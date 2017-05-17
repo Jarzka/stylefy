@@ -1,7 +1,7 @@
 (ns stylefy.macros
   (:require [garden.core :refer [css]]))
 
-(defmacro defstyle
+(defmacro style
   ([style] (defstyle style {}))
   ([style options]
    (let [class-name (str "__stylefy__" (gensym))
