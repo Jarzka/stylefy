@@ -15,5 +15,4 @@
                        {:id "prod"
                         :source-paths ["src/cljs"]
                         :compiler {:output-to "stylefy.js"
-                                   :optimizations :advanced}}]}
-  :profiles {:dev {:dependencies [[reagent "0.6.0-rc"]]}})
+                                   :optimizations :advanced}}]})
