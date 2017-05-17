@@ -6,7 +6,7 @@
   ([style options]
    (let [class-name (str "__stylefy__" (gensym))
          css-code (css style)]
-     (with-open [writer (clojure.java.io/writer "stylefy.css" :append true)]
+     (with-open [writer (clojure.java.io/writer "resources/public/css/stylefy.css" :append true)]
        (.write writer css-code))
 
      `{:style ~style
