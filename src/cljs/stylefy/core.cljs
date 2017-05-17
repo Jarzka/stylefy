@@ -1,2 +1,1 @@
-(ns stylefy.core
-  (:require [garden.core :refer [css]]))
+(ns stylefy.core)
