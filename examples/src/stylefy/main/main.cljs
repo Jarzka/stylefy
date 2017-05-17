@@ -6,7 +6,8 @@
                             :background-color "grey"
                             :padding "5px"
                             :width "100px"
-                            :height "70px"}))
+                            :height "70px"}
+                           {}))
 
 (defn- hello-world []
   [:div (pr-str "Hello world " generic-button)])
