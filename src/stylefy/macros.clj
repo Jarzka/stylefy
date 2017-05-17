@@ -9,5 +9,5 @@
      (with-open [writer (clojure.java.io/writer "resources/public/css/stylefy.css" :append true)]
        (.write writer css-code))
 
-     `{:style ~style
+     `{:style ~style-map
        :class ~class-name})))
