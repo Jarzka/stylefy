@@ -5,7 +5,7 @@
                  [figwheel "0.5.4-7"]
                  [reagent "0.6.0-rc"]]
   :plugins [[lein-cljsbuild "1.1.2"]
-            [lein-doo "0.1.7"]]
+            [lein-figwheel "0.5.4-7"]]
   :cljsbuild {:builds [{:id "dev"
                         :source-paths ["src" "../src"]
                         :figwheel {:on-jsload "stylefy.examples.main/main"}
