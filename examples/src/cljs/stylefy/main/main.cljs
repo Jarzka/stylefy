@@ -9,7 +9,7 @@
                             :height "70px"}))
 
 (defn- hello-world []
-  [:div "Hello world " (pr-str generic-button)])
+  [:div (pr-str "Hello world " generic-button])
 
 (defn start []
   (r/render hello-world (.getElementById js/document "app")))
