@@ -10,7 +10,9 @@
                            {}))
 
 (defn- hello-world []
-  [:div (pr-str "Hello world " generic-button)])
+  [:div
+   (pr-str "Hello world " generic-button)
+   (pr-str "META: " (pr-str (meta generic-button)))])
 
 (defn start []
   (r/render hello-world (.getElementById js/document "app")))
