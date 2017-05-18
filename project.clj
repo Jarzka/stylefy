@@ -1,9 +1,11 @@
 (defproject stylefy "0.1-alpha1"
   :description "Library for styling UI components"
   :dependencies [[org.clojure/clojure "1.8.0"]
-                 [org.clojure/clojurescript "1.9.542"]]
+                 [org.clojure/clojurescript "1.9.542"]
+                 [prismatic/dommy "1.1.0"]
+                 [reagent "0.6.0"]
+                 [garden "1.3.2"]]
   :plugins [[lein-cljsbuild "1.1.2"]
-            [garden "1.3.2"]
             [lein-doo "0.1.7"]]
   :cljsbuild {:builds [{:id "test"
                         :source-paths ["src" "test/cljs"]
