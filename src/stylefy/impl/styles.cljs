@@ -5,7 +5,7 @@
   (:require-macros [reagent.ratom :refer [run!]]))
 
 (def ^:private styles-in-use (atom #{}))
-(def ^:private stylefy-node-id :#_stylefy-style_)
+(def ^:private stylefy-node-id :#_stylefy-styles_)
 
 (defn- styles-in-use->css [node styles-in-use]
   (let [styles-as-css (map #(css [(keyword (str "." (:class %))) (:style %)])
