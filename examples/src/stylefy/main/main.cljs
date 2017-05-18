@@ -17,21 +17,36 @@
                             :margin-right "5px"
                             :margin-bottom "5px"}))
 
-(defn- button []
-  [:div (use-style generic-button) "Hello world"])
+(def primary-button (style (merge (:style generic-button)
+                                  {:background-color "rgb(88, 121, 193)"})))
+(def secondary-button (style (merge (:style generic-button)
+                                    {:background-color "rgb(88, 121, 152)"})))
+
+(defn- button-style-by-type [type]
+  (case type
+    :primary primary-button
+    :secondary secondary-button
+    generic-button))
+
+(defn- button
+  ([] (button nil))
+  ([type]
+   (.log js/console "RENDER BUTTTON: " (pr-str type))
+   [:div (use-style (button-style-by-type type))
+    "Hello world"]))
 
 (defn- button-container []
   [:div (use-style generic-container)
    [button]
-   [button]
-   [button]])
+   [button :primary]
+   [button :secondary]])
 
 (defn- examples []
   [:div
-   [:h1 "Styled button"]
+   [:h1 "Generic button"]
    [button]
 
-   [:h1 "Multiple styled buttons in a container"]
+   [:h1 "Different type of buttons in a container"]
    [button-container]])
 
 (defn start []
