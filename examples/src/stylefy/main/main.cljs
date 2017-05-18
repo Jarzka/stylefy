@@ -6,7 +6,7 @@
 (def generic-button (style {:border "1px solid black"
                             :background-color "grey"
                             :padding "5px"
-                            :width "120px"
+                            :width "150px"
                             :height "50px"}
                            {}))
 
