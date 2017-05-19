@@ -33,12 +33,15 @@
 (defn- examples []
   [:div
    [:h1 "Generic button"]
+   [:p "Just a simple styled button to begin with."]
    [button]
 
-   [:h1 "Different type of buttons in a container (styled by merging styles)"]
+   [:h1 "Different type of buttons in a container"]
+   [:p "Styled by merging styles"]
    [button-container]
 
-   [:h1 "Component with multiple sub elements (styled by using sub-styles)"]
+   [:h1 "Component with multiple sub elements"]
+   [:p "Styled by using sub-styles"]
    [stuff-box]])
 
 (defn start []
