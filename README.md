@@ -15,8 +15,6 @@ stylefy has been tested to work with [Reagent](https://github.com/reagent-projec
 - Defining styles as Clojure data for any UI element
 - Defining sub-styles (you can create a style for the root element of your UI component and then define substyles for the internal elements)
 
-the data to your JSON-loving neighbour), unnamespacing the map can be done easily before JSON conversion.
-
 # Installation
 
 Add the following line to your Leiningen project:
