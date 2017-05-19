@@ -41,6 +41,37 @@
          [:p "The component's current state is ON"])
        [button "Switch" #(reset! state (switch @state)) :primary]])))
 
+(defn- create-random-component [index]
+  (fn [style]
+    [:div style
+     (str "Component " index)]))
+
+(defn- create-random-style [index]
+  (style {:padding "5px"
+          :width (str (+ 200 (* index 1.7)) "px")
+          :height "30px"
+          :margin-bottom "5px"
+          :background-color (str "#"
+                                 (rand-int 10)
+                                 (rand-int 10)
+                                 (rand-int 10)
+                                 (rand-int 10)
+                                 (rand-int 10)
+                                 (rand-int 10))}))
+
+(defn stress-test []
+  (let [state (r/atom :hidden)]
+    (fn []
+      (.log js/console "Render stress test: " (pr-str state))
+      [:div (use-style styles/generic-container)
+
+       (if (= @state :visible)
+         (map-indexed (fn [index component]
+                        ^{:key (gensym)}
+                        [component (use-style (create-random-style index))])
+                      (map create-random-component (range 0 100)))
+         [button "Generate" #(reset! state :visible) :primary])])))
+
 (defn- examples []
   [:div
    [:h1 "Generic button"]
@@ -57,7 +88,11 @@
 
    [:h1 "Component with internal state"]
    [:p "This component contains a different style in different states. The styles are generated and inserted into DOM on-demand."]
-   [stateful-component]])
+   [stateful-component]
+
+   [:h1 "Stress test"]
+   [:p "Styles are added into DOM on-demand, when components using them are mounted for the first time. Click the button below to dunamically generate 100 components with uniquer styles"]
+   [stress-test]])
 
 (defn start []
   (r/render examples (.getElementById js/document "app")))
