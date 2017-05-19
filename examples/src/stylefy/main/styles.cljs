@@ -31,4 +31,5 @@
 
 (def stuff-box-style (style (merge
                               (::stylefy/props generic-container)
-                              {::stylefy/sub-styles {:box (::stylefy/props simple-box-style)}})))
+                              {::stylefy/sub-styles {:box (::stylefy/props simple-box-style)
+                                                     :list {:margin-top "1em"}}})))

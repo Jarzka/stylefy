@@ -25,7 +25,7 @@
   [:div (use-style styles/stuff-box-style)
    [:p "This container contains multiple elements, like texts and lists."]
    [:div (use-sub-style styles/stuff-box-style :box)]
-   [:ul
+   [:ul (use-sub-style styles/stuff-box-style :list)
     [:li "List element 1"]
     [:li "List element 2"]
     [:li "List element 3"]]])
