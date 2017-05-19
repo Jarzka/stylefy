@@ -45,11 +45,11 @@
 
 (defn- stress-test-item [index]
   (fn [style]
-    [:div style (str "Component " index)]))
+    [:div style index]))
 
 (defn- create-random-style [index]
   {:padding "5px"
-   :width (str (+ 200 (* index 3)) "px")
+   :width (str index "%")
    :height "30px"
    :margin-bottom "5px"
    :background-color (str "#"
