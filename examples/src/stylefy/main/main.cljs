@@ -38,7 +38,7 @@
    [:h1 "Different type of buttons in a container (styled by merging styles)"]
    [button-container]
 
-   [:h1 "Component with multiple sub elements"]
+   [:h1 "Component with multiple sub elements (styled by using sub-styles)"]
    [stuff-box]])
 
 (defn start []
