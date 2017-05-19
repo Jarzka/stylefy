@@ -20,7 +20,7 @@ stylefy has been tested to work with [Reagent](https://github.com/reagent-projec
 Add the following line to your Leiningen project:
 
 ```clj
-[stylefy "0.1.1"]
+[stylefy "0.2"]
 ```
 
 # Usage
@@ -29,12 +29,12 @@ Add the following line to your Leiningen project:
 (:require [stylefy.core :as stylefy])
 ```
 
-To create a simple style, use the *style* function:
+Create style as a normal Clojure map:
 
 ```clojure
-(def generic-container (style {:padding "25px"
-                               :background-color "#BBBBBB"
-                               :border "1px solid black"}))
+(def generic-container {:padding "25px"
+                        :background-color "#BBBBBB"
+                        :border "1px solid black"})
 ```
 
 To use it in a component, use the *use-style* function:
@@ -48,21 +48,19 @@ To use it in a component, use the *use-style* function:
 Combine or parametrise styles however you like:
 
 ```clojure
-(def primary-button (style (merge (::stylefy/props generic-button)
-                                  {:background-color "rgb(88, 121, 193)"})))
+(def primary-button (merge generic-button {:background-color "rgb(88, 121, 193)"}))
                                   
 (defn button-style [background-color]
-  (style (merge (::stylefy/props generic-button)
-                {:background-color background-color})))
+  (merge generic-button {:background-color background-color}))
 ```
 
-Use sub-styles
+Create styles in styles using sub-styles (useful, if you want to define styles for the root component and it's sub elements in a single map)
 
 ```clojure
-(def container-style (style (merge
-                              (::stylefy/props generic-container)
-                              {::stylefy/sub-styles {:list {:margin-top "1em"}}})))
-                              
+(def container-style (merge
+                       generic-container
+                       {::stylefy/sub-styles {:list {:margin-top "1em"}}}))
+
 (defn list-in-container []
   [:div (use-style styles/container-style)
    [:ul (use-sub-style styles/container-style :list)
