@@ -17,9 +17,9 @@
                             :margin-right "5px"
                             :margin-bottom "5px"}))
 
-(def primary-button (style (merge (::stylefy/style generic-button)
+(def primary-button (style (merge (::stylefy/props generic-button)
                                   {:background-color "rgb(88, 121, 193)"})))
-(def secondary-button (style (merge (::stylefy/style generic-button)
+(def secondary-button (style (merge (::stylefy/props generic-button)
                                     {:background-color "rgb(88, 121, 152)"})))
 
 (def simple-box-style (style {:border "1px solid black"
@@ -30,5 +30,5 @@
                               :height "150px"}))
 
 (def stuff-box-style (style (merge
-                              (::stylefy/style generic-container)
-                              {::stylefy/sub-styles {:box (::stylefy/style simple-box-style)}})))
+                              (::stylefy/props generic-container)
+                              {::stylefy/sub-styles {:box (::stylefy/props simple-box-style)}})))
