@@ -22,7 +22,7 @@ the data to your JSON-loving neighbour), unnamespacing the map can be done easil
 Add the following line to your Leiningen project:
 
 ```clj
-[stylefy "0.1"]
+[stylefy "0.1.1"]
 ```
 
 # Usage
