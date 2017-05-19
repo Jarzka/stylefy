@@ -15,7 +15,8 @@
                             :width "150px"
                             :height "38px"
                             :margin-right "5px"
-                            :margin-bottom "5px"}))
+                            :margin-bottom "5px"
+                            :cursor :pointer}))
 
 (def primary-button (style (merge (::stylefy/props generic-button)
                                   {:background-color "rgb(88, 121, 193)"})))
@@ -33,3 +34,11 @@
                               (::stylefy/props generic-container)
                               {::stylefy/sub-styles {:box (::stylefy/props simple-box-style)
                                                      :list {:margin-top "1em"}}})))
+
+(def stateful-component {:on (style (merge
+                                      (::stylefy/props generic-container)
+                                      {:background-color "#22FF22"}))
+                         :off (style (merge
+                                       (::stylefy/props generic-container)
+                                       {:background-color "#333333"
+                                        :color "white"}))})
