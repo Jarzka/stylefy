@@ -7,3 +7,5 @@ examples/resources/public/js
 examples/resources/public/css
 examples/figwheel_server.log
 .nrepl-port
+pom.xml
+pom.xml.asc
