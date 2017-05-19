@@ -23,7 +23,7 @@
       (styles-in-use->css node styles-in-use)
       (.error js/console "stylefy is unable to find the required <style> tag!"))))
 
-(run!()
+(run!
   (update-styles-in-dom @styles-in-use))
 
 (defn- save-style! [{:keys [props hash] :as style}]
