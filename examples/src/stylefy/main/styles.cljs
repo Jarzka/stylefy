@@ -17,17 +17,18 @@
                             :margin-right "5px"
                             :margin-bottom "5px"}))
 
-(def primary-button (style (merge (:style generic-button)
+(def primary-button (style (merge (::stylefy/style generic-button)
                                   {:background-color "rgb(88, 121, 193)"})))
-(def secondary-button (style (merge (:style generic-button)
+(def secondary-button (style (merge (::stylefy/style generic-button)
                                     {:background-color "rgb(88, 121, 152)"})))
 
-(def stuff-box-style (style (:style generic-container)))
-
-
 (def simple-box-style (style {:border "1px solid black"
-                        :background-color "#FFDDDD"
-                        :text-align :center
-                        :padding "5px"
-                        :width "150px"
-                        :height "150px"}))
+                              :background-color "#FFDDDD"
+                              :text-align :center
+                              :padding "5px"
+                              :width "150px"
+                              :height "150px"}))
+
+(def stuff-box-style (style (merge
+                              (::stylefy/style generic-container)
+                              {::stylefy/sub-styles {:box (::stylefy/style simple-box-style)}})))

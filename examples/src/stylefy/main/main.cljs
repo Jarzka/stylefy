@@ -1,7 +1,7 @@
 (ns stylefy.examples.main
   (:require [reagent.core :as r]
             [stylefy.examples.styles :as styles]
-            [stylefy.core :as stylefy :refer [style use-style]]))
+            [stylefy.core :as stylefy :refer [style use-style use-sub-style]]))
 
 (defn- button-style-by-type [type]
   (case type
@@ -23,8 +23,12 @@
 
 (defn stuff-box []
   [:div (use-style styles/stuff-box-style)
-   [:p "This is just some random text blah blah"]
-   [:div (use-style styles/simple-box-style)]])
+   [:p "This container contains multiple elements, like texts and lists."]
+   [:div (use-sub-style styles/stuff-box-style :box)]
+   [:ul
+    [:li "List element 1"]
+    [:li "List element 2"]
+    [:li "List element 3"]]])
 
 (defn- examples []
   [:div

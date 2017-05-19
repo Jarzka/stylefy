@@ -8,7 +8,7 @@
 (def ^:private stylefy-node-id :#_stylefy-styles_)
 
 (defn- styles-in-use->css [node styles-in-use]
-  (let [styles-as-css (map #(css [(keyword (str "." (:class %))) (:style %)])
+  (let [styles-as-css (map #(css [(keyword (str "." (::stylefy.core/class %))) (::stylefy.core/style %)])
                            styles-in-use)]
     (dommy/set-text! node (apply str styles-as-css))))
 
@@ -26,11 +26,23 @@
 
 (defn use-style! [style]
   (use-style-in-dom! style)
-  {:class (:class style)})
+  {:class (::stylefy.core/class style)})
+
+(defn use-sub-style! [style sub-style]
+  (let [resolved-style (sub-style (::stylefy.core/sub-styles style))]
+    (use-style-in-dom! resolved-style)
+    {:class (::stylefy.core/class resolved-style)}))
 
 (defn style
-  [style-map options]
-  (let [class-name (str "_stylefy_" (hash style-map))]
-    {:style style-map
-     :class class-name}))
-
+  ([style-map] (style style-map nil))
+  ([style-map options]
+   (let [class-name (str "_stylefy_" (hash style-map))
+         sub-styles (::stylefy.core/sub-styles style-map)
+         defined-substyles (when sub-styles
+                             (apply merge (map #(-> {% (style (% sub-styles))})
+                                               (keys sub-styles))))]
+     (merge
+       {::stylefy.core/style (dissoc style-map ::stylefy.core/sub-styles)
+        ::stylefy.core/class class-name}
+       (when sub-styles
+         {::stylefy.core/sub-styles defined-substyles})))))
