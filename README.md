@@ -54,7 +54,7 @@ Combine or parametrise styles however you like:
   (merge generic-button {:background-color background-color}))
 ```
 
-Create styles in styles using sub-styles (useful, if you want to define styles for the root component and it's sub elements in a single map)
+Create styles in styles using sub-styles (useful, if you want to define styles for the root component and it's sub elements in a single map):
 
 ```clojure
 (def container-style (merge
