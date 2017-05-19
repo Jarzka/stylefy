@@ -43,10 +43,9 @@
          [:p "The component's current state is ON"])
        [button "Switch" #(reset! state (switch @state)) :primary]])))
 
-(defn- create-random-component [index]
+(defn- stress-test-item [index]
   (fn [style]
-    [:div style
-     (str "Component " index)]))
+    [:div style (str "Component " index)]))
 
 (defn- create-random-style [index]
   {:padding "5px"
@@ -62,15 +61,16 @@
                           (rand-int 10))})
 
 (defn stress-test []
-  (let [state (r/atom :hidden)]
+  (let [state (r/atom :hidden)
+        styles (mapv create-random-style (range 0 100))]
     (fn []
       [:div (use-style styles/generic-container)
 
        (if (= @state :visible)
          (map-indexed (fn [index component]
-                        ^{:key (gensym)}
-                        [component (use-style (create-random-style index))])
-                      (map create-random-component (range 0 100)))
+                        ^{:key index}
+                        [component (use-style (get styles index))])
+                      (map stress-test-item (range 0 100)))
          [button
           (if (= @state :generating)
             "Generating..."
