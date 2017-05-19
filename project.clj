@@ -6,7 +6,8 @@
                  [reagent "0.6.0"]
                  [garden "1.3.2"]]
   :plugins [[lein-cljsbuild "1.1.2"]
-            [lein-doo "0.1.7"]]
+            [lein-doo "0.1.7"]
+            [lein-codox "0.10.3"]]
   :cljsbuild {:builds [{:id "test"
                         :source-paths ["src" "test/cljs"]
                         :compiler {:output-to "target/cljs/test/test.js"
