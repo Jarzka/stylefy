@@ -4,7 +4,7 @@
 
 An EXPERIMENTAL ClojureScript library for styling UI components with ease.
 
-[API Documentation](https://jarzka.github.io/stylefy/docs/)
+[API Documentation](https://jarzka.github.io/stylefy/doc)
 
 # Introduction
 
