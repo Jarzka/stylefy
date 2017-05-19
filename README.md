@@ -11,7 +11,7 @@ stylefy makes it possible to define UI component styles as Clojure data. Interna
 # Supported features
 
 - Defining styles as Clojure data for any UI element, styles are converted internally to CSS classes
-- Defining sub-styles (you can create a style for the root element of your UI component and then define substyles for the internal elements like <p> tags)
+- Defining sub-styles (you can create a style for the root element of your UI component and then define substyles for the internal elements)
 
 # Changelog
 
