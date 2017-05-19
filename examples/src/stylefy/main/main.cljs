@@ -1,7 +1,9 @@
 (ns stylefy.examples.main
   (:require [reagent.core :as r]
             [stylefy.examples.styles :as styles]
-            [stylefy.core :as stylefy :refer [style use-style use-sub-style]]))
+            [cljs.core.async :refer [<! timeout]]
+            [stylefy.core :as stylefy :refer [style use-style use-sub-style]])
+  (:require-macros [cljs.core.async.macros :refer [go]]))
 
 (defn- button-style-by-type [type]
   (case type
@@ -48,7 +50,7 @@
 
 (defn- create-random-style [index]
   (style {:padding "5px"
-          :width (str (+ 200 (* index 1.7)) "px")
+          :width (str (+ 200 (* index 3)) "px")
           :height "30px"
           :margin-bottom "5px"
           :background-color (str "#"
@@ -70,7 +72,15 @@
                         ^{:key (gensym)}
                         [component (use-style (create-random-style index))])
                       (map create-random-component (range 0 100)))
-         [button "Generate" #(reset! state :visible) :primary])])))
+         [button
+          (if (= @state :generating)
+            "Generating..."
+            "Generate")
+          #(when (not= @state :generating)
+             (go (reset! state :generating)
+                 (<! (timeout 10))
+                 (reset! state :visible)))
+          :primary])])))
 
 (defn- examples []
   [:div
