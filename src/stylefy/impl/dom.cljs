@@ -1,0 +1,32 @@
+(ns stylefy.impl.dom
+  (:require [dommy.core :as dommy]
+            [garden.core :refer [css]]
+            [reagent.core :as reagent :refer [atom]])
+  (:require-macros [reagent.ratom :refer [run!]]))
+
+(def ^:private styles-in-use (atom {})) ;; style hash -> props
+(def ^:private stylefy-node-id :#_stylefy-styles_)
+
+(defn- style-by-hash [style-hash]
+  (get @styles-in-use style-hash))
+
+(defn- styles-in-use->css [node styles-in-use]
+  (let [styles-in-css (map (fn [style-hash]
+                             (css [(keyword (str "." style-hash))
+                                   (style-by-hash style-hash)]))
+                           (keys styles-in-use))]
+    (dommy/set-text! node (apply str styles-in-css))))
+
+(defn- update-styles-in-dom [styles-in-use]
+  (let [node (dommy/sel1 stylefy-node-id)]
+    (if node
+      (styles-in-use->css node styles-in-use)
+      (.error js/console "stylefy is unable to find the required <style> tag!"))))
+
+(run!()
+  (update-styles-in-dom @styles-in-use))
+
+(defn- save-style! [{:keys [props hash] :as style}]
+  (assert props "Unable to save empty style!")
+  (assert hash "Unable to save style without hash!")
+  (swap! styles-in-use assoc hash props))

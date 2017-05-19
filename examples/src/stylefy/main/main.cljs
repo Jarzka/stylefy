@@ -2,7 +2,7 @@
   (:require [reagent.core :as r]
             [stylefy.examples.styles :as styles]
             [cljs.core.async :refer [<! timeout]]
-            [stylefy.core :as stylefy :refer [style use-style use-sub-style]])
+            [stylefy.core :as stylefy :refer [use-style use-sub-style]])
   (:require-macros [cljs.core.async.macros :refer [go]]))
 
 (defn- button-style-by-type [type]
@@ -25,10 +25,10 @@
    [button "Secondary" #() :secondary]])
 
 (defn stuff-box []
-  [:div (use-style styles/stuff-box-style)
+  [:div (use-style styles/stuff-box)
    [:p "This container contains multiple elements, like texts and lists."]
-   [:div (use-sub-style styles/stuff-box-style :box)]
-   [:ul (use-sub-style styles/stuff-box-style :list)
+   [:div (use-sub-style styles/stuff-box :box)]
+   [:ul (use-sub-style styles/stuff-box :list)
     [:li "List element 1"]
     [:li "List element 2"]
     [:li "List element 3"]]])
@@ -49,22 +49,21 @@
      (str "Component " index)]))
 
 (defn- create-random-style [index]
-  (style {:padding "5px"
-          :width (str (+ 200 (* index 3)) "px")
-          :height "30px"
-          :margin-bottom "5px"
-          :background-color (str "#"
-                                 (rand-int 10)
-                                 (rand-int 10)
-                                 (rand-int 10)
-                                 (rand-int 10)
-                                 (rand-int 10)
-                                 (rand-int 10))}))
+  {:padding "5px"
+   :width (str (+ 200 (* index 3)) "px")
+   :height "30px"
+   :margin-bottom "5px"
+   :background-color (str "#"
+                          (rand-int 10)
+                          (rand-int 10)
+                          (rand-int 10)
+                          (rand-int 10)
+                          (rand-int 10)
+                          (rand-int 10))})
 
 (defn stress-test []
   (let [state (r/atom :hidden)]
     (fn []
-      (.log js/console "Render stress test: " (pr-str state))
       [:div (use-style styles/generic-container)
 
        (if (= @state :visible)
