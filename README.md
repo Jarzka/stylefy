@@ -6,7 +6,7 @@ The library is currently in development. More information coming soon!
 
 # Introduction
 
-stylefy makes it possible to define UI component styles as Clojure data. Internally the defined styles are converted to CSS classes by using [Garden](https://github.com/noprompt/garden) library. When styles are defined as Clojure data, they can be easily transformed using Clojure's powerful functions (like merge) and parametrised using the language you know.
+stylefy makes it possible to define UI component styles as Clojure data. Internally the defined styles are converted to CSS classes by using [Garden](https://github.com/noprompt/garden) library. When styles are defined as Clojure data, they can be easily transformed with Clojure's powerful functions (like merge) and parametrised.
 
 # Supported features
 
