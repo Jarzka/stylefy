@@ -1,5 +1,7 @@
 # stylefy
 
+[![Clojars Project](https://img.shields.io/clojars/v/stylefy.svg)](https://clojars.org/stylefy)
+
 An EXPERIMENTAL ClojureScript library for styling UI components with ease.
 
 # Introduction
