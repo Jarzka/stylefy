@@ -36,16 +36,22 @@
         {:class (::stylefy.core/class resolved-style)})
       (.error js/console (str "Sub-style " (pr-str sub-style) " not found in style: " (pr-str style))))))
 
+(defn- style-by-hash [styles-in-use style-hash]
+  (first (filter #(= (::stylefy.core/class %) style-hash)
+                 styles-in-use)))
+
 (defn style
   ([style-map] (style style-map nil))
   ([style-map options]
-   (let [class-name (str "_stylefy_" (hash style-map))
-         sub-styles (::stylefy.core/sub-styles style-map)
-         defined-substyles (when sub-styles
-                             (apply merge (map #(-> {% (style (% sub-styles))})
-                                               (keys sub-styles))))]
-     (merge
-       {::stylefy.core/props (dissoc style-map ::stylefy.core/sub-styles)
-        ::stylefy.core/class class-name}
-       (when sub-styles
-         {::stylefy.core/sub-styles defined-substyles})))))
+   (let [class-name (str "_stylefy_" (hash style-map))]
+     (if-let [already-created-style (style-by-hash @styles-in-use class-name)]
+       already-created-style
+       (let [sub-styles (::stylefy.core/sub-styles style-map)
+             defined-substyles (when sub-styles
+                                 (apply merge (map #(-> {% (style (% sub-styles))})
+                                                   (keys sub-styles))))]
+         (merge
+           {::stylefy.core/props (dissoc style-map ::stylefy.core/sub-styles)
+            ::stylefy.core/class class-name}
+           (when sub-styles
+             {::stylefy.core/sub-styles defined-substyles})))))))
