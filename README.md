@@ -71,8 +71,9 @@ Use sub-styles
     [:li "List element 1"]
     [:li "List element 2"]
     [:li "List element 3"]]])
-    
 ```
+
+More examples available here: https://github.com/Jarzka/stylefy/tree/master/examples/src/stylefy/main
 
 # Changelog
 
