@@ -52,9 +52,10 @@ Combine or parametrise styles however you like:
 ```clojure
 (def primary-button (style (merge (::stylefy/props generic-button)
                                   {:background-color "rgb(88, 121, 193)"})))
-(def button-style [background-color]
+                                  
+(defn button-style [background-color]
   (style (merge (::stylefy/props generic-button)
-    {:background-color background-color})))
+                {:background-color background-color})))
 ```
 
 Use sub-styles
