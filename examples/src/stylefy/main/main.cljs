@@ -61,8 +61,9 @@
                           (rand-int 10))})
 
 (defn stress-test []
-  (let [state (r/atom :hidden)
-        styles (mapv create-random-style (range 0 100))]
+  (let [components-count 100
+        state (r/atom :hidden)
+        styles (mapv create-random-style (range 0 components-count))]
     (fn []
       [:div (use-style styles/generic-container)
 
@@ -70,7 +71,7 @@
          (map-indexed (fn [index component]
                         ^{:key index}
                         [component (use-style (get styles index))])
-                      (map stress-test-item (range 0 100)))
+                      (map stress-test-item (range 0 components-count)))
          [button
           (if (= @state :generating)
             "Generating..."
