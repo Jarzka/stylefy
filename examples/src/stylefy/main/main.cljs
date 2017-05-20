@@ -104,7 +104,7 @@
    [stateful-component]
 
    [:h1 "Stress test"]
-   [:p "Styles are added into DOM on-demand, when components using them are mounted for the first time. Click the button below to dynamically generate 1000 components with unique styles"]
+   [:p "Styles are added into DOM on-demand when they are used for the first time. Clicking the button below generates 1000 different looking components dynamically. The components are first styled with inline styles until the DOM has been updated and we can begin using CSS classes to save memory."]
    [stress-test]])
 
 (defn main []

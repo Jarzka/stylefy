@@ -29,6 +29,12 @@ Add the following line to your Leiningen project:
 (:require [stylefy.core :as stylefy])
 ```
 
+First, call *stylefy/init*:
+
+```clojure
+(stylefy/init)
+```
+
 Create style as a normal Clojure map:
 
 ```clojure
