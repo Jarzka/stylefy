@@ -10,18 +10,14 @@
 (defn- style-by-hash [style-hash]
   (get @styles-in-use style-hash))
 
-(defn- styles-in-use->css [node styles-in-use]
-  (let [styles-in-css (map (fn [style-hash]
-                             (css [(keyword (str "." style-hash))
-                                   (style-by-hash style-hash)]))
-                           (keys styles-in-use))]
-    (dommy/set-text! node (apply str styles-in-css))))
-
 (defn- update-styles-in-dom [styles-in-use]
-  (let [node (dommy/sel1 stylefy-node-id)]
-    (if node
-      (styles-in-use->css node styles-in-use)
-      (.error js/console "stylefy is unable to find the required <style> tag!"))))
+  (if-let [node (dommy/sel1 stylefy-node-id)]
+    (let [styles-in-css (map (fn [style-hash]
+                               (css [(keyword (str "." style-hash))
+                                     (style-by-hash style-hash)]))
+                             (keys styles-in-use))]
+      (dommy/set-text! node (apply str styles-in-css)))
+    (.error js/console "stylefy is unable to find the required <style> tag!")))
 
 (run!
   (update-styles-in-dom @styles-in-use))
