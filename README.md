@@ -21,7 +21,7 @@ stylefy has been tested to work with [Reagent](https://github.com/reagent-projec
 Add the following line to your Leiningen project:
 
 ```clj
-[stylefy "0.2.2"]
+[stylefy "0.2.3"]
 ```
 
 # Usage
