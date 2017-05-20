@@ -49,7 +49,7 @@
 
 (defn- create-random-style [index]
   {:padding "5px"
-   :width (str (/ index 3) "%")
+   :width (str (/ index 10) "%")
    :height "30px"
    :margin-bottom "5px"
    :background-color (str "#"
