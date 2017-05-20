@@ -13,8 +13,7 @@
 (defn- update-styles-in-dom! [styles-in-use]
   (if-let [node (dommy/sel1 stylefy-node-id)]
     (let [styles-in-css (map (fn [style-hash]
-                               (css [(keyword (str "." style-hash))
-                                     (style-by-hash style-hash)]))
+                               (::css (style-by-hash style-hash)))
                              (keys styles-in-use))]
       (dommy/set-text! node (apply str styles-in-css)))
     (.error js/console "stylefy is unable to find the required <style> tag!")))
@@ -25,4 +24,7 @@
 (defn- save-style! [{:keys [props hash] :as style}]
   (assert props "Unable to save empty style!")
   (assert hash "Unable to save style without hash!")
-  (swap! styles-in-use assoc hash props))
+  (let [style-css (css [(keyword (str "." hash))
+                        props])]
+    (swap! styles-in-use assoc hash
+           (assoc props ::css style-css))))
