@@ -76,6 +76,29 @@ Create styles in styles using sub-styles (useful, if you want to define styles f
     [:li "List element 3"]]])
 ```
 
+Use 3rd part classes alogn with stylefy definitions:
+
+```clojure
+(defn- bs-navbar-item [index index-atom text]
+  [:li (merge (use-style styles/clickable
+                         (when (= @index-atom index)
+                           {::stylefy/with-classes ["active"]}))
+              {:role "presentation"
+               :on-click #(reset! index-atom index)})
+   [:a text]])
+
+(defn- bs-navbar []
+  (let [active-index (r/atom 0)]
+    (fn []
+      [:ul (use-style styles/boostrap-navbar-overrides
+                      {::stylefy/with-classes ["nav" "nav-pills"]})
+       [bs-navbar-item 0 active-index "One"]
+       [bs-navbar-item 1 active-index "Two"]
+       [bs-navbar-item 2 active-index "Three"]
+       [bs-navbar-item 3 active-index "Four"]])))
+```
+
+
 More examples available here: https://github.com/Jarzka/stylefy/tree/master/examples/src/stylefy/main
 
 # Changelog
