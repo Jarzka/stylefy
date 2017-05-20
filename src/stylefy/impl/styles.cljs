@@ -12,8 +12,6 @@
   (doseq [sub-style (vals (:stylefy.core/sub-styles props))]
     (create-style! {:props sub-style :hash (hash-style sub-style)})))
 
-
-
 (defn use-style! [style]
   (let [style-hash (hash-style style)
         already-created (dom/style-by-hash style-hash)]
