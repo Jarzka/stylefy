@@ -22,6 +22,3 @@
    sub-style is the name of the sub-stale in the given style map."
   [style sub-style]
   (impl-styles/use-sub-style! style sub-style))
-
-(defn update-styles! []
-  (dom/update-styles-in-dom!))
