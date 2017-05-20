@@ -88,7 +88,7 @@
 (defn- bs-navbar-item [index index-atom text]
   [:li (merge (use-style styles/clickable
                          (when (= @index-atom index)
-                           {:with-classes ["active"]}))
+                           {::stylefy/with-classes ["active"]}))
               {:role "presentation"
                :on-click #(reset! index-atom index)})
    [:a text]])
@@ -97,7 +97,7 @@
   (let [active-index (r/atom 0)]
     (fn []
       [:ul (use-style styles/boostrap-navbar-overrides
-                      {:with-classes ["nav" "nav-pills"]})
+                      {::stylefy/with-classes ["nav" "nav-pills"]})
        [bs-navbar-item 0 active-index "One"]
        [bs-navbar-item 1 active-index "Two"]
        [bs-navbar-item 2 active-index "Three"]
