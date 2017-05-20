@@ -67,20 +67,23 @@
     (fn []
       [:div (use-style styles/generic-container)
 
+       [button
+        (case @state
+          :hidden "Generate"
+          :generating "Generating..."
+          :visible "Hide")
+        #(case @state
+           :hidden (go (reset! state :generating)
+                       (<! (timeout 10))
+                       (reset! state :visible))
+           :visible (reset! state :hidden))
+        :primary]
+
        (if (= @state :visible)
          (map-indexed (fn [index component]
                         ^{:key index}
                         [component (use-style (get styles index))])
-                      (map stress-test-item (range 0 components-count)))
-         [button
-          (if (= @state :generating)
-            "Generating..."
-            "Generate")
-          #(when (not= @state :generating)
-             (go (reset! state :generating)
-                 (<! (timeout 10))
-                 (reset! state :visible)))
-          :primary])])))
+                      (map stress-test-item (range 0 components-count))))])))
 
 (defn- examples []
   [:div
@@ -108,4 +111,5 @@
   [examples])
 
 (defn start []
+  (stylefy/init)
   (r/render main (.getElementById js/document "app")))

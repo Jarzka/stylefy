@@ -1,8 +1,7 @@
 (ns stylefy.core
   (:require [dommy.core :as dommy]
             [stylefy.impl.styles :as impl-styles]
-            [stylefy.impl.dom :as dom]
-            [reagent.core :as reagent :refer [atom]])
+            [stylefy.impl.dom :as dom])
   (:require-macros [reagent.ratom :refer [run!]]))
 
 (defn use-style
@@ -23,3 +22,10 @@
    sub-style is the name of the sub-stale in the given style map."
   [style sub-style]
   (impl-styles/use-sub-style! style sub-style))
+
+(defn init
+  "Initialises stylefy.
+
+  Internally starts checking if new styles need to be added in to DOM as CSS classes."
+  []
+  (dom/init-dom-update))

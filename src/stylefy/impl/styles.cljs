@@ -1,7 +1,6 @@
 (ns stylefy.impl.styles
   (:require [stylefy.impl.dom :as dom]
-            [garden.core :refer [css]])
-  (:require-macros [reagent.ratom :refer [run!]]))
+            [garden.core :refer [css]]))
 
 (defn hash-style [style]
   (str "_stylefy_" (hash style)))
