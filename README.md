@@ -29,7 +29,7 @@ Add the following line to your Leiningen project:
 (:require [stylefy.core :as stylefy])
 ```
 
-First, call *stylefy/init* once when your application stars
+First, call *stylefy/init* once when your application starts:
 
 ```clojure
 (stylefy/init)
