@@ -7,7 +7,8 @@
 
 (defn use-style
   "Defines style for a component.
-   Returns a map which contains :class keyword pointing to the given style.
+   Returns a map which contains :class keyword pointing to the given style if the style is found in DOM.
+   Otherwise, returns the given props as inline style.
 
    The given parameter is a map which contains style properties. There can also be special namespaced keywords:
    ::sub-styles        The content of sub-styles should be a map, in which keys define the name of the sub-style and

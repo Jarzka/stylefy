@@ -11,14 +11,23 @@
 (defn- style-by-hash [style-hash]
   (get @styles-in-use style-hash))
 
+(defn- update-style-tag! [node]
+  (let [styles-in-css (map (fn [style-hash]
+                             (::css (style-by-hash style-hash)))
+                           (keys @styles-in-use))]
+    (dommy/set-text! node (apply str styles-in-css))))
+
+(defn- mark-styles-added-in-dom! []
+  (reset! styles-in-use (apply merge (map
+                                       #(-> {% (assoc (get @styles-in-use %) ::in-dom? true)})
+                                       (keys @styles-in-use)))))
+
 (defn- update-styles-in-dom! []
   (when @dom-needs-update?
     (if-let [node (dommy/sel1 stylefy-node-id)]
-      (let [styles-in-css (map (fn [style-hash]
-                                 (::css (style-by-hash style-hash)))
-                               (keys @styles-in-use))]
-        (dommy/set-text! node (apply str styles-in-css))
-        (reset! dom-needs-update? false))
+      (do (update-style-tag! node)
+          (reset! dom-needs-update? false)
+          (mark-styles-added-in-dom!))
       (.error js/console "stylefy is unable to find the required <style> tag!")))
   (r/next-tick update-styles-in-dom!))
 
@@ -32,3 +41,6 @@
     (swap! styles-in-use assoc hash
            (assoc props ::css style-css))
     (reset! dom-needs-update? true)))
+
+(defn style-in-dom? [style-hash]
+  (boolean (::in-dom? (style-by-hash style-hash))))

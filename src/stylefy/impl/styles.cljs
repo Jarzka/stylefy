@@ -13,6 +13,8 @@
   (doseq [sub-style (vals (:stylefy.core/sub-styles props))]
     (create-style! {:props sub-style :hash (hash-style sub-style)})))
 
+
+
 (defn use-style! [style]
   (let [style-hash (hash-style style)
         already-created (dom/style-by-hash style-hash)]
@@ -20,7 +22,9 @@
     (when-not already-created
       (create-style! {:props style :hash style-hash}))
 
-    {:class style-hash}))
+    (if (dom/style-in-dom? style-hash)
+      {:class style-hash}
+      {:style style})))
 
 (defn use-sub-style! [style sub-style]
   (let [resolved-sub-style (get (:stylefy.core/sub-styles style) sub-style)]
