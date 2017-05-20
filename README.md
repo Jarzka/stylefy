@@ -76,7 +76,7 @@ Create styles in styles using sub-styles (useful, if you want to define styles f
     [:li "List element 3"]]])
 ```
 
-Use 3rd part classes alogn with stylefy definitions:
+Use 3rd party classes alogn with stylefy definitions:
 
 ```clojure
 (defn- bs-navbar-item [index index-atom text]
