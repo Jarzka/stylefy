@@ -61,7 +61,7 @@
                           (rand-int 10))})
 
 (defn stress-test []
-  (let [components-count 100
+  (let [components-count 300
         state (r/atom :hidden)
         styles (mapv create-random-style (range 0 components-count))]
     (fn []
@@ -101,7 +101,7 @@
    [stateful-component]
 
    [:h1 "Stress test"]
-   [:p "Styles are added into DOM on-demand, when components using them are mounted for the first time. Click the button below to dynamically generate 100 components with unique styles"]
+   [:p "Styles are added into DOM on-demand, when components using them are mounted for the first time. Click the button below to dynamically generate 300 components with unique styles"]
    [stress-test]])
 
 (defn start []
