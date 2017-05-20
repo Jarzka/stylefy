@@ -85,6 +85,24 @@
                         [component (use-style (get styles index))])
                       (map stress-test-item (range 0 components-count))))])))
 
+(defn- bs-navbar-item [index index-atom text]
+  [:li (merge (use-style styles/clickable
+                         (when (= @index-atom index)
+                           {:with-classes ["active"]}))
+              {:role "presentation"
+               :on-click #(reset! index-atom index)})
+   [:a text]])
+
+(defn- bs-navbar []
+  (let [active-index (r/atom 0)]
+    (fn []
+      [:ul (use-style styles/boostrap-navbar-overrides
+                      {:with-classes ["nav" "nav-pills"]})
+       [bs-navbar-item 0 active-index "One"]
+       [bs-navbar-item 1 active-index "Two"]
+       [bs-navbar-item 2 active-index "Three"]
+       [bs-navbar-item 3 active-index "Four"]])))
+
 (defn- examples []
   [:div
    [:h1 "Generic button"]
@@ -105,7 +123,11 @@
 
    [:h1 "Stress test"]
    [:p "Styles are added into DOM on-demand when they are used for the first time. Clicking the button below generates 1000 different looking components dynamically. The components are first styled with inline styles until the DOM has been updated and we can begin using CSS classes to save memory."]
-   [stress-test]])
+   [stress-test]
+
+   [:h1 "Boostrap navbar"]
+   [:p "You can also assign any classes to elements normally. Here we use Boostrap classes to construct a simple navbar. We also override some BS styles."]
+   [bs-navbar]])
 
 (defn main []
   [examples])

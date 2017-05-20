@@ -2,21 +2,23 @@
   (:require [reagent.core :as r]
             [stylefy.core :as stylefy :refer [use-style]]))
 
+(def clickable {:cursor :pointer})
+
 (def generic-container {:padding "25px"
                         :background-color "#BBBBBB"
                         :border "1px solid black"})
 
-(def generic-button {:border "1px solid black"
-                     :background-color "grey"
-                     :color "white"
-                     :text-align :center
-                     :font-size "1.2em"
-                     :padding "5px"
-                     :width "150px"
-                     :height "38px"
-                     :margin-right "5px"
-                     :margin-bottom "5px"
-                     :cursor :pointer})
+(def generic-button (merge {:border "1px solid black"
+                            :background-color "grey"
+                            :color "white"
+                            :text-align :center
+                            :font-size "1.2em"
+                            :padding "5px"
+                            :width "150px"
+                            :height "38px"
+                            :margin-right "5px"
+                            :margin-bottom "5px"}
+                           clickable))
 
 (def primary-button (merge generic-button {:background-color "rgb(88, 121, 193)"}))
 
@@ -39,3 +41,5 @@
                                 generic-container
                                 {:background-color "#333333"
                                  :color "white"})})
+
+(def boostrap-navbar-overrides {:background-color "#3333"})
