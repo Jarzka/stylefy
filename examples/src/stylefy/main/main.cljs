@@ -61,48 +61,62 @@
                           (rand-int 10))})
 
 (defn stress-test []
-  (let [components-count 300
+  (let [components-count 1000
         state (r/atom :hidden)
         styles (mapv create-random-style (range 0 components-count))]
-    (fn []
-      [:div (use-style styles/generic-container)
+    (r/create-class
+      {:component-did-mount (fn [& _]
+                               (stylefy/update-styles!))
+       :component-did-update (fn [& _]
+                               (stylefy/update-styles!))
+       :reagent-render
+       (fn []
+         [:div (use-style styles/generic-container)
 
-       (if (= @state :visible)
-         (map-indexed (fn [index component]
-                        ^{:key index}
-                        [component (use-style (get styles index))])
-                      (map stress-test-item (range 0 components-count)))
-         [button
-          (if (= @state :generating)
-            "Generating..."
-            "Generate")
-          #(when (not= @state :generating)
-             (go (reset! state :generating)
-                 (<! (timeout 10))
-                 (reset! state :visible)))
-          :primary])])))
+          (if (= @state :visible)
+            (map-indexed (fn [index component]
+                           ^{:key index}
+                           [component (use-style (get styles index))])
+                         (map stress-test-item (range 0 components-count)))
+            [button
+             (if (= @state :generating)
+               "Generating..."
+               "Generate")
+             #(when (not= @state :generating)
+                (go (reset! state :generating)
+                    (<! (timeout 10))
+                    (reset! state :visible)))
+             :primary])])})))
 
 (defn- examples []
-  [:div
-   [:h1 "Generic button"]
-   [:p "Just a simple styled button to begin with."]
-   [button "Generic button"]
+  (r/create-class
+    {:component-did-mount (fn [& _]
+                            (stylefy/update-styles!))
+     :reagent-render
+     (fn []
+       [:div
+        [:h1 "Generic button"]
+        [:p "Just a simple styled button to begin with."]
+        [button "Generic button"]
 
-   [:h1 "Different type of buttons in a container"]
-   [:p "Styled by merging styles"]
-   [button-container]
+        [:h1 "Different type of buttons in a container"]
+        [:p "Styled by merging styles"]
+        [button-container]
 
-   [:h1 "Component with multiple sub elements"]
-   [:p "Styled by using sub-styles"]
-   [stuff-box]
+        [:h1 "Component with multiple sub elements"]
+        [:p "Styled by using sub-styles"]
+        [stuff-box]
 
-   [:h1 "Component with internal state"]
-   [:p "This component contains a different style in different states. The styles are generated and inserted into DOM on-demand."]
-   [stateful-component]
+        [:h1 "Component with internal state"]
+        [:p "This component contains a different style in different states. The styles are generated and inserted into DOM on-demand."]
+        [stateful-component]
 
-   [:h1 "Stress test"]
-   [:p "Styles are added into DOM on-demand, when components using them are mounted for the first time. Click the button below to dynamically generate 300 components with unique styles"]
-   [stress-test]])
+        [:h1 "Stress test"]
+        [:p "Styles are added into DOM on-demand, when components using them are mounted for the first time. Click the button below to dynamically generate 300 components with unique styles"]
+        [stress-test]])}))
+
+(defn main []
+  [examples])
 
 (defn start []
-  (r/render examples (.getElementById js/document "app")))
+  (r/render main (.getElementById js/document "app")))

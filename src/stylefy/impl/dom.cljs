@@ -10,17 +10,17 @@
 (defn- style-by-hash [style-hash]
   (get @styles-in-use style-hash))
 
-(defn- update-styles-in-dom! [styles-in-use]
+(defn- update-styles-in-dom! []
   (if-let [node (dommy/sel1 stylefy-node-id)]
     (let [styles-in-css (map (fn [style-hash]
                                (css [(keyword (str "." style-hash))
                                      (style-by-hash style-hash)]))
-                             (keys styles-in-use))]
+                             (keys @styles-in-use))]
       (dommy/set-text! node (apply str styles-in-css)))
     (.error js/console "stylefy is unable to find the required <style> tag!")))
 
-(run!
-  (update-styles-in-dom! @styles-in-use))
+#_(run!
+    (update-styles-in-dom!))
 
 (defn- save-style! [{:keys [props hash] :as style}]
   (assert props "Unable to save empty style!")
