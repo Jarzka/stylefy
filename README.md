@@ -40,7 +40,11 @@ Add the following line to your Leiningen project:
 
 ## Init
 
-Make sure there is a *style* tag on your page's *head* tag. The style tag should be the last of its kind and containt the following id: _stylefy-styles_ 
+Make sure there is the following *style* tag on your page's *head* tag. The style tag should be the last of its kind.
+
+```html
+<style id="_stylefy-styles_ "></style>
+```
 
 Then, call *stylefy/init* once when your application starts:
 
