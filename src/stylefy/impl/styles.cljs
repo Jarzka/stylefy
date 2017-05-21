@@ -4,6 +4,8 @@
             [clojure.string :as str]))
 
 (defn hash-style [style]
+  ;; Hash style without its sub-styles. ::sub-styles is only a link to other styles, it
+  ;; does not define the actual properties of this style.
   (str "_stylefy_" (hash
                      (dissoc style
                              :stylefy.core/sub-styles))))
