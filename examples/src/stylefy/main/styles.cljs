@@ -2,6 +2,8 @@
   (:require [reagent.core :as r]
             [stylefy.core :as stylefy :refer [use-style]]))
 
+(def phone-width "414px")
+
 (def general-styles {:font-family "Verdana"})
 
 (def clickable {:cursor :pointer})
@@ -65,4 +67,5 @@
                                                                :flex 2})
                                               :column3 (merge column
                                                               {:background-color "#0000AA"
-                                                               :flex 1})}})
+                                                               :flex 1})}
+                        ::stylefy/media {{:max-width phone-width} {:flex-direction :column}}})

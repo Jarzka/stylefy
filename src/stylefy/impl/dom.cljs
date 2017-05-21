@@ -1,7 +1,8 @@
 (ns stylefy.impl.dom
   (:require [dommy.core :as dommy]
             [reagent.core :as r]
-            [garden.core :refer [css]])
+            [garden.core :refer [css]]
+            [garden.stylesheet :refer [at-media]])
   (:require-macros [reagent.ratom :refer [run!]]))
 
 (def styles-in-use (r/atom {})) ;; style hash -> props
@@ -49,17 +50,24 @@
                                     :stylefy.core/mode
                                     :stylefy.core/vendors
                                     :stylefy.core/auto-prefix)
-        general-style-garden [(keyword (str "." hash)) general-style-props]
+        class-selector (keyword (str "." hash))
+        garden-class-definition [class-selector general-style-props]
         modes (:stylefy.core/mode props)
-        modes-garden (mapv #(-> [(keyword (str "&" %)) (% modes)])
-                        (keys modes))
+        garden-modes (mapv #(-> [(keyword (str "&" %)) (% modes)])
+                           (keys modes))
         vendors (when-let [vendors (:stylefy.core/vendors props)]
-                           {:vendors vendors
-                            :auto-prefix (:stylefy.core/auto-prefix props)})
-        css-options vendors]
-    (if css-options
-      (css css-options (into general-style-garden modes-garden))
-      (css (into general-style-garden modes-garden)))))
+                  {:vendors vendors
+                   :auto-prefix (:stylefy.core/auto-prefix props)})
+        garden-options vendors
+        css-class (if garden-options
+                    (css garden-options (into garden-class-definition garden-modes))
+                    (css (into garden-class-definition garden-modes)))
+        media-queries (:stylefy.core/media props)
+        css-media (map (fn [media-query]
+                         (css (at-media media-query [class-selector (get media-queries media-query)])))
+                       (keys media-queries))]
+    (.log js/console "CSS MEDIA: " (pr-str css-media))
+    (str css-class (apply str css-media))))
 
 (defn- save-style!
   "Stores the style in an atom. The style is going to be added in DOM soon."
