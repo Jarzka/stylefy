@@ -15,6 +15,7 @@ stylefy makes it possible to define UI component styles as Clojure data. Interna
 - Use any other classes (such as Boostrap) easily with stylefy style definitions, override if necessary
 - Define general, inheriting styles (such as text color, font etc.) by putting them in the root component of the app
 - Define how your style behaves in different modes, for example mouse is on top of an element using the style
+- Vendor prefixes
 
 # TODO
 
@@ -22,7 +23,6 @@ The following features are planned to be added soon:
 
 - Media queries
 - Keyframes
-- Vendor profixes (probably possible already with Garden? An example needs to be added)
 
 # Requirements
 
