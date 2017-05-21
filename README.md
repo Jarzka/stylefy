@@ -31,11 +31,15 @@ Add the following line to your Leiningen project:
 (:require [stylefy.core :as stylefy])
 ```
 
+## Init
+
 First, call *stylefy/init* once when your application starts:
 
 ```clojure
 (stylefy/init)
 ```
+
+## Simple styles
 
 Create style as a normal Clojure map:
 
@@ -53,6 +57,8 @@ To use it in a component, use the *use-style* function:
     text])
 ```
 
+## Combine & parametrise styles
+
 Combine or parametrise styles however you like:
 
 ```clojure
@@ -61,6 +67,8 @@ Combine or parametrise styles however you like:
 (defn button-style [background-color]
   (merge generic-button {:background-color background-color}))
 ```
+
+## Sub-styles
 
 Create styles in styles using sub-styles (useful, if you want to define styles for the root component and it's sub elements in a single map):
 
@@ -76,6 +84,8 @@ Create styles in styles using sub-styles (useful, if you want to define styles f
     [:li "List element 2"]
     [:li "List element 3"]]])
 ```
+
+## 3rd party classes
 
 Use 3rd party classes along with stylefy definitions:
 
@@ -99,6 +109,11 @@ Use 3rd party classes along with stylefy definitions:
        [bs-navbar-item 3 active-index "Four"]])))
 ```
 
+## Units and colors
+
+You can use Garden's [Unit](https://github.com/noprompt/garden/wiki/Units-%26-Arithmetic) and [Color](https://github.com/noprompt/garden/wiki/Color) helpers with stylefy.
+
+## More examples
 
 More examples available here: https://github.com/Jarzka/stylefy/tree/master/examples/src/stylefy/main
 
