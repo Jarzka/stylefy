@@ -17,13 +17,6 @@ stylefy makes it possible to define UI component styles as Clojure data. Interna
 - Define how your style behaves in different modes, for example mouse is on top of an element using the style
 - Vendor prefixes
 
-# TODO
-
-The following features are planned to be added soon:
-
-- Media queries
-- Keyframes
-
 # Requirements
 
 Currently stylefy works only with [Reagent](https://github.com/reagent-project/reagent). This is because stylefy forces all components to re-render themselves when currently used styles are changed. This requirement has been implemented using Reagent atoms, which is deref'd in all components calling *use-style*.
