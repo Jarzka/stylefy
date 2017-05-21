@@ -40,7 +40,7 @@
       [:div (use-style (@state styles/stateful-component))
        (if (= @state :on)
          [:p "The component's current state is ON"]
-         [:p "The component's current state is ON"])
+         [:p "The component's current state is OFF"])
        [button "Switch" #(reset! state (switch @state)) :primary]])))
 
 (defn- stress-test-item [index]
