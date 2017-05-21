@@ -14,9 +14,9 @@ stylefy makes it possible to define UI component styles as Clojure data. Interna
 - Sub-styles (you can create a style for the root element of your UI component and then define substyles for the internal elements)
 - Use any other classes (such as Boostrap) easily with stylefy style definitions, override if necessary
 - Define general, inheriting styles (such as text color, font etc.) by putting them in the root component of the app
-- Define how your style behaves in different modes, for example mouse is on top of an element using the style
-- Vendor prefixes
-- Media queries
+- Define how your style behaves in different modes, for example when a mouse is on top of an element using the style
+- Vendor prefixes, define what vendor prefixes are used and which properties should be prefixed
+- Media queries, define how your style looks different on various screen sizes
 
 # Requirements
 
