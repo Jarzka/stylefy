@@ -46,12 +46,20 @@
 (defn style->css [{:keys [props hash] :as style}]
   (let [general-style-props (dissoc props
                                     :stylefy.core/sub-styles
-                                    :stylefy.core/mode)
+                                    :stylefy.core/mode
+                                    :stylefy.core/vendors
+                                    :stylefy.core/auto-prefix)
         general-style-garden [(keyword (str "." hash)) general-style-props]
         modes (:stylefy.core/mode props)
         modes-garden (mapv #(-> [(keyword (str "&" %)) (% modes)])
-                        (keys modes))]
-    (css (into general-style-garden modes-garden))))
+                        (keys modes))
+        vendors (when-let [vendors (:stylefy.core/vendors props)]
+                           {:vendors vendors
+                            :auto-prefix (:stylefy.core/auto-prefix props)})
+        css-options vendors]
+    (if css-options
+      (css css-options (into general-style-garden modes-garden))
+      (css (into general-style-garden modes-garden)))))
 
 (defn- save-style!
   "Stores the style in an atom. The style is going to be added in DOM soon."

@@ -12,6 +12,7 @@
 
 (def generic-button (merge {:border "1px solid black"
                             :background-color "#888888"
+                            :border-radius "5px"
                             :color "white"
                             :text-align :center
                             :font-size "1.2em"
@@ -20,6 +21,8 @@
                             :height "38px"
                             :margin-right "5px"
                             :margin-bottom "5px"
+                            ::stylefy/vendors ["webkit" "moz" "o"]
+                            ::stylefy/auto-prefix #{:border-radius}
                             ::stylefy/mode {:hover {:background-color "#AAAAAA"}}}
                            clickable))
 
