@@ -57,6 +57,15 @@ To use it in a component, use the *use-style* function:
     text])
 ```
 
+## Modes
+
+Define how your style looks in different modes, such as when mouse is on top of the element usin the style:
+
+```clojure
+(def simple-element {:background-color "rgb(88, 121, 193)"
+                     ::stylefy/mode {:hover {:background-color "rgb(98, 131, 213)"}}}
+```
+
 ## Combine & parametrise styles
 
 Combine or parametrise styles however you like:
