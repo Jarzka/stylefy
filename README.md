@@ -130,7 +130,8 @@ Define how you style looks different on various screen sizes:
 
 (def responsive-layout {:display :flex
                         :flex-direction :row
-                        ::stylefy/media {{:max-width phone-width} {:flex-direction :column}}
+                        ;; (commented, because GitHub is unable to parse this)
+                        ;; ::stylefy/media {{:max-width phone-width} {:flex-direction :column}}
                         ::stylefy/sub-styles {:column1 (merge column
                                                               {:background-color "#AA0000"
                                                                :flex 1})
