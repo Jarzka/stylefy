@@ -74,7 +74,7 @@
           :visible "Hide")
         #(case @state
            :hidden (go (reset! state :generating)
-                       (<! (timeout 10))
+                       (<! (timeout 100))
                        (reset! state :visible))
            :visible (reset! state :hidden))
         :primary]

@@ -23,9 +23,11 @@
                             ::stylefy/mode {:hover {:background-color "#AAAAAA"}}}
                            clickable))
 
-(def primary-button (merge generic-button {:background-color "rgb(88, 121, 193)"}))
+(def primary-button (merge generic-button {:background-color "rgb(88, 121, 193)"
+                                           ::stylefy/mode {:hover {:background-color "rgb(98, 131, 213)"}}}))
 
-(def secondary-button (merge generic-button {:background-color "rgb(88, 121, 152)"}))
+(def secondary-button (merge generic-button {:background-color "rgb(88, 121, 152)"
+                                             ::stylefy/mode {:hover {:background-color "rgb(98, 131, 172)"}}}))
 
 (def simple-box {:border "1px solid black"
                  :background-color "#FFDDDD"
