@@ -10,7 +10,7 @@
             [lein-codox "0.10.3"]]
   :codox {:source-paths ["src"]}
   :cljsbuild {:builds [{:id "test"
-                        :source-paths ["src" "test/cljs"]
+                        :source-paths ["src" "test"]
                         :compiler {:output-to "target/cljs/test/test.js"
                                    :output-dir "target/cljs/test"
                                    :optimizations :none
