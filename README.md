@@ -16,6 +16,7 @@ stylefy makes it possible to define UI component styles as Clojure data. Interna
 - Define general, inheriting styles (such as text color, font etc.) by putting them in the root component of the app
 - Define how your style behaves in different modes, for example mouse is on top of an element using the style
 - Vendor prefixes
+- Media queries
 
 # Requirements
 
@@ -115,6 +116,30 @@ Supported in the same way as Garden supports them:
              :height "38px"
              ::stylefy/vendors ["webkit" "moz" "o"]
              ::stylefy/auto-prefix #{:border-radius}})
+```
+
+## Media queries
+
+Define how you style looks different on various screen sizes:
+
+```clojure
+(def phone-width "414px")
+
+(def column {:padding "5px"
+             :color "white"})
+
+(def responsive-layout {:display :flex
+                        :flex-direction :row
+                        ::stylefy/sub-styles {:column1 (merge column
+                                                              {:background-color "#AA0000"
+                                                               :flex 1})
+                                              :column2 (merge column
+                                                              {:background-color "#00AA00"
+                                                               :flex 2})
+                                              :column3 (merge column
+                                                              {:background-color "#0000AA"
+                                                               :flex 1})}
+                        ::stylefy/media {{:max-width phone-width} {:flex-direction :column}}})W
 ```
 
 ## 3rd party classes
