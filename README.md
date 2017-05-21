@@ -40,7 +40,7 @@ Add the following line to your Leiningen project:
 
 ## Init
 
-Make sure there is the following *style* tag on your page's *head* tag. The style tag should be the last of its kind.
+Make sure there is the following *style* tag on your page's *head* tag. The *style* tag should be the last of its kind.
 
 ```html
 <style id="_stylefy-styles_"></style>
