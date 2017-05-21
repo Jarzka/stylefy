@@ -142,6 +142,15 @@ Define how you style looks different on various screen sizes:
                                               :column3 (merge column
                                                               {:background-color "#0000AA"
                                                                :flex 1})}})
+
+(defn responsive-layout []
+  [:div (use-style styles/responsive-layout)
+   [:div (use-sub-style styles/responsive-layout :column1)
+    [:p "This is column 1"]]
+   [:div (use-sub-style styles/responsive-layout :column2)
+    [:p "This is column 2"]]
+   [:div (use-sub-style styles/responsive-layout :column3)
+    [:p "This is column 3"]]])
 ```
 
 ## 3rd party classes
