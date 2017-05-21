@@ -121,8 +121,7 @@ Supported in the same way as Garden supports them:
              :width "150px"
              :height "38px"
              ::stylefy/vendors ["webkit" "moz" "o"]
-             ::stylefy/auto-prefix #{:border-radius}
-             ::stylefy/mode {:hover {:background-color "#AAAAAA"}}})
+             ::stylefy/auto-prefix #{:border-radius}})
 ```
 
 ## 3rd party classes
