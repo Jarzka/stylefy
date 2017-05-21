@@ -26,7 +26,7 @@ Support for other UI frameworks is planned, but not on the top priority list.
 Add the following line to your Leiningen project:
 
 ```clj
-[stylefy "0.2.3"]
+[stylefy "0.3"]
 ```
 
 # Usage
