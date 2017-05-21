@@ -42,11 +42,6 @@
 (defn init-dom-update []
   (request-dom-update))
 
-
-(css [:a {:font-weight 'normal :text-decoration 'none}
-      [:&:hover {:font-weight 'bold :text-decoration 'underline}]])
-
-
 (defn style->css [{:keys [props hash] :as style}]
   (let [general-style-props (dissoc props
                                     :stylefy.core/sub-styles
