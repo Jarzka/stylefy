@@ -1,9 +1,10 @@
 (ns stylefy.impl.dom
   (:require [dommy.core :as dommy]
+            [reagent.core :as r]
             [garden.core :refer [css]])
   (:require-macros [reagent.ratom :refer [run!]]))
 
-(def ^:private styles-in-use (atom {})) ;; style hash -> props
+(def styles-in-use (r/atom {})) ;; style hash -> props
 (def ^:private stylefy-node-id :#_stylefy-styles_)
 (def ^:private dom-needs-update? (atom false))
 

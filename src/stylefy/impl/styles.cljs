@@ -18,6 +18,7 @@
     (create-style! {:props sub-style :hash (hash-style sub-style)})))
 
 (defn use-style! [style options]
+  @dom/styles-in-use ;; Deref to make sure components re-render themselves when styles-in-use updates
   (let [with-classes (:stylefy.core/with-classes options)]
 
     (assert (or (nil? with-classes)
@@ -31,10 +32,10 @@
       (when-not already-created
         (create-style! {:props style :hash style-hash}))
 
-      (if (dom/style-in-dom? style-hash)
-        {:class (str/join " " (conj with-classes style-hash))}
-        {:class (str/join " " with-classes)
-         :style style}))))
+      (let [return-map {:class (str/join " " (conj with-classes style-hash))}]
+        (if (dom/style-in-dom? style-hash)
+          return-map
+          (merge return-map {:style style}))))))
 
 (defn use-sub-style! [style sub-style options]
   (let [resolved-sub-style (get (:stylefy.core/sub-styles style) sub-style)]
