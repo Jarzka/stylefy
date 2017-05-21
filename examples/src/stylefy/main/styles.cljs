@@ -47,4 +47,4 @@
                                 {:background-color "#333333"
                                  :color "white"})})
 
-(def boostrap-navbar-overrides {:background-color "#3333"})
+(def boostrap-navbar-overrides {:background-color "#DDDDDD"})
