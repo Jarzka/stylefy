@@ -52,7 +52,7 @@ Then, call *stylefy/init* once when your application starts:
 (stylefy/init)
 ```
 
-## Simple styles
+## Creating & using styles
 
 Create style as a normal Clojure map:
 
