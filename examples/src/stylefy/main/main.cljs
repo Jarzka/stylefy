@@ -106,11 +106,18 @@
 (defn- responsive-layout []
   [:div (use-style styles/responsive-layout)
    [:div (use-sub-style styles/responsive-layout :column1)
-    "This is column 1"]
+    [:p "This is column 1"]
+    [:p "This is column 1"]
+    [:p "This is column 1"]
+    [:p "This is column 1"]
+    [:p "This is column 1"]]
    [:div (use-sub-style styles/responsive-layout :column2)
-    "This is column 2"]
+    [:p "This is column 2"]
+    [:p "This is column 2"]
+    [:p "This is column 2"]]
    [:div (use-sub-style styles/responsive-layout :column3)
-    "This is column 3"]])
+    [:p "This is column 3"]
+    [:p "This is column 3"]]])
 
 (defn- examples []
   [:div (use-style styles/general-styles)
