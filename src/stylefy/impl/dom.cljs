@@ -47,6 +47,7 @@
 (defn style->css [{:keys [props hash] :as style}]
   (let [general-style-props (dissoc props
                                     :stylefy.core/sub-styles
+                                    :stylefy.core/media
                                     :stylefy.core/mode
                                     :stylefy.core/vendors
                                     :stylefy.core/auto-prefix)
