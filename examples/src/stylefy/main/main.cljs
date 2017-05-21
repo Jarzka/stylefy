@@ -103,6 +103,15 @@
        [bs-navbar-item 2 active-index "Three"]
        [bs-navbar-item 3 active-index "Four"]])))
 
+(defn- responsive-layout []
+  [:div (use-style styles/responsive-layout)
+   [:div (use-sub-style styles/responsive-layout :column1)
+    "This is column 1"]
+   [:div (use-sub-style styles/responsive-layout :column2)
+    "This is column 2"]
+   [:div (use-sub-style styles/responsive-layout :column3)
+    "This is column 3"]])
+
 (defn- examples []
   [:div (use-style styles/general-styles)
    [:h1 "Generic button"]
@@ -127,7 +136,10 @@
 
    [:h1 "Boostrap navbar"]
    [:p "You can also assign any classes to elements normally. Here we use Boostrap classes to construct a simple navbar. We also override some BS styles."]
-   [bs-navbar]])
+   [bs-navbar]
+
+   [:h1 "Responsive layout"]
+   [responsive-layout]])
 
 (defn main []
   [examples])
