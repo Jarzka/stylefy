@@ -11,7 +11,7 @@
                         :border "1px solid black"})
 
 (def generic-button (merge {:border "1px solid black"
-                            :background-color "grey"
+                            :background-color "#888888"
                             :color "white"
                             :text-align :center
                             :font-size "1.2em"
@@ -19,7 +19,8 @@
                             :width "150px"
                             :height "38px"
                             :margin-right "5px"
-                            :margin-bottom "5px"}
+                            :margin-bottom "5px"
+                            ::stylefy/mode {:hover {:background-color "#AAAAAA"}}}
                            clickable))
 
 (def primary-button (merge generic-button {:background-color "rgb(88, 121, 193)"}))

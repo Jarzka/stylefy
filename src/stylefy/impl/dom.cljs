@@ -42,11 +42,20 @@
 (defn init-dom-update []
   (request-dom-update))
 
+
+(css [:a {:font-weight 'normal :text-decoration 'none}
+      [:&:hover {:font-weight 'bold :text-decoration 'underline}]])
+
+
 (defn style->css [{:keys [props hash] :as style}]
   (let [general-style-props (dissoc props
                                     :stylefy.core/sub-styles
-                                    :stylefy.core/mode)]
-    (css [(keyword (str "." hash)) general-style-props])))
+                                    :stylefy.core/mode)
+        general-style-garden [(keyword (str "." hash)) general-style-props]
+        modes (:stylefy.core/mode props)
+        modes-garden (mapv #(-> [(keyword (str "&" %)) (% modes)])
+                        (keys modes))]
+    (css (into general-style-garden modes-garden))))
 
 (defn- save-style!
   "Stores the style in an atom. The style is going to be added in DOM soon."
