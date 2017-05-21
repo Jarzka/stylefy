@@ -18,6 +18,6 @@
                                    :source-map true
                                    :main stylefy.runner}}
                        {:id "prod"
-                        :source-paths ["src/cljs"]
+                        :source-paths ["src"]
                         :compiler {:output-to "stylefy.js"
                                    :optimizations :advanced}}]})
