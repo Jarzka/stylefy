@@ -20,7 +20,7 @@ stylefy makes it possible to define UI component styles as Clojure data. Interna
 
 # Requirements
 
-Currently stylefy works only with [Reagent](https://github.com/reagent-project/reagent). This is because stylefy forces all components to re-render themselves when currently used styles are changed. This requirement has been implemented using Reagent atoms, which is deref'd in all components calling *use-style*.
+Currently stylefy works only with [Reagent](https://github.com/reagent-project/reagent). This is because stylefy forces all components to re-render themselves when currently used styles are changed. This requirement has been implemented using Reagent atom, which is deref'd in all components calling *use-style*.
 
 Support for other UI frameworks is planned, but not on the top priority list.
 
