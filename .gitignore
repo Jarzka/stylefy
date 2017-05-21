@@ -10,3 +10,4 @@ examples/figwheel_server.log
 .nrepl-port
 pom.xml
 pom.xml.asc
+doo-index.html
