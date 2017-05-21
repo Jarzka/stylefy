@@ -2,6 +2,8 @@
   (:require [reagent.core :as r]
             [stylefy.core :as stylefy :refer [use-style]]))
 
+(def general-styles {:font-family "Verdana"})
+
 (def clickable {:cursor :pointer})
 
 (def generic-container {:padding "25px"

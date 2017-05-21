@@ -104,7 +104,7 @@
        [bs-navbar-item 3 active-index "Four"]])))
 
 (defn- examples []
-  [:div
+  [:div (use-style styles/general-styles)
    [:h1 "Generic button"]
    [:p "Just a simple styled button to begin with."]
    [button "Generic button"]
