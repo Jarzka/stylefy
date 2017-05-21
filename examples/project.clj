@@ -5,13 +5,17 @@
                  [prismatic/dommy "1.1.0"]
                  [garden "1.3.2"]
                  [reagent "0.6.0"]
-                 [figwheel "0.5.4-7"]]
+                 [figwheel "0.5.10"]]
   :plugins [[lein-cljsbuild "1.1.2"]
-            [lein-figwheel "0.5.4-7"]]
+            [lein-figwheel "0.5.10"]]
   :cljsbuild {:builds [{:id "dev"
                         :source-paths ["src" "../src"]
-                        :figwheel {:on-jsload "stylefy.examples.main/start"}
-                        :compiler {:output-to "resources/public/js/compiled/stylefy.js"
-                                   :output-dir "resources/public/js/compiled/out"
+                        :compiler {:output-to "resources/public/js/dev/stylefy.js"
+                                   :output-dir "resources/public/js/dev/out"
                                    :optimizations :none
-                                   :source-map true}}]})
+                                   :source-map true}}
+                       {:id "prod"
+                        :source-paths ["src" "../src"]
+                        :compiler {:output-to "resources/public/js/stylefy.js"
+                                   :output-dir "resources/public/js/out"
+                                   :optimizations :advanced}}]})

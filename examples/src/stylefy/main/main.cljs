@@ -144,6 +144,6 @@
 (defn main []
   [examples])
 
-(defn start []
+(defn ^:export start []
   (stylefy/init)
   (r/render main (.getElementById js/document "app")))
