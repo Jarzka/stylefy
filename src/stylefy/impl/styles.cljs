@@ -4,7 +4,9 @@
             [clojure.string :as str]))
 
 (defn hash-style [style]
-  (str "_stylefy_" (hash style)))
+  (str "_stylefy_" (hash
+                     (dissoc style
+                             :stylefy.core/sub-styles))))
 
 (defn- create-style! [{:keys [props hash] :as style}]
   (dom/save-style! {:props props :hash hash})
