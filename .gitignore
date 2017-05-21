@@ -3,7 +3,7 @@
 /.idea
 stylefy.js
 examples/target
-examples/resources/public/js
+examples/resources/public/js/dev
 examples/resources/public/css
 examples/figwheel_server.log
 .nrepl-port
