@@ -15,6 +15,7 @@ stylefy has been tested to work with [Reagent](https://github.com/reagent-projec
 - Styles as Clojure data for any UI element
 - Sub-styles (you can create a style for the root element of your UI component and then define substyles for the internal elements)
 - Use any other classes (such as Boostrap) easily with stylefy style definitions, override if necessary
+- Define general, inheriting styles (such as text color, font etc.) by putting them in the root component of the app
 
 # Installation
 
