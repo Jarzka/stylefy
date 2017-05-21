@@ -139,7 +139,7 @@ Define how you style looks different on various screen sizes:
                                               :column3 (merge column
                                                               {:background-color "#0000AA"
                                                                :flex 1})}
-                        ::stylefy/media {{:max-width phone-width} {:flex-direction :column}}})W
+                        ::stylefy/media {{:max-width phone-width} {:flex-direction :column}}})
 ```
 
 ## 3rd party classes
