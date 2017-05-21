@@ -42,7 +42,7 @@ Add the following line to your Leiningen project:
 
 Make sure there is a *style* tag on your page's *head* tag. The style tag should be the last of its kind and containt the following id: _stylefy-styles_ 
 
-Then. call *stylefy/init* once when your application starts:
+Then, call *stylefy/init* once when your application starts:
 
 ```clojure
 (stylefy/init)
