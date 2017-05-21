@@ -64,6 +64,8 @@ To use it in a component, use the *use-style* function:
     text])
 ```
 
+Calling use-style asks stylefy to save the style (if it has not been saved already) and add it into DOM as CSS class as soon as possible. The return value is a map pointing to the created class, and the given style properties as inline style. Inline style is needed until the CSS code has been generated and inserted into DOM. When the DOM is ready, the component is forced to re-render itself and use only class definition.
+
 ## Modes
 
 Define how your style looks in different modes, such as when mouse is on top of the element usin the style:
