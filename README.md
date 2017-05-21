@@ -54,7 +54,7 @@ Then, call *stylefy/init* once when your application starts:
 
 ## Creating & using styles
 
-Create style as a normal Clojure map:
+Create a style as a normal Clojure map:
 
 ```clojure
 (def generic-container {:padding "25px"
