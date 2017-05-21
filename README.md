@@ -35,7 +35,7 @@ Support for other UI frameworks is planned, but not on the top priority list.
 Add the following line to your Leiningen project:
 
 ```clj
-[stylefy "0.3"]
+[stylefy "0.3.1"]
 ```
 
 # Usage
@@ -105,6 +105,24 @@ Create styles in styles using sub-styles (useful, if you want to define styles f
     [:li "List element 1"]
     [:li "List element 2"]
     [:li "List element 3"]]])
+```
+
+## Vendor prefixes
+
+Supported in the same way as Garden supports them:
+
+```clojure
+(def button {:border "1px solid black"
+             :background-color "#888888"
+             :border-radius "5px"
+             :color "white"
+             :text-align :center
+             :padding "5px"
+             :width "150px"
+             :height "38px"
+             ::stylefy/vendors ["webkit" "moz" "o"]
+             ::stylefy/auto-prefix #{:border-radius}
+             ::stylefy/mode {:hover {:background-color "#AAAAAA"}}})
 ```
 
 ## 3rd party classes
