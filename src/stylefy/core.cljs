@@ -11,7 +11,7 @@
    the component looks good even if CSS has not been genererated yet.
 
    The given parameter is a map which contains style properties (as supported by Garden library)
-   There can also be special namespaced keywords alogn with the style definitions in the same map:
+   There can also be special namespaced keywords along with the style definitions in the same map:
    ::sub-styles        The content of sub-styles should be a map, in which keys define the name of the sub-style and
                        values contain the style properties.
 
