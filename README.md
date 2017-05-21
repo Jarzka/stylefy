@@ -8,14 +8,18 @@ An EXPERIMENTAL ClojureScript library for styling UI components with ease.
 
 stylefy makes it possible to define UI component styles as Clojure data. Internally the defined styles are converted to CSS classes by using [Garden](https://github.com/noprompt/garden) and inserted into DOM. When styles are defined as Clojure data, they can be easily transformed with Clojure's powerful functions (like merge) and parametrised. Also, since the converted CSS is handled internally by the library, there is no need to worry about things like name conflicts etc.
 
-stylefy has been tested to work with [Reagent](https://github.com/reagent-project/reagent). Other UI frameworks should work too if they use similar [Hiccup](https://github.com/weavejester/hiccup) syntax.
-
 # Supported features
 
 - Styles as Clojure data for any UI element
 - Sub-styles (you can create a style for the root element of your UI component and then define substyles for the internal elements)
 - Use any other classes (such as Boostrap) easily with stylefy style definitions, override if necessary
 - Define general, inheriting styles (such as text color, font etc.) by putting them in the root component of the app
+
+# Requirements
+
+Currently stylefy works only with [Reagent](https://github.com/reagent-project/reagent). This is because stylefy forces all components to re-render themselves when currently used styles are changed. This requirement has been implemented using Reagent atoms, which is deref'd in all components calling *use-style*.
+
+Support for other UI frameworks is planned, but not on the top priority list.
 
 # Installation
 
