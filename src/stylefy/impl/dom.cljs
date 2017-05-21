@@ -66,7 +66,6 @@
         css-media (map (fn [media-query]
                          (css (at-media media-query [class-selector (get media-queries media-query)])))
                        (keys media-queries))]
-    (.log js/console "CSS MEDIA: " (pr-str css-media))
     (str css-class (apply str css-media))))
 
 (defn- save-style!
