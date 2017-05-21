@@ -1,7 +1,6 @@
 /target
 *iml
 /.idea
-stylefy.js
 examples/target
 examples/resources/public/js/dev
 examples/resources/public/js/out
