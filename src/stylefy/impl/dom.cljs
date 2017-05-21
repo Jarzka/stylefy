@@ -42,13 +42,18 @@
 (defn init-dom-update []
   (request-dom-update))
 
+(defn style->css [{:keys [props hash] :as style}]
+  (let [general-style-props (dissoc props
+                                    :stylefy.core/sub-styles
+                                    :stylefy.core/mode)]
+    (css [(keyword (str "." hash)) general-style-props])))
+
 (defn- save-style!
   "Stores the style in an atom. The style is going to be added in DOM soon."
   [{:keys [props hash] :as style}]
   (assert props "Unable to save empty style!")
   (assert hash "Unable to save style without hash!")
-  (let [style-css (css [(keyword (str "." hash))
-                        props])]
+  (let [style-css (style->css style)]
     (swap! styles-in-use assoc hash
            (assoc props ::css style-css))
     (reset! dom-needs-update? true)))
