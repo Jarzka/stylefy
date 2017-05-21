@@ -75,7 +75,7 @@ Calling use-style asks stylefy to save the style (if it has not been saved alrea
 
 ## Modes
 
-Define how your style looks in different modes, such as when mouse is on top of the element usin the style:
+Define how your style looks in different modes, such as when mouse is on top of an element using the style:
 
 ```clojure
 (def simple-element {:background-color "rgb(88, 121, 193)"
