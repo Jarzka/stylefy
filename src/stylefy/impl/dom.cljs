@@ -22,8 +22,8 @@
         keyframes-in-css (map (fn [keyframes]
                                 (css keyframes))
                               @keyframes-in-use)]
-    (dommy/set-text! node (apply str (concat styles-in-css
-                                             keyframes-in-css)))))
+    (dommy/set-text! node (apply str (concat keyframes-in-css
+                                             styles-in-css)))))
 
 (defn- mark-styles-added-in-dom! []
   (reset! styles-in-use (apply merge (map
