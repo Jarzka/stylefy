@@ -5,12 +5,20 @@
             [stylefy.impl.dom :as dom]
             [clojure.string :as str]))
 
-(def style-box {:padding "25px"
-                :background-color "#BBBBBB"
-                :border "1px solid black"})
+(def style-box {:border "1px solid black"
+                :background-color "#FFDDDD"
+                :text-align :center
+                :padding "5px"
+                :width "150px"
+                :height "150px"
+                ::stylefy/vendors ["webkit" "moz" "o"]
+                ::stylefy/auto-prefix #{:border-radius}
+                ::stylefy/sub-styles {:sub-box {:border "1px solid black"}}})
 
-(deftest style->css
-  (testing "Converting simple style definition to CSS"
-    (is (= (dom/style->css {:props style-box :hash (styles/hash-style style-box)}
-                           {:pretty-print? false})
-           "._stylefy_878532438{padding:25px;background-color:#BBBBBB;border:1px solid black}"))))
+(deftest hash-style
+  (is (= (styles/hash-style style-box) "_stylefy_-2018943876"))
+  ;; ::sub-styles is only a link to other styles, it
+  ;; does not define the actual properties of this style.
+  ;; Therefore, the hash should be the same even if the sub-styles does not exist.
+  (is (= (styles/hash-style (dissoc style-box ::stylefy/sub-styles))
+         "_stylefy_-2018943876")))
