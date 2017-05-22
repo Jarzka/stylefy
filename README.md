@@ -20,6 +20,8 @@ stylefy makes it possible to define UI component styles as Clojure data. Interna
 - Define how your style behaves in different modes, for example when a mouse is on top of an element using the style
 - Vendor prefixes, define which vendor prefixes are used and which properties should be prefixed
 - Media queries, define how your style looks different on various screen sizes
+- Keyframes
+- Font-face
 - Easy and simple API
 - Tested to work with Chrome, Firefox, Edge & Internet Explorer 11
 
@@ -195,6 +197,35 @@ Use 3rd party classes along with stylefy definitions:
        [bs-navbar-item 1 active-index "Two"]
        [bs-navbar-item 2 active-index "Three"]
        [bs-navbar-item 3 active-index "Four"]])))
+```
+
+# Font-face
+
+Call *stylefy/font-face* and the given font-face is added on top the generated CSS code.
+
+```clojure
+(stylefy/font-face {:font-family "open_sans"
+                    :src "url('../fonts/OpenSans-Regular-webfont.woff') format('woff')"
+                    :font-weight "normal"
+                    :font-style "normal"})
+```
+
+
+# Keyframes
+
+Call *stylefy/keyframes* and the given keyframes are added on top the generated CSS code.
+
+```clojure
+(stylefy/keyframes "simple-animation"
+                   [:from
+                    {:background-color "red"}]
+                   [:to
+                    {:background-color "blue"}])
+                    
+(def animated-box (merge simple-box
+                         {:animation-name "simple-animation"
+                          :animation-duration "3s"
+                          :animation-iteration-count "infinite"}))
 ```
 
 ## Units and colors
