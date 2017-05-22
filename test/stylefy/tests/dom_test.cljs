@@ -33,3 +33,11 @@
   (is (= (dom/style->css {:props style-mode :hash (styles/hash-style style-mode)}
                          {:pretty-print? false})
          "._stylefy_-2110434399{}._stylefy_-2110434399:hover{background-color:#AAAAAA}")))
+
+(def responsive-style {:background-color "red"
+                       ::stylefy/media {{:max-width "500px"} {:background-color "blue"}}})
+
+(deftest responsive-style->css
+  (is (= (dom/style->css {:props responsive-style :hash (styles/hash-style responsive-style)}
+                         {:pretty-print? false})
+         "._stylefy_1443051883{background-color:red}@media (max-width: 500px) {\n\n  ._stylefy_1443051883 {\n    background-color: blue;\n  }\n\n}")))
