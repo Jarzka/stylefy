@@ -19,23 +19,24 @@
 
 (defn use-style! [style options]
   @dom/styles-in-use ;; Deref to make sure components re-render themselves when styles-in-use updates
-  (let [with-classes (:stylefy.core/with-classes options)]
+  (when-not (empty? style)
+    (let [with-classes (:stylefy.core/with-classes options)]
 
-    (assert (or (nil? with-classes)
-                (and (vector? with-classes)
-                     (every? string? with-classes)))
-            (str "with-classes argument must be a vector of string, got: " (pr-str with-classes)))
+      (assert (or (nil? with-classes)
+                  (and (vector? with-classes)
+                       (every? string? with-classes)))
+              (str "with-classes argument must be a vector of string, got: " (pr-str with-classes)))
 
-    (let [style-hash (hash-style style)
-          already-created (dom/style-by-hash style-hash)]
+      (let [style-hash (hash-style style)
+            already-created (dom/style-by-hash style-hash)]
 
-      (when-not already-created
-        (create-style! {:props style :hash style-hash}))
+        (when-not already-created
+          (create-style! {:props style :hash style-hash}))
 
-      (let [return-map {:class (str/join " " (conj with-classes style-hash))}]
-        (if (dom/style-in-dom? style-hash)
-          return-map
-          (merge return-map {:style style}))))))
+        (let [return-map {:class (str/join " " (conj with-classes style-hash))}]
+          (if (dom/style-in-dom? style-hash)
+            return-map
+            (merge return-map {:style style})))))))
 
 (defn use-sub-style! [style sub-style options]
   (let [resolved-sub-style (get (:stylefy.core/sub-styles style) sub-style)]
