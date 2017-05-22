@@ -14,8 +14,8 @@ stylefy makes it possible to define UI component styles as Clojure data. Interna
 # Features
 
 - Styles as Clojure data for any UI element
-- Sub-styles (you can create a style for the root element of your UI component and then define substyles for the internal elements)
-- Use any other classes (such as Boostrap) easily with stylefy, override if necessary
+- Sub-styles help you to define a style for your component and all the elements inside of it in a single map
+- Use any other classes (such as Boostrap) easily with stylefy, override style props if necessary
 - Define general, inheriting styles (such as text color, font etc.) by putting them in the root component of the app
 - Define how your style behaves in different modes, for example when a mouse is on top of an element using the style
 - Vendor prefixes, define which vendor prefixes are used and which properties should be prefixed
@@ -105,7 +105,7 @@ Combine or parametrise styles however you like:
 
 ## Sub-styles
 
-Create styles in styles using sub-styles (useful, if you want to define styles for the root component and it's sub elements in a single map):
+Define a style for your component and all the elements inside of it in a single map:
 
 ```clojure
 (def container-style (merge
@@ -178,6 +178,7 @@ Use 3rd party classes along with stylefy definitions:
 (defn- bs-navbar-item [index index-atom text]
   [:li (merge (use-style styles/clickable
                          (when (= @index-atom index)
+                           ;; Call ::with-classes to add additional classes
                            {::stylefy/with-classes ["active"]}))
               {:role "presentation"
                :on-click #(reset! index-atom index)})
@@ -186,8 +187,9 @@ Use 3rd party classes along with stylefy definitions:
 (defn- bs-navbar []
   (let [active-index (r/atom 0)]
     (fn []
-      [:ul (use-style styles/boostrap-navbar-overrides
-                      {::stylefy/with-classes ["nav" "nav-pills"]})
+      ;; Additional classes can also be attached in the name of the element,
+      ;; just like in Reagent.
+      [:ul.nav.nav-pills (use-style styles/boostrap-navbar-overrides)
        [bs-navbar-item 0 active-index "One"]
        [bs-navbar-item 1 active-index "Two"]
        [bs-navbar-item 2 active-index "Three"]
