@@ -68,19 +68,21 @@
 (def column {:padding "5px"
              :color "white"})
 
-(def responsive-layout {:display :flex
-                        :flex-direction :row
-                        ::stylefy/sub-styles {:column1 (merge column
-                                                              {:background-color "#AA0000"
-                                                               :flex 1})
-                                              :column2 (merge column
-                                                              {:background-color "#00AA00"
-                                                               :flex 2})
-                                              :column3 (merge column
-                                                              {:background-color "#0000AA"
-                                                               :flex 1
-                                                               ::stylefy/media {{:max-width phone-width} {:background-color "#000000"}}})}
-                        ::stylefy/media {{:max-width phone-width} {:display :block}}})
+(def responsive-layout
+  {:display :flex
+   :flex-direction :row
+   ::stylefy/sub-styles
+   {:column1 (merge column
+                    {:background-color "#AA0000"
+                     :flex 1})
+    :column2 (merge column
+                    {:background-color "#00AA00"
+                     :flex 2})
+    :column3 (merge column
+                    {:background-color "#0000AA"
+                     :flex 1
+                     ::stylefy/media {{:max-width phone-width} {:background-color "#000000"}}})}
+   ::stylefy/media {{:max-width phone-width} {:display :block}}})
 
 (def animated-box (merge simple-box
                          {:animation-name "simple-animation"
