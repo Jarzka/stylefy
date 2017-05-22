@@ -27,6 +27,22 @@
     (let [return (stylefy/use-style {})]
       (is (nil? return))))
 
+  (testing "Use garbage style: number"
+    (try
+      (stylefy/use-style 123)
+      (is true "Error was not thrown")
+      (is (nil? return))
+         (catch js/Error e
+           (is true "Error was thrown as expected"))))
+
+  (testing "Use garbage style: string"
+    (try
+      (stylefy/use-style "foo")
+      (is true "Error was not thrown")
+      (is (nil? return))
+      (catch js/Error e
+        (is true "Error was thrown as expected"))))
+
   (testing "Use style with option: ::with-classes"
     (let [return (stylefy/use-style style-box
                                     {::stylefy/with-classes ["dummy"]})]
@@ -47,6 +63,22 @@
   (testing "Use sub-style when the actual style map is empty"
     (let [return (stylefy/use-sub-style {} :foo)]
       (is (nil? return))))
+
+  (testing "Use garbage style: number"
+    (try
+      (stylefy/use-sub-style style 123 :foo)
+      (is true "Error was not thrown")
+      (is (nil? return))
+      (catch js/Error e
+        (is true "Error was thrown as expected"))))
+
+  (testing "Use garbage style: string"
+    (try
+      (stylefy/use-sub-style style "foo" :foo)
+      (is true "Error was not thrown")
+      (is (nil? return))
+      (catch js/Error e
+        (is true "Error was thrown as expected"))))
 
   (testing "Use sub-style with option: ::with-classes"
     (let [return (stylefy/use-sub-style style-box :sub-box
