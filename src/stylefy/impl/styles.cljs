@@ -41,4 +41,4 @@
   (let [resolved-sub-style (get (:stylefy.core/sub-styles style) sub-style)]
     (if resolved-sub-style
       (use-style! resolved-sub-style options)
-      (.error js/console (str "Sub-style " (pr-str sub-style) " not found in style: " (pr-str style))))))
+      (.warn js/console (str "Sub-style " (pr-str sub-style) " not found in style: " (pr-str style))))))
