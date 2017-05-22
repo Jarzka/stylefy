@@ -9,7 +9,7 @@ An EXPERIMENTAL ClojureScript library for styling UI components with ease.
 
 stylefy makes it possible to define UI component styles as Clojure data. Internally the defined styles are converted to CSS classes by using [Garden](https://github.com/noprompt/garden) and inserted into DOM. When styles are defined as Clojure data, they can be easily transformed with Clojure's powerful functions (like merge) and parametrised. Also, since the converted CSS is handled internally by the library, there is no need to worry about things like name conflicts etc.
 
-# Supported features
+# Features
 
 - Styles as Clojure data for any UI element
 - Sub-styles (you can create a style for the root element of your UI component and then define substyles for the internal elements)
@@ -18,12 +18,21 @@ stylefy makes it possible to define UI component styles as Clojure data. Interna
 - Define how your style behaves in different modes, for example when a mouse is on top of an element using the style
 - Vendor prefixes, define which vendor prefixes are used and which properties should be prefixed
 - Media queries, define how your style looks different on various screen sizes
+- Easy and simple API
 
 # Requirements
 
 Currently stylefy works only with [Reagent](https://github.com/reagent-project/reagent). This is because stylefy forces all components to re-render themselves when currently used styles are changed. This requirement has been implemented using Reagent atom, which is deref'd in all components calling *use-style*.
 
 Support for other UI frameworks is planned, but not on the top priority list.
+
+# FAQ
+
+## How is this library different than Garden?
+
+Garden is "just" a Clojure to CSS generator. If you want to use Garden to style your page, you are pretty much going to write CSS code as usual, i.e. write classes and selectors to stylize things on the page. You also need to avoid CSS quirks like name conflicts and make sure you always handle CSS cascading process correcly. stylefy helps you with this; you just write your style definition and attach it to your component in the render function. There is no need to write CSS classes or selectors, no need to worry about name conflicts etc. You just call *use-style* in your component and let stylefy handle everything.
+
+Yes, it is possible to easily attach styles to components with Garden too if you use inline styles. But if you use stylefy, all your style definitions are converted to unique CSS classes automatically and the corresponding class is attached to your component. This is more effective than using inline-styles, especially if the same component exists multiple times on the same page. The style is defined only once in the CSS class, not multiple times in each component instance. Also, pseudoclasses (:hover etc.) and media queries are difficult (impossible) to work with inline styles. For stylefy, this is not a problem, as it allows you to define pseudoclasses and media queries and converts them to CSS code automatically.
 
 # Installation
 
