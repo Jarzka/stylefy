@@ -8,7 +8,8 @@
   "Defines style for a component.
    Returns a map which contains :class keyword pointing to the given style if the style is found in DOM.
    If the style has not been added to DOM yet, it also returns the given props as inline style, so that
-   the component looks good even if CSS has not been genererated yet.
+   the component looks good even if CSS has not been genererated yet (except if the style contains
+   mode or media query definitions, {:visibility \"hidden\"} is returned until DOM is ready).
 
    The given parameter is a map which contains CSS style properties (as supported by Garden library).
    There can also be special namespaced keywords along with the style definitions:
@@ -29,7 +30,7 @@
    sub-style is the name of the sub-stale in the given style map."
   ([style sub-style] (use-sub-style style sub-style {}))
   ([style sub-style options]
-  (impl-styles/use-sub-style! style sub-style options)))
+   (impl-styles/use-sub-style! style sub-style options)))
 
 (defn init
   "Initialises stylefy.
@@ -66,5 +67,5 @@
 
 (def ^{:doc "Reagent atom, true if all font-faces are present in DOM"}
 font-faces-in-dom? dom/font-faces-in-dom?)
-(def ^{:doc "Reagent atom, true if all  are present in DOM"}
+(def ^{:doc "Reagent atom, true if all keyframes are present in DOM"}
 keyframes-in-dom? dom/keyframes-in-dom?)
