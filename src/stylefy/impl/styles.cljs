@@ -47,7 +47,8 @@
               ;; is added to DOM and the component re-renders itself.
               ;; However, if there are media query or mode definitions, inline styling is probably
               ;; going to look wrong. Thus, hide the component completely until DOM is ready.
-              (merge return-map {:style {:visibility "hidden"}})
+              (merge return-map {:style (merge style
+                                               {:visibility "hidden"})})
               (merge return-map {:style style}))))))))
 
 (defn use-sub-style! [style sub-style options]
