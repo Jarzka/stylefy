@@ -201,7 +201,7 @@ Use 3rd party classes along with stylefy definitions:
 
 ## Font-face
 
-Call *stylefy/font-face* and the given font-face is added on top the generated CSS code.
+Call *stylefy/font-face* and the given font-face is added on top the generated CSS code:
 
 ```clojure
 (stylefy/font-face {:font-family "open_sans"
@@ -213,7 +213,7 @@ Call *stylefy/font-face* and the given font-face is added on top the generated C
 
 ## Keyframes
 
-Call *stylefy/keyframes* and the given keyframes are added on top the generated CSS code.
+Call *stylefy/keyframes* and the given keyframes are added on top the generated CSS code:
 
 ```clojure
 (stylefy/keyframes "simple-animation"
