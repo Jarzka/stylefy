@@ -10,6 +10,7 @@
             [lein-figwheel "0.5.10"]]
   :cljsbuild {:builds [{:id "dev"
                         :source-paths ["src" "../src"]
+                        :figwheel {:on-jsload "stylefy.examples.main/start"}
                         :compiler {:output-to "resources/public/js/dev/stylefy.js"
                                    :output-dir "resources/public/js/dev/out"
                                    :optimizations :none
