@@ -13,6 +13,7 @@
 (def keyframes-in-dom? (r/atom false))
 
 (def ^:private stylefy-node-id :#_stylefy-styles_)
+(def ^:private stylefy-constant-node-id :#_stylefy-constant-styles_)
 (def ^:private dom-needs-update? (atom false))
 
 (defn- style-by-hash [style-hash]
@@ -20,7 +21,7 @@
 
 (defn- update-style-tag!
   "Sets the content of the given style tag to be the CSS of the used styles."
-  [node]
+  [node node-constant]
   (let [styles-in-css (map (fn [style-hash]
                              (::css (style-by-hash style-hash)))
                            (keys @styles-in-use))
@@ -30,9 +31,9 @@
         font-faces-in-use (map (fn [properties]
                                  (css properties))
                                @font-faces-in-use)]
-    (dommy/set-text! node (apply str (concat font-faces-in-use
-                                             keyframes-in-css
-                                             styles-in-css)))))
+    (dommy/set-text! node-constant (apply str (concat font-faces-in-use
+                                                      keyframes-in-css)))
+    (dommy/set-text! node (apply str styles-in-css))))
 
 (defn- mark-styles-added-in-dom! []
   (reset! styles-in-use (apply merge (map
@@ -48,13 +49,15 @@
   "Updates style tag if needed."
   []
   (when @dom-needs-update?
-    (if-let [node (dommy/sel1 stylefy-node-id)]
-      (do (update-style-tag! node)
-          (reset! dom-needs-update? false)
-          (mark-styles-added-in-dom!)
-          (reset! keyframes-in-dom? true)
-          (reset! font-faces-in-dom? true))
-      (.error js/console "stylefy is unable to find the required <style> tag!")))
+    (let [node (dommy/sel1 stylefy-node-id)
+          node-constant (dommy/sel1 stylefy-constant-node-id)]
+      (if (and node node-constant)
+        (do (update-style-tag! node node-constant)
+            (reset! dom-needs-update? false)
+            (mark-styles-added-in-dom!)
+            (reset! keyframes-in-dom? true)
+            (reset! font-faces-in-dom? true)))
+      (.error js/console "stylefy is unable to find the required <style> tags!")))
   (request-dom-update))
 
 (defn init-dom-update []

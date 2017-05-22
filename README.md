@@ -43,7 +43,7 @@ Yes, it is possible to easily attach styles to components with Garden too if you
 Add the following line to your Leiningen project:
 
 ```clj
-[stylefy "0.5.5"]
+[stylefy "0.6"]
 ```
 
 # Usage
@@ -54,9 +54,12 @@ Add the following line to your Leiningen project:
 
 ## Init
 
-Make sure there is the following *style* tag on your page's *head* tag. The *style* tag should be the last of its kind.
+Make sure there is the following *style* tags on your page's *head* tag. The tags should be the last <style> tags in the header.
+
+The first tag is going to contain CSS definitions that are not going to change (font-face, keyframes etc.). The second will contain class definitions that are added into DOM on-demand when components need them.
 
 ```html
+<style id="_stylefy-constant-styles_"></style>
 <style id="_stylefy-styles_"></style>
 ```
 
