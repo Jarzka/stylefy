@@ -1,8 +1,9 @@
 (ns stylefy.tests.core-test
-  (:require [cljs.test :as test :refer-macros [deftest is]]
+  (:require [cljs.test :as test :refer-macros [deftest is testing]]
             [stylefy.core :as stylefy]
             [stylefy.impl.styles :as styles]
-            [stylefy.impl.dom :as dom]))
+            [stylefy.impl.dom :as dom]
+            [clojure.string :as str]))
 
 (def style-box {:border "1px solid black"
                 :background-color "#FFDDDD"
@@ -13,14 +14,30 @@
                 ::stylefy/sub-styles {:sub-box {:border "1px solid black"}}})
 
 (deftest use-style
-  (let [return (stylefy/use-style style-box)]
-    (is (string? (:class return)))
-    (is (= (:style style-box)))))
+  (testing "Use style"
+    (let [return (stylefy/use-style style-box)]
+      (is (string? (:class return)))
+      (is (= (:style style-box)))))
+
+  (testing "Use style with option: ::with-classes"
+    (let [return (stylefy/use-style style-box
+                                    {::stylefy/with-classes ["dummy"]})]
+      (is (string? (:class return)))
+      (is (str/includes? (:class return) "dummy"))
+      (is (= (:style style-box))))))
 
 (deftest use-sub-style
-  (let [return (stylefy/use-sub-style style-box :sub-box)]
-    (is (string? (:class return)))
-    (is (= (:style (get-in style-box [::stylefy/sub-styles :sub-box]))))))
+  (testing "Use sub-style"
+    (let [return (stylefy/use-sub-style style-box :sub-box)]
+      (is (string? (:class return)))
+      (is (= (:style (get-in style-box [::stylefy/sub-styles :sub-box]))))))
+
+  (testing "Use sub-style with option: ::with-classes"
+    (let [return (stylefy/use-sub-style style-box :sub-box
+                                        {::stylefy/with-classes ["dummy"]})]
+      (is (string? (:class return)))
+      (is (str/includes? (:class return) "dummy"))
+      (is (= (:style (get-in style-box [::stylefy/sub-styles :sub-box])))))))
 
 (deftest init
   (let [update-styles-in-dom-called (atom false)]
