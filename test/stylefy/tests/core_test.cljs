@@ -7,9 +7,15 @@
                 :text-align :center
                 :padding "5px"
                 :width "150px"
-                :height "150px"})
+                :height "150px"
+                ::stylefy/sub-styles {:sub-box {:border "1px solid black"}}})
 
 (deftest use-style
-  (let [use-style-response (stylefy/use-style style-box)]
-    (is (string? (:class use-style-response)))
+  (let [return (stylefy/use-style style-box)]
+    (is (string? (:class return)))
     (is (= (:style style-box)))))
+
+(deftest use-sub-style
+  (let [return (stylefy/use-sub-style style-box :sub-box)]
+    (is (string? (:class return)))
+    (is (= (:style (get-in style-box [::stylefy/sub-styles :sub-box]))))))
