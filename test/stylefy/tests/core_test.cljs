@@ -19,6 +19,14 @@
       (is (string? (:class return)))
       (is (= (:style style-box)))))
 
+  (testing "Use nil style"
+    (let [return (stylefy/use-style nil)]
+      (is (nil? return))))
+
+  (testing "Use empty style"
+    (let [return (stylefy/use-style {})]
+      (is (nil? return))))
+
   (testing "Use style with option: ::with-classes"
     (let [return (stylefy/use-style style-box
                                     {::stylefy/with-classes ["dummy"]})]
@@ -31,6 +39,14 @@
     (let [return (stylefy/use-sub-style style-box :sub-box)]
       (is (string? (:class return)))
       (is (= (:style (get-in style-box [::stylefy/sub-styles :sub-box]))))))
+
+  (testing "Use sub-style when the actual style map is nil"
+    (let [return (stylefy/use-sub-style nil :foo)]
+      (is (nil? return))))
+
+  (testing "Use sub-style when the actual style map is empty"
+    (let [return (stylefy/use-sub-style {} :foo)]
+      (is (nil? return))))
 
   (testing "Use sub-style with option: ::with-classes"
     (let [return (stylefy/use-sub-style style-box :sub-box
