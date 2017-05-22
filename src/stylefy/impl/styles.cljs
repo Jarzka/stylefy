@@ -18,7 +18,9 @@
     (create-style! {:props sub-style :hash (hash-style sub-style)})))
 
 (defn use-style! [style options]
-  @dom/styles-in-use ;; Deref to make sure components re-render themselves when styles-in-use updates
+  ;; Deref to make sure components re-render themselves when styles-in-use updates
+  @dom/styles-in-use
+
   (when-not (empty? style)
     (let [with-classes (:stylefy.core/with-classes options)]
 

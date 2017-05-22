@@ -37,3 +37,17 @@
   Internally starts checking if new styles need to be added in to DOM as CSS classes."
   []
   (dom/init-dom-update))
+
+(defn keyframes
+  "Adds the given keyframe definition to DOM.
+   Identifier is the name of the keyframes.
+   Frames are given in the same form as Garden accepts them.
+
+   Example:
+   (stylefy/keyframes \"simple-animation\"
+                       [:from
+                        {:opacity 0}]
+                       [:to
+                        {:opacity 1}])"
+  [identifier & frames]
+  (apply dom/keyframes identifier frames))

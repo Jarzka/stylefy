@@ -118,8 +118,12 @@
     [:p "This is column 3"]
     [:p "This is column 3"]]])
 
+(defn animation []
+  [:div (use-style styles/animated-box)])
+
 (defn- examples []
-  [:div (use-style styles/general-styles)
+  [:div (use-style (merge styles/root
+                          styles/general-styles))
    [:h1 "Generic button"]
    [:p "Just a simple styled button to begin with."]
    [button "Generic button"]
@@ -145,7 +149,12 @@
    [bs-navbar]
 
    [:h1 "Responsive layout"]
-   [responsive-layout]])
+   [:p "stylefy supports media queries out of the box"]
+   [responsive-layout]
+
+   [:h1 "Animations"]
+   [:p "stylefy also supports keyframes"]
+   [animation]])
 
 (defn main []
   [examples])

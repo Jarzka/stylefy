@@ -2,10 +2,11 @@
   (:require [dommy.core :as dommy]
             [reagent.core :as r]
             [garden.core :refer [css]]
-            [garden.stylesheet :refer [at-media]])
+            [garden.stylesheet :refer [at-media at-keyframes]])
   (:require-macros [reagent.ratom :refer [run!]]))
 
 (def styles-in-use (r/atom {})) ;; style hash -> props
+(def keyframes-in-use (r/atom []))
 (def ^:private stylefy-node-id :#_stylefy-styles_)
 (def ^:private dom-needs-update? (atom false))
 
@@ -17,8 +18,12 @@
   [node]
   (let [styles-in-css (map (fn [style-hash]
                              (::css (style-by-hash style-hash)))
-                           (keys @styles-in-use))]
-    (dommy/set-text! node (apply str styles-in-css))))
+                           (keys @styles-in-use))
+        keyframes-in-css (map (fn [keyframes]
+                                (css keyframes))
+                              @keyframes-in-use)]
+    (dommy/set-text! node (apply str (concat styles-in-css
+                                             keyframes-in-css)))))
 
 (defn- mark-styles-added-in-dom! []
   (reset! styles-in-use (apply merge (map
@@ -85,3 +90,6 @@
 
 (defn style-in-dom? [style-hash]
   (boolean (::in-dom? (style-by-hash style-hash))))
+
+(defn keyframes [identifier & frames]
+  (swap! keyframes-in-use conj (apply at-keyframes identifier frames)))

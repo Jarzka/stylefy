@@ -4,8 +4,14 @@
 
 (def phone-width "414px")
 
-(def general-styles {:font-family "Verdana"})
+(stylefy/keyframes "simple-animation"
+                   [:from
+                    {:background-color "red"}]
+                   [:to
+                    {:background-color "blue"}])
 
+(def general-styles {:font-family "Verdana"})
+(def root {:margin "10px"})
 (def clickable {:cursor :pointer})
 
 (def generic-container {:padding "25px"
@@ -70,3 +76,8 @@
                                                                :flex 1
                                                                ::stylefy/media {{:max-width phone-width} {:background-color "#000000"}}})}
                         ::stylefy/media {{:max-width phone-width} {:flex-direction :column}}})
+
+(def animated-box (merge simple-box
+                         {:animation-name "simple-animation"
+                          :animation-duration "3s"
+                          :animation-iteration-count "infinite"}))
