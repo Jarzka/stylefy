@@ -6,25 +6,30 @@
             [clojure.string :as str]))
 
 (def simple-style {:padding "25px"
-                :background-color "#BBBBBB"
-                :border "1px solid black"})
+                   :background-color "#BBBBBB"
+                   :border "1px solid black"})
 
 (deftest simple-style->css
-  (testing "Converting simple style definition to CSS"
-    (is (= (dom/style->css {:props simple-style :hash (styles/hash-style simple-style)}
-                           {:pretty-print? false})
-           "._stylefy_878532438{padding:25px;background-color:#BBBBBB;border:1px solid black}"))))
+  (is (= (dom/style->css {:props simple-style :hash (styles/hash-style simple-style)}
+                         {:pretty-print? false})
+         "._stylefy_878532438{padding:25px;background-color:#BBBBBB;border:1px solid black}")))
 
 (def clickable {:cursor :pointer})
 
 (def autoprefix-style (merge {:border "1px solid black"
                               :border-radius "5px"
-                            ::stylefy/vendors ["webkit" "moz" "o"]
-                            ::stylefy/auto-prefix #{:border-radius}}
+                              ::stylefy/vendors ["webkit" "moz" "o"]
+                              ::stylefy/auto-prefix #{:border-radius}}
                              clickable))
 
-(deftest autoprefixed-style->cssK
-  (testing "Converting simple style definition to CSS"
-    (is (= (dom/style->css {:props autoprefix-style :hash (styles/hash-style simple-style)}
-                           {:pretty-print? false})
-           "._stylefy_878532438{border:1px solid black;border-radius:5px;-webkit-border-radius:5px;-moz-border-radius:5px;-o-border-radius:5px;cursor:pointer}" ))))
+(deftest autoprefixed-style->css
+  (is (= (dom/style->css {:props autoprefix-style :hash (styles/hash-style autoprefix-style)}
+                         {:pretty-print? false})
+         "._stylefy_-216657570{border:1px solid black;border-radius:5px;-webkit-border-radius:5px;-moz-border-radius:5px;-o-border-radius:5px;cursor:pointer}")))
+
+(def style-mode {::stylefy/mode {:hover {:background-color "#AAAAAA"}}})
+
+(deftest mode-style->css
+  (is (= (dom/style->css {:props style-mode :hash (styles/hash-style style-mode)}
+                         {:pretty-print? false})
+         "._stylefy_-2110434399{}._stylefy_-2110434399:hover{background-color:#AAAAAA}")))
