@@ -99,9 +99,11 @@
 (defn add-keyframes [identifier & frames]
   (let [garden-definition (apply at-keyframes identifier frames)]
     (swap! keyframes-in-use conj garden-definition)
+    (reset! dom-needs-update? true)
     garden-definition))
 
 (defn add-font-face [properties]
   (let [garden-definition (at-font-face properties)]
     (swap! font-faces-in-use conj garden-definition)
+    (reset! dom-needs-update? true)
     garden-definition))
