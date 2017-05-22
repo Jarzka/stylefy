@@ -8,7 +8,9 @@
   :plugins [[lein-cljsbuild "1.1.2"]
             [lein-doo "0.1.7"]
             [lein-codox "0.10.3"]]
-  :codox {:source-paths ["src"]}
+  :codox {:language :clojurescript
+          :output-path "doc"
+          :source-paths ["src"]}
   :cljsbuild {:builds [{:id "test"
                         :source-paths ["src" "test"]
                         :compiler {:output-to "target/cljs/test/test.js"
