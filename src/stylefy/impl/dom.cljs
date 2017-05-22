@@ -2,11 +2,12 @@
   (:require [dommy.core :as dommy]
             [reagent.core :as r]
             [garden.core :refer [css]]
-            [garden.stylesheet :refer [at-media at-keyframes]])
+            [garden.stylesheet :refer [at-media at-keyframes at-font-face]])
   (:require-macros [reagent.ratom :refer [run!]]))
 
 (def styles-in-use (r/atom {})) ;; style hash -> props
 (def keyframes-in-use (r/atom []))
+(def font-faces-in-use (r/atom []))
 (def ^:private stylefy-node-id :#_stylefy-styles_)
 (def ^:private dom-needs-update? (atom false))
 
@@ -21,8 +22,12 @@
                            (keys @styles-in-use))
         keyframes-in-css (map (fn [keyframes]
                                 (css keyframes))
-                              @keyframes-in-use)]
-    (dommy/set-text! node (apply str (concat keyframes-in-css
+                              @keyframes-in-use)
+        font-faces-in-use (map (fn [properties]
+                                 (css properties))
+                               @font-faces-in-use)]
+    (dommy/set-text! node (apply str (concat font-faces-in-use
+                                             keyframes-in-css
                                              styles-in-css)))))
 
 (defn- mark-styles-added-in-dom! []
@@ -91,5 +96,8 @@
 (defn style-in-dom? [style-hash]
   (boolean (::in-dom? (style-by-hash style-hash))))
 
-(defn keyframes [identifier & frames]
+(defn add-keyframes [identifier & frames]
   (swap! keyframes-in-use conj (apply at-keyframes identifier frames)))
+
+(defn add-font-face [properties]
+  (swap! font-faces-in-use conj (at-font-face properties)))

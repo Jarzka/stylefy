@@ -50,4 +50,16 @@
                        [:to
                         {:opacity 1}])"
   [identifier & frames]
-  (apply dom/keyframes identifier frames))
+  (apply dom/add-keyframes identifier frames))
+
+(defn font-face
+  "Adds the given font-face definition to DOM.
+   Properties are given in the same form as Garden accepts them.
+
+   Example:
+   (stylefy/font-face {:font-family \"open_sans\"
+                       :src \"url('../fonts/OpenSans-Regular-webfont.woff') format('woff')\"
+                       :font-weight \"normal\"
+                       :font-style \"normal\"})"
+  [properties]
+  (dom/add-font-face properties))

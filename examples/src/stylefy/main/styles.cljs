@@ -10,7 +10,12 @@
                    [:to
                     {:background-color "blue"}])
 
-(def general-styles {:font-family "Verdana"})
+(stylefy/font-face {:font-family "open_sans"
+                    :src "url('../fonts/OpenSans-Regular-webfont.woff') format('woff')"
+                    :font-weight "normal"
+                    :font-style "normal"})
+
+(def general-styles {:font-family "open_sans"})
 (def root {:margin "10px"})
 (def clickable {:cursor :pointer})
 
