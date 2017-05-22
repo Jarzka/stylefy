@@ -97,7 +97,11 @@
   (boolean (::in-dom? (style-by-hash style-hash))))
 
 (defn add-keyframes [identifier & frames]
-  (swap! keyframes-in-use conj (apply at-keyframes identifier frames)))
+  (let [garden-definition (apply at-keyframes identifier frames)]
+    (swap! keyframes-in-use conj garden-definition)
+    garden-definition))
 
 (defn add-font-face [properties]
-  (swap! font-faces-in-use conj (at-font-face properties)))
+  (let [garden-definition (at-font-face properties)]
+    (swap! font-faces-in-use conj garden-definition)
+    garden-definition))

@@ -105,12 +105,11 @@
 
 (deftest font-face
   (is (= (css {:pretty-print? false}
-              (stylefy/keyframes "simple-animation"
-                                 [:from
-                                  {:background-color "red"}]
-                                 [:to
-                                  {:background-color "blue"}]))
-         "@keyframes simple-animation{from{background-color:red}to{background-color:blue}}")))
+              (stylefy/font-face {:font-family "open_sans"
+                                  :src "url('../fonts/OpenSans-Regular-webfont.woff') format('woff')"
+                                  :font-weight "normal"
+                                  :font-style "normal"}))
+         "@font-face{font-family:open_sans;src:url('../fonts/OpenSans-Regular-webfont.woff') format('woff');font-weight:normal;font-style:normal}")))
 
 (deftest keyframes
   (is (= (css {:pretty-print? false}
@@ -119,4 +118,4 @@
                                   {:background-color "red"}]
                                  [:to
                                   {:background-color "blue"}]))
-         "@keyframes simple-animation{from{background-color:red}to{background-color:blue}}@keyframes simple-animation{from{background-color:red}to{background-color:blue}}")))
+         "@keyframes simple-animation{from{background-color:red}to{background-color:blue}}")))
