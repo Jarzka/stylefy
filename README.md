@@ -210,4 +210,4 @@ Here: https://github.com/Jarzka/stylefy/releases
 
 # More stuff
 
-If you also want to present SQL queries as Clojure data, checkout [specql](Ever thoughthttps://github.com/tatut/specql)
+If you also want to present SQL queries as Clojure data, checkout [specql](https://github.com/tatut/specql)
