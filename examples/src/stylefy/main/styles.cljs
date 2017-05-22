@@ -80,7 +80,7 @@
                                                               {:background-color "#0000AA"
                                                                :flex 1
                                                                ::stylefy/media {{:max-width phone-width} {:background-color "#000000"}}})}
-                        ::stylefy/media {{:max-width phone-width} {:flex-direction :column}}})
+                        ::stylefy/media {{:max-width phone-width} {:display :block}}})
 
 (def animated-box (merge simple-box
                          {:animation-name "simple-animation"
