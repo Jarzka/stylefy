@@ -44,30 +44,34 @@
 (defn init-dom-update []
   (request-dom-update))
 
-(defn style->css [{:keys [props hash] :as style}]
-  (let [general-style-props (dissoc props
-                                    :stylefy.core/sub-styles
-                                    :stylefy.core/media
-                                    :stylefy.core/mode
-                                    :stylefy.core/vendors
-                                    :stylefy.core/auto-prefix)
-        class-selector (keyword (str "." hash))
-        garden-class-definition [class-selector general-style-props]
-        modes (:stylefy.core/mode props)
-        garden-modes (mapv #(-> [(keyword (str "&" %)) (% modes)])
-                           (keys modes))
-        vendors (when-let [vendors (:stylefy.core/vendors props)]
-                  {:vendors vendors
-                   :auto-prefix (:stylefy.core/auto-prefix props)})
-        garden-options vendors
-        css-class (if garden-options
-                    (css garden-options (into garden-class-definition garden-modes))
-                    (css (into garden-class-definition garden-modes)))
-        media-queries (:stylefy.core/media props)
-        css-media (map (fn [media-query]
-                         (css (at-media media-query [class-selector (get media-queries media-query)])))
-                       (keys media-queries))]
-    (str css-class (apply str css-media))))
+(defn style->css
+  ([style] (style->css style {}))
+  ([{:keys [props hash] :as style} options]
+   (let [general-style-props (dissoc props
+                                     :stylefy.core/sub-styles
+                                     :stylefy.core/media
+                                     :stylefy.core/mode
+                                     :stylefy.core/vendors
+                                     :stylefy.core/auto-prefix)
+         class-selector (keyword (str "." hash))
+         garden-class-definition [class-selector general-style-props]
+         modes (:stylefy.core/mode props)
+         garden-modes (mapv #(-> [(keyword (str "&" %)) (% modes)])
+                            (keys modes))
+         vendors (when-let [vendors (:stylefy.core/vendors props)]
+                   {:vendors vendors
+                    :auto-prefix (:stylefy.core/auto-prefix props)})
+         garden-options (merge
+                          options
+                          vendors)
+         css-class (if garden-options
+                     (css garden-options (into garden-class-definition garden-modes))
+                     (css (into garden-class-definition garden-modes)))
+         media-queries (:stylefy.core/media props)
+         css-media (map (fn [media-query]
+                          (css (at-media media-query [class-selector (get media-queries media-query)])))
+                        (keys media-queries))]
+     (str css-class (apply str css-media)))))
 
 (defn- save-style!
   "Stores the style in an atom. The style is going to be added in DOM soon."
