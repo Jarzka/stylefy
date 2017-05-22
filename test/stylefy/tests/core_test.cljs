@@ -3,6 +3,7 @@
             [stylefy.core :as stylefy]
             [stylefy.impl.styles :as styles]
             [stylefy.impl.dom :as dom]
+            [garden.core :refer [css]]
             [clojure.string :as str]))
 
 (def style-box {:border "1px solid black"
@@ -32,8 +33,8 @@
       (stylefy/use-style 123)
       (is true "Error was not thrown")
       (is (nil? return))
-         (catch js/Error e
-           (is true "Error was thrown as expected"))))
+      (catch js/Error e
+        (is true "Error was thrown as expected"))))
 
   (testing "Use garbage style: string"
     (try
@@ -101,3 +102,21 @@
                   dom/request-dom-update #(dom/update-styles-in-dom!)]
       (stylefy/init)
       (is (true? @update-styles-in-dom-called)))))
+
+(deftest font-face
+  (is (= (css {:pretty-print? false}
+              (stylefy/keyframes "simple-animation"
+                                 [:from
+                                  {:background-color "red"}]
+                                 [:to
+                                  {:background-color "blue"}]))
+         "@keyframes simple-animation{from{background-color:red}to{background-color:blue}}")))
+
+(deftest keyframes
+  (is (= (css {:pretty-print? false}
+              (stylefy/keyframes "simple-animation"
+                                 [:from
+                                  {:background-color "red"}]
+                                 [:to
+                                  {:background-color "blue"}]))
+         "@keyframes simple-animation{from{background-color:red}to{background-color:blue}}@keyframes simple-animation{from{background-color:red}to{background-color:blue}}")))
