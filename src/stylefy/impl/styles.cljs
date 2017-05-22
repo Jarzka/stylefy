@@ -45,7 +45,7 @@
               ;; The style definition has not been added to DOM yet, so return the style props
               ;; as inline style. Inline style gets replaced soon as the style definition
               ;; is added to DOM and the component re-renders itself.
-              ;; However, if there are media query or mode definitions, inline styling is proably
+              ;; However, if there are media query or mode definitions, inline styling is probably
               ;; going to look wrong. Thus, hide the component completely until DOM is ready.
               (merge return-map {:style {:visibility "hidden"}})
               (merge return-map {:style style}))))))))
