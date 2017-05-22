@@ -199,7 +199,7 @@ Use 3rd party classes along with stylefy definitions:
        [bs-navbar-item 3 active-index "Four"]])))
 ```
 
-# Font-face
+## Font-face
 
 Call *stylefy/font-face* and the given font-face is added on top the generated CSS code.
 
@@ -211,7 +211,7 @@ Call *stylefy/font-face* and the given font-face is added on top the generated C
 ```
 
 
-# Keyframes
+## Keyframes
 
 Call *stylefy/keyframes* and the given keyframes are added on top the generated CSS code.
 
