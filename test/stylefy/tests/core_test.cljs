@@ -37,7 +37,11 @@
                                         {::stylefy/with-classes ["dummy"]})]
       (is (string? (:class return)))
       (is (str/includes? (:class return) "dummy"))
-      (is (= (:style (get-in style-box [::stylefy/sub-styles :sub-box])))))))
+      (is (= (:style (get-in style-box [::stylefy/sub-styles :sub-box]))))))
+
+  (testing "Use sub-style that does not exist: returns nil"
+    (let [return (stylefy/use-sub-style style-box :foo)]
+      (is (nil? return)))))
 
 (deftest init
   (let [update-styles-in-dom-called (atom false)]
