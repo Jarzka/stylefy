@@ -23,7 +23,6 @@
     (is (= (:style (get-in style-box [::stylefy/sub-styles :sub-box]))))))
 
 (deftest init
-  ;; A bit dummy test
   (let [update-styles-in-dom-called (atom false)]
     (with-redefs [;; No DOM manipulation here, just check that the function
                   ;; was called
