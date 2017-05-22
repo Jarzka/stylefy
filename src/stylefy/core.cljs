@@ -8,7 +8,8 @@
   "Defines style for a component.
    Returns a map which contains :class keyword pointing to the given style if the style is found in DOM.
    If the style has not been added to DOM yet, it also returns the given props as inline style, so that
-   the component looks good even if CSS has not been genererated yet.
+   the component looks good even if CSS has not been genererated yet (except if the style contains
+   mode or media query definitions, {:display \"none\"} is returned until DOM is ready).
 
    The given parameter is a map which contains CSS style properties (as supported by Garden library).
    There can also be special namespaced keywords along with the style definitions:
