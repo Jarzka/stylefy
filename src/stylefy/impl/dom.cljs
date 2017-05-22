@@ -19,8 +19,7 @@
 (defn- style-by-hash [style-hash]
   (get @styles-in-use style-hash))
 
-(defn- update-style-tag!
-  "Sets the content of the given style tag to be the CSS of the used styles."
+(defn- update-style-tags!
   [node node-constant]
   (let [styles-in-css (map (fn [style-hash]
                              (::css (style-by-hash style-hash)))
@@ -52,7 +51,7 @@
     (let [node (dommy/sel1 stylefy-node-id)
           node-constant (dommy/sel1 stylefy-constant-node-id)]
       (if (and node node-constant)
-        (do (update-style-tag! node node-constant)
+        (do (update-style-tags! node node-constant)
             (reset! dom-needs-update? false)
             (mark-styles-added-in-dom!)
             (reset! keyframes-in-dom? true)
