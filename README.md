@@ -207,3 +207,7 @@ More examples available here: https://github.com/Jarzka/stylefy/tree/master/exam
 # Changelog
 
 Here: https://github.com/Jarzka/stylefy/releases
+
+# More stuff
+
+If you also want to present SQL queries as Clojure data, checkout [specql](Ever thoughthttps://github.com/tatut/specql)
