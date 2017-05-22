@@ -21,6 +21,7 @@ stylefy makes it possible to define UI component styles as Clojure data. Interna
 - Vendor prefixes, define which vendor prefixes are used and which properties should be prefixed
 - Media queries, define how your style looks different on various screen sizes
 - Easy and simple API
+- Tested to work with Chrome, Firefox, Edge & Internet Explorer 11
 
 # Requirements
 
