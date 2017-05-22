@@ -29,7 +29,7 @@
    sub-style is the name of the sub-stale in the given style map."
   ([style sub-style] (use-sub-style style sub-style {}))
   ([style sub-style options]
-  (impl-styles/use-sub-style! style sub-style options)))
+   (impl-styles/use-sub-style! style sub-style options)))
 
 (defn init
   "Initialises stylefy.
@@ -63,3 +63,8 @@
                        :font-style \"normal\"})"
   [properties]
   (dom/add-font-face properties))
+
+(def ^{:doc "Reagent atom, true if all font-faces are present in DOM"}
+font-faces-in-dom? dom/font-faces-in-dom?)
+(def ^{:doc "Reagent atom, true if all keyframes are present in DOM"}
+keyframes-in-dom? dom/keyframes-in-dom?)

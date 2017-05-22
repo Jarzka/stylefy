@@ -122,39 +122,43 @@
   [:div (use-style styles/animated-box)])
 
 (defn- examples []
-  [:div (use-style (merge styles/root
-                          styles/general-styles))
-   [:h1 "Generic button"]
-   [:p "Just a simple styled button to begin with."]
-   [button "Generic button"]
+  (fn []
+    ;; Some browsers (read IE11) require that animations are present in DOM before
+    ;; they can be used correctly in components.
+    (when @stylefy/keyframes-in-dom?
+      [:div (use-style (merge styles/root
+                              styles/general-styles))
+       [:h1 "Generic button"]
+       [:p "Just a simple styled button to begin with."]
+       [button "Generic button"]
 
-   [:h1 "Different type of buttons in a container"]
-   [:p "Styled by merging styles"]
-   [button-container]
+       [:h1 "Different type of buttons in a container"]
+       [:p "Styled by merging styles"]
+       [button-container]
 
-   [:h1 "Component with multiple sub elements"]
-   [:p "Styled by using sub-styles"]
-   [stuff-box]
+       [:h1 "Component with multiple sub elements"]
+       [:p "Styled by using sub-styles"]
+       [stuff-box]
 
-   [:h1 "Component with internal state"]
-   [:p "This component contains a different style in different states. The styles are generated and inserted into DOM on-demand."]
-   [stateful-component]
+       [:h1 "Component with internal state"]
+       [:p "This component contains a different style in different states. The styles are generated and inserted into DOM on-demand."]
+       [stateful-component]
 
-   [:h1 "Stress test"]
-   [:p "Styles are added into DOM on-demand when they are used for the first time. Clicking the button below generates 1000 different looking components dynamically. The components are first styled with inline styles until the DOM has been updated and we can begin using CSS classes to save memory."]
-   [stress-test]
+       [:h1 "Stress test"]
+       [:p "Styles are added into DOM on-demand when they are used for the first time. Clicking the button below generates 1000 different looking components dynamically. The components are first styled with inline styles until the DOM has been updated and we can begin using CSS classes to save memory."]
+       [stress-test]
 
-   [:h1 "Boostrap navbar"]
-   [:p "You can also assign any classes to elements normally. Here we use Boostrap classes to construct a simple navbar. We also override some BS styles."]
-   [bs-navbar]
+       [:h1 "Boostrap navbar"]
+       [:p "You can also assign any classes to elements normally. Here we use Boostrap classes to construct a simple navbar. We also override some BS styles."]
+       [bs-navbar]
 
-   [:h1 "Responsive layout"]
-   [:p "stylefy supports media queries out of the box"]
-   [responsive-layout]
+       [:h1 "Responsive layout"]
+       [:p "stylefy supports media queries out of the box"]
+       [responsive-layout]
 
-   [:h1 "Animations"]
-   [:p "stylefy also supports keyframes"]
-   [animation]])
+       [:h1 "Animations"]
+       [:p "stylefy also supports keyframes"]
+       [animation]])))
 
 (defn main []
   [examples])

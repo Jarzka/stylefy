@@ -5,9 +5,9 @@
 (def phone-width "414px")
 
 (stylefy/keyframes "simple-animation"
-                   [:from
+                   [:0%
                     {:background-color "red"}]
-                   [:to
+                   [:100%
                     {:background-color "blue"}])
 
 (stylefy/font-face {:font-family "open_sans"
