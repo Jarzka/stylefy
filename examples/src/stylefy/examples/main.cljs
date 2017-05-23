@@ -135,9 +135,9 @@
         [{:title "Product" :name :name}
          {:title "ID" :name :id}
          {:title "Price (€/kg)" :name :price}]
-        [{:name "Apple" :id 6 :price 1}
-         {:name "Orange" :id 6 :price 2}
-         {:name "Banana" :id 6 :price 3}]]
+        [{:name "Apple" :id 13 :price 1}
+         {:name "Orange" :id 35 :price 2}
+         {:name "Banana" :id 15 :price 3}]]
 
        [:h1 "Component with internal state"]
        [:p "This component contains a different style in different states. The styles are generated and inserted into DOM on-demand."]
