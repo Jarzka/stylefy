@@ -22,7 +22,7 @@ stylefy makes it possible to define UI component styles as Clojure data. Interna
 - Media queries, define how your style looks different on various screen sizes
 - Keyframes
 - Font-face
-- Easy and simple API
+- Small and simple API
 - Tested to work with Chrome, Firefox, Edge & Internet Explorer 11
 
 # Requirements
