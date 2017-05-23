@@ -17,15 +17,33 @@
   (doseq [sub-style (vals (:stylefy.core/sub-styles props))]
     (create-style! {:props sub-style :hash (hash-style sub-style)})))
 
+(defn- style-return-value [style style-hash options]
+  (let [with-classes (:stylefy.core/with-classes options)
+        contains-media-queries? (some? (:stylefy.core/media style))
+        excluded-modes #{:hover}
+        contains-modes-not-excluded? (not (empty?
+                                            (filter (comp not excluded-modes)
+                                                    (keys (:stylefy.core/mode style)))))
+        return-map {:class (str/join " " (conj with-classes style-hash))}]
+    (if (dom/style-in-dom? style-hash)
+      return-map
+      (if (or contains-media-queries? contains-modes-not-excluded?)
+        ;; The style definition has not been added to DOM yet, so return the style props
+        ;; as inline style. Inline style gets replaced soon as the style definition
+        ;; is added to DOM and the component re-renders itself.
+        ;; However, if there are media queries or specific mode definitions, inline styling is probably
+        ;; going to look wrong. Thus, hide the component completely until DOM is ready.
+        (merge return-map {:style (merge style
+                                         {:visibility "hidden"})})
+        (merge return-map {:style style})))))
+
 (defn use-style! [style options]
   ;; Deref to make sure components re-render themselves when styles-in-use updates
   ;; so that we can get rid of inline styles and use only classes as soon as possible.
   @dom/styles-in-use
 
   (when-not (empty? style)
-    (let [with-classes (:stylefy.core/with-classes options)
-          contains-media-queries? (some? (:stylefy.core/media style))
-          contains-modes? (some? (:stylefy.core/mode style))]
+    (let [with-classes (:stylefy.core/with-classes options)]
 
       (assert (or (nil? with-classes)
                   (and (vector? with-classes)
@@ -38,18 +56,7 @@
         (when-not already-created
           (create-style! {:props style :hash style-hash}))
 
-        (let [return-map {:class (str/join " " (conj with-classes style-hash))}]
-          (if (dom/style-in-dom? style-hash)
-            return-map
-            (if (or contains-media-queries? contains-modes?)
-              ;; The style definition has not been added to DOM yet, so return the style props
-              ;; as inline style. Inline style gets replaced soon as the style definition
-              ;; is added to DOM and the component re-renders itself.
-              ;; However, if there are media query or mode definitions, inline styling is probably
-              ;; going to look wrong. Thus, hide the component completely until DOM is ready.
-              (merge return-map {:style (merge style
-                                               {:visibility "hidden"})})
-              (merge return-map {:style style}))))))))
+        (style-return-value style style-hash options)))))
 
 (defn use-sub-style! [style sub-style options]
   (let [resolved-sub-style (get (:stylefy.core/sub-styles style) sub-style)]
