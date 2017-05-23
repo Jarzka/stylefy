@@ -55,8 +55,8 @@
             (reset! dom-needs-update? false)
             (mark-styles-added-in-dom!)
             (reset! keyframes-in-dom? true)
-            (reset! font-faces-in-dom? true)))
-      (.error js/console "stylefy is unable to find the required <style> tags!")))
+            (reset! font-faces-in-dom? true))
+        (.error js/console "stylefy is unable to find the required <style> tags!"))))
   (request-dom-update))
 
 (defn init-dom-update []
