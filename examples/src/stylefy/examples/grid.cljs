@@ -5,8 +5,10 @@
 (def grid-style {::stylefy/sub-styles
                  {:thead {:background-color "#66AA66"}
                   :table {:border-collapse "collapse"}
-                  :row-even {:background-color "#DDDDDD"}
-                  :row-odd {:background-color "#EEEEEE"}
+                  :row-even {:background-color "#DDDDDD"
+                             ::stylefy/mode {:hover {:background-color "#BBBBBB"}}}
+                  :row-odd {:background-color "#EEEEEE"
+                            ::stylefy/mode {:hover {:background-color "#BBBBBB"}}}
                   :cell {:padding "5px"}}})
 
 (defn grid [options schema data]
