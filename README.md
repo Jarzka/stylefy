@@ -237,7 +237,7 @@ You can use Garden's [Unit](https://github.com/noprompt/garden/wiki/Units-%26-Ar
 
 ## More examples
 
-More examples available here: https://github.com/Jarzka/stylefy/tree/master/examples/src/stylefy/main
+More examples available here: https://github.com/Jarzka/stylefy/tree/master/examples/src/stylefy/examples
 
 # Changelog
 
