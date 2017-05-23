@@ -116,14 +116,15 @@ Define a style for your component and all the elements inside of it in a single 
 ```clojure
 (def container-style (merge
                        generic-container
-                       {::stylefy/sub-styles {:list {:margin-top "1em"}}}))
+                       {::stylefy/sub-styles {:list {:margin-top "1em"}
+                                              :list-item {:color "black"}}}))
 
 (defn list-in-container []
-  [:div (use-style styles/container-style)
-   [:ul (use-sub-style styles/container-style :list)
-    [:li "List element 1"]
-    [:li "List element 2"]
-    [:li "List element 3"]]])
+  [:div (use-style container-style)
+   [:ul (use-sub-style container-style :list)
+    [:li (use-sub-styles container-style :list-item) "List element 1"]
+    [:li (use-sub-styles container-style :list-item) "List element 2"]
+    [:li (use-sub-styles container-style :list-item) "List element 3"]]])
 ```
 
 ## Vendor prefixes

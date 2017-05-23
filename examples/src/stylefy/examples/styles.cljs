@@ -1,6 +1,6 @@
 (ns stylefy.examples.styles
   (:require [reagent.core :as r]
-            [stylefy.core :as stylefy :refer [use-style]]))
+            [stylefy.core :as stylefy]))
 
 (def phone-width "414px")
 
@@ -51,10 +51,6 @@
                  :padding "5px"
                  :width "150px"
                  :height "150px"})
-
-(def stuff-box (merge generic-container
-                      {::stylefy/sub-styles {:box simple-box
-                                             :list {:margin-top "1em"}}}))
 
 (def stateful-component {:on (merge generic-container
                                     {:background-color "#22FF22"})

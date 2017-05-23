@@ -1,6 +1,7 @@
 (ns stylefy.examples.main
   (:require [reagent.core :as r]
             [stylefy.examples.styles :as styles]
+            [stylefy.examples.grid :as grid]
             [cljs.core.async :refer [<! timeout]]
             [stylefy.core :as stylefy :refer [use-style use-sub-style]])
   (:require-macros [cljs.core.async.macros :refer [go]]))
@@ -23,15 +24,6 @@
    [button "Hello World!"]
    [button "Primary" #() :primary]
    [button "Secondary" #() :secondary]])
-
-(defn stuff-box []
-  [:div (use-style styles/stuff-box)
-   [:p "This container contains multiple elements, like texts and lists."]
-   [:div (use-sub-style styles/stuff-box :box)]
-   [:ul (use-sub-style styles/stuff-box :list)
-    [:li "List element 1"]
-    [:li "List element 2"]
-    [:li "List element 3"]]])
 
 (defn stateful-component []
   (let [switch #(if (= :on %) :off :on)
@@ -138,7 +130,14 @@
 
        [:h1 "Component with multiple sub elements"]
        [:p "Styled by using sub-styles"]
-       [stuff-box]
+       [grid/grid
+        {:title "Example grid"}
+        [{:title "Product" :name :name}
+         {:title "ID" :name :id}
+         {:title "Price (€/kg)" :name :price}]
+        [{:name "Apple" :id 6 :price 1}
+         {:name "Orange" :id 6 :price 2}
+         {:name "Banana" :id 6 :price 3}]]
 
        [:h1 "Component with internal state"]
        [:p "This component contains a different style in different states. The styles are generated and inserted into DOM on-demand."]
