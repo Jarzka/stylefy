@@ -114,17 +114,16 @@ Combine or parametrise styles however you like:
 Define a style for your component and all the elements inside of it in a single map:
 
 ```clojure
-(def container-style (merge
-                       generic-container
-                       {::stylefy/sub-styles {:list {:margin-top "1em"}
-                                              :list-item {:color "black"}}}))
+(def list-container-style (merge generic-container
+                                 {::stylefy/sub-styles {:list {:margin-top "1em"}
+                                                        :list-item {:color "black"}}}))
 
 (defn list-in-container []
-  [:div (use-style container-style)
-   [:ul (use-sub-style container-style :list)
-    [:li (use-sub-styles container-style :list-item) "List element 1"]
-    [:li (use-sub-styles container-style :list-item) "List element 2"]
-    [:li (use-sub-styles container-style :list-item) "List element 3"]]])
+  [:div (use-style list-container-style)
+   [:ul (use-sub-style list-container-style :list)
+    [:li (use-sub-styles list-container-style :list-item) "List element 1"]
+    [:li (use-sub-styles list-container-style :list-item) "List element 2"]
+    [:li (use-sub-styles list-container-style :list-item) "List element 3"]]])
 ```
 
 ## Vendor prefixes
