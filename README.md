@@ -121,9 +121,9 @@ Define a style for your component and all the elements inside of it in a single 
 (defn list-in-container []
   [:div (use-style list-container-style)
    [:ul (use-sub-style list-container-style :list)
-    [:li (use-sub-styles list-container-style :list-item) "List element 1"]
-    [:li (use-sub-styles list-container-style :list-item) "List element 2"]
-    [:li (use-sub-styles list-container-style :list-item) "List element 3"]]])
+    [:li (use-sub-style list-container-style :list-item) "List element 1"]
+    [:li (use-sub-style list-container-style :list-item) "List element 2"]
+    [:li (use-sub-style list-container-style :list-item) "List element 3"]]])
 ```
 
 ## Vendor prefixes
