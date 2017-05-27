@@ -245,4 +245,5 @@ Here: https://github.com/Jarzka/stylefy/releases
 
 # More stuff
 
-If you also want to present SQL queries as Clojure data, checkout [specql](https://github.com/tatut/specql).
+- Need to namespace and unnamespace keywords in a map? Check you my other library: [namespafy](https://github.com/Jarzka/namespacefy)
+- If you also want to present SQL queries as Clojure data, checkout [specql](https://github.com/tatut/specql)
