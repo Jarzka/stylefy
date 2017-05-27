@@ -245,5 +245,5 @@ Here: https://github.com/Jarzka/stylefy/releases
 
 # More stuff
 
-- Need to namespace and unnamespace keywords in a map? Check out my other library: [namespafy](https://github.com/Jarzka/namespacefy)
+- Need to namespace and unnamespace keywords in a map? Checkout my other library: [namespafy](https://github.com/Jarzka/namespacefy)
 - If you also want to present SQL queries as Clojure data, checkout [specql](https://github.com/tatut/specql)
