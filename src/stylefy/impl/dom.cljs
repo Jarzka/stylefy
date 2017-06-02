@@ -125,6 +125,7 @@
     garden-definition))
 
 (defn add-class [name properties]
-  (swap! custom-classes-in-use conj {::class-name name ::class-properties properties})
-  (reset! dom-needs-update? true)
-  custom-classes-in-use)
+  (let [custom-class-definition {::class-name name ::class-properties properties}]
+    (swap! custom-classes-in-use conj custom-class-definition)
+    (reset! dom-needs-update? true)
+    custom-class-definition))

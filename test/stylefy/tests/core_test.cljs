@@ -119,3 +119,9 @@
                                  [:to
                                   {:background-color "blue"}]))
          "@keyframes simple-animation{from{background-color:red}to{background-color:blue}}")))
+
+(deftest class
+  (is (= (stylefy/class "background-transition"
+                        {:transition "background-color 1s;"})
+         {::stylefy.impl.dom/class-name "background-transition"
+          ::stylefy.impl.dom/class-properties {:transition "background-color 1s;"}})))
