@@ -210,7 +210,7 @@ Use 3rd party classes along with stylefy definitions:
 
 ## Font-face
 
-Call *stylefy/font-face* and the given font-face is added on top the generated CSS code:
+Call *stylefy/font-face* and the given font-face is added in to DOM as CSS code.
 
 ```clojure
 (stylefy/font-face {:font-family "open_sans"
@@ -222,7 +222,7 @@ Call *stylefy/font-face* and the given font-face is added on top the generated C
 
 ## Keyframes
 
-Call *stylefy/keyframes* and the given keyframes are added on top the generated CSS code:
+Call *stylefy/keyframes* and the given keyframes are added in to DOM as CSS code.
 
 ```clojure
 (stylefy/keyframes "simple-animation"
@@ -248,7 +248,7 @@ As has been told, stylefy converts style definition to unique CSS classes automa
 [:div.background-transition]
 ```
 
-Still, you should prefer *stylefy/use-style* when ever possible.
+This generates a CSS class with the name "background-transition" and adds it in to DOM.
 
 ## Units and colors
 
