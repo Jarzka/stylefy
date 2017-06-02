@@ -83,7 +83,8 @@
                            {::stylefy/with-classes ["active"]}))
               {:role "presentation"
                :on-click #(reset! index-atom index)})
-   [:a text]])
+   [:a (use-sub-style styles/boostrap-navbar-overrides :link)
+    text]])
 
 (defn- bs-navbar []
   (let [active-index (r/atom 0)]
@@ -113,7 +114,7 @@
 (defn animation []
   [:div (use-style styles/animated-box)])
 
-(defn- examples []
+(defn- simple-examples []
   (fn []
     ;; Some browsers (read IE11) require that animations are present in DOM before
     ;; they can be used correctly in components.
@@ -151,7 +152,7 @@
        [:p "You can also assign any classes to elements normally. Here we use Boostrap classes to construct a simple navbar. We also override some BS styles."]
        [bs-navbar]
 
-       [:h1 "Responsive layout"]
+       [:h1 "Simple responsive layout"]
        [:p "stylefy supports media queries out of the box"]
        [responsive-layout]
 
@@ -159,8 +160,23 @@
        [:p "stylefy also supports keyframes"]
        [animation]])))
 
-(defn main []
-  [examples])
+(defn- full-page-example []
+  [:div (use-style {:padding "10px"})
+   "TODO"])
+
+(defn- top-level []
+  (let [active-tab (r/atom 0)]
+    (fn []
+      [:div
+       [:ul.nav.nav-pills (use-style styles/boostrap-navbar-overrides)
+        [bs-navbar-item 0 active-tab "Simple examples"]
+        [bs-navbar-item 1 active-tab "Full page example"]]
+       (case @active-tab
+         0 [simple-examples]
+         1 [full-page-example])])))
+
+(defn- main []
+  [top-level])
 
 (defn ^:export start []
   (stylefy/init)

@@ -59,7 +59,8 @@
                                 {:background-color "#333333"
                                  :color "white"})})
 
-(def boostrap-navbar-overrides {:background-color "#DDDDDD"})
+(def boostrap-navbar-overrides {:background-color "#DDDDDD"
+                                ::stylefy/sub-styles {:link {:border-radius "0 !important"}}})
 
 (def column {:padding "5px"
              :color "white"})
