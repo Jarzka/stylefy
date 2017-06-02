@@ -66,7 +66,7 @@
   (request-dom-update))
 
 (defn init-dom-update []
-  (request-dom-update))
+  (update-styles-in-dom!))
 
 (defn style->css
   ([style] (style->css style {}))
