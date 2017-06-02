@@ -84,7 +84,7 @@
   (dom/add-font-face properties))
 
 (defn class
-  "Create a CSS class with the given name and properties.
+  "Creates a CSS class with the given name and properties.
    Normally you should let stylefy convert your style maps to unique CSS classes by calling
    use-style. Thus, there is usually no need to create customly named classes when using stylefy.
 
