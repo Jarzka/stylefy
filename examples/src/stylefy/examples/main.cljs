@@ -125,54 +125,50 @@
        "Click me!"])))
 
 (defn- simple-examples []
-  (fn []
-    ;; Some browsers (read IE11) require that animations are present in DOM before
-    ;; they can be used correctly in components.
-    (when @stylefy/keyframes-in-dom?
-      [:div (use-style (merge styles/root
-                              styles/general-styles))
-       [:h1 "Generic button"]
-       [:p "Just a simple styled button to begin with."]
-       [button "Generic button"]
+  [:div (use-style (merge styles/root
+                          styles/general-styles))
+   [:h1 "Generic button"]
+   [:p "Just a simple styled button to begin with."]
+   [button "Generic button"]
 
-       [:h1 "Different type of buttons in a container"]
-       [:p "Styled by merging styles"]
-       [button-container]
+   [:h1 "Different type of buttons in a container"]
+   [:p "Styled by merging styles"]
+   [button-container]
 
-       [:h1 "Component with multiple sub elements"]
-       [:p "Styled by using sub-styles"]
-       [grid/grid
-        {:title "Example grid"}
-        [{:title "Product" :name :name}
-         {:title "ID" :name :id}
-         {:title "Price (€/kg)" :name :price}]
-        [{:name "Apple" :id 13 :price 1}
-         {:name "Orange" :id 35 :price 2}
-         {:name "Banana" :id 15 :price 3}]]
+   [:h1 "Component with multiple sub elements"]
+   [:p "Styled by using sub-styles"]
+   [grid/grid
+    {:title "Example grid"}
+    [{:title "Product" :name :name}
+     {:title "ID" :name :id}
+     {:title "Price (€/kg)" :name :price}]
+    [{:name "Apple" :id 13 :price 1}
+     {:name "Orange" :id 35 :price 2}
+     {:name "Banana" :id 15 :price 3}]]
 
-       [:h1 "Component with internal state"]
-       [:p "This component contains a different style in different states. The styles are generated and inserted into DOM on-demand."]
-       [stateful-component]
+   [:h1 "Component with internal state"]
+   [:p "This component contains a different style in different states. The styles are generated and inserted into DOM on-demand."]
+   [stateful-component]
 
-       [:h1 "Stress test"]
-       [:p "Styles are added into DOM on-demand when they are used for the first time. Clicking the button below generates 1000 different looking components dynamically. The components are first styled with inline styles until the DOM has been updated and we can begin using CSS classes to save memory."]
-       [stress-test]
+   [:h1 "Stress test"]
+   [:p "Styles are added into DOM on-demand when they are used for the first time. Clicking the button below generates 1000 different looking components dynamically. The components are first styled with inline styles until the DOM has been updated and we can begin using CSS classes to save memory."]
+   [stress-test]
 
-       [:h1 "Boostrap navbar"]
-       [:p "You can also assign any classes to elements normally. Here we use Boostrap classes to construct a simple navbar. We also override some BS styles."]
-       [bs-navbar]
+   [:h1 "Boostrap navbar"]
+   [:p "You can also assign any classes to elements normally. Here we use Boostrap classes to construct a simple navbar. We also override some BS styles."]
+   [bs-navbar]
 
-       [:h1 "Simple responsive layout"]
-       [:p "stylefy supports media queries out of the box"]
-       [responsive-layout]
+   [:h1 "Simple responsive layout"]
+   [:p "stylefy supports media queries out of the box"]
+   [responsive-layout]
 
-       [:h1 "Animations"]
-       [:p "stylefy also supports keyframes"]
-       [animation]
+   [:h1 "Animations"]
+   [:p "stylefy also supports keyframes"]
+   [animation]
 
-       [:h1 "Custom class names"]
-       [:p "Normally stylefy handles the conversion from Clojure style maps to unique CSS classes. However, if needed, you can also define your custom named classes. Here we have defined a custom named class for handling animation fades."]
-       [fade]])))
+   [:h1 "Custom class names"]
+   [:p "Normally stylefy handles the conversion from Clojure style maps to unique CSS classes. However, if needed, you can also define your custom named classes. Here we have defined a custom named class for handling animation fades."]
+   [fade]])
 
 (defn- full-page-example []
   [:div (use-style {:padding "10px"})
