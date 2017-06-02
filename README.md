@@ -244,7 +244,8 @@ As has been told, stylefy converts style definition to unique CSS classes automa
 ```clojure
 (stylefy/class "background-transition"
                {:transition "background-color 1s;"})
-                    
+          
+;; Use the generated class in a component like any other class
 [:div.background-transition]
 ```
 
