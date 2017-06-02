@@ -242,14 +242,13 @@ Call *stylefy/keyframes* and the given keyframes are added in to DOM as CSS code
 As has been told, stylefy converts style definition to unique CSS classes automatically and there is no need to worry about class names. It can, however, be useful to be able to generate custom named classes for example when working with 3rd party libraries / frameworks. For this purpose, call *stylefy/class*:
 
 ```clojure
+;; This generates a CSS class with the name "background-transition" and adds it in to DOM.
 (stylefy/class "background-transition"
                {:transition "background-color 1s;"})
           
 ;; Use the generated class in a component like any other class
 [:div.background-transition]
 ```
-
-This generates a CSS class with the name "background-transition" and adds it in to DOM.
 
 ## Units and colors
 
