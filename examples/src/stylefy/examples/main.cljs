@@ -114,6 +114,16 @@
 (defn animation []
   [:div (use-style styles/animated-box)])
 
+(defn fade []
+  (let [on-style {:background-color (:background-color styles/simple-box)}
+        off-style {:background-color "black"}
+        active-state (r/atom true)]
+    (fn []
+      [:div.background-transition (merge (use-style (merge styles/simple-box
+                                                           (if @active-state on-style off-style)))
+                                         {:on-click #(swap! active-state not)})
+       "Click me!"])))
+
 (defn- simple-examples []
   (fn []
     ;; Some browsers (read IE11) require that animations are present in DOM before
@@ -158,7 +168,11 @@
 
        [:h1 "Animations"]
        [:p "stylefy also supports keyframes"]
-       [animation]])))
+       [animation]
+
+       [:h1 "Custom class names"]
+       [:p "Normally stylefy handles the conversion from Clojure style maps to unique CSS classes. However, if needed, you can also define your custom named classes. Here we have defined a custom named class for handling animation fades."]
+       [fade]])))
 
 (defn- full-page-example []
   [:div (use-style {:padding "10px"})

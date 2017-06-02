@@ -15,6 +15,12 @@
                     :font-weight "normal"
                     :font-style "normal"})
 
+;; Custom named classes can be created, but should only be used when working with
+;; other libraries / frameworks. Normally there is no need to create customly named classes
+;; when using stylefy.
+(stylefy/class "background-transition"
+               {:transition "background-color 1s;"})
+
 (def general-styles {:font-family "open_sans"})
 (def root {:margin "10px"})
 (def clickable {:cursor :pointer})

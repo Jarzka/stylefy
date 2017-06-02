@@ -83,6 +83,16 @@
   [properties]
   (dom/add-font-face properties))
 
+(defn class
+  "Create a CSS class with the given name and properties.
+   Normally you should let stylefy convert your style maps to unique CSS classes by calling
+   use-style. Thus, there is usually no need to create customly named classes when using stylefy.
+
+   (stylefy/class \"enter-transition\"
+                   {:transition \"background-color 20s ease-out;\"})"
+  [name properties]
+  (dom/add-class name properties))
+
 (def ^{:doc "Reagent atom, true if all font-faces are present in DOM"}
 font-faces-in-dom? dom/font-faces-in-dom?)
 (def ^{:doc "Reagent atom, true if all keyframes are present in DOM"}

@@ -8,6 +8,7 @@
 (def styles-in-use (r/atom {})) ;; style hash -> props
 (def keyframes-in-use (r/atom []))
 (def font-faces-in-use (r/atom []))
+(def custom-classes-in-use (r/atom []))
 
 (def font-faces-in-dom? (r/atom false))
 (def keyframes-in-dom? (r/atom false))
@@ -29,9 +30,14 @@
                               @keyframes-in-use)
         font-faces-in-use (map (fn [properties]
                                  (css properties))
-                               @font-faces-in-use)]
+                               @font-faces-in-use)
+        custom-classes-in-use (map (fn [class-definition]
+                                     (css [(keyword (str "." (::class-name class-definition)))
+                                           (::class-properties class-definition)]))
+                                   @custom-classes-in-use)]
     (dommy/set-text! node-constant (apply str (concat font-faces-in-use
-                                                      keyframes-in-css)))
+                                                      keyframes-in-css
+                                                      custom-classes-in-use)))
     (dommy/set-text! node (apply str styles-in-css))))
 
 (defn- mark-styles-added-in-dom! []
@@ -117,3 +123,8 @@
     (swap! font-faces-in-use conj garden-definition)
     (reset! dom-needs-update? true)
     garden-definition))
+
+(defn add-class [name properties]
+  (swap! custom-classes-in-use conj {::class-name name ::class-properties properties})
+  (reset! dom-needs-update? true)
+  custom-classes-in-use)
