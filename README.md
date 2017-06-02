@@ -147,7 +147,7 @@ Supported in the same way as Garden supports them:
              ::stylefy/auto-prefix #{:border-radius}})
 ```
 
-This generates a CSS class in which border-radius is prefixed with the given values (webkit, moz and o).
+When using this style, a CSS class generated in which border-radius is prefixed with the given values (webkit, moz and o).
 
 ## Media queries
 
