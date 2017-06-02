@@ -237,6 +237,19 @@ Call *stylefy/keyframes* and the given keyframes are added on top the generated 
                           :animation-iteration-count "infinite"}))
 ```
 
+## Custom class names
+
+As has been told, stylefy converts style definition to unique CSS classes automatically and there is no need to worry about class names. It can, however, be useful to be able to generate custom named classes for example when working with 3rd party libraries / frameworks. For this purpose, call *stylefy/class*:
+
+```clojure
+(stylefy/class "background-transition"
+               {:transition "background-color 1s;"})
+                    
+[:div.background-transition]
+```
+
+Still, you should prefer *stylefy/use-style* when ever possible.
+
 ## Units and colors
 
 You can use Garden's [Unit](https://github.com/noprompt/garden/wiki/Units-%26-Arithmetic) and [Color](https://github.com/noprompt/garden/wiki/Color) helpers with stylefy.
