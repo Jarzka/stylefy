@@ -16,23 +16,25 @@
    [:table (use-sub-style grid-style :table)
     [:thead (use-sub-style grid-style :thead)
      [:tr
-      (map-indexed
-        (fn [column-index s]
-          ^{:key column-index}
-          [:th (use-sub-style grid-style :cell)
-           (:title s)])
-        schema)]]
+      (doall
+        (map-indexed
+          (fn [column-index s]
+            ^{:key column-index}
+            [:th (use-sub-style grid-style :cell)
+             (:title s)])
+          schema))]]
     [:tbody
-     (map-indexed
-       (fn [data-index data-item]
-         ^{:key data-index}
-         [:tr (use-sub-style grid-style (if (= (rem data-index 2) 0)
-                                          :row-even
-                                          :row-odd))
-          (map-indexed
-            (fn [column-index s]
-              ^{:key column-index}
-              [:td (use-sub-style grid-style :cell)
-               ((:name s) data-item)])
-            schema)])
-       data)]]])
+     (doall
+       (map-indexed
+         (fn [data-index data-item]
+           ^{:key data-index}
+           [:tr (use-sub-style grid-style (if (= (rem data-index 2) 0)
+                                            :row-even
+                                            :row-odd))
+            (doall (map-indexed
+                     (fn [column-index s]
+                       ^{:key column-index}
+                       [:td (use-sub-style grid-style :cell)
+                        ((:name s) data-item)])
+                     schema))])
+         data))]]])
