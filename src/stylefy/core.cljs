@@ -5,19 +5,37 @@
   (:require-macros [reagent.ratom :refer [run!]]))
 
 (defn use-style
-  "Defines style for a component.
-   Returns a map which contains :class keyword pointing to the given style if the style is found in DOM.
-   If the style has not been added to DOM yet, it also returns the given props as inline style, so that
-   the component looks good even if CSS has not been genererated yet (except if the style contains
-   mode or media query definitions, {:visibility \"hidden\"} is returned until DOM is ready).
+  "Defines a style for a component by converting the given style map in to an unique CSS class,
+   and returning a pointer (a map with :class keyword) to it so that the component can use it.
 
-   The given parameter is a map which contains CSS style properties (as supported by Garden library).
-   There can also be special namespaced keywords along with the style definitions:
-   ::sub-styles        The contents of ::sub-styles should be a map,
+   Calling use-style does not immediately add the generated CSS class to DOM, because doing this
+   in a single render would slow everything down if use-style is called multiple times.
+   If the style has not been added to DOM yet, it also returns the given props as inline style, so that
+   the component looks good even if CSS class has not been genererated yet.
+   Exception: if the style contains specific modes or media query definitions,
+   {:visibility \"hidden\"} is returned until DOM is ready).
+
+   The given 'style' parameter is a map which contains CSS style properties
+   (as supported by Garden library). There can also be special namespaced keywords
+   along with the style definitions:
+
+   ::sub-styles        Makes it possible to define a named style map inside of the main style map.
+                       The contents of ::sub-styles should be a map,
                        in which keys define the name of the sub-style and
                        values contain the style properties.
+                       Sub-styles are nothing special, they are supposed to contain the same contents
+                       as the main style map. ::sub-styles helps you to define styles that are closely
+                       related to the main style map but do not deserve their own 'def'.
+   ::mode              A map in which keys are mode names and values are style properties.
+                       Internally all modes are converted to CSS pseudoclasses. You can use any mode name
+                       that is a valid CSS speudoclass.
+   ::media             A map in which keys are maps presenting CSS media query definitions, and values
+                       are style maps which are used when the media query is active.
+   ::vendors           A vector of vendor prefixes that are used with ::auto-prefix.
+   ::auto-prefix       A set of style properties that should be prefixed with ::vendors.
 
    Options is an optional map with the following features:
+
    ::with-classes       A vector of class names used with the current style."
   ([style] (use-style style {}))
   ([style options]

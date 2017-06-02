@@ -95,8 +95,10 @@ Define how your style looks in different modes, such as when mouse is on top of 
 
 ```clojure
 (def simple-element {:background-color "rgb(88, 121, 193)"
-                     ::stylefy/mode {:hover {:background-color "rgb(98, 131, 213)"}}}
+                     ::stylefy/mode {:hover {:background-color "rgb(98, 131, 213)"}}})
 ```
+
+stylefy modes are pretty much the same thing as pseudoclasses in CSS and they simply create a new "class:mode" selector for you style. The reason for not using the name pseudoclass is completely self-willed; I think "pseudoclass" simply means nothing, when "mode" is a little bit more informative what CSS pseudoclasses are supposed to do.
 
 ## Combine & parametrise styles
 
@@ -126,6 +128,8 @@ Define a style for your component and all the elements inside of it in a single 
     [:li (use-sub-style list-container-style :list-item) "List element 3"]]])
 ```
 
+Sub-styles are nothing special, they are supposed to contain the same contents as the main style map. ::sub-styles helps you to define styles that are closely related to the main style map but do not deserve their own 'def'.
+
 ## Vendor prefixes
 
 Supported in the same way as Garden supports them:
@@ -142,6 +146,8 @@ Supported in the same way as Garden supports them:
              ::stylefy/vendors ["webkit" "moz" "o"]
              ::stylefy/auto-prefix #{:border-radius}})
 ```
+
+This generates a CSS class in which border-radius is prefixed with the given values (webkit, moz and o).
 
 ## Media queries
 
