@@ -2,6 +2,7 @@
   (:require [reagent.core :as r]
             [stylefy.examples.styles :as styles]
             [stylefy.examples.grid :as grid]
+            [stylefy.examples.full-page :as full-page]
             [cljs.core.async :refer [<! timeout]]
             [stylefy.core :as stylefy :refer [use-style use-sub-style]])
   (:require-macros [cljs.core.async.macros :refer [go]]))
@@ -170,10 +171,6 @@
    [:p "Normally stylefy handles the conversion from Clojure style maps to unique CSS classes. However, if needed, you can also define your custom named classes. Here we have defined a custom named class for handling animation fades."]
    [fade]])
 
-(defn- full-page-example []
-  [:div (use-style {:padding "10px"})
-   "TODO"])
-
 (defn- top-level []
   (let [active-tab (r/atom 0)]
     (fn []
@@ -183,7 +180,7 @@
         [bs-navbar-item 1 active-tab "Full page example"]]
        (case @active-tab
          0 [simple-examples]
-         1 [full-page-example])])))
+         1 [full-page/full-page])])))
 
 (defn- main []
   [top-level])
