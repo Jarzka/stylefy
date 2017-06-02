@@ -19,7 +19,7 @@
 ;; other libraries / frameworks. Normally there is no need to create customly named classes
 ;; when using stylefy.
 (stylefy/class "background-transition"
-               {:transition "background-color 1s;"})
+               {:transition "background-color 1s"})
 
 (def general-styles {:font-family "open_sans"})
 (def root {:margin "10px"})

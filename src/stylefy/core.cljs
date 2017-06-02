@@ -88,8 +88,9 @@
    Normally you should let stylefy convert your style maps to unique CSS classes by calling
    use-style. Thus, there is usually no need to create customly named classes when using stylefy.
 
+   Example:
    (stylefy/class \"enter-transition\"
-                   {:transition \"background-color 20s ease-out;\"})"
+                   {:transition \"background-color 2s\"})"
   [name properties]
   (dom/add-class name properties))
 
