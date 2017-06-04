@@ -15,7 +15,7 @@
 
    Important exception: if the style contains specific modes or media query definitions,
    {:visibility \"hidden\"} is returned until DOM is ready. This is done because these definitions
-   cannot be present as inline style. If this is a problem, see prepare-styles functions.
+   cannot be present as inline style. If this is a problem, see prepare-styles function.
 
    The given 'style' parameter is a map which contains CSS style properties
    (as supported by Garden library). There can also be special namespaced keywords
