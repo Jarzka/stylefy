@@ -97,6 +97,8 @@ If the style contains some specific definitions that cannot be present as inline
              ...)})
 ```
 
+It's good to keep in mind that most of the time *prepare-styles* is not needed but calling *use-style* should be enough.
+
 ## Modes
 
 Define how your style looks in different modes, such as when mouse is on top of an element using the style:
