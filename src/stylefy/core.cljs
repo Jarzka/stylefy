@@ -94,7 +94,18 @@
   [name properties]
   (dom/add-class name properties))
 
-(defn will-use-styles [styles]
+(defn will-use-styles
+  "Will convert the given styles to CSS and add them to DOM immediately.
+
+   Normally, when you call use-style, the given style is converted to CSS and will
+   be added into DOM very soon. Until then, the style is returned as inline style, except
+   if properties that cannot be present as inline style are used (some specific modes
+   and media queries). In this purpose, it can be useful to ask stylefy to prepare
+   certain styles before they are used in a component.
+
+   This function should be called when a component is going to be created
+   (in :component-will-mount lifecycle method)."
+  [styles]
   (doseq [style styles]
     (use-style style))
 
