@@ -45,10 +45,10 @@
                                        #(-> {% (assoc (get @styles-in-use %) ::in-dom? true)})
                                        (keys @styles-in-use)))))
 
-(declare update-styles-in-dom!)
+(declare continuously-update-styles-in-dom!)
 
 (defn- request-dom-update []
-  (.requestAnimationFrame js/window update-styles-in-dom!))
+  (.requestAnimationFrame js/window continuously-update-styles-in-dom!))
 
 (defn- update-styles-in-dom!
   "Updates style tag if needed."
@@ -62,11 +62,17 @@
             (mark-styles-added-in-dom!)
             (reset! keyframes-in-dom? true)
             (reset! font-faces-in-dom? true))
-        (.error js/console "stylefy is unable to find the required <style> tags!"))))
+        (.error js/console "stylefy is unable to find the required <style> tags!")))))
+
+(defn- continuously-update-styles-in-dom!
+  "Updates style tag if needed."
+  []
+  (when @dom-needs-update?
+    (update-styles-in-dom!))
   (request-dom-update))
 
 (defn init-dom-update []
-  (update-styles-in-dom!))
+  (continuously-update-styles-in-dom!))
 
 (defn style->css
   ([style] (style->css style {}))

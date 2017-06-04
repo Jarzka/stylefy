@@ -59,11 +59,17 @@
                  :height "150px"})
 
 (def stateful-component {:on (merge generic-container
-                                    {:background-color "#22FF22"})
+                                    {:background-color "#22FF22"
+                                     :border-radius "10px"
+                                     ::stylefy/media {{:max-width phone-width}
+                                                      {:border-radius 0}}})
                          :off (merge
                                 generic-container
                                 {:background-color "#333333"
-                                 :color "white"})})
+                                 :border-radius "10px"
+                                 :color "white"
+                                 ::stylefy/media {{:max-width phone-width}
+                                                  {:border-radius 0}}})})
 
 (def boostrap-navbar-overrides {:background-color "#DDDDDD"
                                 ::stylefy/sub-styles {:link {:border-radius "0 !important"}}})

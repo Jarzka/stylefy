@@ -94,6 +94,12 @@
   [name properties]
   (dom/add-class name properties))
 
+(defn will-use-styles [styles]
+  (doseq [style styles]
+    (use-style style))
+
+  (dom/update-styles-in-dom!))
+
 (def ^{:doc "Reagent atom, true if all font-faces are present in DOM"}
 font-faces-in-dom? dom/font-faces-in-dom?)
 (def ^{:doc "Reagent atom, true if all keyframes are present in DOM"}
