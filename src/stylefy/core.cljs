@@ -106,7 +106,8 @@
   (dom/add-class name properties))
 
 (defn prepare-styles
-  "Will convert the given styles to CSS and add them to DOM immediately.
+  "Will convert the given styles and their sub-styles to CSS
+   and add them to DOM immediately.
 
    Normally, when you call use-style, the given style is converted to CSS and will
    be added into DOM very soon. Until then, the style is returned as inline style, except
@@ -121,7 +122,12 @@
   (assert (seqable? styles) (str "Styles should be seqable, got: " (pr-str styles)))
   (let [styles (remove nil? styles)]
     (assert (every? map? styles) (str "Every style should be map, got: " (pr-str styles)))
+
     (doseq [style styles]
-      (use-style style))
+      (use-style style)
+
+      (when-let [sub-styles (::sub-styles style)]
+        (doseq [sub-style (vals sub-styles)]
+          (use-style sub-style))))
 
     (dom/update-styles-in-dom!)))
