@@ -41,7 +41,7 @@
    ::with-classes       A vector of class names used with the current style."
   ([style] (use-style style {}))
   ([style options]
-   (assert (or (map? style) (nil? style)) (str "Style should be a map or nil, got: " (pr-str style)))
+   (assert (or  (nil? style)) (str "Style should be a map or nil, got: " (pr-str style)))
    (assert (or (map? options) (nil? options)) (str "Options should be a map or nil, got: " (pr-str options)))
    (impl-styles/use-style! style options)))
 
