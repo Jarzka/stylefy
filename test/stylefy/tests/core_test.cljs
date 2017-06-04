@@ -123,7 +123,7 @@
           ::stylefy.impl.dom/class-properties {:transition "background-color 1s;"}})))
 
 (comment
-  ;; Passes locally, but not on Circle!?
+  ;; TODO Passes locally, but not on Circle!?
   (deftest prepare-styles
    (testing "Good argument"
      (try
