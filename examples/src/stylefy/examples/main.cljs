@@ -30,7 +30,14 @@
   (let [switch #(if (= :on %) :off :on)
         state (r/atom :on)]
     (r/create-class
-      {:component-will-mount #(stylefy/will-use-styles (vals styles/stateful-component))
+      ;; Make sure all state styles are prepared to be used.
+      ;; This is not mandatory, stylefy prepares styles on-demand when use-style
+      ;; is called and returns the given style as inline style until the style is
+      ;; converted to CSS class and added to DOM.
+      ;; However, the state styles contain media queries, which cannot be
+      ;; present as inline style, so we want that all state styles are converted and
+      ;; present in DOM when this component is created.
+      {:component-will-mount #(stylefy/prepare-styles (vals styles/stateful-component))
        :render
        (fn []
          [:div (use-style (@state styles/stateful-component))
