@@ -3,6 +3,7 @@
             [stylefy.core :as stylefy :refer [use-style use-sub-style]]))
 
 (def phone-width "514px")
+(def tablet "770px")
 
 (def header {:display :flex
              :flex-direction :column
@@ -33,7 +34,8 @@
            :margin-bottom "15px"})
 
 (def main-content {:border-right "1px solid black"
-                   :padding "15px"})
+                   :padding "15px"
+                   ::stylefy/media {{:max-width tablet} {:border-right "none"}}})
 
 (def clearfix {::stylefy/mode {:after {:clear "both"
                                        :content "." ;
