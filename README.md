@@ -96,8 +96,8 @@ If the style contains some specific definitions that cannot be present as inline
   {:component-will-mount #(stylefy/prepare-styles [style1 style2 style3])
    :render (fn []
              [:div (use-style 1)
-               [:div use-style 2]
-               [:div use-style 3]])})
+               [:div (use-style 2)]
+               [:div (use-style 3)]])})
 ```
 
 It's good to keep in mind that most of the time *prepare-styles* is not needed but calling *use-style* should be enough.
