@@ -93,7 +93,7 @@ If the style contains some specific definitions that cannot be present as inline
 
 ```clojure
 (r/create-class
-  {:component-will-mount #(stylefy/prepare-styles (vals styles/stateful-component))
+  {:component-will-mount #(stylefy/prepare-styles [style1 style2 style3])
    :render
    (fn []
      ...)})
