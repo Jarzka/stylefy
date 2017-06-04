@@ -52,6 +52,8 @@
            :margin-top "1em"
            :margin-bottom "1em"})
 
+(def stylefy-add {:font-size "1.5em"})
+
 (def lorem "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum")
 
 (defn full-page []
@@ -76,6 +78,6 @@
      [:img (merge
              (use-style meme)
              {:src "images/meme.png"})]
-     [:p "At least if you use stylefy ;)"]]]
+     [:p (use-style stylefy-add) "At least if one uses stylefy ;)"]]]
    [:footer (use-style footer)
     "Pretty much useless footer"]])
