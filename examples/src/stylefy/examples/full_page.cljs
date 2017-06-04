@@ -34,8 +34,6 @@
 (def main-content {:border-right "1px solid black"
                    :padding "15px"})
 
-(def aside {:padding "10px"})
-
 (def clearfix {::stylefy/mode {:after {:clear "both"
                                        :content "." ;
                                        :display "block"
