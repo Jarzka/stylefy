@@ -108,6 +108,7 @@
    This function should be called when a component is going to be created
    (in :component-will-mount lifecycle method)."
   [styles]
+  (assert (vector? styles) "Styles should be a vector.")
   (doseq [style styles]
     (use-style style))
 
