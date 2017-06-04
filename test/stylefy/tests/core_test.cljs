@@ -65,17 +65,15 @@
 
   (testing "Use garbage style: number"
     (try
-      (stylefy/use-sub-style style 123 :foo)
-      (is true "Error was not thrown")
-      (is (nil? return))
+      (stylefy/use-sub-style {} 123 :foo)
+      (is false "Error was not thrown")
       (catch js/Error e
         (is true "Error was thrown as expected"))))
 
   (testing "Use garbage style: string"
     (try
-      (stylefy/use-sub-style style "foo" :foo)
-      (is true "Error was not thrown")
-      (is (nil? return))
+      (stylefy/use-sub-style {} "foo" :foo)
+      (is false "Error was not thrown")
       (catch js/Error e
         (is true "Error was thrown as expected"))))
 
