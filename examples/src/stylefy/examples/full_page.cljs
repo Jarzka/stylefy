@@ -6,6 +6,7 @@
 
 (def header {:display :flex
              :flex-direction :column
+             :background-color "rgb(3, 84, 114)" ; Fallback
              :background-image "url(images/background.jpg)"
              :background-size "100%"
              :text-transform "uppercase"
