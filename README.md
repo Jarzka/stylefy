@@ -74,9 +74,9 @@ Then, call *stylefy/init* once when your application starts:
 Create a style as a normal Clojure map:
 
 ```clojure
-(def generic-container {:padding "25px"
-                        :background-color "#BBBBBB"
-                        :border "1px solid black"})
+(def button-style {:padding "25px"
+                   :background-color "#BBBBBB"
+                   :border "1px solid black"})
 ```
 
 To use it in a component, use the *use-style* function:
