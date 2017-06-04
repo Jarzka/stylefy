@@ -10,9 +10,6 @@
 (def font-faces-in-use (r/atom []))
 (def custom-classes-in-use (r/atom []))
 
-(def font-faces-in-dom? (r/atom false))
-(def keyframes-in-dom? (r/atom false))
-
 (def ^:private stylefy-node-id :#_stylefy-styles_)
 (def ^:private stylefy-constant-node-id :#_stylefy-constant-styles_)
 (def ^:private dom-needs-update? (atom false))
@@ -59,9 +56,7 @@
       (if (and node node-constant)
         (do (update-style-tags! node node-constant)
             (reset! dom-needs-update? false)
-            (mark-styles-added-in-dom!)
-            (reset! keyframes-in-dom? true)
-            (reset! font-faces-in-dom? true))
+            (mark-styles-added-in-dom!))
         (.error js/console "stylefy is unable to find the required <style> tags!")))))
 
 (defn- continuously-update-styles-in-dom!
@@ -117,14 +112,12 @@
   (boolean (::in-dom? (style-by-hash style-hash))))
 
 (defn add-keyframes [identifier & frames]
-  (reset! keyframes-in-dom? false)
   (let [garden-definition (apply at-keyframes identifier frames)]
     (swap! keyframes-in-use conj garden-definition)
     (reset! dom-needs-update? true)
     garden-definition))
 
 (defn add-font-face [properties]
-  (reset! font-faces-in-dom? false)
   (let [garden-definition (at-font-face properties)]
     (swap! font-faces-in-use conj garden-definition)
     (reset! dom-needs-update? true)

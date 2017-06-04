@@ -99,8 +99,3 @@
     (use-style style))
 
   (dom/update-styles-in-dom!))
-
-(def ^{:doc "Reagent atom, true if all font-faces are present in DOM"}
-font-faces-in-dom? dom/font-faces-in-dom?)
-(def ^{:doc "Reagent atom, true if all keyframes are present in DOM"}
-keyframes-in-dom? dom/keyframes-in-dom?)
