@@ -31,16 +31,14 @@
   (testing "Use garbage style: number"
     (try
       (stylefy/use-style 123)
-      (is true "Error was not thrown")
-      (is (nil? return))
+      (is false "Error was not thrown")
       (catch js/Error e
         (is true "Error was thrown as expected"))))
 
   (testing "Use garbage style: string"
     (try
       (stylefy/use-style "foo")
-      (is true "Error was not thrown")
-      (is (nil? return))
+      (is false "Error was not thrown")
       (catch js/Error e
         (is true "Error was thrown as expected"))))
 
