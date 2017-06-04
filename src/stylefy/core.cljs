@@ -41,9 +41,8 @@
    ::with-classes       A vector of class names used with the current style."
   ([style] (use-style style {}))
   ([style options]
-   (assert (map? style) (str "Style should be a map, got: " (pr-str style)))
-   (assert (or (map? options) (nil? options))
-           (str "Options should be a map or nil, got: " (pr-str options)))
+   (assert (or (map? style) (nil? style)) (str "Style should be a map or nil, got: " (pr-str style)))
+   (assert (or (map? options) (nil? options)) (str "Options should be a map or nil, got: " (pr-str options)))
    (impl-styles/use-style! style options)))
 
 (defn use-sub-style
@@ -53,7 +52,7 @@
    sub-style is the name of the sub-stale in the given style map."
   ([style sub-style] (use-sub-style style sub-style {}))
   ([style sub-style options]
-   (assert (map? style) (str "Style should be a map, got: " (pr-str style)))
+   (assert (or (map? style) (nil? style)) (str "Style should be a map or nil, got: " (pr-str style)))
    (assert (or (map? options) (nil? options))
            (str "Options should be a map or nil, got: " (pr-str options)))
    (impl-styles/use-sub-style! style sub-style options)))
@@ -120,8 +119,9 @@
    (in :component-will-mount lifecycle method)."
   [styles]
   (assert (seqable? styles) (str "Styles should be seqable, got: " (pr-str styles)))
-  (assert (every? map? styles) (str "Every style should be map, got: " (pr-str styles)))
-  (doseq [style styles]
-    (use-style style))
+  (let [styles (remove nil? styles)]
+    (assert (every? map? styles) (str "Every style should be map, got: " (pr-str styles)))
+    (doseq [style styles]
+      (use-style style))
 
-  (dom/update-styles-in-dom!))
+    (dom/update-styles-in-dom!)))

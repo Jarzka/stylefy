@@ -129,12 +129,19 @@
 (deftest prepare-styles
   (testing "Good argument"
     (try
-      (stylefy/prepare-styles [{:foo :bar} {:foo :bar}])
-      (is true "Error was not thrown")
+      (stylefy/prepare-styles [{:foo :bar} nil {:foo :bar}])
+      (is true "Error was not thrown as expected")
       (catch js/Error e
         (is false "Error was thrown"))))
 
-  (testing "Bad argument"
+  (testing "Good empty argument"
+    (try
+      (stylefy/prepare-styles [])
+      (is true "Error was not thrown as expected")
+      (catch js/Error e
+        (is false "Error was thrown"))))
+
+  (testing "Bad argument: map"
     (try
       (stylefy/prepare-styles {:foo :bar})
       (is false "Expected an error to be thrown.")
