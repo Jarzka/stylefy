@@ -41,6 +41,9 @@
    ::with-classes       A vector of class names used with the current style."
   ([style] (use-style style {}))
   ([style options]
+   (assert (map? style) (str "Style should be a map, got: " (pr-str style)))
+   (assert (or (map? options) (nil? options))
+           (str "Options should be a map or nil, got: " (pr-str options)))
    (impl-styles/use-style! style options)))
 
 (defn use-sub-style
@@ -50,6 +53,9 @@
    sub-style is the name of the sub-stale in the given style map."
   ([style sub-style] (use-sub-style style sub-style {}))
   ([style sub-style options]
+   (assert (map? style) (str "Style should be a map, got: " (pr-str style)))
+   (assert (or (map? options) (nil? options))
+           (str "Options should be a map or nil, got: " (pr-str options)))
    (impl-styles/use-sub-style! style sub-style options)))
 
 (defn init
@@ -71,6 +77,7 @@
                        [:to
                         {:opacity 1}])"
   [identifier & frames]
+  (assert (string? identifier) (str "Identifier should be string, got: " (pr-str identifier)))
   (apply dom/add-keyframes identifier frames))
 
 (defn font-face
@@ -83,6 +90,7 @@
                        :font-weight \"normal\"
                        :font-style \"normal\"})"
   [properties]
+  (assert (map? properties) (str "Properties should be a map, got: " (pr-str properties)))
   (dom/add-font-face properties))
 
 (defn class
@@ -94,6 +102,8 @@
    (stylefy/class \"enter-transition\"
                    {:transition \"background-color 2s\"})"
   [name properties]
+  (assert (string? name) (str "Name should be a string, got: " (pr-str name)))
+  (assert (map? properties) (str "Properties should be a map, got: " (pr-str properties)))
   (dom/add-class name properties))
 
 (defn prepare-styles
@@ -103,12 +113,14 @@
    be added into DOM very soon. Until then, the style is returned as inline style, except
    if it cannot be present as inline style (it contains some specific modes and media queries).
    In this purpose, it can be useful to ask stylefy to prepare
-   certain styles before they are used in a component.
+   certain styles before they are used in a component. This way, components using these styles
+   can start using CSS classes and media queries immediately.
 
    This function should be called when a component is going to be created
    (in :component-will-mount lifecycle method)."
   [styles]
-  (assert (vector? styles) "Styles should be a vector.")
+  (assert (seqable? styles) (str "Styles should be seqable, got: " (pr-str styles)))
+  (assert (every? map? styles) (str "Every style should be map, got: " (pr-str styles)))
   (doseq [style styles]
     (use-style style))
 

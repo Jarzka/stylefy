@@ -35,8 +35,9 @@
       ;; is called and returns the given style as inline style until the style is
       ;; converted to CSS class and added to DOM.
       ;; However, the state styles contain media queries, which cannot be
-      ;; present as inline style, so we want that all state styles are converted and
-      ;; present in DOM when this component is created.
+      ;; present as inline style, so stylefy would hide the component for a small amount of time
+      ;; until the styles are added into DOM. We want that all state styles are converted and
+      ;; present in DOM when this component is created, so we prepare the styles first.
       {:component-will-mount #(stylefy/prepare-styles (vals styles/stateful-component))
        :render
        (fn []
