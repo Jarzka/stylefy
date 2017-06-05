@@ -1,6 +1,5 @@
 # stylefy
 
-<img src="stylefy_logo.png" alt="" style="width: 100px; float: right;"/>
 
 [![Clojars Project](https://img.shields.io/clojars/v/stylefy.svg)](https://clojars.org/stylefy)
 [![CircleCI](https://circleci.com/gh/Jarzka/stylefy.svg?style=svg)](https://circleci.com/gh/Jarzka/stylefy)
