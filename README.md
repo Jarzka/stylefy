@@ -29,7 +29,7 @@ stylefy makes it possible to define UI component styles as Clojure data. Interna
 
 # Requirements
 
-- Currently stylefy works only with [Reagent](https://github.com/reagent-project/reagent). This is because stylefy forces all components to re-render themselves when currently used styles are changed. This requirement has been implemented using Reagent atom, which is deref'd in all components calling *use-style*. Support for other UI frameworks is planned, but not on the top priority list.
+- Currently stylefy works only with [Reagent](https://github.com/reagent-project/reagent). This is because stylefy forces all components to re-render themselves when currently used styles are changed. This requirement has been implemented using Reagent atom, which is deref'd in all components calling *use-style*. Support for other UI frameworks is on experimental stage.
 - Your browser needs to support requestAnimationFrame. However, all major browsers have supported it for a long time, so this should not be problem.
 
 # FAQ
