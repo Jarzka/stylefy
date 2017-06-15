@@ -2,7 +2,7 @@
   (:require [reagent.core :as r]
             [cljs-time.core :as t]
             [cljs.core.async :refer [<! timeout]]
-            [stylefy.core :as stylefy :refer [use-style use-sub-style]])
+            [stylefy.core :as stylefy :refer [use-style sub-style]])
   (:require-macros [cljs.core.async.macros :refer [go go-loop]]))
 
 (def phone-width "514px")
@@ -110,9 +110,9 @@
 (defn full-page []
   [:div
    [:header (use-style header)
-    [:h1 (use-sub-style header :infinity) "∞"]
-    [:h1 (use-sub-style header :h1) "Full Page Style"]
-    [:h1 (use-sub-style header :h2) "by stylefy"]]
+    [:h1 (use-style (sub-style header :infinity)) "∞"]
+    [:h1 (use-style (sub-style header :h1)) "Full Page Style"]
+    [:h1 (use-style (sub-style header :h2)) "by stylefy"]]
    [:div.row (use-style (merge bs-row-overrides clearfix))
     [:div.main.col-sm-8 (use-style main)
      [:div (use-style main-content)
@@ -127,7 +127,7 @@
        [:p lorem]]]]
     [:aside.col-sm-4
      [:img (merge
-             (use-style meme)
-             {:src "images/meme.jpg"})]]]
+            (use-style meme)
+            {:src "images/meme.jpg"})]]]
    [:footer (use-style footer)
     "Pretty much useless footer"]])

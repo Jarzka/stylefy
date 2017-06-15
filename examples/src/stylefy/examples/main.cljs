@@ -4,7 +4,7 @@
             [stylefy.examples.grid :as grid]
             [stylefy.examples.full-page :as full-page]
             [cljs.core.async :refer [<! timeout]]
-            [stylefy.core :as stylefy :refer [use-style use-sub-style]])
+            [stylefy.core :as stylefy :refer [use-style sub-style]])
   (:require-macros [cljs.core.async.macros :refer [go]]))
 
 (defn- button-style-by-type [type]
@@ -95,7 +95,7 @@
                            {::stylefy/with-classes ["active"]}))
               {:role "presentation"
                :on-click #(reset! index-atom index)})
-   [:a (use-sub-style styles/boostrap-navbar-overrides :link)
+   [:a (use-style (sub-style styles/boostrap-navbar-overrides :link))
     text]])
 
 (defn- bs-navbar []
@@ -109,17 +109,17 @@
 
 (defn- responsive-layout []
   [:div (use-style styles/responsive-layout)
-   [:div (use-sub-style styles/responsive-layout :column1)
+   [:div (use-style (sub-style styles/responsive-layout :column1))
     [:p "This is column 1"]
     [:p "This is column 1"]
     [:p "This is column 1"]
     [:p "This is column 1"]
     [:p "This is column 1"]]
-   [:div (use-sub-style styles/responsive-layout :column2)
+   [:div (use-style (sub-style styles/responsive-layout :column2))
     [:p "This is column 2"]
     [:p "This is column 2"]
     [:p "This is column 2"]]
-   [:div (use-sub-style styles/responsive-layout :column3)
+   [:div (use-style (sub-style styles/responsive-layout :column3))
     [:p "This is column 3"]
     [:p "This is column 3"]]])
 

@@ -58,8 +58,3 @@
 
         (style-return-value style style-hash options)))))
 
-(defn use-sub-style! [style sub-style options]
-  (let [resolved-sub-style (get (:stylefy.core/sub-styles style) sub-style)]
-    (if resolved-sub-style
-      (use-style! resolved-sub-style options)
-      (.warn js/console (str "Sub-style " (pr-str sub-style) " not found in style: " (pr-str style))))))

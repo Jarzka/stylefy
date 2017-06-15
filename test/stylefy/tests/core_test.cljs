@@ -49,43 +49,43 @@
       (is (str/includes? (:class return) "dummy"))
       (is (= (:style style-box))))))
 
-(deftest use-sub-style
+(deftest sub-style
   (testing "Use sub-style"
-    (let [return (stylefy/use-sub-style style-box :sub-box)]
+    (let [return (stylefy/use-style (stylefy/sub-style style-box :sub-box))]
       (is (string? (:class return)))
       (is (= (:style (get-in style-box [::stylefy/sub-styles :sub-box]))))))
 
   (testing "Use sub-style when the actual style map is nil"
-    (let [return (stylefy/use-sub-style nil :foo)]
+    (let [return (stylefy/use-style (stylefy/sub-style nil :foo))]
       (is (nil? return))))
 
   (testing "Use sub-style when the actual style map is empty"
-    (let [return (stylefy/use-sub-style {} :foo)]
+    (let [return (stylefy/use-style (stylefy/sub-style {} :foo))]
       (is (nil? return))))
 
   (testing "Use garbage style: number"
     (try
-      (stylefy/use-sub-style {} 123 :foo)
+      (stylefy/use-style (stylefy/sub-style {} 123 :foo))
       (is false "Error was not thrown")
       (catch js/Error e
         (is true "Error was thrown as expected"))))
 
   (testing "Use garbage style: string"
     (try
-      (stylefy/use-sub-style {} "foo" :foo)
+      (stylefy/use-style (stylefy/sub-style {} "foo" :foo))
       (is false "Error was not thrown")
       (catch js/Error e
         (is true "Error was thrown as expected"))))
 
   (testing "Use sub-style with option: ::with-classes"
-    (let [return (stylefy/use-sub-style style-box :sub-box
-                                        {::stylefy/with-classes ["dummy"]})]
+    (let [return (stylefy/use-style (stylefy/sub-style style-box :sub-box)
+                                    {::stylefy/with-classes ["dummy"]})]
       (is (string? (:class return)))
       (is (str/includes? (:class return) "dummy"))
       (is (= (:style (get-in style-box [::stylefy/sub-styles :sub-box]))))))
 
   (testing "Use sub-style that does not exist: returns nil"
-    (let [return (stylefy/use-sub-style style-box :foo)]
+    (let [return (stylefy/use-style (stylefy/sub-style style-box :foo))]
       (is (nil? return)))))
 
 (deftest init
@@ -125,23 +125,23 @@
 (comment
   ;; TODO Passes locally, but not on Circle!?
   (deftest prepare-styles
-   (testing "Good argument"
-     (try
-       (stylefy/prepare-styles [{:foo :bar} nil {:foo :bar}])
-       (is true "Error was not thrown as expected")
-       (catch js/Error e
-         (is false "Error was thrown"))))
+    (testing "Good argument"
+      (try
+        (stylefy/prepare-styles [{:foo :bar} nil {:foo :bar}])
+        (is true "Error was not thrown as expected")
+        (catch js/Error e
+          (is false "Error was thrown"))))
 
-   (testing "Good empty argument"
-     (try
-       (stylefy/prepare-styles [])
-       (is true "Error was not thrown as expected")
-       (catch js/Error e
-         (is false "Error was thrown"))))
+    (testing "Good empty argument"
+      (try
+        (stylefy/prepare-styles [])
+        (is true "Error was not thrown as expected")
+        (catch js/Error e
+          (is false "Error was thrown"))))
 
-   (testing "Bad argument: map"
-     (try
-       (stylefy/prepare-styles {:foo :bar})
-       (is false "Expected an error to be thrown.")
-       (catch js/Error e
-         (is true "Error was thrown as expected"))))))
+    (testing "Bad argument: map"
+      (try
+        (stylefy/prepare-styles {:foo :bar})
+        (is false "Expected an error to be thrown.")
+        (catch js/Error e
+          (is true "Error was thrown as expected"))))))
