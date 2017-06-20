@@ -45,16 +45,26 @@
    (assert (or (map? options) (nil? options)) (str "Options should be a map or nil, got: " (pr-str options)))
    (impl-styles/use-style! style options)))
 
+(defn use-sub-style
+  "Defines style for a component using sub-style.
+
+   The style and options are the same as you would use with use-style.
+   sub-style is the name of the sub-stale in the given style map.
+
+   If you have a deeper sub-style nesting, ie. you want to get a sub-style from sub-style,
+   take a look at sub-style function."
+  ([style sub-style] (use-sub-style style sub-style {}))
+  ([style sub-style options]
+   (assert (or (map? style) (nil? style)) (str "Style should be a map or nil, got: " (pr-str style)))
+   (assert (or (map? options) (nil? options))
+           (str "Options should be a map or nil, got: " (pr-str options)))
+   (impl-styles/use-sub-style! style sub-style options)))
+
 (defn sub-style
   "Returns sub-style for a given style."
   [style & sub-styles]
-  (if (or (nil? style) (empty? sub-styles))
-    style
-    (let [head (first sub-styles)
-          tail (rest sub-styles)]
-      (assert (map? style) (str "Style should be a map, got: " (pr-str style)))
-      (assert (keyword? head) (str "Sub style should be referenced by keyword, got: " (pr-str sub-styles head)))
-      (recur (get (:stylefy.core/sub-styles style) head) tail))))
+  (assert (every? keyword? sub-styles) (str "Sub style sshould be referenced by keyword, got: " (pr-str sub-styles)))
+  (apply impl-styles/sub-style (apply conj [style] sub-styles)))
 
 (defn init
   "Initialises stylefy.
