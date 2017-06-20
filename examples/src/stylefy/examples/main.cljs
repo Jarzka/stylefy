@@ -121,8 +121,8 @@
     [:p "This is column 2"]
     [:p "This is column 2"]]
    [:div (use-sub-style styles/responsive-layout :column3)
-    ;; If the nesting of the sub-styling is deeper than one level, we can simpyly get
-    ;; the desired sub-style and use it
+    ;; If there are more than one level of sub-style nesting, call sub-style to get
+    ;; the desired sub-style and use it.
     [:p (use-style (sub-style styles/responsive-layout :column3 :text)) "This is column 3"]
     [:p (use-style (sub-style styles/responsive-layout :column3 :text)) "This is column 3"]]])
 
