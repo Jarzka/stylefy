@@ -90,6 +90,7 @@
     :column3 (merge column
                     {:background-color "#0000AA"
                      :flex 1
+                     ;; sub-styles can also contain sub-styles
                      ::stylefy/sub-styles {:text {:color "red"}}
                      ::stylefy/media {{:max-width phone-width} {:background-color "#000000"}}})}
    ::stylefy/media {{:max-width phone-width} {:display :block}}})
