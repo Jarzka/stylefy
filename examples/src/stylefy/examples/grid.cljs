@@ -1,6 +1,6 @@
 (ns stylefy.examples.grid
   (:require [reagent.core :as r]
-            [stylefy.core :as stylefy :refer [use-style use-sub-style]]))
+            [stylefy.core :as stylefy :refer [use-style sub-style]]))
 
 (def grid-style {::stylefy/sub-styles
                  {:thead {:background-color "#66AA66"}
@@ -13,28 +13,28 @@
 
 (defn grid [options schema data]
   [:div (use-style grid-style)
-   [:table (use-sub-style grid-style :table)
-    [:thead (use-sub-style grid-style :thead)
+   [:table (use-style (sub-style grid-style :table))
+    [:thead (use-style (sub-style grid-style :thead))
      [:tr
       (doall
-        (map-indexed
-          (fn [column-index s]
-            ^{:key column-index}
-            [:th (use-sub-style grid-style :cell)
-             (:title s)])
-          schema))]]
+       (map-indexed
+        (fn [column-index s]
+          ^{:key column-index}
+          [:th (use-style (sub-style grid-style :cell))
+           (:title s)])
+        schema))]]
     [:tbody
      (doall
-       (map-indexed
-         (fn [data-index data-item]
-           ^{:key data-index}
-           [:tr (use-sub-style grid-style (if (= (rem data-index 2) 0)
-                                            :row-even
-                                            :row-odd))
-            (doall (map-indexed
-                     (fn [column-index s]
-                       ^{:key column-index}
-                       [:td (use-sub-style grid-style :cell)
-                        ((:name s) data-item)])
-                     schema))])
-         data))]]])
+      (map-indexed
+       (fn [data-index data-item]
+         ^{:key data-index}
+         [:tr (use-style (sub-style grid-style (if (= (rem data-index 2) 0)
+                                                 :row-even
+                                                 :row-odd)))
+          (doall (map-indexed
+                  (fn [column-index s]
+                    ^{:key column-index}
+                    [:td (use-style (sub-style grid-style :cell))
+                     ((:name s) data-item)])
+                  schema))])
+       data))]]])

@@ -137,10 +137,10 @@ Define a style for your component and all the elements inside of it in a single 
 
 (defn list-in-container []
   [:div (use-style list-container-style)
-   [:ul (use-sub-style list-container-style :list)
-    [:li (use-sub-style list-container-style :list-item) "List element 1"]
-    [:li (use-sub-style list-container-style :list-item) "List element 2"]
-    [:li (use-sub-style list-container-style :list-item) "List element 3"]]])
+   [:ul (use-style (sub-style list-container-style :list))
+    [:li (use-style (sub-style list-container-style :list-item)) "List element 1"]
+    [:li (use-style (sub-style list-container-style :list-item)) "List element 2"]
+    [:li (use-style (sub-style list-container-style :list-item)) "List element 3"]]])
 ```
 
 Sub-styles are nothing special, they are supposed to contain the same contents as the main style map. ::sub-styles helps you to define styles that are closely related to the main style map but do not deserve their own 'def'.
@@ -189,11 +189,11 @@ Define how you style looks different on various screen sizes:
 
 (defn responsive-layout []
   [:div (use-style styles/responsive-layout)
-   [:div (use-sub-style styles/responsive-layout :column1)
+   [:div (use-style (sub-style styles/responsive-layout :column1))
     [:p "This is column 1"]]
-   [:div (use-sub-style styles/responsive-layout :column2)
+   [:div (use-style (sub-style styles/responsive-layout :column2))
     [:p "This is column 2"]]
-   [:div (use-sub-style styles/responsive-layout :column3)
+   [:div (use-style (sub-style styles/responsive-layout :column3))
     [:p "This is column 3"]]])
 ```
 
