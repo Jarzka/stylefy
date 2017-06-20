@@ -63,7 +63,7 @@
 (defn sub-style
   "Returns sub-style for a given style."
   [style & sub-styles]
-  (assert (every? keyword? sub-styles) (str "Sub style sshould be referenced by keyword, got: " (pr-str sub-styles)))
+  (assert (every? keyword? sub-styles) (str "Sub style should be referenced by keyword, got: " (pr-str sub-styles)))
   (apply impl-styles/sub-style (apply conj [style] sub-styles)))
 
 (defn init
