@@ -88,6 +88,37 @@
     (let [return (stylefy/use-sub-style style-box :foo)]
       (is (nil? return)))))
 
+(deftest sub-style
+  (testing "Get sub-style"
+    (let [style-map {::stylefy/sub-styles
+                     {:button
+                      {:border "1px solid black"
+                       ::stylefy/sub-styles
+                       {:icon
+                        {:background-color "red"}}}}}]
+      (is (= (stylefy/sub-style style-map :button)
+             {:border "1px solid black"
+              ::stylefy/sub-styles
+              {:icon
+               {:background-color "red"}}}))
+      (is (= (stylefy/sub-style style-map :button :icon)
+             {:background-color "red"}))))
+
+  (testing "sub-style when the actual style map is nil"
+    (let [return (stylefy/sub-style nil :button :icon)]
+      (is (nil? return))))
+
+  (testing "sub-style when the actual style map is empty"
+    (let [return (stylefy/sub-style {} :button :icon)]
+      (is (nil? return))))
+
+  (testing "sub-style with bad substyle argument"
+    (try
+      (stylefy/sub-style {} :foo "bar")
+      (is false "Error was not thrown")
+      (catch js/Error e
+        (is true "Error was thrown as expected")))))
+
 (deftest init
   (let [update-styles-in-dom-called (atom false)]
     (with-redefs [;; No DOM manipulation here, just check that the function

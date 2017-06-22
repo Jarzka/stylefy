@@ -63,3 +63,13 @@
     (if resolved-sub-style
       (use-style! resolved-sub-style options)
       (.warn js/console (str "Sub-style " (pr-str sub-style) " not found in style: " (pr-str style))))))
+
+(defn sub-style
+  [style & sub-styles]
+  (let [resolved-sub-style (reduce #(get-in %1 [:stylefy.core/sub-styles %2])
+                                   style
+                                   sub-styles)]
+
+    (if resolved-sub-style
+      resolved-sub-style
+      (.warn js/console (str "Sub-style " (pr-str sub-styles) " not found in style: " (pr-str style))))))

@@ -4,7 +4,7 @@
             [stylefy.examples.grid :as grid]
             [stylefy.examples.full-page :as full-page]
             [cljs.core.async :refer [<! timeout]]
-            [stylefy.core :as stylefy :refer [use-style use-sub-style]])
+            [stylefy.core :as stylefy :refer [use-style sub-style use-sub-style]])
   (:require-macros [cljs.core.async.macros :refer [go]]))
 
 (defn- button-style-by-type [type]
@@ -109,6 +109,7 @@
 
 (defn- responsive-layout []
   [:div (use-style styles/responsive-layout)
+   ;; The easiest way to use a sub-style is to call use-sub-style function:
    [:div (use-sub-style styles/responsive-layout :column1)
     [:p "This is column 1"]
     [:p "This is column 1"]
@@ -120,8 +121,10 @@
     [:p "This is column 2"]
     [:p "This is column 2"]]
    [:div (use-sub-style styles/responsive-layout :column3)
-    [:p "This is column 3"]
-    [:p "This is column 3"]]])
+    ;; If there are more than one level of sub-style nesting, call sub-style to get
+    ;; the desired sub-style and use it.
+    [:p (use-style (sub-style styles/responsive-layout :column3 :text)) "This is column 3"]
+    [:p (use-style (sub-style styles/responsive-layout :column3 :text)) "This is column 3"]]])
 
 (defn animation []
   [:div (use-style styles/animated-box)])

@@ -45,7 +45,7 @@ Yes, it is possible to easily attach styles to components with Garden too if you
 Add the following line to your Leiningen project:
 
 ```clj
-[stylefy "0.7.1"]
+[stylefy "0.7.2"]
 ```
 
 # Usage
@@ -141,6 +141,22 @@ Define a style for your component and all the elements inside of it in a single 
     [:li (use-sub-style list-container-style :list-item) "List element 1"]
     [:li (use-sub-style list-container-style :list-item) "List element 2"]
     [:li (use-sub-style list-container-style :list-item) "List element 3"]]])
+```
+
+Another version using deeper sub-style nesting:
+
+```clojure
+(def list-container-style (merge generic-container
+                                 {::stylefy/sub-styles
+                                   {:list {:margin-top "1em"
+                                           ::stylefy/sub-styles {:item {:color "black"}}}}}))
+
+(defn list-in-container []
+  [:div (use-style list-container-style)
+   [:ul (use-sub-style list-container-style :list)
+    [:li (use-style (sub-style list-container-style :list :item)) "List element 1"]
+    [:li (use-style (sub-style list-container-style :list :item)) "List element 2"]
+    [:li (use-style (sub-style list-container-style :list :item)) "List element 3"]]])
 ```
 
 Sub-styles are nothing special, they are supposed to contain the same contents as the main style map. ::sub-styles helps you to define styles that are closely related to the main style map but do not deserve their own 'def'.
