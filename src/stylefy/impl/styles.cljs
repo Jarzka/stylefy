@@ -78,7 +78,6 @@
   (let [styles (remove nil? styles)]
 
     (doseq [style styles]
-      (.log js/console "Preparing style: " (pr-str style))
       (use-style! style {})
       (when-let [sub-styles (vals (:stylefy.core/sub-styles style))]
         (prepare-styles sub-styles))))
