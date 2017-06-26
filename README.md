@@ -45,7 +45,7 @@ Yes, it is possible to easily attach styles to components with Garden too if you
 Add the following line to your Leiningen project:
 
 ```clj
-[stylefy "0.7.2"]
+[stylefy "0.7.3"]
 ```
 
 # Usage
