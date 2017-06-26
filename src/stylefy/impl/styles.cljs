@@ -73,3 +73,14 @@
     (if resolved-sub-style
       resolved-sub-style
       (.warn js/console (str "Sub-style " (pr-str sub-styles) " not found in style: " (pr-str style))))))
+
+(defn prepare-styles [styles]
+  (let [styles (remove nil? styles)]
+
+    (doseq [style styles]
+      (.log js/console "Preparing style: " (pr-str style))
+      (use-style! style {})
+      (when-let [sub-styles (vals (:stylefy.core/sub-styles style))]
+        (prepare-styles sub-styles))))
+
+  (dom/update-styles-in-dom!))
