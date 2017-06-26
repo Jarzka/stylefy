@@ -128,15 +128,13 @@
    This function should be called when a component is going to be created
    (in :component-will-mount lifecycle method)."
   [styles]
-  (assert (seqable? styles) (str "Styles should be seqable, got: " (pr-str styles)))
-  (let [styles (remove nil? styles)]
-    (assert (every? map? styles) (str "Every style should be map, got: " (pr-str styles)))
-
-    (doseq [style styles]
-      (use-style style)
-
-      (when-let [sub-styles (::sub-styles style)]
-        (doseq [sub-style (vals sub-styles)]
-          (use-style sub-style))))
-
+  (letfn [(inner [styles]
+            (assert (seqable? styles) (str "Styles should be seqable, got: " (pr-str styles)))
+            (let [styles (remove nil? styles)]
+              (assert (every? map? styles) (str "Every style should be map, got: " (pr-str styles)))
+              (doseq [style styles]
+                (use-style style)
+                (when-let [sub-styles (::sub-styles style)]
+                  (inner sub-styles)))))]
+    (impl styles)
     (dom/update-styles-in-dom!)))
