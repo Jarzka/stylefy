@@ -40,6 +40,13 @@ Garden is awesome, but it's "just" a Clojure to CSS generator. If you want to us
 
 Yes, it is possible to easily attach styles to components with Garden too if you use inline styles. But if you use stylefy, all your style definitions are converted to unique CSS classes automatically and the corresponding class is attached to your component. This is more effective than using inline-styles, especially if the same component exists multiple times on the same page. The style is defined only once in the CSS class, not multiple times in each component instance. Also, pseudoclasses (:hover etc.) and media queries are difficult (impossible) to work with inline styles. For stylefy, this is not a problem, as it allows you to define pseudoclasses and media queries and converts them to CSS code automatically.
 
+## Any real projects using stylefy?
+
+Yup, for example:
+- [My personal website](https://github.com/Jarzka/Voimala.org). I converted to from SASS to stylefy. Diff [here](https://github.com/Jarzka/Voimala.org/compare/ac776c50d2b6e61786c7771efaf397a5fe28557e...d9d547f25b6bfbe375c501ac09a387a1060a5eef)
+
+Are you using stylefy in your (public) project? Send me a message.
+
 # Installation
 
 Add the following line to your Leiningen project:
