@@ -48,7 +48,7 @@
       (assert (or (nil? with-classes)
                   (and (vector? with-classes)
                        (every? string? with-classes)))
-              (str "with-classes argument must be a vector of string, got: " (pr-str with-classes)))
+              (str "with-classes argument must be a vector of strings, got: " (pr-str with-classes)))
 
       (let [style-hash (hash-style style)
             already-created (dom/style-by-hash style-hash)]
