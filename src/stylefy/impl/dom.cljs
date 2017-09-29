@@ -69,40 +69,56 @@
 (defn init-dom-update []
   (continuously-update-styles-in-dom!))
 
+(defn- convert-props
+  [{:keys [props hash] :as style} options]
+  (let [general-style-props (apply dissoc props (filter namespace (keys props)))
+        class-selector (keyword (str "." hash))
+        garden-class-definition [class-selector general-style-props]
+        stylefy-modes (:stylefy.core/mode props)
+        garden-pseudo-classes (mapv #(-> [(keyword (str "&" %)) (% stylefy-modes)])
+                                    (keys stylefy-modes))
+        vendors (when-let [vendors (:stylefy.core/vendors props)]
+                  {:vendors vendors
+                   :auto-prefix (:stylefy.core/auto-prefix props)})
+        css-class-options (or (merge options vendors) {})
+        css-class (css css-class-options (into garden-class-definition garden-pseudo-classes))]
+    css-class))
+
+(defn- convert-media-queries
+  [{:keys [props hash] :as style} options]
+  (let [class-selector (keyword (str "." hash))
+        stylefy-media-queries (:stylefy.core/media props)
+        css-media-queries (map (fn [media-query]
+                                 ;; TODO dissoc namespaced keywords, add support for vendor prefixes here?
+                                 (css options (at-media media-query
+                                                        [class-selector
+                                                         (get stylefy-media-queries
+                                                              media-query)])))
+                               (keys stylefy-media-queries))]
+    (apply str css-media-queries)))
+
+(defn- convert-supports-rules
+  [{:keys [props hash] :as style} options]
+  (let [class-selector (keyword (str "." hash))
+        stylefy-supports (:stylefy.core/supports props)
+        css-supports (map (fn [supports-selector]
+                            ;; TODO Make it possible to use @media inside @supports.
+                            ;; TODO dissoc namespaced keywords, add support for vendor prefixes here?
+                            (str "@supports (" supports-selector ") {"
+                                 (css options [class-selector
+                                               (get stylefy-supports
+                                                    supports-selector)])
+                                 "}"))
+                          (keys stylefy-supports))]
+    (apply str css-supports)))
+
 (defn style->css
   ([style] (style->css style {}))
   ([{:keys [props hash] :as style} options]
-   (let [general-style-props (apply dissoc props (filter namespace (keys props)))
-         class-selector (keyword (str "." hash))
-         garden-class-definition [class-selector general-style-props]
-         stylefy-modes (:stylefy.core/mode props)
-         garden-pseudo-classes (mapv #(-> [(keyword (str "&" %)) (% stylefy-modes)])
-                                     (keys stylefy-modes))
-         vendors (when-let [vendors (:stylefy.core/vendors props)]
-                   {:vendors vendors
-                    :auto-prefix (:stylefy.core/auto-prefix props)})
-         garden-options (or (merge options vendors) {})
-         css-class (css garden-options (into garden-class-definition garden-pseudo-classes))
-         stylefy-media-queries (:stylefy.core/media props)
-         css-media-queries (map (fn [media-query]
-                                  (css garden-options (at-media media-query
-                                                                [class-selector
-                                                                 (get stylefy-media-queries
-                                                                      media-query)])))
-                                (keys stylefy-media-queries))
-         stylefy-supports (:stylefy.core/supports props)
-         css-supports (map (fn [supports-selector]
-                             ;; TODO Make it possible to use @media inside @supports.
-                             (str "@supports (" supports-selector ") {"
-                                  (css garden-options [class-selector
-                                                       (get stylefy-supports
-                                                            supports-selector)])
-                                  "}"))
-                           (keys stylefy-supports))]
-     (println (pr-str css-supports))
-     (str css-class
-          (apply str css-media-queries)
-          (apply str css-supports)))))
+   (let [css-class (convert-props style options)
+         css-media-queries (convert-media-queries style options)
+         css-supports (convert-supports-rules style options)]
+     (str css-class css-media-queries css-supports))))
 
 (defn- save-style!
   "Stores the style in an atom. The style is going to be added in DOM soon."
