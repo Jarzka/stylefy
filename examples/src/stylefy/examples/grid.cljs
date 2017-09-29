@@ -5,6 +5,7 @@
 (def grid-style {;; Default style uses Flexbox as fallback
                  :display "flex"
                  :flex-direction "row"
+                 :flex-wrap "wrap"
                  ;; Use CSS Grid if supported by the browser
                  ;; If the browser does not support feature queries at all, this
                  ;; block is simply ignored.
