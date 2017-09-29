@@ -190,7 +190,7 @@ When using this style, a CSS class generated in which border-radius is prefixed 
 
 ## Media queries
 
-Define how you style looks different on various screen sizes:
+Define how your style looks different on various screen sizes:
 
 ```clojure
 (def phone-width "414px")
@@ -225,7 +225,7 @@ You can also use modes and vendor prefixes inside media query style map.
 
 ## Feature queries
 
-Define how you style looks different when certain CSS features are supported by the browser:
+Define how your style looks different when certain CSS features are supported by the browser:
 
 ```clojure
 (def grid-style {;; Default style uses Flexbox as fallback
