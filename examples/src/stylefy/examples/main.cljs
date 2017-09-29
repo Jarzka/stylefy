@@ -1,7 +1,7 @@
 (ns stylefy.examples.main
   (:require [reagent.core :as r]
             [stylefy.examples.styles :as styles]
-            [stylefy.examples.grid :as grid]
+            [stylefy.examples.table :as grid]
             [stylefy.examples.full-page :as full-page]
             [cljs.core.async :refer [<! timeout]]
             [stylefy.core :as stylefy :refer [use-style sub-style use-sub-style]])
