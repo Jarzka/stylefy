@@ -11,7 +11,7 @@ ClojureScript library for styling UI components with ease.
 
 # Introduction
 
-stylefy makes it possible to define UI component styles as Clojure data. Internally the defined styles are converted to CSS classes by using [Garden](https://github.com/noprompt/garden) and inserted into DOM. When styles are defined as Clojure data, they can be easily transformed with Clojure's powerful functions (like merge) and parametrised. Also, since the converted CSS is handled internally by the library, there is no need to worry about things like name conflicts, difficult cascading, dead CSS code etc.
+stylefy makes it possible to define UI component styles as Clojure data. Internally the defined styles are converted to CSS classes by using [Garden](https://github.com/noprompt/garden) and inserted into DOM at runtime. When styles are defined as Clojure data, they can be easily transformed with Clojure's powerful functions (like merge) and parametrised. Also, since the converted CSS is handled internally by the library, there is no need to worry about things like name conflicts, difficult cascading, dead CSS code etc.
 
 # Features
 
@@ -31,7 +31,7 @@ Please note that feature queries (@supports) are currently not supported.
 
 # Requirements
 
-- Currently stylefy works only with [Reagent](https://github.com/reagent-project/reagent). This is because stylefy forces all components to re-render themselves when currently used styles are changed. This requirement has been implemented using Reagent atom, which is deref'd in all components calling *use-style*. Support for other UI frameworks is on experimental stage.
+- Currently stylefy works only with SPA applications using [Reagent](https://github.com/reagent-project/reagent). This is because stylefy forces all components to re-render themselves when currently used styles are changed. This requirement has been implemented using Reagent atom, which is deref'd in all components calling *use-style*. Support for other UI frameworks is on experimental stage.
 - Your browser needs to support requestAnimationFrame. However, all major browsers have supported it for a long time, so this should not be problem.
 
 # FAQ
