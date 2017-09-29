@@ -132,3 +132,11 @@
   (assert (every? map? (remove nil? styles))
           (str "Every style should be a map or nil, got: " (pr-str styles)))
   (impl-styles/prepare-styles styles))
+
+;; Style maps can contain the following special keywords,
+;; which are referenced to this namespace:
+;;  :stylefy.core/sub-styles
+;;  :stylefy.core/media
+;;  :stylefy.core/mode
+;;  :stylefy.core/vendors
+;;  :stylefy.core/auto-prefix

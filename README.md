@@ -24,10 +24,9 @@ stylefy makes it possible to define UI component styles as Clojure data. Interna
 - Media queries, define how your style looks different on various screen sizes
 - Keyframes
 - Font-face
+- Feature queries (@supports)
 - Small and simple API
 - Tested to work with Chrome, Firefox, Edge & Internet Explorer 11
-
-Please note that feature queries (@supports) are currently not supported.
 
 # Requirements
 
@@ -222,6 +221,29 @@ Define how you style looks different on various screen sizes:
     [:p "This is column 3"]]])
     
 You can also use modes and vendor prefixes inside media query style map.
+
+## Feature queries
+
+Define how you style looks different when certain CSS features are supported by the browser:
+
+```clojure
+(def grid-style {;; Default style uses Flexbox as fallback
+                 :display "flex"
+                 :flex-direction "row"
+                 :flex-wrap "wrap"
+                 :.stylefy/media {{:max-width styles/phone-width}
+                                  {:display "block"}}
+                 ;; Use CSS Grid style if it is supported by the browser
+                 ;; If the browser does not support CSS Grid or feature queries at all, this
+                 ;; block is simply ignored.
+                 ::stylefy/supports {"display: grid"
+                                     {:display "grid"
+                                      :grid-template-columns "1fr 1fr 1fr"
+                                      ;; Make CSS Grid responsive
+                                      ::stylefy/media {{:max-width styles/phone-width}
+                                                       {:grid-template-columns "1fr"}}}}})
+    
+You can use modes, media queries, and vendor prefixes inside feature query style map.
     
 ```
 
