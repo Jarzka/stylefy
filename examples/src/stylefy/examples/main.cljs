@@ -1,7 +1,8 @@
 (ns stylefy.examples.main
   (:require [reagent.core :as r]
             [stylefy.examples.styles :as styles]
-            [stylefy.examples.table :as grid]
+            [stylefy.examples.table :as table]
+            [stylefy.examples.grid :as grid]
             [stylefy.examples.full-page :as full-page]
             [cljs.core.async :refer [<! timeout]]
             [stylefy.core :as stylefy :refer [use-style sub-style use-sub-style]])
@@ -152,7 +153,7 @@
 
    [:h1 "Component with multiple sub elements"]
    [:p "Styled by using sub-styles"]
-   [grid/grid
+   [table/table
     {:title "Example grid"}
     [{:title "Product" :name :name}
      {:title "ID" :name :id}
@@ -183,7 +184,11 @@
 
    [:h1 "Custom class names"]
    [:p "Normally stylefy handles the conversion from Clojure style maps to unique CSS classes. However, if needed, you can also define your custom named classes. Here we have defined a custom named class for handling animation fades."]
-   [fade]])
+   [fade]
+
+   [:h1 "Feature queries"]
+   [:p "The following example is rendered using CSS Grid if supported by the browser. If not, it uses Flexbox fallback as the default style."]
+   [grid/grid]])
 
 (defn- top-level []
   (let [active-tab (r/atom 0)]

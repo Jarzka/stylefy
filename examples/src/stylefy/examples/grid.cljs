@@ -2,21 +2,24 @@
   (:require [reagent.core :as r]
             [stylefy.core :as stylefy :refer [use-style use-sub-style]]))
 
-(def modern-grid {:display "grid"
-                  :grid-template-columns "1fr 1fr 1fr"
-                  ::stylefy/supports "(display: grid)"})
-
-(def legacy-grid {:display "flex"
-                  :flex-direction "row"
-                  })
-
-(def grid-style {})
+(def grid-style {;; Default style uses Flexbox as fallback
+                 :display "flex"
+                 :flex-direction "row"
+                 ;; Use CSS Grid if supported by the browser
+                 ;; If the browser does not support feature queries at all, this
+                 ;; block is simply ignored.
+                 ::stylefy/supports {"(display: grid)"
+                                     {:display "grid"
+                                      :grid-template-columns "1fr 1fr 1fr"}}})
 
 (defn create-box-style [color]
   {:background-color color
-   :height "200px"})
+   :width "33.333%"
+   :height "200px"
+   ::stylefy/supports {"(display: grid)" {:width "auto" ;; Managed by grid
+                                          }}})
 
-(defn grid [options schema data]
+(defn grid []
   [:div (use-style grid-style)
    [:div (use-style (create-box-style "#000000"))]
    [:div (use-style (create-box-style "#AA0000"))]

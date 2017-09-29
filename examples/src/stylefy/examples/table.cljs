@@ -11,7 +11,7 @@
                             ::stylefy/mode {:hover {:background-color "#BBBBBB"}}}
                   :cell {:padding "5px"}}})
 
-(defn grid [options schema data]
+(defn table [options schema data]
   [:div (use-style table-style)
    [:table (use-sub-style table-style :table)
     [:thead (use-sub-style table-style :thead)
