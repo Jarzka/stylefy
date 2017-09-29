@@ -40,4 +40,4 @@
 (deftest responsive-style->css
   (is (= (dom/style->css {:props responsive-style :hash (styles/hash-style responsive-style)}
                          {:pretty-print? false})
-         "._stylefy_1443051883{background-color:red}@media (max-width: 500px) {\n\n  ._stylefy_1443051883 {\n    background-color: blue;\n  }\n\n}")))
+         "._stylefy_1443051883{background-color:red}@media(max-width:500px){._stylefy_1443051883{background-color:blue}}")))
