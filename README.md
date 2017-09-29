@@ -220,6 +220,9 @@ Define how you style looks different on various screen sizes:
     [:p "This is column 2"]]
    [:div (use-sub-style styles/responsive-layout :column3)
     [:p "This is column 3"]]])
+    
+You can also use modes and vendor prefixes inside media query style map.
+    
 ```
 
 ## 3rd party classes
