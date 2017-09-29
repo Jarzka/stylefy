@@ -26,7 +26,7 @@ stylefy makes it possible to define UI component styles as Clojure data. Interna
 - Font-face
 - Feature queries (@supports)
 - Small and simple API
-- Tested to work with Chrome, Firefox, Edge & Internet Explorer 11
+- All features are tested to work with Chrome, Firefox, Edge & Internet Explorer 11
 
 # Requirements
 

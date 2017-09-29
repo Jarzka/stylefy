@@ -23,8 +23,10 @@
   {:background-color color
    :width "33.333%"
    :height "200px"
+   ::stylefy/media {{:max-width styles/phone-width}
+                    {:width "100%"}}
    ::stylefy/supports {"display: grid"
-                       ;; Element width is well managed by grid.
+                       ;; Element width is always well managed by grid.
                        {:width "auto"}}})
 
 (defn grid []
