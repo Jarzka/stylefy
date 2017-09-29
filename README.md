@@ -231,7 +231,7 @@ Define how you style looks different when certain CSS features are supported by 
                  :display "flex"
                  :flex-direction "row"
                  :flex-wrap "wrap"
-                 :.stylefy/media {{:max-width styles/phone-width}
+                 ::stylefy/media {{:max-width styles/phone-width}
                                   {:display "block"}}
                  ;; Use CSS Grid style if it is supported by the browser
                  ;; If the browser does not support CSS Grid or feature queries at all, this
