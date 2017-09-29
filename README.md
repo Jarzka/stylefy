@@ -53,7 +53,7 @@ Are you using stylefy in your (public) project? Send me a message.
 Add the following line to your Leiningen project:
 
 ```clj
-[stylefy "0.7.3"]
+[stylefy "1.0.0"]
 ```
 
 # Usage
