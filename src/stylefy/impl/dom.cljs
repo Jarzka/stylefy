@@ -81,17 +81,28 @@
          vendors (when-let [vendors (:stylefy.core/vendors props)]
                    {:vendors vendors
                     :auto-prefix (:stylefy.core/auto-prefix props)})
-         garden-options (merge
-                          options
-                          vendors)
-         css-class (if garden-options
-                     (css garden-options (into garden-class-definition garden-pseudo-classes))
-                     (css (into garden-class-definition garden-pseudo-classes)))
+         garden-options (or (merge options vendors) {})
+         css-class (css garden-options (into garden-class-definition garden-pseudo-classes))
          stylefy-media-queries (:stylefy.core/media props)
          css-media-queries (map (fn [media-query]
-                                  (css (at-media media-query [class-selector (get stylefy-media-queries media-query)])))
-                                (keys stylefy-media-queries))]
-     (str css-class (apply str css-media-queries)))))
+                                  (css garden-options (at-media media-query
+                                                                [class-selector
+                                                                 (get stylefy-media-queries
+                                                                      media-query)])))
+                                (keys stylefy-media-queries))
+         stylefy-supports (:stylefy.core/supports props)
+         css-supports (map (fn [supports-selector]
+                             ;; TODO Make it possible to use @media inside @supports.
+                             (str "@supports (" supports-selector ") {"
+                                  (css garden-options [class-selector
+                                                       (get stylefy-supports
+                                                            supports-selector)])
+                                  "}"))
+                           (keys stylefy-supports))]
+     (println (pr-str css-supports))
+     (str css-class
+          (apply str css-media-queries)
+          (apply str css-supports)))))
 
 (defn- save-style!
   "Stores the style in an atom. The style is going to be added in DOM soon."

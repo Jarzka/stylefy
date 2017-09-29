@@ -8,7 +8,7 @@
                  ;; Use CSS Grid if supported by the browser
                  ;; If the browser does not support feature queries at all, this
                  ;; block is simply ignored.
-                 ::stylefy/supports {"(display: grid)"
+                 ::stylefy/supports {"display: grid"
                                      {:display "grid"
                                       :grid-template-columns "1fr 1fr 1fr"}}})
 
@@ -16,8 +16,8 @@
   {:background-color color
    :width "33.333%"
    :height "200px"
-   ::stylefy/supports {"(display: grid)" {:width "auto" ;; Managed by grid
-                                          }}})
+   ::stylefy/supports {"display: grid" {:width "auto" ;; Managed by grid
+                                        }}})
 
 (defn grid []
   [:div (use-style grid-style)
