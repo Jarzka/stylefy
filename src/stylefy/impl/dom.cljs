@@ -72,6 +72,11 @@
 (defn- filter-style-props [props]
   (apply dissoc props (filter namespace (keys props))))
 
+(defn- convert-stylefy-vendors-to-garden [props]
+  (when-let [vendors (:stylefy.core/vendors props)]
+    {:vendors vendors
+     :auto-prefix (:stylefy.core/auto-prefix props)}))
+
 (defn- convert-props
   [{:keys [props hash] :as style} options]
   (let [style-props (filter-style-props props)
@@ -80,11 +85,9 @@
         stylefy-modes (:stylefy.core/mode props)
         garden-pseudo-classes (mapv #(-> [(keyword (str "&" %)) (% stylefy-modes)])
                                     (keys stylefy-modes))
-        vendors (when-let [vendors (:stylefy.core/vendors props)]
-                  {:vendors vendors
-                   :auto-prefix (:stylefy.core/auto-prefix props)})
-        css-class-options (or (merge options vendors) {})
-        css-class (css css-class-options (into garden-class-definition garden-pseudo-classes))]
+        vendors (convert-stylefy-vendors-to-garden props)
+        garden-options (or (merge options vendors) {})
+        css-class (css garden-options (into garden-class-definition garden-pseudo-classes))]
     css-class))
 
 (defn- convert-media-queries
@@ -93,9 +96,10 @@
         stylefy-media-queries (:stylefy.core/media props)
         css-media-queries (map
                             (fn [media-query]
-                              ;; TODO Add support for vendor prefixes here?
-                              (let [props (filter-style-props (get stylefy-media-queries media-query))]
-                                (css options (at-media media-query [class-selector props]))))
+                              (let [props (filter-style-props (get stylefy-media-queries media-query))
+                                    vendors (convert-stylefy-vendors-to-garden props)
+                                    garden-options (or (merge options vendors) {})]
+                                (css garden-options (at-media media-query [class-selector props]))))
                             (keys stylefy-media-queries))]
     (apply str css-media-queries)))
 
@@ -105,10 +109,11 @@
         stylefy-supports (:stylefy.core/supports props)
         css-supports (map (fn [supports-selector]
                             ;; TODO Make it possible to use @media inside @supports.
-                            ;; TODO Add support for vendor prefixes here?
-                            (let [props (filter-style-props (get stylefy-supports supports-selector))]
+                            (let [props (filter-style-props (get stylefy-supports supports-selector))
+                                  vendors (convert-stylefy-vendors-to-garden props)
+                                  garden-options (or (merge options vendors) {})]
                               (str "@supports (" supports-selector ") {"
-                                   (css options [class-selector props])
+                                   (css garden-options [class-selector props])
                                    "}")))
                           (keys stylefy-supports))]
     (apply str css-supports)))
