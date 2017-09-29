@@ -72,12 +72,7 @@
 (defn style->css
   ([style] (style->css style {}))
   ([{:keys [props hash] :as style} options]
-   (let [general-style-props (dissoc props
-                                     :stylefy.core/sub-styles
-                                     :stylefy.core/media
-                                     :stylefy.core/mode
-                                     :stylefy.core/vendors
-                                     :stylefy.core/auto-prefix)
+   (let [general-style-props (apply dissoc props (filter namespace (keys props)))
          class-selector (keyword (str "." hash))
          garden-class-definition [class-selector general-style-props]
          stylefy-modes (:stylefy.core/mode props)
