@@ -69,11 +69,14 @@
 (defn init-dom-update []
   (continuously-update-styles-in-dom!))
 
+(defn- filter-style-props [props]
+  (apply dissoc props (filter namespace (keys props))))
+
 (defn- convert-props
   [{:keys [props hash] :as style} options]
-  (let [general-style-props (apply dissoc props (filter namespace (keys props)))
+  (let [style-props (filter-style-props props)
         class-selector (keyword (str "." hash))
-        garden-class-definition [class-selector general-style-props]
+        garden-class-definition [class-selector style-props]
         stylefy-modes (:stylefy.core/mode props)
         garden-pseudo-classes (mapv #(-> [(keyword (str "&" %)) (% stylefy-modes)])
                                     (keys stylefy-modes))
@@ -88,13 +91,12 @@
   [{:keys [props hash] :as style} options]
   (let [class-selector (keyword (str "." hash))
         stylefy-media-queries (:stylefy.core/media props)
-        css-media-queries (map (fn [media-query]
-                                 ;; TODO dissoc namespaced keywords, add support for vendor prefixes here?
-                                 (css options (at-media media-query
-                                                        [class-selector
-                                                         (get stylefy-media-queries
-                                                              media-query)])))
-                               (keys stylefy-media-queries))]
+        css-media-queries (map
+                            (fn [media-query]
+                              ;; TODO Add support for vendor prefixes here?
+                              (let [props (filter-style-props (get stylefy-media-queries media-query))]
+                                (css options (at-media media-query [class-selector props]))))
+                            (keys stylefy-media-queries))]
     (apply str css-media-queries)))
 
 (defn- convert-supports-rules
@@ -103,12 +105,11 @@
         stylefy-supports (:stylefy.core/supports props)
         css-supports (map (fn [supports-selector]
                             ;; TODO Make it possible to use @media inside @supports.
-                            ;; TODO dissoc namespaced keywords, add support for vendor prefixes here?
-                            (str "@supports (" supports-selector ") {"
-                                 (css options [class-selector
-                                               (get stylefy-supports
-                                                    supports-selector)])
-                                 "}"))
+                            ;; TODO Add support for vendor prefixes here?
+                            (let [props (filter-style-props (get stylefy-supports supports-selector))]
+                              (str "@supports (" supports-selector ") {"
+                                   (css options [class-selector props])
+                                   "}")))
                           (keys stylefy-supports))]
     (apply str css-supports)))
 
