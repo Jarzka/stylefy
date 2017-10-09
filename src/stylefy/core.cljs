@@ -140,3 +140,4 @@
 ;;  :stylefy.core/mode
 ;;  :stylefy.core/vendors
 ;;  :stylefy.core/auto-prefix
+;;  :stylefy.core/supports
