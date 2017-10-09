@@ -21,7 +21,7 @@ stylefy makes it possible to define UI component styles as Clojure data. Interna
 - Define general, inheriting styles (such as text color, font etc.) by putting them in the root component of the app
 - Define how your style behaves in different modes, for example when a mouse is on top of an element using the style
 - Vendor prefixes, define which vendor prefixes are used and which properties should be prefixed
-- Media queries, define how your style looks different on various screen sizes
+- Media queries, define how your style looks on various screen sizes
 - Keyframes
 - Font-face
 - Feature queries (@supports)
@@ -190,7 +190,7 @@ When using this style, a CSS class generated in which border-radius is prefixed 
 
 ## Media queries
 
-Define how your style looks different on various screen sizes:
+Define how your style looks on various screen sizes:
 
 ```clojure
 (def phone-width "414px")
