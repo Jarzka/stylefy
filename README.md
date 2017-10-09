@@ -11,7 +11,7 @@ ClojureScript library for styling UI components with ease.
 
 # Introduction
 
-stylefy makes it possible to define UI component styles as Clojure data. Internally the defined styles are converted to CSS classes by using [Garden](https://github.com/noprompt/garden) and inserted into DOM at runtime. When styles are defined as Clojure data, they can be easily transformed with Clojure's powerful functions (like merge) and parametrised. Also, since the converted CSS is handled internally by the library, there is no need to worry about things like name conflicts, difficult cascading, dead CSS code etc.
+stylefy makes it possible to define UI component styles as Clojure data. Internally the defined styles are converted to CSS classes by using [Garden](https://github.com/noprompt/garden) and inserted into the DOM at runtime. When styles are defined as Clojure data, they can be easily transformed with Clojure's powerful functions (like merge) and parametrised. Also, since the converted CSS is handled internally by the library, there is no need to worry about things like name conflicts, difficult cascading, dead CSS code etc.
 
 # Features
 
@@ -66,7 +66,7 @@ Add the following line to your Leiningen project:
 
 Make sure there are the following *style* tags on your page's *head* tag. The tags should be the last <style> tags in the header.
 
-The first tag is going to contain CSS definitions that are not going to change (font-face, keyframes etc.). The second will contain class definitions that are added into DOM on-demand when components need them.
+The first tag is going to contain CSS definitions that are not going to change (font-face, keyframes etc.). The second will contain class definitions that are added into the DOM on-demand when components need them.
 
 ```html
 <style id="_stylefy-constant-styles_"></style>
@@ -97,7 +97,7 @@ To use it in a component, use the *use-style* function:
     text])
 ```
 
-Calling use-style asks stylefy to save the style (if it has not been saved already) and add it into DOM as CSS class as soon as possible. The return value is a map pointing to the created class, and the given style properties as inline style. Inline style is needed until the CSS code has been generated and inserted into DOM. When the DOM is ready, the component is forced to re-render itself and use only class definition.
+Calling use-style asks stylefy to save the style (if it has not been saved already) and add it into the DOM as CSS class as soon as possible. The return value is a map pointing to the created class, and the given style properties as inline style. Inline style is needed until the CSS code has been generated and inserted into the DOM. When the DOM is ready, the component is forced to re-render itself and use only class definition.
 
 If the style contains some specific definitions that cannot be present as inline style (some specific modes or media queries), the component is going to be hidden for a small amount of time until the CSS style is added into the DOM. The styles can also be added into the beforehand by calling *prepare-styles*. Calling this function on :component-will-mount makes sure the styles are completely ready to be used when the component needs them.
 
