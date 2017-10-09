@@ -20,6 +20,7 @@
 (defn- style-return-value [style style-hash options]
   (let [with-classes (:stylefy.core/with-classes options)
         contains-media-queries? (some? (:stylefy.core/media style))
+        contains-feature-queries? (some? (:stylefy.core/supports style))
         excluded-modes #{:hover}
         contains-modes-not-excluded? (not (empty?
                                             (filter (comp not excluded-modes)
@@ -27,12 +28,14 @@
         return-map {:class (str/join " " (conj with-classes style-hash))}]
     (if (dom/style-in-dom? style-hash)
       return-map
-      (if (or contains-media-queries? contains-modes-not-excluded?)
-        ;; The style definition has not been added to DOM yet, so return the style props
+      (if (or contains-media-queries?
+              contains-feature-queries?
+              contains-modes-not-excluded?)
+        ;; The style definition has not been added into the DOM yet, so return the style props
         ;; as inline style. Inline style gets replaced soon as the style definition
-        ;; is added to DOM and the component re-renders itself.
+        ;; is added into the DOM and the component re-renders itself.
         ;; However, if there are media queries or specific mode definitions, inline styling is probably
-        ;; going to look wrong. Thus, hide the component completely until DOM is ready.
+        ;; going to look wrong. Thus, hide the component completely until the DOM is ready.
         (merge return-map {:style (merge style
                                          {:visibility "hidden"})})
         (merge return-map {:style style})))))

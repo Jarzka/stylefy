@@ -38,7 +38,7 @@
       ;; However, the state styles contain media queries, which cannot be
       ;; present as inline style, so stylefy would hide the component for a small amount of time
       ;; until the styles are added into DOM. We want that all state styles are converted and
-      ;; present in DOM when this component is created, so we prepare the styles first.
+      ;; present in the DOM when this component is created, so we prepare the styles first.
       {:component-will-mount #(stylefy/prepare-styles (vals styles/stateful-component))
        :render
        (fn []
@@ -167,7 +167,7 @@
    [stateful-component]
 
    [:h1 "Stress test"]
-   [:p "Styles are added into DOM on-demand when they are used for the first time. Clicking the button below generates 1000 different looking components dynamically. The components are first styled with inline styles until the DOM has been updated and we can begin using CSS classes to save memory."]
+   [:p "Styles are added into the DOM on-demand when they are used for the first time. Clicking the button below generates 1000 different looking components dynamically. The components are first styled with inline styles until the DOM has been updated and we can begin using CSS classes to save memory."]
    [stress-test]
 
    [:h1 "Boostrap navbar"]

@@ -10,11 +10,11 @@
 
    Calling use-style does not immediately add the generated CSS class to DOM, because doing this
    in a single render would slow everything down if use-style is called multiple times.
-   If the style has not been added to DOM yet, it also returns the given props as inline style, so that
+   If the style has not been added into the DOM yet, it also returns the given props as inline style, so that
    the component looks good even if CSS class has not been genererated yet.
 
    Important exception: if the style contains specific modes or media query definitions,
-   {:style {:visibility \"hidden\"}} is returned until DOM is ready.
+   {:style {:visibility \"hidden\"}} is returned until the DOM is ready.
    This is done because these definitions cannot be present as inline style.
    If this is a problem, see prepare-styles function.
 
@@ -70,7 +70,7 @@
 (defn init
   "Initialises stylefy.
 
-  Internally starts checking if new styles need to be added in to DOM as CSS classes."
+  Internally starts checking if new styles need to be added into the DOM as CSS classes."
   []
   (dom/init-dom-update))
 
@@ -117,10 +117,10 @@
 
 (defn prepare-styles
   "Will convert the given styles and their sub-styles to CSS
-   and add them to DOM immediately.
+   and add them into the DOM immediately.
 
    Normally, when you call use-style, the given style is converted to CSS and will
-   be added into DOM very soon. Until then, the style is returned as inline style, except
+   be added into the DOM very soon. Until then, the style is returned as inline style, except
    if it cannot be present as inline style (it contains some specific modes and media queries).
    In this purpose, it can be useful to ask stylefy to prepare
    certain styles before they are used in a component. This way, components using these styles

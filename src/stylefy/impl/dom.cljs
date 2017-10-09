@@ -145,7 +145,7 @@
      (str css-class css-media-queries css-supports))))
 
 (defn- save-style!
-  "Stores the style in an atom. The style is going to be added in DOM soon."
+  "Stores the style in an atom. The style is going to be added into the DOM soon."
   [{:keys [props hash] :as style}]
   (assert props "Unable to save empty style!")
   (assert hash "Unable to save style without hash!")
