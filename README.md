@@ -225,7 +225,7 @@ You can also use modes and vendor prefixes inside media query style map.
 
 ## Feature queries
 
-Define how your style looks different when certain CSS features are supported by the browser:
+Define how your style looks when certain CSS features are supported by the browser:
 
 ```clojure
 (def grid-style {;; Default style uses Flexbox as fallback
