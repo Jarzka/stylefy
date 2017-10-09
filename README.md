@@ -99,7 +99,7 @@ To use it in a component, use the *use-style* function:
 
 Calling use-style asks stylefy to save the style (if it has not been saved already) and add it into DOM as CSS class as soon as possible. The return value is a map pointing to the created class, and the given style properties as inline style. Inline style is needed until the CSS code has been generated and inserted into DOM. When the DOM is ready, the component is forced to re-render itself and use only class definition.
 
-If the style contains some specific definitions that cannot be present as inline style (some specific modes or media queries), the component is going to be hidden for a small amount of time until the CSS style is added in to DOM. The styles can also be added in to DOM beforehand by calling *prepare-styles*. Calling this function on :component-will-mount makes sure the styles are completely ready to be used when the component needs them.
+If the style contains some specific definitions that cannot be present as inline style (some specific modes or media queries), the component is going to be hidden for a small amount of time until the CSS style is added into the DOM. The styles can also be added into the beforehand by calling *prepare-styles*. Calling this function on :component-will-mount makes sure the styles are completely ready to be used when the component needs them.
 
 ```clojure
 (r/create-class
@@ -212,12 +212,12 @@ Define how your style looks different on various screen sizes:
                                                                :flex 1})}})
 
 (defn responsive-layout []
-  [:div (use-style styles/responsive-layout)
-   [:div (use-sub-style styles/responsive-layout :column1)
+  [:div (use-style responsive-layout)
+   [:div (use-sub-style responsive-layout :column1)
     [:p "This is column 1"]]
-   [:div (use-sub-style styles/responsive-layout :column2)
+   [:div (use-sub-style responsive-layout :column2)
     [:p "This is column 2"]]
-   [:div (use-sub-style styles/responsive-layout :column3)
+   [:div (use-sub-style responsive-layout :column3)
     [:p "This is column 3"]]])
 ```
 
@@ -277,7 +277,7 @@ Use 3rd party classes along with stylefy definitions:
 
 ## Font-face
 
-Call *stylefy/font-face* and the given font-face is added in to DOM as CSS code.
+Call *stylefy/font-face* and the given font-face is added into the as CSS code.
 
 ```clojure
 (stylefy/font-face {:font-family "open_sans"
@@ -289,7 +289,7 @@ Call *stylefy/font-face* and the given font-face is added in to DOM as CSS code.
 
 ## Keyframes
 
-Call *stylefy/keyframes* and the given keyframes are added in to DOM as CSS code.
+Call *stylefy/keyframes* and the given keyframes are added into the as CSS code.
 
 ```clojure
 (stylefy/keyframes "simple-animation"
@@ -309,7 +309,7 @@ Call *stylefy/keyframes* and the given keyframes are added in to DOM as CSS code
 As has been told, stylefy converts style definition to unique CSS classes automatically and there is no need to worry about class names. It can, however, be useful to be able to generate custom named classes for example when working with 3rd party libraries / frameworks. For this purpose, call *stylefy/class*:
 
 ```clojure
-;; This generates a CSS class with the name "background-transition" and adds it in to DOM.
+;; This generates a CSS class with the name "background-transition" and adds it into the.
 (stylefy/class "background-transition"
                {:transition "background-color 1s"})
           
