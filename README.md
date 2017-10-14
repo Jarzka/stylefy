@@ -112,17 +112,6 @@ If the style contains some specific definitions that cannot be present as inline
 
 It's good to keep in mind that most of the time *prepare-styles* is not needed but calling *use-style* should be enough.
 
-## Modes
-
-Define how your style looks in different modes, such as when mouse is on top of an element using the style:
-
-```clojure
-(def simple-element {:background-color "rgb(88, 121, 193)"
-                     ::stylefy/mode {:hover {:background-color "rgb(98, 131, 213)"}}})
-```
-
-stylefy modes are pretty much the same thing as pseudoclasses in CSS and they simply create a new "class:mode" selector for you style. The reason for not using the name pseudoclass is completely self-willed; I think "pseudoclass" simply means nothing, when "mode" is a little bit more informative what CSS pseudoclasses are supposed to do.
-
 ## Combine & parametrise styles
 
 Combine or parametrise styles however you like:
@@ -133,6 +122,17 @@ Combine or parametrise styles however you like:
 (defn button-style [background-color]
   (merge generic-button {:background-color background-color}))
 ```
+
+## Modes
+
+Define how your style looks in different modes, such as when mouse is on top of an element using the style:
+
+```clojure
+(def simple-element {:background-color "rgb(88, 121, 193)"
+                     ::stylefy/mode {:hover {:background-color "rgb(98, 131, 213)"}}})
+```
+
+stylefy modes are pretty much the same thing as pseudoclasses in CSS and they simply create a new "class:mode" selector for you style. The reason for not using the name pseudoclass is completely self-willed; I think "pseudoclass" simply means nothing, when "mode" is a little bit more informative what CSS pseudoclasses are supposed to do.
 
 ## Sub-styles
 
