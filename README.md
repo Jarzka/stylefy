@@ -277,7 +277,7 @@ Use 3rd party classes along with stylefy definitions:
 
 ## Font-face
 
-Call *stylefy/font-face* and the given font-face is added into the as CSS code.
+Call *stylefy/font-face* and the given font-face is added into the DOM as CSS code.
 
 ```clojure
 (stylefy/font-face {:font-family "open_sans"
@@ -289,7 +289,7 @@ Call *stylefy/font-face* and the given font-face is added into the as CSS code.
 
 ## Keyframes
 
-Call *stylefy/keyframes* and the given keyframes are added into the as CSS code.
+Call *stylefy/keyframes* and the given keyframes are added into the DOM as CSS code.
 
 ```clojure
 (stylefy/keyframes "simple-animation"
@@ -309,7 +309,7 @@ Call *stylefy/keyframes* and the given keyframes are added into the as CSS code.
 As has been told, stylefy converts style definition to unique CSS classes automatically and there is no need to worry about class names. It can, however, be useful to be able to generate custom named classes for example when working with 3rd party libraries / frameworks. For this purpose, call *stylefy/class*:
 
 ```clojure
-;; This generates a CSS class with the name "background-transition" and adds it into the.
+;; This generates a CSS class with the name "background-transition" and adds it into the DOM.
 (stylefy/class "background-transition"
                {:transition "background-color 1s"})
           
