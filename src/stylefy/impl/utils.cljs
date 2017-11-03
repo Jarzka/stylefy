@@ -10,12 +10,12 @@
   (:require-macros [reagent.ratom :refer [run!]]))
 
 (defn filter-style-props
-  "Removes namespaced keywords from style map."
+  "Removes namespaced keywords from a style map."
   [props]
   (apply dissoc props (filter namespace (keys props))))
 
 (defn garden-units->to-css
-  "Checks all values in the map and converts all Garden units to CSS"
+  "Checks all values in the map and converts all Garden units to CSS."
   [props]
   (reduce
     (fn [result next-key]
