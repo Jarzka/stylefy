@@ -25,7 +25,7 @@ stylefy makes it possible to define UI component styles as Clojure data. Interna
 - Keyframes
 - Font-face
 - Feature queries (@supports)
-- Small and simple API
+- Small and simple core API
 - All features are tested to work with Chrome, Firefox, Edge & Internet Explorer 11
 
 # Requirements
@@ -53,7 +53,7 @@ Are you using stylefy in your (public) project? Send me a message.
 Add the following line to your Leiningen project:
 
 ```clj
-[stylefy "1.0.1"]
+[stylefy "1.1.0"]
 ```
 
 # Usage
@@ -118,7 +118,7 @@ Combine or parametrise styles however you like:
 
 ```clojure
 (def primary-button (merge generic-button {:background-color "rgb(88, 121, 193)"}))
-                                  
+
 (defn button-style [background-color]
   (merge generic-button {:background-color background-color}))
 ```
@@ -188,10 +188,63 @@ Supported in the same way as Garden supports them:
 
 When using this style, a CSS class generated in which border-radius is prefixed with the given values (webkit, moz and o).
 
+## Media queries
+
+Define how your style looks on various screen sizes:
+
+```clojure
+(def phone-width "414px")
+
+(def column {:padding "5px"
+             :color "white"})
+
+(def responsive-layout {:display :flex
+                        :flex-direction :row
+                        ::stylefy/media {{:max-width phone-width} {:flex-direction :column}}
+                        ::stylefy/sub-styles {:column1 (merge column
+                                                              {:background-color "#AA0000"
+                                                               :flex 1})
+                                              :column2 (merge column
+                                                              {:background-color "#00AA00"
+                                                               :flex 2})
+                                              :column3 (merge column
+                                                              {:background-color "#0000AA"
+                                                               :flex 1})}})
+
+(defn responsive-layout []
+  [:div (use-style responsive-layout)
+   [:div (use-sub-style responsive-layout :column1)
+    [:p "This is column 1"]]
+   [:div (use-sub-style responsive-layout :column2)
+    [:p "This is column 2"]]
+   [:div (use-sub-style responsive-layout :column3)
+    [:p "This is column 3"]]])
+```
+
+You can also use modes and vendor prefixes inside media query style map.
+
 ## Feature queries
 
 Define how your style looks when certain CSS features are supported by the browser:
 
+```clojure
+(def grid-style {;; Default style uses Flexbox as fallback
+                 :display "flex"
+                 :flex-direction "row"
+                 :flex-wrap "wrap"
+                 ::stylefy/media {{:max-width styles/phone-width}
+                                  {:display "block"}}
+                 ;; Use CSS Grid style if it is supported by the browser.
+                 ;; If the browser does not support CSS Grid or feature queries at all, this
+                 ;; block is simply ignored.
+                 ::stylefy/supports {"display: grid"
+                                     {:display "grid"
+                                      :grid-template-columns "1fr 1fr 1fr"
+                                      ;; Make CSS Grid responsive
+                                      ::stylefy/media {{:max-width styles/phone-width}
+                                                       {:grid-template-columns "1fr"}}}}})
+
+```
 
 You can use modes, media queries, and vendor prefixes inside feature query style map.
 
@@ -244,7 +297,7 @@ Call *stylefy/keyframes* and the given keyframes are added into the DOM as CSS c
                     {:background-color "red"}]
                    [:to
                     {:background-color "blue"}])
-                    
+
 (def animated-box (merge simple-box
                          {:animation-name "simple-animation"
                           :animation-duration "3s"
@@ -259,9 +312,22 @@ As has been told, stylefy converts style definition to unique CSS classes automa
 ;; This generates a CSS class with the name "background-transition" and adds it into the DOM.
 (stylefy/class "background-transition"
                {:transition "background-color 1s"})
-          
+
 ;; Use the generated class in a component like any other class
 [:div.background-transition]
+```
+
+## Custom tag styles
+
+As has been told, stylefy converts style definition to unique CSS classes automatically and there is no need to worry about writing selectors for HTML tags. However, custom tag styles can be useful for setting styles on base elements, like html or body. For this purpose, call *stylefy/tag*:
+
+```clojure
+;; This generates a CSS tag selector and style for "body" element
+(def body-style
+  {:background-color :lightyellow
+   :padding          :5px})
+
+(stylefy/tag "body" body-style)
 ```
 
 ## Units and colors
