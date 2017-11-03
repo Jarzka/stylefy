@@ -23,6 +23,9 @@
   (let [styles-in-css (map (fn [style-hash]
                              (::css (style-by-hash style-hash)))
                            (keys @styles-in-use))
+        ;; TODO Keyframes, font-faces, custom classes are not going to change once defined.
+        ;; Now we re-convert those to CSS every single time this function is called.
+        ;; We should use the converted CSS when it has been created.
         keyframes-in-css (map (fn [keyframes]
                                 (css keyframes))
                               @keyframes-in-use)
