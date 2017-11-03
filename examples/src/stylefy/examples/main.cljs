@@ -4,6 +4,7 @@
             [stylefy.examples.table :as table]
             [stylefy.examples.grid :as grid]
             [stylefy.examples.full-page :as full-page]
+            [stylefy.examples.custom-tags :as custom-tags]
             [cljs.core.async :refer [<! timeout]]
             [stylefy.core :as stylefy :refer [use-style sub-style use-sub-style]])
   (:require-macros [cljs.core.async.macros :refer [go]]))
@@ -182,6 +183,10 @@
    [:p "stylefy also supports keyframes"]
    [animation]
 
+   [:h1 "Custom tag styles"]
+   [:p "Custom tag selectors should rarely be necessary, but can be useful for setting styles on base elements, like html or body. This example shows custom styles applied to <code> and <ul> elements."]
+   [custom-tags/custom-tags]
+
    [:h1 "Custom class names"]
    [:p "Normally stylefy handles the conversion from Clojure style maps to unique CSS classes. However, if needed, you can also define your custom named classes. Here we have defined a custom named class for handling animation fades."]
    [fade]
@@ -206,4 +211,5 @@
 
 (defn ^:export start []
   (stylefy/init)
+  (custom-tags/custom-tag-styles)
   (r/render main (.getElementById js/document "app")))
