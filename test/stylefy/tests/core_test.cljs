@@ -12,13 +12,87 @@
                 :padding "5px"
                 :width "150px"
                 :height "150px"
-                ::stylefy/sub-styles {:sub-box {:border "1px solid black"}}})
+                :stylefy.core/mode {:hover {:background-color "red"}}
+                :stylefy.core/vendors #{"moz"}
+                :stylefy.core/auto-prefix #{:border-radius}
+                :stylefy.core/sub-styles {:sub-box {:border "1px solid black"}}})
 
 (deftest use-style
   (testing "Use style"
     (let [return (stylefy/use-style style-box)]
       (is (string? (:class return)))
-      (is (= (:style style-box)))))
+      ;; This is the first time we use this style map -> inline style shoule be returned
+      (is (map? (:style return)))
+      ;; Inline style does not contain namespaced keywords:
+      (is (= (:style return)
+             {:border "1px solid black"
+              :background-color "#FFDDDD"
+              :text-align :center
+              :padding "5px"
+              :width "150px"
+              :height "150px"}))))
+
+  (testing "Use style with :hover mode"
+    (let [return (stylefy/use-style (merge style-box
+                                           {:stylefy.core/mode {:hover {:background-color "blue"}}}))]
+      (is (string? (:class return)))
+      (is (map? (:style return)))
+      ;; Inline style does not contain namespaced keywords and it's not hidden.
+      (is (= (:style return)
+             {:border "1px solid black"
+              :background-color "#FFDDDD"
+              :text-align :center
+              :padding "5px"
+              :width "150px"
+              :height "150px"}))))
+
+  (testing "Use style with :foo mode"
+    (let [return (stylefy/use-style (merge style-box
+                                           {:stylefy.core/mode {:foo {:background-color "blue"}}}))]
+      (is (string? (:class return)))
+      (is (map? (:style return)))
+      ;; Inline style does not contain namespaced keywords and it IS hidden, because only
+      ;; certain modes be accepted without hiding the component
+      (is (= (:style return)
+             {:border "1px solid black"
+              :background-color "#FFDDDD"
+              :text-align :center
+              :visibility "hidden"
+              :padding "5px"
+              :width "150px"
+              :height "150px"}))))
+
+  (testing "Use style with media query"
+    (let [return (stylefy/use-style (merge style-box
+                                           {:stylefy.core/media {{:max-width "400px"}
+                                                                 {:border "1px solid red"}}}))]
+      (is (string? (:class return)))
+      (is (map? (:style return)))
+      ;; Inline style hides the component (media queries do not work as inline style)
+      (is (= (:style return)
+             {:border "1px solid black"
+              :background-color "#FFDDDD"
+              :text-align :center
+              :padding "5px"
+              :visibility "hidden"
+              :width "150px"
+              :height "150px"}))))
+
+  (testing "Use style with feature query"
+    (let [return (stylefy/use-style (merge style-box
+                                           {:stylefy.core/supports {"display: grid"
+                                                                    {:border "1px solid red"}}}))]
+      (is (string? (:class return)))
+      (is (map? (:style return)))
+      ;; Inline style hides the component (feature queries do not work as inline style)
+      (is (= (:style return)
+             {:border "1px solid black"
+              :background-color "#FFDDDD"
+              :text-align :center
+              :padding "5px"
+              :visibility "hidden"
+              :width "150px"
+              :height "150px"}))))
 
   (testing "Use nil style"
     (let [return (stylefy/use-style nil)]
@@ -52,6 +126,7 @@
 (deftest use-sub-style
   (testing "Use sub-style"
     (let [return (stylefy/use-sub-style style-box :sub-box)]
+      (println "RETURNS " (pr-str return))
       (is (string? (:class return)))
       (is (= (:style (get-in style-box [::stylefy/sub-styles :sub-box]))))))
 
@@ -127,8 +202,8 @@
                   ;; No .requestAnimationFrame in Phantom,
                   ;; use a simple function call instead
                   dom/request-dom-update #(dom/update-styles-in-dom!)]
-      (stylefy/init)
-      (is (true? @update-styles-in-dom-called)))))
+                 (stylefy/init)
+                 (is (true? @update-styles-in-dom-called)))))
 
 (deftest font-face
   (is (= (css {:pretty-print? false}
@@ -156,23 +231,23 @@
 (comment
   ;; TODO Passes locally, but not on Circle!?
   (deftest prepare-styles
-   (testing "Good argument"
-     (try
-       (stylefy/prepare-styles [{:foo :bar} nil {:foo :bar}])
-       (is true "Error was not thrown as expected")
-       (catch js/Error e
-         (is false "Error was thrown"))))
+    (testing "Good argument"
+      (try
+        (stylefy/prepare-styles [{:foo :bar} nil {:foo :bar}])
+        (is true "Error was not thrown as expected")
+        (catch js/Error e
+          (is false "Error was thrown"))))
 
-   (testing "Good empty argument"
-     (try
-       (stylefy/prepare-styles [])
-       (is true "Error was not thrown as expected")
-       (catch js/Error e
-         (is false "Error was thrown"))))
+    (testing "Good empty argument"
+      (try
+        (stylefy/prepare-styles [])
+        (is true "Error was not thrown as expected")
+        (catch js/Error e
+          (is false "Error was thrown"))))
 
-   (testing "Bad argument: map"
-     (try
-       (stylefy/prepare-styles {:foo :bar})
-       (is false "Expected an error to be thrown.")
-       (catch js/Error e
-         (is true "Error was thrown as expected"))))))
+    (testing "Bad argument: map"
+      (try
+        (stylefy/prepare-styles {:foo :bar})
+        (is false "Expected an error to be thrown.")
+        (catch js/Error e
+          (is true "Error was thrown as expected"))))))

@@ -1,7 +1,8 @@
 (ns stylefy.impl.styles
   (:require [stylefy.impl.dom :as dom]
             [garden.core :refer [css]]
-            [clojure.string :as str]))
+            [clojure.string :as str]
+            [stylefy.impl.utils :as utils]))
 
 (defn hash-style [style]
   ;; Hash style without its sub-styles. ::sub-styles is only a link to other styles, it
@@ -25,7 +26,8 @@
         contains-modes-not-excluded? (not (empty?
                                             (filter (comp not excluded-modes)
                                                     (keys (:stylefy.core/mode style)))))
-        return-map {:class (str/join " " (conj with-classes style-hash))}]
+        return-map {:class (str/join " " (conj with-classes style-hash))}
+        inline-style (utils/filter-style-props style)]
     (if (dom/style-in-dom? style-hash)
       return-map
       (if (or contains-media-queries?
@@ -36,9 +38,9 @@
         ;; is added into the DOM and the component re-renders itself.
         ;; However, if there are media queries or specific mode definitions, inline styling is probably
         ;; going to look wrong. Thus, hide the component completely until the DOM is ready.
-        (merge return-map {:style (merge style
+        (merge return-map {:style (merge inline-style
                                          {:visibility "hidden"})})
-        (merge return-map {:style style})))))
+        (merge return-map {:style inline-style})))))
 
 (defn use-style! [style options]
   ;; Deref to make sure components re-render themselves when styles-in-use updates

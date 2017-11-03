@@ -2,6 +2,7 @@
   (:require [dommy.core :as dommy]
             [reagent.core :as r]
             [garden.core :refer [css]]
+            [stylefy.impl.utils :as utils]
             [garden.stylesheet :refer [at-media at-keyframes at-font-face]])
   (:require-macros [reagent.ratom :refer [run!]]))
 
@@ -69,9 +70,6 @@
 (defn init-dom-update []
   (continuously-update-styles-in-dom!))
 
-(defn- filter-style-props [props]
-  (apply dissoc props (filter namespace (keys props))))
-
 (defn- convert-stylefy-vendors-to-garden [props]
   (when-let [vendors (:stylefy.core/vendors props)]
     {:vendors vendors
@@ -84,7 +82,7 @@
 
 (defn- convert-base-style
   [{:keys [props hash] :as style} options]
-  (let [style-props (filter-style-props props)
+  (let [style-props (utils/filter-style-props props)
         class-selector (keyword (str "." hash))
         garden-class-definition [class-selector style-props]
         garden-pseudo-classes (convert-stylefy-modes-garden props)
@@ -102,7 +100,7 @@
         (map
           (fn [media-query]
             (let [media-query-props (get stylefy-media-queries media-query)
-                  style-props (filter-style-props media-query-props)
+                  style-props (utils/filter-style-props media-query-props)
                   garden-class-definition [class-selector style-props]
                   garden-pseudo-classes (convert-stylefy-modes-garden media-query-props)
                   garden-vendors (convert-stylefy-vendors-to-garden media-query-props)
@@ -119,7 +117,7 @@
         css-supports (map
                        (fn [supports-selector]
                          (let [supports-props (get stylefy-supports supports-selector)
-                               style-props (filter-style-props supports-props)
+                               style-props (utils/filter-style-props supports-props)
                                garden-class-definition [class-selector style-props]
                                garden-pseudo-classes (convert-stylefy-modes-garden style-props)
                                garden-vendors (convert-stylefy-vendors-to-garden supports-props)
