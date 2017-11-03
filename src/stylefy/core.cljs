@@ -102,6 +102,19 @@
   (assert (map? properties) (str "Properties should be a map, got: " (pr-str properties)))
   (dom/add-font-face properties))
 
+(defn tag
+  "Creates a CSS selector for the given tag and properties.
+   Normally you should let stylefy convert your style maps to unique CSS classes by calling
+   use-style, instead of using custom classes or tags.
+
+   Example:
+   (stylefy/tag \"code\"
+                 {:background-color \"lightyellow\"})"
+  [name properties]
+  (assert (string? name) (str "Tag name should be a string, got: " (pr-str name)))
+  (assert (map? properties) (str "Properties should be a map, got: " (pr-str properties)))
+  (dom/add-tag name properties))
+
 (defn class
   "Creates a CSS class with the given name and properties.
    Normally you should let stylefy convert your style maps to unique CSS classes by calling

@@ -8,6 +8,7 @@
 (def styles-in-use (r/atom {})) ;; style hash -> props
 (def keyframes-in-use (r/atom []))
 (def font-faces-in-use (r/atom []))
+(def custom-tags-in-use (r/atom []))
 (def custom-classes-in-use (r/atom []))
 
 (def ^:private stylefy-node-id :#_stylefy-styles_)
@@ -28,12 +29,17 @@
         font-faces-in-use (map (fn [properties]
                                  (css properties))
                                @font-faces-in-use)
+        custom-tags-in-use (map (fn [tag-definition]
+                                  (css [(keyword (::tag-name tag-definition))
+                                        (::tag-properties tag-definition)]))
+                                @custom-tags-in-use)
         custom-classes-in-use (map (fn [class-definition]
                                      (css [(keyword (str "." (::class-name class-definition)))
                                            (::class-properties class-definition)]))
                                    @custom-classes-in-use)]
     (dommy/set-text! node-constant (apply str (concat font-faces-in-use
                                                       keyframes-in-css
+                                                      custom-tags-in-use
                                                       custom-classes-in-use)))
     (dommy/set-text! node (apply str styles-in-css))))
 
@@ -168,6 +174,12 @@
     (swap! font-faces-in-use conj garden-definition)
     (reset! dom-needs-update? true)
     garden-definition))
+
+(defn add-tag [name properties]
+  (let [custom-tag-definition {::tag-name name ::tag-properties properties}]
+    (swap! custom-tags-in-use conj custom-tag-definition)
+    (reset! dom-needs-update? true)
+    custom-tag-definition))
 
 (defn add-class [name properties]
   (let [custom-class-definition {::class-name name ::class-properties properties}]

@@ -147,6 +147,15 @@
                                   {:background-color "blue"}]))
          "@keyframes simple-animation{from{background-color:red}to{background-color:blue}}")))
 
+(deftest tag
+  (reset! stylefy.impl.dom/custom-tags-in-use [])
+  (is (= (stylefy/tag "code"
+                      {:background-color :lightyellow})
+         {::stylefy.impl.dom/tag-name       "code"
+          ::stylefy.impl.dom/tag-properties {:background-color :lightyellow}}))
+  (is (= @stylefy.impl.dom/custom-tags-in-use
+         [{:stylefy.impl.dom/tag-name "code", :stylefy.impl.dom/tag-properties {:background-color :lightyellow}}])))
+
 (deftest class
   (is (= (stylefy/class "background-transition"
                         {:transition "background-color 1s;"})
