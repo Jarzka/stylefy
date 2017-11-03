@@ -4,6 +4,8 @@
             [stylefy.impl.styles :as styles]
             [stylefy.impl.dom :as dom]
             [garden.core :refer [css]]
+            [garden.color :as color]
+            [garden.units :as units]
             [clojure.string :as str]))
 
 (def style-box {:border "1px solid black"
@@ -122,6 +124,21 @@
       (is (string? (:class return)))
       (is (str/includes? (:class return) "dummy"))
       (is (= (:style style-box))))))
+
+(deftest garden-types
+  (testing "Garden units are converted correctly"
+    (let [return (stylefy/use-style {:width (units/px 50)})]
+      (is (string? (:class return)))
+      (is (map? (:style return)))
+      (is (= (:style return)
+             {:width "50px"}))))
+
+  (testing "Garden colors are converted correctly"
+    (let [return (stylefy/use-style {:color (color/hsl 123 1 2)})]
+      (is (string? (:class return)))
+      (is (map? (:style return)))
+      (is (= (:style return)
+             {:color "#050505"})))))
 
 (deftest use-sub-style
   (testing "Use sub-style"

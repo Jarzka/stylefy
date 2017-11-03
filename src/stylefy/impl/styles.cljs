@@ -27,7 +27,9 @@
                                             (filter (comp not excluded-modes)
                                                     (keys (:stylefy.core/mode style)))))
         return-map {:class (str/join " " (conj with-classes style-hash))}
-        inline-style (utils/filter-style-props style)]
+        inline-style (-> style
+                         (utils/filter-style-props)
+                         (utils/garden-units->to-css))]
     (if (dom/style-in-dom? style-hash)
       return-map
       (if (or contains-media-queries?
