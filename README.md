@@ -25,7 +25,7 @@ stylefy makes it possible to define UI component styles as Clojure data. Interna
 - Keyframes
 - Font-face
 - Feature queries (@supports)
-- Small and simple API
+- Small and simple core API
 - All features are tested to work with Chrome, Firefox, Edge & Internet Explorer 11
 
 # Requirements
@@ -53,7 +53,7 @@ Are you using stylefy in your (public) project? Send me a message.
 Add the following line to your Leiningen project:
 
 ```clj
-[stylefy "1.0.1"]
+[stylefy "1.1.0"]
 ```
 
 # Usage

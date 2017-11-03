@@ -105,7 +105,8 @@
 (defn tag
   "Creates a CSS selector for the given tag and properties.
    Normally you should let stylefy convert your style maps to unique CSS classes by calling
-   use-style, instead of using custom classes or tags.
+   use-style, instead of creating tag selectors. However, custom tag styles
+   can be useful for setting styles on base elements, like html or body.
 
    Example:
    (stylefy/tag \"code\"
@@ -118,7 +119,8 @@
 (defn class
   "Creates a CSS class with the given name and properties.
    Normally you should let stylefy convert your style maps to unique CSS classes by calling
-   use-style. Thus, there is usually no need to create customly named classes when using stylefy.
+   use-style. Thus, there is usually no need to create customly named classes when using stylefy,
+   unless you work with some 3rd party framework.
 
    Example:
    (stylefy/class \"enter-transition\"

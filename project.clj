@@ -1,4 +1,4 @@
-(defproject stylefy "1.0.1"
+(defproject stylefy "1.1.0"
   :description "Library for styling UI components"
   :dependencies [[org.clojure/clojure "1.8.0"]
                  [org.clojure/clojurescript "1.9.542"]
