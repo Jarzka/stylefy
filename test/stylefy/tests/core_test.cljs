@@ -54,7 +54,7 @@
       (is (string? (:class return)))
       (is (map? (:style return)))
       ;; Inline style does not contain namespaced keywords and it IS hidden, because only
-      ;; certain modes be accepted without hiding the component
+      ;; certain modes can be accepted without hiding the component
       (is (= (:style return)
              {:border "1px solid black"
               :background-color "#FFDDDD"
