@@ -317,6 +317,19 @@ As has been told, stylefy converts style definition to unique CSS classes automa
 [:div.background-transition]
 ```
 
+## Custom tag styles
+
+As has been told, stylefy converts style definition to unique CSS classes automatically and there is no need to worry about writing selectors for HTML tags. However, custom tag styles can be useful for setting styles on base elements, like html or body. For this purpose, call *stylefy/tag*:
+
+```clojure
+;; This generates a CSS tag selector and style for "body" element
+(def body-style
+  {:background-color :lightyellow
+   :padding          :5px})
+
+(stylefy/tag "body" body-style)
+```
+
 ## Units and colors
 
 You can use Garden's [Unit](https://github.com/noprompt/garden/wiki/Units-%26-Arithmetic) and [Color](https://github.com/noprompt/garden/wiki/Color) helpers with stylefy.
