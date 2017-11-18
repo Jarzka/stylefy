@@ -73,6 +73,7 @@
 (defn stress-test []
   (let [components-count 1000
         state (r/atom :hidden)
+        start-time (atom nil)
         styles (mapv create-bar-style (range 0 components-count))]
     (fn []
       [:div (use-style styles/generic-container)
@@ -84,13 +85,19 @@
           :visible "Hide")
         #(case @state
            :hidden (go (reset! state :generating)
-                       (<! (timeout 10))
+                       (<! (timeout 100))
+                       (reset! start-time (.getTime (js/Date.)))
                        (reset! state :visible))
            :visible (reset! state :hidden))
         :primary]
 
        (when (= @state :visible)
          (map-indexed (fn [index component]
+                        (when (= index (- components-count 1))
+                          (.log js/console (str "Generation time: "
+                                                (- (.getTime (js/Date.)) @start-time)
+                                                " ms.")))
+
                         ^{:key index}
                         [component (use-style (get styles index))])
                       (map stress-test-item (range 0 components-count))))])))
