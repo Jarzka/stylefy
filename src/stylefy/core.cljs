@@ -75,7 +75,8 @@
 
   The following options are supported:
     use-caching?            If true, caches the generated CSS code so that future page
-                            loads work faster. Defaults to false."
+                            loads work faster. Defaults to false.
+                            NOTE: You need to clear the cache manually by hand."
   ([] (init {}))
   ([options]
    (dom/init-dom-update)

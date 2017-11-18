@@ -25,3 +25,5 @@
   (when @cache-styles?
     (.setItem (.-localStorage js/window) cache-key styles)))
 
+(defn clear []
+  (.setItem (.-localStorage js/window) cache-key ""))
