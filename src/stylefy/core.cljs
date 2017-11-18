@@ -74,14 +74,17 @@
   the DOM as CSS classes.
 
   The following options are supported:
-    use-caching?            If true, caches the generated CSS code so that future page
-                            loads work faster. Defaults to false.
-                            NOTE: You need to clear the cache manually by hand
-                            by calling stylefy.cache/clear."
+    use-caching?              If true, caches the generated CSS code so that future page
+                              loads work faster. Defaults to false.
+                              NOTE: You need to clear the cache manually by hand
+                              by calling stylefy.cache/clear.
+    global-vendor-prefixes    A map containing a set of :vendors and :auto-prefix properties.
+                              These properties are globally prefixed in all CSS code."
   ([] (init {}))
   ([options]
    (dom/init-dom-update)
-   (dom/init-styles-in-use options)))
+   (dom/init-styles-in-use options)
+   (dom/init-global-vendor-prefixes options)))
 
 (defn keyframes
   "Adds the given keyframe definition to DOM.
