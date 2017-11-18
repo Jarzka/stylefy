@@ -70,9 +70,16 @@
 (defn init
   "Initialises stylefy.
 
-  Internally starts checking if new styles need to be added into the DOM as CSS classes."
-  []
-  (dom/init-dom-update))
+  Internally checks cache once and starts checking if new styles need to be added into
+  the DOM as CSS classes.
+
+  The following options are supported:
+    use-caching?            If true, caches the generated CSS code so that future page
+                            loads work faster. Defaults to false."
+  ([] (init {}))
+  ([options]
+   (dom/init-dom-update)
+   (dom/init-styles-in-use options)))
 
 (defn keyframes
   "Adds the given keyframe definition to DOM.

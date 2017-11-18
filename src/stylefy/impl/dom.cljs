@@ -2,6 +2,7 @@
   (:require [dommy.core :as dommy]
             [reagent.core :as r]
             [garden.core :refer [css]]
+            [stylefy.impl.cache :as cache]
             [stylefy.impl.utils :as utils]
             [garden.stylesheet :refer [at-media at-keyframes at-font-face]])
   (:require-macros [reagent.ratom :refer [run!]]))
@@ -78,6 +79,11 @@
 
 (defn init-dom-update []
   (continuously-update-styles-in-dom!))
+
+(defn init-styles-in-use [options]
+  (when (:use-caching? options)
+    (cache/use-caching!)
+    (reset! styles-in-use (or (cache/read-cache) {}))))
 
 (defn- convert-stylefy-vendors-to-garden [props]
   (when-let [vendors (:stylefy.core/vendors props)]
@@ -156,9 +162,10 @@
   [{:keys [props hash] :as style}]
   (assert props "Unable to save empty style!")
   (assert hash "Unable to save style without hash!")
-  (let [style-css (style->css style)]
-    (swap! styles-in-use assoc hash
-           (assoc props ::css style-css))
+  (let [style-css (style->css style)
+        style-to-be-saved (assoc props ::css style-css)]
+    (swap! styles-in-use assoc hash style-to-be-saved)
+    (cache/cache-style hash style-to-be-saved)
     (reset! dom-needs-update? true)))
 
 (defn style-in-dom? [style-hash]

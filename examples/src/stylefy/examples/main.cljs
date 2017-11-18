@@ -210,6 +210,6 @@
   [top-level])
 
 (defn ^:export start []
-  (stylefy/init)
+  (stylefy/init {:use-caching? true})
   (custom-tags/custom-tag-styles)
   (r/render main (.getElementById js/document "app")))
