@@ -6,7 +6,8 @@
             [stylefy.examples.full-page :as full-page]
             [stylefy.examples.custom-tags :as custom-tags]
             [cljs.core.async :refer [<! timeout]]
-            [stylefy.core :as stylefy :refer [use-style sub-style use-sub-style]])
+            [stylefy.core :as stylefy :refer [use-style sub-style use-sub-style]]
+            [stylefy.cache :as stylefy-cache])
   (:require-macros [cljs.core.async.macros :refer [go]]))
 
 (defn- button-style-by-type [type]
@@ -205,7 +206,11 @@
 
    [:h1 "Feature queries"]
    [:p "The following example is rendered using CSS Grid if supported by the browser. If not, it uses Flexbox fallback as the default style. stylefy also supports media queries inside feature queries!"]
-   [grid/grid]])
+   [grid/grid]
+
+   [:h1 "Caching"]
+   [:p "stylefy supports style caching, which means that the generated CSS code is saved into the offline storage and retrieved from there when the page is reloaded. This way, styles once generated do not need to be generated again and the page loads faster. Caching can be turned on manually, and it also needs to be cleared manually."]
+   [button "Clear cache" #(stylefy-cache/clear) :primary]])
 
 (defn- top-level []
   (let [active-tab (r/atom 0)]
