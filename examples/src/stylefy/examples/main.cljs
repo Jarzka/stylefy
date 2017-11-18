@@ -221,6 +221,8 @@
   [top-level])
 
 (defn ^:export start []
-  (stylefy/init {:use-caching? true})
+  (stylefy/init {:use-caching? true
+                 :global-vendor-prefixes {::stylefy/vendors ["webkit" "moz" "o"]
+                                          ::stylefy/auto-prefix #{:border-radius}}})
   (custom-tags/custom-tag-styles)
   (r/render main (.getElementById js/document "app")))

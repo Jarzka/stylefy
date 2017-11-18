@@ -13,8 +13,6 @@
 (def font-faces-in-use (r/atom []))
 (def custom-tags-in-use (r/atom []))
 (def custom-classes-in-use (r/atom []))
-(def global-vendor-prefixes (atom {:vendors #{}
-                                   :auto-prefix #{}}))
 
 (def ^:private stylefy-node-id :#_stylefy-styles_)
 (def ^:private stylefy-constant-node-id :#_stylefy-constant-styles_)
@@ -92,22 +90,10 @@
     (cache/use-caching!)
     (reset! styles-in-use (or (cache/read-cache) {}))))
 
-(defn init-global-vendor-prefixes [options]
-  (let [global-vendor-prefixes-options (:global-vendor-prefixes options)]
-    (reset! global-vendor-prefixes
-            {:vendors (:vendors global-vendor-prefixes-options)
-             :auto-prefix (:auto-prefix global-vendor-prefixes-options)})))
-
 (defn- convert-stylefy-vendors-to-garden [props]
   (when-let [vendors (:stylefy.core/vendors props)]
     {:vendors vendors
      :auto-prefix (:stylefy.core/auto-prefix props)}))
-
-(defn- add-global-vendors [garden-options]
-  {:vendors (set/union (:vendors @global-vendor-prefixes)
-                       (:vendors garden-options))
-   :auto-prefix (set/union (:auto-prefix @global-vendor-prefixes)
-                           (:auto-prefix garden-options))})
 
 (defn- convert-stylefy-modes-garden [props]
   (let [modes (:stylefy.core/mode props)]
@@ -120,9 +106,7 @@
         class-selector (keyword (str "." hash))
         garden-class-definition [class-selector style-props]
         garden-pseudo-classes (convert-stylefy-modes-garden props)
-        garden-vendors (-> props
-                           (convert-stylefy-vendors-to-garden)
-                           (add-global-vendors))
+        garden-vendors (convert-stylefy-vendors-to-garden props)
         garden-options (or (merge options garden-vendors) {})
         css-class (css garden-options (into garden-class-definition
                                             garden-pseudo-classes))]
@@ -139,9 +123,7 @@
                   style-props (utils/filter-style-props media-query-props)
                   garden-class-definition [class-selector style-props]
                   garden-pseudo-classes (convert-stylefy-modes-garden media-query-props)
-                  garden-vendors (-> media-query-props
-                                     (convert-stylefy-vendors-to-garden)
-                                     (add-global-vendors))
+                  garden-vendors (convert-stylefy-vendors-to-garden media-query-props)
                   garden-options (or (merge options garden-vendors) {})]
               (css garden-options (at-media media-query (into garden-class-definition
                                                               garden-pseudo-classes)))))
@@ -158,9 +140,7 @@
                                style-props (utils/filter-style-props supports-props)
                                garden-class-definition [class-selector style-props]
                                garden-pseudo-classes (convert-stylefy-modes-garden style-props)
-                               garden-vendors (-> supports-props
-                                                  (convert-stylefy-vendors-to-garden)
-                                                  (add-global-vendors))
+                               garden-vendors (convert-stylefy-vendors-to-garden supports-props)
                                garden-options (or (merge options garden-vendors) {})
                                css-media-queries-inside-supports
                                (convert-media-queries

@@ -2,7 +2,18 @@
   (:require [stylefy.impl.dom :as dom]
             [garden.core :refer [css]]
             [clojure.string :as str]
-            [stylefy.impl.utils :as utils]))
+            [stylefy.impl.utils :as utils]
+            [clojure.set :as set]))
+
+(def global-vendor-prefixes (atom {:stylefy.core/vendors #{}
+                                   :stylefy.core/auto-prefix #{}}))
+
+(defn- add-global-vendors [style]
+  (merge style
+         {:stylefy.core/vendors (set/union (:stylefy.core/vendors @global-vendor-prefixes)
+                                           (:stylefy.core/vendors style))
+          :stylefy.core/auto-prefix (set/union (:stylefy.core/auto-prefix @global-vendor-prefixes)
+                                               (:stylefy.core/auto-prefix style))}))
 
 (defn hash-style [style]
   ;; Hash style without its sub-styles. ::sub-styles is only a link to other styles, it
@@ -57,7 +68,8 @@
                        (every? string? with-classes)))
               (str "with-classes argument must be a vector of strings, got: " (pr-str with-classes)))
 
-      (let [style-hash (hash-style style)
+      (let [style (add-global-vendors style)
+            style-hash (hash-style style)
             already-created (dom/style-by-hash style-hash)]
 
         (when-not already-created
@@ -90,3 +102,9 @@
         (prepare-styles sub-styles))))
 
   (dom/update-styles-in-dom!))
+
+(defn init-global-vendor-prefixes [options]
+  (let [global-vendor-prefixes-options (:global-vendor-prefixes options)]
+    (reset! global-vendor-prefixes
+            {:stylefy.core/vendors (:stylefy.core/vendors global-vendor-prefixes-options)
+             :stylefy.core/auto-prefix (:stylefy.core/auto-prefix global-vendor-prefixes-options)})))
