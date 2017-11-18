@@ -76,7 +76,8 @@
   The following options are supported:
     use-caching?            If true, caches the generated CSS code so that future page
                             loads work faster. Defaults to false.
-                            NOTE: You need to clear the cache manually by hand."
+                            NOTE: You need to clear the cache manually by hand
+                            by calling stylefy.cache/clear."
   ([] (init {}))
   ([options]
    (dom/init-dom-update)
