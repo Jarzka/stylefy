@@ -22,7 +22,7 @@
 (defn cache-styles
   "Caches the given style if caching is used."
   [styles]
-  (when @cache-styles?
+  (when (and @cache-styles? (map? styles))
     (.setItem (.-localStorage js/window) cache-key styles)))
 
 (defn clear []
