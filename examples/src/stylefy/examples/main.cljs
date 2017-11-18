@@ -84,12 +84,12 @@
           :visible "Hide")
         #(case @state
            :hidden (go (reset! state :generating)
-                       (<! (timeout 100))
+                       (<! (timeout 10))
                        (reset! state :visible))
            :visible (reset! state :hidden))
         :primary]
 
-       (if (= @state :visible)
+       (when (= @state :visible)
          (map-indexed (fn [index component]
                         ^{:key index}
                         [component (use-style (get styles index))])
