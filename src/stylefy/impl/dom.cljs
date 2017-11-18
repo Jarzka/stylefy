@@ -67,6 +67,10 @@
       (if (and node node-constant)
         (do (update-style-tags! node node-constant)
             (reset! dom-needs-update? false)
+            (cache/cache-styles (apply merge
+                                       (map
+                                         #(-> {% (dissoc (get @styles-in-use %) ::in-dom?)})
+                                         (keys @styles-in-use))))
             (mark-styles-added-in-dom!))
         (.error js/console "stylefy is unable to find the required <style> tags!")))))
 
@@ -165,7 +169,6 @@
   (let [style-css (style->css style)
         style-to-be-saved (assoc props ::css style-css)]
     (swap! styles-in-use assoc hash style-to-be-saved)
-    (cache/cache-style hash style-to-be-saved)
     (reset! dom-needs-update? true)))
 
 (defn style-in-dom? [style-hash]

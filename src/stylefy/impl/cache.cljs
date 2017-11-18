@@ -19,11 +19,9 @@
     (when-let [cache-contents (.getItem (.-localStorage js/window) cache-key)]
       (cljs.reader/read-string cache-contents))))
 
-(defn cache-style
+(defn cache-styles
   "Caches the given style if caching is used."
-  [hash style]
+  [styles]
   (when @cache-styles?
-    (let [cache-contents (read-cache)
-          new-cache (assoc cache-contents hash style)]
-      (.setItem (.-localStorage js/window) cache-key new-cache))))
+    (.setItem (.-localStorage js/window) cache-key styles)))
 

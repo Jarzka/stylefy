@@ -53,23 +53,27 @@
   (fn [style]
     [:div style index]))
 
-(defn- create-random-style [index]
+(defn- last-number [number]
+  (subs (str number) (- (count (str number)) 1) (count (str number))))
+
+(defn- create-bar-style [index]
   {:padding "5px"
    :width (str (/ index 10) "%")
    :height "30px"
+   :color "red"
    :margin-bottom "5px"
    :background-color (str "#"
-                          (rand-int 10)
-                          (rand-int 10)
-                          (rand-int 10)
-                          (rand-int 10)
-                          (rand-int 10)
-                          (rand-int 10))})
+                          (last-number index)
+                          (last-number index)
+                          (last-number index)
+                          (last-number index)
+                          (last-number index)
+                          (last-number index))})
 
 (defn stress-test []
   (let [components-count 1000
         state (r/atom :hidden)
-        styles (mapv create-random-style (range 0 components-count))]
+        styles (mapv create-bar-style (range 0 components-count))]
     (fn []
       [:div (use-style styles/generic-container)
 
