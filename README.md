@@ -51,10 +51,20 @@ Are you using stylefy in your (public) project? Send me a message.
 
 # Installation
 
+## Stable version
+
 Add the following line to your Leiningen project:
 
 ```clj
 [stylefy "1.1.0"]
+```
+
+## Development version
+
+Includes experimental support for caching and globally defined vendor prefixes.
+
+```clj
+[stylefy "1.2.0-beta1"]
 ```
 
 # Usage
