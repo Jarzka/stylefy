@@ -57,6 +57,7 @@
   (subs (str number) (- (count (str number)) 1) (count (str number))))
 
 (defn- create-bar-style [index]
+  ;; Generates unique, but predictable style, so that caching can be tested.
   {:padding "5px"
    :width (str (/ index 10) "%")
    :height "30px"
