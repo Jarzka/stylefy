@@ -94,9 +94,14 @@
 (defn init-styles-in-use [options]
   (when (:use-caching? options)
     (cache/use-caching! (:cache-options options))
-    (reset! styles-in-use (or (cache/read-cache-value
-                                cache/cache-key-styles)
-                              {}))))
+
+    (when-let [cached-styles (cache/read-cache-value
+                               cache/cache-key-styles)]
+      (reset! styles-in-use (or (cache/read-cache-value
+                                  cache/cache-key-styles)
+                                {}))
+      (reset! dom-needs-update? true)
+      (update-styles-in-dom!))))
 
 (defn- convert-stylefy-vendors-to-garden [props]
   (when-let [vendors (:stylefy.core/vendors props)]
