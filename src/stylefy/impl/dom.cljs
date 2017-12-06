@@ -93,8 +93,10 @@
 
 (defn init-styles-in-use [options]
   (when (:use-caching? options)
-    (cache/use-caching!)
-    (reset! styles-in-use (or (cache/read-cache) {}))))
+    (cache/use-caching! (:cache-options options))
+    (reset! styles-in-use (or (cache/read-cache-value
+                                cache/cache-styles)
+                              {}))))
 
 (defn- convert-stylefy-vendors-to-garden [props]
   (when-let [vendors (:stylefy.core/vendors props)]

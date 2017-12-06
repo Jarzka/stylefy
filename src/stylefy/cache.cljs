@@ -3,4 +3,4 @@
   (:require [stylefy.impl.cache :as cache]))
 
 (defn clear []
-  (cache/clear))
+  (cache/clear-styles))

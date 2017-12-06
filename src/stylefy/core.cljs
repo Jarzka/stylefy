@@ -74,10 +74,14 @@
   the DOM as CSS classes.
 
   The following options are supported:
-    use-caching?              If true, caches the generated CSS code so that future page
-                              loads work faster. Defaults to false.
-                              NOTE: You need to clear the cache manually by hand
-                              by calling stylefy.cache/clear.
+    use-caching?              If true, caches the generated CSS code using localstorage
+                              so that future page loads work faster. Defaults to false.
+                              Also check :cache-options.
+    cache-options             A map which can contain the following keywords:
+      expires                 Number of seconds after the cache is cleared automatically.
+                              For example, value 604800 clears the cache after one week.
+                              By default, the cache is never cleared automatically.
+                              You can also clear the cache manually by calling stylefy.cache/clear.
     global-vendor-prefixes    A map containing a set of ::stylefy/vendors and
                               ::stylefy/auto-prefix properties.
                               These properties are globally prefixed in all CSS code."

@@ -228,6 +228,7 @@
 
 (defn ^:export start []
   (stylefy/init {:use-caching? true
+                 :cache-options {:expires 10}
                  :global-vendor-prefixes {::stylefy/vendors ["webkit" "moz" "o"]
                                           ::stylefy/auto-prefix #{:border-radius}}})
   (custom-tags/custom-tag-styles)
