@@ -68,10 +68,16 @@
       (if (and node node-constant)
         (do (update-style-tags! node node-constant)
             (reset! dom-needs-update? false)
-            (cache/cache-styles (apply merge
-                                       (map
-                                         #(-> {% (dissoc (get @styles-in-use %) ::in-dom?)})
-                                         (keys @styles-in-use))))
+
+            (try
+              (cache/cache-styles (apply merge
+                                         (map
+                                           #(-> {% (dissoc (get @styles-in-use %) ::in-dom?)})
+                                           (keys @styles-in-use))))
+              (catch :default e
+                (.warn js/console (str "Unable to cache styles, error: " e))
+                e))
+
             (mark-styles-added-in-dom!))
         (.error js/console "stylefy is unable to find the required <style> tags!")))))
 

@@ -20,7 +20,8 @@
       (cljs.reader/read-string cache-contents))))
 
 (defn cache-styles
-  "Caches the given style if caching is used."
+  "Caches the given style if caching is used.
+  Throws QUOTA_EXCEEDED_ERR if the storage is full."
   [styles]
   (when (and @cache-styles? (map? styles))
     (.setItem (.-localStorage js/window) cache-key styles)))
