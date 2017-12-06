@@ -15,10 +15,10 @@
              :background-size "100%"
              :text-transform "uppercase"
              :color "white"
+             :padding "15px"
              :text-align :center
              :justify-content :center
              :align-self :center
-             :height "400px"
              ::stylefy/sub-styles
              {:infinity {:font-size "150px"
                          :margin-top "-0.4em"
