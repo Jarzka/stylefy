@@ -37,6 +37,7 @@
 
   ;; Cache is empty, set creation date.
   (when-not (read-cache-value cache-key-created)
+    (.info js/console "Setting cache creation date.")
     (set-cache-created-time (now-in-seconds)))
 
   (when (cache-expired? (read-cache-value cache-key-created)

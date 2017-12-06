@@ -95,7 +95,7 @@
   (when (:use-caching? options)
     (cache/use-caching! (:cache-options options))
     (reset! styles-in-use (or (cache/read-cache-value
-                                cache/cache-styles)
+                                cache/cache-key-styles)
                               {}))))
 
 (defn- convert-stylefy-vendors-to-garden [props]
