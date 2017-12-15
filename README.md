@@ -345,7 +345,7 @@ As has been told, stylefy converts style definition to unique CSS classes automa
 
 stylefy supports style caching with HTML5 local storage. The converted CSS code is added into local storage and loaded from there when the page is reloaded.
 
-Cacing with local storage is turned off by default. You can turn it on in the initialisation function:
+Caching with local storage is turned off by default. You can turn it on in the initialisation function:
 
 ```clojure
   (stylefy/init {:use-caching? true})
