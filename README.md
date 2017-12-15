@@ -21,13 +21,13 @@ stylefy makes it possible to define UI component styles as Clojure data. Interna
 - Define general, inheriting styles (such as text color, font etc.) by putting them in the root component of the app
 - Define how your style behaves in different modes, for example when a mouse is on top of an element using the style
 - Vendor prefixes, define which vendor prefixes are used and which properties should be prefixed
-- Globally defined vendor prefixes (EXPERIMENTAL)
+- Globally defined vendor prefixes
 - Media queries, define how your style looks on various screen sizes
 - Keyframes
 - Font-face
 - Feature queries (@supports)
 - Small and simple core API
-- Style caching using localstorage (EXPERIMENTAL)
+- Style caching using local storage
 - All features are tested to work with Chrome, Firefox, Edge & Internet Explorer 11
 
 # Requirements
@@ -53,20 +53,10 @@ Are you using stylefy in your (public) project? Send me a message.
 
 # Installation
 
-## Stable version
-
 Add the following line to your Leiningen project:
 
 ```clj
-[stylefy "1.1.0"]
-```
-
-## Development version
-
-Includes experimental support for caching and globally defined vendor prefixes.
-
-```clj
-[stylefy "1.2.0-beta2"]
+[stylefy "1.2.0"]
 ```
 
 # Usage
@@ -184,7 +174,7 @@ Sub-styles are nothing special, they are supposed to contain the same contents a
 
 ## Vendor prefixes
 
-Supported in the same way as Garden supports them:
+Supported in the same way as Garden supports them.
 
 ```clojure
 (def button {:border "1px solid black"
@@ -200,6 +190,14 @@ Supported in the same way as Garden supports them:
 ```
 
 When using this style, a CSS class generated in which border-radius is prefixed with the given values (webkit, moz and o).
+
+You can also use globally defined vendor prefixes. These prefixes are automatically added into every style map.
+
+```clojure
+
+(stylefy/init {:global-vendor-prefixes {::stylefy/vendors ["webkit" "moz" "o"]
+                                        ::stylefy/auto-prefix #{:border-radius}}})
+```
 
 ## Media queries
 
@@ -342,6 +340,34 @@ As has been told, stylefy converts style definition to unique CSS classes automa
 
 (stylefy/tag "body" body-style)
 ```
+
+## Style caching
+
+stylefy supports style caching with HTML5 local storage. The converted CSS code is added into local storage and loaded from there when the page is reloaded.
+
+Cacing with local storage is turned off by default. You can turn it on in the initialisation function:
+
+```clojure
+  (stylefy/init {:use-caching? true})
+```
+
+By default,the cache is never cleared. You can clear it manually by calling:
+
+```clojure
+(require '[stylefy.cache :as stylefy-cache])
+(stylefy-cache/clear)
+```
+
+### Cache options
+
+Cache options support automatic cache clearing when a certain amount of time is passed. You can turn it on like this:
+
+```clojure
+(stylefy/init {:use-caching? true
+               :cache-options {:expires 60}}) ; Cache is cleared after 60 seconds
+```
+
+In local development environment, it is recommended to keep the cache clearing interval relatively frequent (like one hour or day). In production environment, the interval should be a few days, depending how often the CSS code is going to change.
 
 ## Units and colors
 
