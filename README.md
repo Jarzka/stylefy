@@ -351,7 +351,7 @@ Caching with local storage is turned off by default. You can turn it on in the i
   (stylefy/init {:use-caching? true})
 ```
 
-By default,the cache is never cleared. You can clear it manually by calling:
+By default, the cache is never cleared. You can clear it manually by calling:
 
 ```clojure
 (require '[stylefy.cache :as stylefy-cache])
