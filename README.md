@@ -21,11 +21,13 @@ stylefy makes it possible to define UI component styles as Clojure data. Interna
 - Define general, inheriting styles (such as text color, font etc.) by putting them in the root component of the app
 - Define how your style behaves in different modes, for example when a mouse is on top of an element using the style
 - Vendor prefixes, define which vendor prefixes are used and which properties should be prefixed
+- Globally defined vendor prefixes (EXPERIMENTAL)
 - Media queries, define how your style looks on various screen sizes
 - Keyframes
 - Font-face
 - Feature queries (@supports)
 - Small and simple core API
+- Style caching using localstorage (EXPERIMENTAL)
 - All features are tested to work with Chrome, Firefox, Edge & Internet Explorer 11
 
 # Requirements
@@ -51,10 +53,20 @@ Are you using stylefy in your (public) project? Send me a message.
 
 # Installation
 
+## Stable version
+
 Add the following line to your Leiningen project:
 
 ```clj
 [stylefy "1.1.0"]
+```
+
+## Development version
+
+Includes experimental support for caching and globally defined vendor prefixes.
+
+```clj
+[stylefy "1.2.0-beta2"]
 ```
 
 # Usage
