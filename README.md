@@ -115,6 +115,14 @@ If the style contains some specific definitions that cannot be present as inline
 
 It's good to keep in mind that most of the time *prepare-styles* is not needed but calling *use-style* should be enough.
 
+*use-style* accepts HTML attributes as the second parameter:
+
+```clojure
+(defn- button [text]
+  [:div (use-style button-style {:on-click #(.log js/console "Click!")})
+    text])
+```
+
 ## Combine & parametrise styles
 
 Combine or parametrise styles however you like:
@@ -266,12 +274,10 @@ Use 3rd party classes along with stylefy definitions:
 
 ```clojure
 (defn- bs-navbar-item [index index-atom text]
-  [:li (merge (use-style styles/clickable
-                         (when (= @index-atom index)
-                           ;; Call ::with-classes to add additional classes
-                           {::stylefy/with-classes ["active"]}))
-              {:role "presentation"
-               :on-click #(reset! index-atom index)})
+  [:li (use-style styles/clickable
+          {:class (when (= @index-atom index) "active")
+           :role "presentation"
+           :on-click #(reset! index-atom index)})
    [:a text]])
 
 (defn- bs-navbar []

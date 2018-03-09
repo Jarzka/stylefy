@@ -19,15 +19,15 @@
 (defn- button
   ([text] (button text #() nil))
   ([text action-fn type]
-   [:div (merge (use-style (button-style-by-type type))
-                {:on-click action-fn})
+   [:div (use-style (button-style-by-type type)
+                    {:on-click action-fn})
     text]))
 
 (defn- button-container []
   [:div (use-style styles/generic-container)
    [button "Hello World!"]
-   [button "Primary" #() :primary]
-   [button "Secondary" #() :secondary]])
+   [button "Primary" #(.log js/console "Primary button clicked") :primary]
+   [button "Secondary" #(.log js/console "Secondary button clicked") :secondary]])
 
 (defn stateful-component []
   (let [switch #(if (= :on %) :off :on)
@@ -105,11 +105,11 @@
                       (map stress-test-item (range 0 components-count))))])))
 
 (defn- bs-navbar-item [index index-atom text]
-  [:li (merge (use-style styles/clickable
-                         (when (= @index-atom index)
-                           {::stylefy/with-classes ["active"]}))
-              {:role "presentation"
-               :on-click #(reset! index-atom index)})
+  [:li (use-style styles/clickable
+                  {:class (when (= @index-atom index)
+                            "active")
+                   :role "presentation"
+                   :on-click #(reset! index-atom index)})
    [:a (use-sub-style styles/boostrap-navbar-overrides :link)
     text]])
 
@@ -149,9 +149,9 @@
         off-style {:background-color "black"}
         active-state (r/atom true)]
     (fn []
-      [:div.background-transition (merge (use-style (merge styles/simple-box
-                                                           (if @active-state on-style off-style)))
-                                         {:on-click #(swap! active-state not)})
+      [:div.background-transition (use-style (merge styles/simple-box
+                                                    (if @active-state on-style off-style))
+                                             {:on-click #(swap! active-state not)})
        "Click me!"])))
 
 (defn- simple-examples []
