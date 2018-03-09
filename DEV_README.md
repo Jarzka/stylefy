@@ -16,7 +16,7 @@ lein figwheel
 Start web server:
 
 ```bash
-cd examples/src/resources/public
+cd examples/resources/public
 python -m SimpleHTTPServer 8000
 ```
 
