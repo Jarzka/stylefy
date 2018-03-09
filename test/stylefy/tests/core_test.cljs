@@ -137,6 +137,7 @@
       (is (= (:src return) attr-src))
       (is (= (:alt return) attr-alt))
       (is (string? (:class return)))
+      (is (str/includes? (:class return) "_stylefy_")) ;; Prefix for auto-generated class
       (is (str/includes? (:class return) "myclass"))
       (is (str/includes? (:class return) "dummy"))
       (is (= (:style style-box))))))
@@ -203,6 +204,7 @@
       (is (= (:src return) attr-src))
       (is (= (:alt return) attr-alt))
       (is (string? (:class return)))
+      (is (str/includes? (:class return) "_stylefy_")) ;; Prefix for auto-generated class
       (is (str/includes? (:class return) "myclass"))
       (is (str/includes? (:class return) "dummy"))
       (is (= (:style style-box)))))
