@@ -31,15 +31,20 @@
 
 (defn- style-return-value [style style-hash options]
   (let [with-classes (:stylefy.core/with-classes options)
+        html-attribuges (utils/filter-props options)
+
         contains-media-queries? (some? (:stylefy.core/media style))
         contains-feature-queries? (some? (:stylefy.core/supports style))
         excluded-modes #{:hover}
         contains-modes-not-excluded? (not (empty?
                                             (filter (comp not excluded-modes)
                                                     (keys (:stylefy.core/mode style)))))
-        return-map {:class (str/join " " (conj with-classes style-hash))}
+        return-map (merge
+                     html-attribuges
+                     ;; TODO Allow to use :class keyword outside conj style has into it?
+                     {:class (str/join " " (conj with-classes style-hash))})
         inline-style (-> style
-                         (utils/filter-style-props)
+                         (utils/filter-props)
                          (utils/garden-units->to-css))]
     (if (dom/style-in-dom? style-hash)
       return-map

@@ -9,8 +9,8 @@
             [garden.stylesheet :refer [at-media at-keyframes at-font-face]])
   (:require-macros [reagent.ratom :refer [run!]]))
 
-(defn filter-style-props
-  "Removes namespaced keywords from a style map."
+(defn filter-props
+  "Removes namespaced keywords from a map."
   [props]
   (apply dissoc props (filter namespace (keys props))))
 

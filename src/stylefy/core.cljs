@@ -37,9 +37,10 @@
    ::vendors           A vector of vendor prefixes that are used with ::auto-prefix.
    ::auto-prefix       A set of style properties that should be prefixed with ::vendors.
 
-   Options is an optional map with the following features:
+   Options is an optional map, which contains the component HTML attributes (:href, :src etc.).
+   It can also contain the the following features:
 
-   ::with-classes       A vector of class names used with the current style."
+   ::with-classes       A vector of additional class names used with the current style."
   ([style] (use-style style {}))
   ([style options]
    (assert (or (map? style) (nil? style)) (str "Style should be a map or nil, got: " (pr-str style)))

@@ -115,7 +115,7 @@
 
 (defn- convert-base-style
   [{:keys [props hash] :as style} options]
-  (let [style-props (utils/filter-style-props props)
+  (let [style-props (utils/filter-props props)
         class-selector (keyword (str "." hash))
         garden-class-definition [class-selector style-props]
         garden-pseudo-classes (convert-stylefy-modes-garden props)
@@ -133,7 +133,7 @@
         (map
           (fn [media-query]
             (let [media-query-props (get stylefy-media-queries media-query)
-                  style-props (utils/filter-style-props media-query-props)
+                  style-props (utils/filter-props media-query-props)
                   garden-class-definition [class-selector style-props]
                   garden-pseudo-classes (convert-stylefy-modes-garden media-query-props)
                   garden-vendors (convert-stylefy-vendors-to-garden media-query-props)
@@ -150,7 +150,7 @@
         css-supports (map
                        (fn [supports-selector]
                          (let [supports-props (get stylefy-supports supports-selector)
-                               style-props (utils/filter-style-props supports-props)
+                               style-props (utils/filter-props supports-props)
                                garden-class-definition [class-selector style-props]
                                garden-pseudo-classes (convert-stylefy-modes-garden style-props)
                                garden-vendors (convert-stylefy-vendors-to-garden supports-props)
