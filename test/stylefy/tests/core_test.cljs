@@ -140,6 +140,23 @@
       (is (str/includes? (:class return) "_stylefy_")) ;; Prefix for auto-generated class
       (is (str/includes? (:class return) "myclass"))
       (is (str/includes? (:class return) "dummy"))
+      (is (= (:style style-box)))))
+
+  (testing "Use style with :class vector"
+    (let [attr-src "image.jpg"
+          attr-alt "fail"
+          attr-class ["myclass" "myclass2"]
+          return (stylefy/use-style style-box
+                                    {:src attr-src
+                                     :alt attr-alt
+                                     :class attr-class
+                                     ::stylefy/with-classes ["dummy"]})]
+      (is (= (:src return) attr-src))
+      (is (= (:alt return) attr-alt))
+      (is (string? (:class return)))
+      (is (str/includes? (:class return) "_stylefy_")) ;; Prefix for auto-generated class
+      (is (str/includes? (:class return) "myclass myclass2"))
+      (is (str/includes? (:class return) "dummy"))
       (is (= (:style style-box))))))
 
 (deftest garden-types
@@ -206,6 +223,23 @@
       (is (string? (:class return)))
       (is (str/includes? (:class return) "_stylefy_")) ;; Prefix for auto-generated class
       (is (str/includes? (:class return) "myclass"))
+      (is (str/includes? (:class return) "dummy"))
+      (is (= (:style style-box)))))
+
+  (testing "Use sub-style with :class vector"
+    (let [attr-src "image.jpg"
+          attr-alt "fail"
+          attr-class ["myclass" "myclass2"]
+          return (stylefy/use-sub-style style-box :sub-box
+                                        {:src attr-src
+                                         :alt attr-alt
+                                         :class attr-class
+                                         ::stylefy/with-classes ["dummy"]})]
+      (is (= (:src return) attr-src))
+      (is (= (:alt return) attr-alt))
+      (is (string? (:class return)))
+      (is (str/includes? (:class return) "_stylefy_")) ;; Prefix for auto-generated class
+      (is (str/includes? (:class return) "myclass myclass2"))
       (is (str/includes? (:class return) "dummy"))
       (is (= (:style style-box)))))
 

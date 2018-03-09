@@ -124,7 +124,13 @@
        [clock]]
       [:article
        [:h1 "Lorem ipsum 3"]
-       [:p lorem]]]]
+       [:p lorem]
+       [:div (use-style {:color "red"} {:class "inline-block d-block"})
+        "Inline block"]
+       [:span (use-style {:color "red"} {:class ["block d-block"]})
+        "Block text"]
+       [:span (use-style {:color "red"} {:class ["block d-block"]})
+        "Block text"]]]]
     [:aside.col-sm-4
      [:img (merge
              (use-style meme)

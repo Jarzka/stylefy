@@ -32,6 +32,7 @@
 (defn- style-return-value [style style-hash options]
   (let [with-classes (:stylefy.core/with-classes options)
         html-attribuges (utils/filter-props options)
+        html-attributes-class (:class html-attribuges)
 
         contains-media-queries? (some? (:stylefy.core/media style))
         contains-feature-queries? (some? (:stylefy.core/supports style))
@@ -41,8 +42,15 @@
                                                     (keys (:stylefy.core/mode style)))))
         return-map (merge
                      html-attribuges
-                     ;; TODO Is Reagent :class always string? What happens if a vector is used?
-                     {:class (str (:class html-attribuges) " " (str/join " " (conj with-classes style-hash)))})
+                     {:class (cond
+                               (vector? html-attributes-class)
+                               (str/join " " (concat html-attributes-class with-classes [style-hash]))
+
+                               (string? html-attributes-class)
+                               (str/join " " (concat [html-attributes-class] with-classes [style-hash]))
+
+                               (nil? html-attributes-class)
+                               (str/join " " (concat with-classes [style-hash])))})
         inline-style (-> style
                          (utils/filter-props)
                          (utils/garden-units->to-css))]
