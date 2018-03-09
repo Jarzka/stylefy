@@ -157,7 +157,14 @@
       (is (str/includes? (:class return) "_stylefy_")) ;; Prefix for auto-generated class
       (is (str/includes? (:class return) "myclass myclass2"))
       (is (str/includes? (:class return) "dummy"))
-      (is (= (:style style-box))))))
+      (is (= (:style style-box)))))
+
+  (testing "Use style with additional HTML attribute :style definition"
+    (try
+      (stylefy/use-style {:color "blue"} {:style {:color "red"}}) ;; No point here!
+      (is false "Error was not thrown")
+      (catch js/Error e
+        (is true "Error was thrown as expected")))))
 
 (deftest garden-types
   (testing "Garden units are converted correctly"
@@ -208,6 +215,13 @@
       (is (string? (:class return)))
       (is (str/includes? (:class return) "dummy"))
       (is (= (:style (get-in style-box [::stylefy/sub-styles :sub-box]))))))
+
+  (testing "Use sub-style with additional HTML attribute :style definition"
+    (try
+      (stylefy/use-sub-style style-box :sub-box {:style {:color "red"}})
+      (is false "Error was not thrown")
+      (catch js/Error e
+        (is true "Error was thrown as expected"))))
 
   (testing "Use sub-style with HTML attributes and ::with-classes"
     (let [attr-src "image.jpg"
