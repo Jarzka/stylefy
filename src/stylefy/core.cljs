@@ -37,7 +37,7 @@
    ::vendors           A vector of vendor prefixes that are used with ::auto-prefix.
    ::auto-prefix       A set of style properties that should be prefixed with ::vendors.
 
-   Options is an optional map, which contains the component HTML attributes (:class, :href, :src etc.).
+   Options is an optional map, which contains HTML attributes (:class, :href, :src etc.).
    It can also contain the the following features:
 
    ::with-classes       DEPRECATED. A vector of additional class names used with the current style.

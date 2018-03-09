@@ -105,7 +105,8 @@
                       (map stress-test-item (range 0 components-count))))])))
 
 (defn- bs-navbar-item [index index-atom text]
-  ;; NOTE: use-style now supports HTML attributes as the second parameter.
+  ;; Since version 1.3.0: use-style now supports HTML attributes as the second parameter.
+  ;; Thus, merging is not needed and ::stylefy/with-classes can be replaced with :class.
   ;; This example here remains as it is for testing purposes, it has to work
   ;; for ensuring good backwards compatibility.
   [:li (merge (use-style styles/clickable
