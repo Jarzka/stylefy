@@ -57,7 +57,7 @@ Add the following line to your Leiningen project:
 
 Stable version:
 ```clj
-[stylefy "1.2.0"]
+[stylefy "1.3.0"]
 ```
 
 # Usage
