@@ -123,6 +123,22 @@
                                     {::stylefy/with-classes ["dummy"]})]
       (is (string? (:class return)))
       (is (str/includes? (:class return) "dummy"))
+      (is (= (:style style-box)))))
+
+  (testing "Use style with HTML attributes and ::with-classes"
+    (let [attr-src "image.jpg"
+          attr-alt "fail"
+          attr-class "myclass"
+          return (stylefy/use-style style-box
+                                    {:src attr-src
+                                     :alt attr-alt
+                                     :class attr-class
+                                     ::stylefy/with-classes ["dummy"]})]
+      (is (= (:src return) attr-src))
+      (is (= (:alt return) attr-alt))
+      (is (string? (:class return)))
+      (is (str/includes? (:class return) "myclass"))
+      (is (str/includes? (:class return) "dummy"))
       (is (= (:style style-box))))))
 
 (deftest garden-types
@@ -174,6 +190,22 @@
       (is (string? (:class return)))
       (is (str/includes? (:class return) "dummy"))
       (is (= (:style (get-in style-box [::stylefy/sub-styles :sub-box]))))))
+
+  (testing "Use sub-style with HTML attributes and ::with-classes"
+    (let [attr-src "image.jpg"
+          attr-alt "fail"
+          attr-class "myclass"
+          return (stylefy/use-sub-style style-box
+                                        {:src attr-src
+                                         :alt attr-alt
+                                         :class attr-class
+                                         ::stylefy/with-classes ["dummy"]})]
+      (is (= (:src return) attr-src))
+      (is (= (:alt return) attr-alt))
+      (is (string? (:class return)))
+      (is (str/includes? (:class return) "myclass"))
+      (is (str/includes? (:class return) "dummy"))
+      (is (= (:style style-box)))))
 
   (testing "Use sub-style that does not exist: returns nil"
     (let [return (stylefy/use-sub-style style-box :foo)]
@@ -242,7 +274,7 @@
   (reset! stylefy.impl.dom/custom-tags-in-use [])
   (is (= (stylefy/tag "code"
                       {:background-color :lightyellow})
-         {::stylefy.impl.dom/tag-name       "code"
+         {::stylefy.impl.dom/tag-name "code"
           ::stylefy.impl.dom/tag-properties {:background-color :lightyellow}}))
   (is (= @stylefy.impl.dom/custom-tags-in-use
          [{:stylefy.impl.dom/tag-name "code", :stylefy.impl.dom/tag-properties {:background-color :lightyellow}}])))
