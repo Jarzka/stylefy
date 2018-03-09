@@ -36,7 +36,7 @@
         html-attributes-inline-style (:style html-attributes)]
 
     (assert (nil? html-attributes-inline-style)
-            "HTML attribute :style is not supported in options map. Instead, you should provide your style definitions as the first parameter when calling use-style.")
+            "HTML attribute :style is not supported in options map. Instead, you should provide your style definitions as the first argument when calling use-style.")
     (assert (or (nil? html-attributes-class)
                 (string? html-attributes-class)
                 (vector? html-attributes-class))
