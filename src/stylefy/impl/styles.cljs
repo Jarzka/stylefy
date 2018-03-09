@@ -41,8 +41,7 @@
                                                     (keys (:stylefy.core/mode style)))))
         return-map (merge
                      html-attribuges
-                     ;; TODO Allow to use :class keyword outside conj style has into it?
-                     {:class (str/join " " (conj with-classes style-hash))})
+                     {:class (str (:class html-attribuges) " " (str/join " " (conj with-classes style-hash)))})
         inline-style (-> style
                          (utils/filter-props)
                          (utils/garden-units->to-css))]
