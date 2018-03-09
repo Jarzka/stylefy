@@ -105,11 +105,14 @@
                       (map stress-test-item (range 0 components-count))))])))
 
 (defn- bs-navbar-item [index index-atom text]
-  [:li (use-style styles/clickable
-                  {:class (when (= @index-atom index)
-                            "active")
-                   :role "presentation"
-                   :on-click #(reset! index-atom index)})
+  ;; NOTE: use-style now supports HTML attributes as the second parameter.
+  ;; This example here remains as it is for testing purposes, it has to work
+  ;; for ensuring good backwards compatibility.
+  [:li (merge (use-style styles/clickable
+                         (when (= @index-atom index)
+                           {::stylefy/with-classes ["active"]}))
+              {:role "presentation"
+               :on-click #(reset! index-atom index)})
    [:a (use-sub-style styles/boostrap-navbar-overrides :link)
     text]])
 
