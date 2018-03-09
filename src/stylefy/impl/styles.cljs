@@ -41,6 +41,7 @@
                                                     (keys (:stylefy.core/mode style)))))
         return-map (merge
                      html-attribuges
+                     ;; TODO Is Reagent :class always string? What happens if a vector is used?
                      {:class (str (:class html-attribuges) " " (str/join " " (conj with-classes style-hash)))})
         inline-style (-> style
                          (utils/filter-props)
