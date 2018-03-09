@@ -31,9 +31,12 @@
 
 (defn- style-return-value [style style-hash options]
   (let [with-classes (:stylefy.core/with-classes options)
-        html-attribuges (utils/filter-props options)
-        html-attributes-class (:class html-attribuges)]
+        html-attributes (utils/filter-props options)
+        html-attributes-class (:class html-attributes)
+        html-attributes-inline-style (:style html-attributes)]
 
+    (assert (nil? html-attributes-inline-style)
+            "HTML attribute :style is not supported in options map. Instead, you should provide your style definitions as the first parameter.")
     (assert (or (nil? html-attributes-class)
                 (string? html-attributes-class)
                 (vector? html-attributes-class))
@@ -46,7 +49,7 @@
                                               (filter (comp not excluded-modes)
                                                       (keys (:stylefy.core/mode style)))))
           return-map (merge
-                       html-attribuges
+                       html-attributes
                        {:class (cond
                                  (nil? html-attributes-class)
                                  (str/join " " (concat with-classes [style-hash]))
