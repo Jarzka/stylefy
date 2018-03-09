@@ -60,11 +60,6 @@ Stable version:
 [stylefy "1.2.0"]
 ```
 
-Development version:
-```clj
-[stylefy "1.3.0-beta1"]
-```
-
 # Usage
 
 ```clj
