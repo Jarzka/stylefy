@@ -195,7 +195,7 @@
     (let [attr-src "image.jpg"
           attr-alt "fail"
           attr-class "myclass"
-          return (stylefy/use-sub-style style-box
+          return (stylefy/use-sub-style style-box :sub-box
                                         {:src attr-src
                                          :alt attr-alt
                                          :class attr-class
