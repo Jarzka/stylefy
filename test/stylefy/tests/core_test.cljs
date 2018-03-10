@@ -253,26 +253,24 @@
          {::stylefy.impl.dom/class-name "background-transition"
           ::stylefy.impl.dom/class-properties {:transition "background-color 1s;"}})))
 
-(comment
-  ;; TODO Passes locally, but not on Circle!?
-  (deftest prepare-styles
-    (testing "Good argument"
-      (try
-        (stylefy/prepare-styles [{:foo :bar} nil {:foo :bar}])
-        (is true "Error was not thrown as expected")
-        (catch js/Error e
-          (is false "Error was thrown"))))
+(deftest prepare-styles
+  (testing "Good argument"
+    (try
+      (stylefy/prepare-styles [{:foo :bar} nil {:foo :bar}])
+      (is true "Error was not thrown as expected")
+      (catch js/Error e
+        (is false "Error was thrown"))))
 
-    (testing "Good empty argument"
-      (try
-        (stylefy/prepare-styles [])
-        (is true "Error was not thrown as expected")
-        (catch js/Error e
-          (is false "Error was thrown"))))
+  (testing "Good empty argument"
+    (try
+      (stylefy/prepare-styles [])
+      (is true "Error was not thrown as expected")
+      (catch js/Error e
+        (is false "Error was thrown"))))
 
-    (testing "Bad argument: map"
-      (try
-        (stylefy/prepare-styles {:foo :bar})
-        (is false "Expected an error to be thrown.")
-        (catch js/Error e
-          (is true "Error was thrown as expected"))))))
+  (testing "Bad argument: map"
+    (try
+      (stylefy/prepare-styles {:foo :bar})
+      (is false "Expected an error to be thrown.")
+      (catch js/Error e
+        (is true "Error was thrown as expected")))))
