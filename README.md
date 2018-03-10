@@ -57,7 +57,7 @@ Add the following line to your Leiningen project:
 
 Stable version:
 ```clj
-[stylefy "1.2.0"]
+[stylefy "1.3.0"]
 ```
 
 # Usage
@@ -118,7 +118,7 @@ It's good to keep in mind that most of the time *prepare-styles* is not needed b
 
 *use-style* accepts HTML attributes as the second parameter:
 
-```clojure
+```clojure§
 (defn- button [text]
   [:div (use-style button-style {:on-click #(.log js/console "Click!")})
     text])
