@@ -197,8 +197,6 @@ Supported in the same way as Garden supports them.
              ::stylefy/auto-prefix #{:border-radius}})
 ```
 
-When using this style, a CSS class generated in which border-radius is prefixed with the given values (webkit, moz and o).
-
 You can also use globally defined vendor prefixes. These prefixes are automatically added into every style map.
 
 ```clojure
