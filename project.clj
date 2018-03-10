@@ -1,5 +1,6 @@
 (defproject stylefy "1.2.0"
   :description "Library for styling UI components"
+  :url "https://github.com/Jarzka/stylefy"
   :dependencies [[org.clojure/clojure "1.9.0"]
                  [org.clojure/clojurescript "1.9.946"]
                  [prismatic/dommy "1.1.0"]
