@@ -1,7 +1,7 @@
 # Run tests
 
 ```bash
-lein doo phantom test
+lein test
 ```
 
 # Compile examples project
