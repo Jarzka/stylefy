@@ -117,7 +117,7 @@ It's good to keep in mind that most of the time *prepare-styles* is not needed b
 
 *use-style* accepts HTML attributes as the second parameter:
 
-```clojure§
+```clojure
 (defn- button [text]
   [:div (use-style button-style {:on-click #(.log js/console "Click!")})
     text])
