@@ -119,7 +119,8 @@ It's good to keep in mind that most of the time *prepare-styles* is not needed b
 
 ```clojure
 (defn- button [text]
-  [:div (use-style button-style {:on-click #(.log js/console "Click!") :class "some-3rd-party-button-class"})
+  [:div (use-style button-style {:on-click #(.log js/console "Click!")
+                                 :class "some-3rd-party-button-class"})
     text])
 ```
 
