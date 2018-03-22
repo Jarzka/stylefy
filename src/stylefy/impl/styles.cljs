@@ -30,7 +30,7 @@
     (create-style! {:props sub-style :hash (hash-style sub-style)})))
 
 (defn- style-return-value [style style-hash options]
-  (let [with-classes (:stylefy.core/with-classes options)
+  (let [with-classes (:stylefy.core/with-classes style)
         html-attributes (utils/filter-props options)
         html-attributes-class (:class html-attributes)
         html-attributes-inline-style (:style html-attributes)]
@@ -82,7 +82,7 @@
   @dom/styles-in-use
 
   (when-not (empty? style)
-    (let [with-classes (:stylefy.core/with-classes options)]
+    (let [with-classes (:stylefy.core/with-classes style)]
 
       (assert (or (nil? with-classes)
                   (and (vector? with-classes)
