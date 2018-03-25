@@ -210,59 +210,12 @@ You can also use globally defined vendor prefixes. These prefixes are automatica
 
 Define how your style looks on various screen sizes:
 
-```clojure
-(def phone-width "414px")
-
-(def column {:padding "5px"
-             :color "white"})
-
-(def responsive-layout {:display :flex
-                        :flex-direction :row
-                        ::stylefy/media {{:max-width phone-width} {:flex-direction :column}}
-                        ::stylefy/sub-styles {:column1 (merge column
-                                                              {:background-color "#AA0000"
-                                                               :flex 1})
-                                              :column2 (merge column
-                                                              {:background-color "#00AA00"
-                                                               :flex 2})
-                                              :column3 (merge column
-                                                              {:background-color "#0000AA"
-                                                               :flex 1})}})
-
-(defn responsive-layout []
-  [:div (use-style responsive-layout)
-   [:div (use-sub-style responsive-layout :column1)
-    [:p "This is column 1"]]
-   [:div (use-sub-style responsive-layout :column2)
-    [:p "This is column 2"]]
-   [:div (use-sub-style responsive-layout :column3)
-    [:p "This is column 3"]]])
-```
-
 You can also use modes and vendor prefixes inside media query style map.
 
 ## Feature queries
 
 Define how your style looks when certain CSS features are supported by the browser:
 
-```clojure
-(def grid-style {;; Default style uses Flexbox as fallback
-                 :display "flex"
-                 :flex-direction "row"
-                 :flex-wrap "wrap"
-                 ::stylefy/media {{:max-width styles/phone-width}
-                                  {:display "block"}}
-                 ;; Use CSS Grid style if it is supported by the browser.
-                 ;; If the browser does not support CSS Grid or feature queries at all, this
-                 ;; block is simply ignored.
-                 ::stylefy/supports {"display: grid"
-                                     {:display "grid"
-                                      :grid-template-columns "1fr 1fr 1fr"
-                                      ;; Make CSS Grid responsive
-                                      ::stylefy/media {{:max-width styles/phone-width}
-                                                       {:grid-template-columns "1fr"}}}}})
-
-```
 
 You can use modes, media queries, and vendor prefixes inside feature query style map.
 
