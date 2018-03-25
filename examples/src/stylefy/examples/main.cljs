@@ -104,7 +104,7 @@
                         [component (use-style (get styles index))])
                       (map stress-test-item (range 0 components-count))))])))
 
-(defn- bs-navbar-item [index index-atom text]
+(defn- bs-navbar-item-legacy-syntax [index index-atom text]
   ;; Since version 1.3.0: use-style now supports HTML attributes as the second parameter.
   ;; Thus, merging is not needed and ::stylefy/with-classes can be replaced with :class.
   ;; This example here remains as it is for testing purposes, it has to work
@@ -117,14 +117,39 @@
    [:a (use-sub-style styles/boostrap-navbar-overrides :link)
     text]])
 
-(defn- bs-navbar []
+(defn- bs-navbar-legacy-syntax []
   (let [active-index (r/atom 0)]
     (fn []
       [:ul.nav.nav-pills (use-style styles/boostrap-navbar-overrides)
-       [bs-navbar-item 0 active-index "One"]
-       [bs-navbar-item 1 active-index "Two"]
-       [bs-navbar-item 2 active-index "Three"]
-       [bs-navbar-item 3 active-index "Four"]])))
+       [bs-navbar-item-legacy-syntax 0 active-index "One"]
+       [bs-navbar-item-legacy-syntax 1 active-index "Two"]
+       [bs-navbar-item-legacy-syntax 2 active-index "Three"]
+       [bs-navbar-item-legacy-syntax 3 active-index "Four"]])))
+
+(defn- bs-navbar-item-current-syntax [index index-atom text]
+  [:li (use-style styles/clickable (merge
+                                     (when (= @index-atom index)
+                                       {:class ["active"]})
+                                     {:role "presentation"
+                                      :on-click #(reset! index-atom index)}))
+   [:a (use-sub-style styles/boostrap-navbar-overrides :link)
+    text]])
+
+(defn- bs-navbar-current-syntax []
+  (let [active-index (r/atom 0)]
+    (fn []
+      [:ul.nav.nav-pills (use-style styles/boostrap-navbar-overrides)
+       [bs-navbar-item-current-syntax 0 active-index "A"]
+       [bs-navbar-item-current-syntax 1 active-index "B"]
+       [bs-navbar-item-current-syntax 2 active-index "C"]])))
+
+(defn- bs-navbar-alternative-syntax []
+  (let [active-index (r/atom 0)]
+    (fn []
+      ;; In this example, BS navbar classes are attached into the style map directly.
+      [:ul (use-style styles/boostrap-navbar)
+       [bs-navbar-item-current-syntax 0 active-index "Hello"]
+       [bs-navbar-item-current-syntax 1 active-index "World!"]])))
 
 (defn- responsive-layout []
   [:div (use-style styles/responsive-layout)
@@ -189,8 +214,10 @@
    [stress-test]
 
    [:h1 "Boostrap navbar"]
-   [:p "You can also assign any classes to elements normally. Here we use Boostrap classes to construct a simple navbar. We also override some BS styles."]
-   [bs-navbar]
+   [:p "You can also assign any classes to elements normally. Here we use Boostrap classes to construct simple navbars. We also override some BS styles."]
+   [bs-navbar-legacy-syntax]
+   [bs-navbar-current-syntax]
+   [bs-navbar-alternative-syntax]
 
    [:h1 "Simple responsive layout"]
    [:p "stylefy supports media queries out of the box"]
@@ -221,8 +248,8 @@
     (fn []
       [:div
        [:ul.nav.nav-pills (use-style styles/boostrap-navbar-overrides)
-        [bs-navbar-item 0 active-tab "Simple examples"]
-        [bs-navbar-item 1 active-tab "Full page example"]]
+        [bs-navbar-item-legacy-syntax 0 active-tab "Simple examples"]
+        [bs-navbar-item-legacy-syntax 1 active-tab "Full page example"]]
        (case @active-tab
          0 [simple-examples]
          1 [full-page/full-page])])))

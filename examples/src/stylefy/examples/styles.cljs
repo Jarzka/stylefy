@@ -74,6 +74,10 @@
 (def boostrap-navbar-overrides {:background-color "#DDDDDD"
                                 ::stylefy/sub-styles {:link {:border-radius "0 !important"}}})
 
+(def boostrap-navbar {:background-color "#DDDDDD"
+                      ::stylefy/sub-styles {:link {:border-radius "0 !important"}}
+                      ::stylefy/with-classes ["nav" "nav-pills"]})
+
 (def column {:padding "5px"
              :color "white"})
 
