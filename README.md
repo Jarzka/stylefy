@@ -278,9 +278,11 @@ Use 3rd party classes along with stylefy definitions:
            :role "presentation"
            :on-click #(reset! index-atom index)})
    [:a text]])
-   
+```
+
 Alternative syntax:
 
+```
 (defn- bs-navbar []
   (let [active-index (r/atom 0)]
     (fn []
