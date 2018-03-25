@@ -282,7 +282,7 @@ Use 3rd party classes along with stylefy definitions:
 
 Alternative syntax:
 
-```
+```clojure
 (defn- bs-navbar []
   (let [active-index (r/atom 0)]
     (fn []
