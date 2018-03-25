@@ -298,7 +298,6 @@ Alternative syntax:
 
 ```clojure
 (def boostrap-navbar {:background-color "#DDDDDD"
-                      ::stylefy/sub-styles {:link {:font-weight "bold"}}
                       ::stylefy/with-classes ["nav" "nav-pills"]})
                       
 (defn- bs-navbar []
