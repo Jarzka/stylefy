@@ -303,7 +303,7 @@ Alternative syntax:
 (defn- bs-navbar []
   (let [active-index (r/atom 0)]
     (fn []
-      [:ul (use-style styles/boostrap-navbar)
+      [:ul (use-style boostrap-navbar)
        [bs-navbar-item 0 active-index "One"]
        [bs-navbar-item 1 active-index "Two"]
        [bs-navbar-item 2 active-index "Three"]
