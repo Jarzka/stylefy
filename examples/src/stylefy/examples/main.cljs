@@ -129,7 +129,7 @@
 (defn- bs-navbar-item-current-syntax [index index-atom text]
   [:li (use-style styles/clickable (merge
                                      (when (= @index-atom index)
-                                       {:class ["active"]})
+                                       {:class "active"})
                                      {:role "presentation"
                                       :on-click #(reset! index-atom index)}))
    [:a (use-sub-style styles/boostrap-navbar-overrides :link)

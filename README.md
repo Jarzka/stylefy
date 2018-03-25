@@ -278,6 +278,8 @@ Use 3rd party classes along with stylefy definitions:
            :role "presentation"
            :on-click #(reset! index-atom index)})
    [:a text]])
+   
+Alternative syntax:
 
 (defn- bs-navbar []
   (let [active-index (r/atom 0)]
@@ -290,6 +292,24 @@ Use 3rd party classes along with stylefy definitions:
        [bs-navbar-item 2 active-index "Three"]
        [bs-navbar-item 3 active-index "Four"]])))
 ```
+
+3rd party classes can also be attached directly into a style map. This means that the defined additional class names are always used with the style:
+
+```clojure
+(def boostrap-navbar {:background-color "#DDDDDD"
+                      ::stylefy/sub-styles {:link {:font-weight "bold"}}
+                      ::stylefy/with-classes ["nav" "nav-pills"]})
+                      
+(defn- bs-navbar []
+  (let [active-index (r/atom 0)]
+    (fn []
+      [:ul (use-style styles/boostrap-navbar)
+       [bs-navbar-item 0 active-index "One"]
+       [bs-navbar-item 1 active-index "Two"]
+       [bs-navbar-item 2 active-index "Three"]
+       [bs-navbar-item 3 active-index "Four"]])))
+```
+
 
 ## Font-face
 

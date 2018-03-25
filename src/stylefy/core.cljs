@@ -36,13 +36,15 @@
                        are style maps which are used when the media query is active.
    ::vendors           A vector of vendor prefixes that are used with ::auto-prefix.
    ::auto-prefix       A set of style properties that should be prefixed with ::vendors.
+   ::with-classes      A collection of additional class names that should always be used with
+                       this style definition.
 
    Options is an optional map, which contains HTML attributes (:class, :href, :src etc.).
    It can also contain the the following features:
 
    ::with-classes       DEPRECATED. A vector of additional class names used with the current style.
-                        Deprecated, because the options map can now contain any HTML attributes.
-                        Thus, you can just use :class instead of ::with-classes."
+                        Deprecated since version 1.3.0: The options map can now contain
+                        any HTML attributes. Thus, you can just use :class instead of ::with-classes."
   ([style] (use-style style {}))
   ([style options]
    (assert (or (map? style) (nil? style)) (str "Style should be a map or nil, got: " (pr-str style)))
