@@ -122,8 +122,7 @@
     (let [return (stylefy/use-style style-box
                                     {::stylefy/with-classes ["dummy"]})]
       (is (string? (:class return)))
-      (is (str/includes? (:class return) "dummy"))
-      (is (= (:style style-box)))))
+      (is (str/includes? (:class return) "dummy"))))
 
   (testing "Use style with HTML attributes and ::with-classes"
     (let [attr-src "image.jpg"
@@ -139,8 +138,7 @@
       (is (string? (:class return)))
       (is (str/includes? (:class return) "_stylefy_")) ;; Prefix for auto-generated class
       (is (str/includes? (:class return) "myclass"))
-      (is (str/includes? (:class return) "dummy"))
-      (is (= (:style style-box)))))
+      (is (str/includes? (:class return) "dummy"))))
 
   (testing "Use style with :class vector"
     (let [attr-src "image.jpg"
@@ -156,8 +154,37 @@
       (is (string? (:class return)))
       (is (str/includes? (:class return) "_stylefy_")) ;; Prefix for auto-generated class
       (is (str/includes? (:class return) "myclass myclass2"))
+      (is (str/includes? (:class return) "dummy"))))
+
+  (testing "Use style with additional class names attached to it"
+    (let [attr-src "image.jpg"
+          attr-alt "fail"
+          return (stylefy/use-style (assoc style-box
+                                      ::stylefy/with-classes ["dummy"])
+                                    {:src attr-src
+                                     :alt attr-alt})]
+      (is (= (:src return) attr-src))
+      (is (= (:alt return) attr-alt))
+      (is (string? (:class return)))
+      (is (str/includes? (:class return) "_stylefy_")) ;; Prefix for auto-generated class
+      (is (str/includes? (:class return) "dummy"))))
+
+  (testing "Use style with additional class names attached to it, along with :class"
+    (let [attr-src "image.jpg"
+          attr-alt "fail"
+          return (stylefy/use-style (assoc style-box
+                                      ::stylefy/with-classes ["dummy"])
+                                    {:src attr-src
+                                     :alt attr-alt
+                                     ::stylefy/with-classes ["anotherclass"]
+                                     :class "myclass"})]
+      (is (= (:src return) attr-src))
+      (is (= (:alt return) attr-alt))
+      (is (string? (:class return)))
+      (is (str/includes? (:class return) "_stylefy_")) ;; Prefix for auto-generated class
       (is (str/includes? (:class return) "dummy"))
-      (is (= (:style style-box)))))
+      (is (str/includes? (:class return) "myclass"))
+      (is (str/includes? (:class return) "anotherclass"))))
 
   (testing "Use style with additional HTML attribute :style definition"
     (try
@@ -237,8 +264,7 @@
       (is (string? (:class return)))
       (is (str/includes? (:class return) "_stylefy_")) ;; Prefix for auto-generated class
       (is (str/includes? (:class return) "myclass"))
-      (is (str/includes? (:class return) "dummy"))
-      (is (= (:style style-box)))))
+      (is (str/includes? (:class return) "dummy"))))
 
   (testing "Use sub-style with :class vector"
     (let [attr-src "image.jpg"
@@ -254,8 +280,7 @@
       (is (string? (:class return)))
       (is (str/includes? (:class return) "_stylefy_")) ;; Prefix for auto-generated class
       (is (str/includes? (:class return) "myclass myclass2"))
-      (is (str/includes? (:class return) "dummy"))
-      (is (= (:style style-box)))))
+      (is (str/includes? (:class return) "dummy"))))
 
   (testing "Use sub-style that does not exist: returns nil"
     (let [return (stylefy/use-sub-style style-box :foo)]
