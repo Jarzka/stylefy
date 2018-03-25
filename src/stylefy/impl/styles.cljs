@@ -30,8 +30,8 @@
     (create-style! {:props sub-style :hash (hash-style sub-style)})))
 
 (defn- style-return-value [style style-hash options]
-  (let [with-classes (vec (concat (:stylefy.core/with-classes style)
-                                  (:stylefy.core/with-classes options)))
+  (let [with-classes (concat (:stylefy.core/with-classes style)
+                             (:stylefy.core/with-classes options))
         html-attributes (utils/filter-props options)
         html-attributes-class (:class html-attributes)
         html-attributes-inline-style (:style html-attributes)]
@@ -83,13 +83,18 @@
   @dom/styles-in-use
 
   (when-not (empty? style)
-    (let [with-classes (vec (concat (:stylefy.core/with-classes style)
-                                    (:stylefy.core/with-classes options)))]
+    (let [with-classes-options (:stylefy.core/with-classes options)
+          with-classes-style (:stylefy.core/with-classes style)]
 
-      (assert (or (nil? with-classes)
-                  (and (vector? with-classes)
-                       (every? string? with-classes)))
-              (str "with-classes argument must be a vector of strings, got: " (pr-str with-classes)))
+      (assert (or (nil? with-classes-options)
+                  (and (vector? with-classes-options)
+                       (every? string? with-classes-options)))
+              (str "with-classes argument inside options map must be a vector of strings, got: " (pr-str with-classes-options)))
+
+      (assert (or (nil? with-classes-style)
+                  (and (vector? with-classes-style)
+                       (every? string? with-classes-style)))
+              (str "with-classes argument inside style map must be a vector of strings, got: " (pr-str with-classes-style)))
 
       (let [style (add-global-vendors style)
             style-hash (hash-style style)
