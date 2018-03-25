@@ -286,8 +286,7 @@ Alternative syntax:
 (defn- bs-navbar []
   (let [active-index (r/atom 0)]
     (fn []
-      ;; Additional classes can also be attached in the name of the element,
-      ;; just like in Reagent.
+      ;; Additional classes can also be attached in the name of the element
       [:ul.nav.nav-pills (use-style styles/boostrap-navbar-overrides)
        [bs-navbar-item 0 active-index "One"]
        [bs-navbar-item 1 active-index "Two"]
