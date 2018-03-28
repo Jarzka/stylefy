@@ -67,7 +67,7 @@ Add the following line to your Leiningen project:
 
 ## Init
 
-Make sure there are the following *style* tags on your page's *head* tag. The tags should be the last <style> tags in the header.
+Make sure there are the following *style* tags on your page's *head* tag. **The tags should be the last style tags in the header**.
 
 The first tag is going to contain CSS definitions that are not going to change (font-face, keyframes etc.). The second will contain class definitions that are added into the DOM on-demand when components need them.
 
