@@ -19,7 +19,8 @@
 (def ^:private dom-needs-update? (atom false))
 
 (defn- style-by-hash [style-hash]
-  (get @styles-in-use style-hash))
+  (when style-hash
+    (get @styles-in-use style-hash)))
 
 (defn- update-style-tags!
   [node node-constant]

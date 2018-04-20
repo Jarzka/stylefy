@@ -18,9 +18,10 @@
 (defn hash-style [style]
   ;; Hash style without its sub-styles. ::sub-styles is only a link to other styles, it
   ;; does not define the actual properties of this style.
-  (str "_stylefy_" (hash
-                     (dissoc style
-                             :stylefy.core/sub-styles))))
+  (when (not (empty? style))
+    (str "_stylefy_" (hash
+                       (dissoc style
+                               :stylefy.core/sub-styles)))))
 
 (defn- create-style! [{:keys [props hash] :as style}]
   (dom/save-style! {:props props :hash hash})
@@ -57,7 +58,8 @@
 
 (defn- style-return-value [style style-hash options]
   (let [return-map (prepare-style-return-value style style-hash options)]
-    (if (dom/style-in-dom? style-hash)
+    (if (or (empty? style)
+            (dom/style-in-dom? style-hash))
       return-map
       ;; The style definition has not been added into the DOM yet, so return the style props
       ;; as inline style. Inline style gets replaced soon as the style definition
@@ -99,8 +101,8 @@
             (str "with-classes argument inside style map must be a vector of strings, got: " (pr-str with-classes-style)))
 
     (let [style-with-global-vendors (when-not (empty? style) (add-global-vendors style))
-          style-hash (when-not (empty? style-with-global-vendors) (hash-style style-with-global-vendors))
-          already-created (when-not (empty? style-with-global-vendors) (dom/style-by-hash style-hash))]
+          style-hash (hash-style style-with-global-vendors)
+          already-created (dom/style-by-hash style-hash)]
 
       (when-not already-created
         (create-style! {:props style-with-global-vendors :hash style-hash}))
