@@ -264,7 +264,7 @@
   [top-level])
 
 (defn ^:export start []
-  (stylefy/init {:use-caching? false
+  (stylefy/init {:use-caching? true
                  :cache-options {:expires 60} ; For testing purposes, normally you want to use much higher value.
                  :global-vendor-prefixes {::stylefy/vendors ["webkit" "moz" "o"]
                                           ::stylefy/auto-prefix #{:border-radius}}})
