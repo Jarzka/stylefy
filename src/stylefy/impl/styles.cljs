@@ -2,8 +2,12 @@
   (:require [stylefy.impl.dom :as dom]
             [garden.core :refer [css]]
             [clojure.string :as str]
+            [garden.units :as units]
             [stylefy.impl.utils :as utils]
-            [clojure.set :as set]))
+            [clojure.set :as set]
+            [garden.color :as color]
+            [garden.types :as types]
+            [garden.compiler :as compiler]))
 
 (def global-vendor-prefixes (atom {:stylefy.core/vendors #{}
                                    :stylefy.core/auto-prefix #{}}))
@@ -16,12 +20,22 @@
                                                (:stylefy.core/auto-prefix style))}))
 
 (defn hash-style [style]
-  ;; Hash style without its sub-styles. ::sub-styles is only a link to other styles, it
-  ;; does not define the actual properties of this style.
   (when (not (empty? style))
-    (str "_stylefy_" (hash
-                       (dissoc style
-                               :stylefy.core/sub-styles)))))
+    (let [hashable-garden-units (reduce
+                                  ;; Convert Garden units to CSS to make them structurally
+                                  ;; hashable (different contents = different hash)
+                                  (fn [result prop-key]
+                                    (let [prop-value (prop-key style)]
+                                      (when (or (instance? types/CSSUnit prop-value)
+                                                (instance? color/CSSColor prop-value))
+                                        (assoc result prop-key (compiler/render-css prop-value)))))
+                                  {}
+                                  (keys (utils/filter-props style)))
+          hashable-style (merge style hashable-garden-units)
+          ;; Hash style without its sub-styles. ::sub-styles is only a link to other styles, it
+          ;; does not define the actual properties of this style.
+          hashable-style (dissoc hashable-style :stylefy.core/sub-styles)]
+      (str "_stylefy_" (hash hashable-style)))))
 
 (defn- create-style! [{:keys [props hash] :as style}]
   (dom/save-style! {:props props :hash hash})
