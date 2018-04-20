@@ -11,7 +11,7 @@
    Calling use-style does not immediately add the generated CSS class to DOM, because doing this
    in a single render would slow everything down if use-style is called multiple times.
    If the style has not been added into the DOM yet, it also returns the given props as inline style, so that
-   the component looks good even if CSS class has not been genererated yet.
+   the component looks good even if CSS class has not been generated yet.
 
    Important exception: if the style contains specific modes or media query definitions,
    {:style {:visibility \"hidden\"}} is returned until the DOM is ready.
@@ -154,7 +154,7 @@
 
 (defn prepare-styles
   "Will convert the given styles and their sub-styles to CSS
-   and add them into the DOM immediately.
+   and add them into the DOM immediately, all at once.
 
    Normally, when you call use-style, the given style is converted to CSS and will
    be added into the DOM very soon. Until then, the style is returned as inline style, except
