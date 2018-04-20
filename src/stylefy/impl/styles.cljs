@@ -30,12 +30,28 @@
   (doseq [sub-style (vals (:stylefy.core/sub-styles props))]
     (create-style! {:props sub-style :hash (hash-style sub-style)})))
 
-(defn- prepare-style-return-value [style style-hash options]
+(defn- prepare-style-return-value
+  "Given a style, hash and options, returns HTML attributes for a Hiccup component,
+   or nil if there are not any attributes."
+  [style style-hash options]
   (let [with-classes (concat (:stylefy.core/with-classes style)
                              (:stylefy.core/with-classes options))
         html-attributes (utils/filter-props options)
         html-attributes-class (:class html-attributes)
-        html-attributes-inline-style (:style html-attributes)]
+        html-attributes-inline-style (:style html-attributes)
+        final-class (str/trim
+                      (cond
+                        (nil? html-attributes-class)
+                        (str/join " " (concat with-classes [style-hash]))
+
+                        (string? html-attributes-class)
+                        (str/join " " (concat [html-attributes-class] with-classes [style-hash]))
+
+                        (vector? html-attributes-class)
+                        (str/join " " (concat html-attributes-class with-classes [style-hash]))))
+        final-html-attributes (merge
+                                html-attributes
+                                (when (not (empty? final-class)) {:class final-class}))]
 
     (assert (or (nil? html-attributes-class)
                 (string? html-attributes-class)
@@ -44,17 +60,8 @@
     (assert (nil? html-attributes-inline-style)
             "HTML attribute :style is not supported in options map. Instead, you should provide your style definitions as the first argument when calling use-style.")
 
-    (merge
-      html-attributes
-      {:class (cond
-                (nil? html-attributes-class)
-                (str/join " " (concat with-classes [style-hash]))
-
-                (string? html-attributes-class)
-                (str/join " " (concat [html-attributes-class] with-classes [style-hash]))
-
-                (vector? html-attributes-class)
-                (str/join " " (concat html-attributes-class with-classes [style-hash])))})))
+    (when (not (empty? final-html-attributes))
+      final-html-attributes)))
 
 (defn- style-return-value [style style-hash options]
   (let [return-map (prepare-style-return-value style style-hash options)]
@@ -104,7 +111,9 @@
           style-hash (hash-style style-with-global-vendors)
           already-created (dom/style-by-hash style-hash)]
 
-      (when-not already-created
+      (when (and (not (empty? style-with-global-vendors))
+                 (some? style-hash)
+                 (not already-created))
         (create-style! {:props style-with-global-vendors :hash style-hash}))
 
       (style-return-value style-with-global-vendors style-hash options))))

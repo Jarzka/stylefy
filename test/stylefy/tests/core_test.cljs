@@ -100,9 +100,17 @@
     (let [return (stylefy/use-style nil)]
       (is (nil? return))))
 
+  (testing "Use nil style with HTML attributes"
+    (let [return (stylefy/use-style nil {:src "image.jpg" :class "myclass"})]
+      (is (= return {:src "image.jpg" :class "myclass"}))))
+
   (testing "Use empty style"
     (let [return (stylefy/use-style {})]
       (is (nil? return))))
+
+  (testing "Use empty style with HTML attributes"
+    (let [return (stylefy/use-style {} {:src "image.jpg" :class "myclass"})]
+      (is (= return {:src "image.jpg" :class "myclass"}))))
 
   (testing "Use garbage style: number"
     (try
