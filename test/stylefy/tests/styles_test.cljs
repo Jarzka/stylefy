@@ -32,6 +32,10 @@
                :line-height line-height
                :padding-bottom (units/rem 1)})
 
+(def h4-style-clone {:font-size (units/rem 2.1)
+                     :line-height line-height
+                     :padding-bottom (units/rem 1)})
+
 (deftest hash-style
   (is (= (styles/hash-style style-box) style-box-expected-hash)))
 
@@ -53,4 +57,7 @@
   (is (not= (styles/hash-style h3-style)
             (styles/hash-style h4-style)))
   (is (not= (styles/hash-style h2-style)
-            (styles/hash-style h4-style))))
+            (styles/hash-style h4-style)))
+
+  (is (= (styles/hash-style h4-style)
+         (styles/hash-style h4-style-clone))))
