@@ -9,3 +9,5 @@ examples/figwheel_server.log
 pom.xml
 pom.xml.asc
 doo-index.html
+.lein-failures
+/out
