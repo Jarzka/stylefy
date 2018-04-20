@@ -167,7 +167,7 @@
     (apply str css-supports)))
 
 (defn style->css
-  "Options are sent directly to Garden"
+  "Converts the given style to CSS. Options are sent directly to Garden"
   ([style] (style->css style {}))
   ([{:keys [props hash] :as style} options]
    (let [css-class (convert-base-style style options)

@@ -56,13 +56,7 @@
                 (str/join " " (concat html-attributes-class with-classes [style-hash])))})))
 
 (defn- style-return-value [style style-hash options]
-  (let [contains-media-queries? (some? (:stylefy.core/media style))
-        contains-feature-queries? (some? (:stylefy.core/supports style))
-        excluded-modes #{:hover}
-        contains-modes-not-excluded? (not (empty?
-                                            (filter (comp not excluded-modes)
-                                                    (keys (:stylefy.core/mode style)))))
-        return-map (prepare-style-return-value style style-hash options)]
+  (let [return-map (prepare-style-return-value style style-hash options)]
     (if (dom/style-in-dom? style-hash)
       return-map
       ;; The style definition has not been added into the DOM yet, so return the style props
@@ -70,7 +64,13 @@
       ;; is added into the DOM and the component re-renders itself.
       ;; However, if there are media queries or specific mode definitions, inline styling is probably
       ;; going to look wrong. Thus, hide the component completely until the DOM is ready.
-      (let [inline-style (-> style
+      (let [contains-media-queries? (some? (:stylefy.core/media style))
+            contains-feature-queries? (some? (:stylefy.core/supports style))
+            excluded-modes #{:hover}
+            contains-modes-not-excluded? (not (empty?
+                                                (filter (comp not excluded-modes)
+                                                        (keys (:stylefy.core/mode style)))))
+            inline-style (-> style
                              (utils/filter-props)
                              (utils/garden-units->to-css))]
         (if (or contains-media-queries?
@@ -85,28 +85,27 @@
   ;; so that we can get rid of inline styles and use only classes as soon as possible.
   @dom/styles-in-use
 
-  (when-not (empty? style)
-    (let [with-classes-options (:stylefy.core/with-classes options)
-          with-classes-style (:stylefy.core/with-classes style)]
+  (let [with-classes-options (:stylefy.core/with-classes options)
+        with-classes-style (:stylefy.core/with-classes style)]
 
-      (assert (or (nil? with-classes-options)
-                  (and (vector? with-classes-options)
-                       (every? string? with-classes-options)))
-              (str "with-classes argument inside options map must be a vector of strings, got: " (pr-str with-classes-options)))
+    (assert (or (nil? with-classes-options)
+                (and (vector? with-classes-options)
+                     (every? string? with-classes-options)))
+            (str "with-classes argument inside options map must be a vector of strings, got: " (pr-str with-classes-options)))
 
-      (assert (or (nil? with-classes-style)
-                  (and (vector? with-classes-style)
-                       (every? string? with-classes-style)))
-              (str "with-classes argument inside style map must be a vector of strings, got: " (pr-str with-classes-style)))
+    (assert (or (nil? with-classes-style)
+                (and (vector? with-classes-style)
+                     (every? string? with-classes-style)))
+            (str "with-classes argument inside style map must be a vector of strings, got: " (pr-str with-classes-style)))
 
-      (let [style (add-global-vendors style)
-            style-hash (hash-style style)
-            already-created (dom/style-by-hash style-hash)]
+    (let [style-with-global-vendors (when-not (empty? style) (add-global-vendors style))
+          style-hash (when-not (empty? style-with-global-vendors) (hash-style style-with-global-vendors))
+          already-created (when-not (empty? style-with-global-vendors) (dom/style-by-hash style-hash))]
 
-        (when-not already-created
-          (create-style! {:props style :hash style-hash}))
+      (when-not already-created
+        (create-style! {:props style-with-global-vendors :hash style-hash}))
 
-        (style-return-value style style-hash options)))))
+      (style-return-value style-with-global-vendors style-hash options))))
 
 (defn use-sub-style! [style sub-style options]
   (let [resolved-sub-style (get (:stylefy.core/sub-styles style) sub-style)]
