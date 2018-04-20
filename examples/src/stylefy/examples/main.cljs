@@ -194,6 +194,12 @@
    [:p "Styled by merging styles"]
    [button-container]
 
+   [:h1 "Modes generate pseudo-classes"]
+   [:p (use-style {::stylefy/mode {:before {:content "'This is CSS :before content - '"}
+                                   :after {:content "' - This is CSS :after content'"}
+                                   :hover {:color "red"}}})
+    "This is text content, hover me!"]
+
    [:h1 "Component with multiple sub elements"]
    [:p "Styled by using sub-styles"]
    [table/table
@@ -258,7 +264,7 @@
   [top-level])
 
 (defn ^:export start []
-  (stylefy/init {:use-caching? true
+  (stylefy/init {:use-caching? false
                  :cache-options {:expires 60} ; For testing purposes, normally you want to use much higher value.
                  :global-vendor-prefixes {::stylefy/vendors ["webkit" "moz" "o"]
                                           ::stylefy/auto-prefix #{:border-radius}}})
