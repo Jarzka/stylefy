@@ -18,7 +18,7 @@ stylefy makes it possible to define UI component styles as Clojure data. Interna
 - Define styles as Clojure data, for any UI element
 - Sub-styles help you to define a style for your component and all the elements inside of it in a single map
 - Use any 3rd party classes or frameworks (such as Boostrap) easily with stylefy, override style props if necessary
-- Define how your style behaves in different modes, for example when a mouse is on top of an element using the style
+- Define how your style behaves in different modes, for example when a mouse is on top of an element using the style. Modes are also used to generate CSS pseudo-elements.
 - Vendor prefixes, define which vendor prefixes are used and which properties should be prefixed
 - Globally defined vendor prefixes
 - Media queries, define how your style looks on various screen sizes
