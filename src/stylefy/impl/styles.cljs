@@ -29,50 +29,53 @@
   (doseq [sub-style (vals (:stylefy.core/sub-styles props))]
     (create-style! {:props sub-style :hash (hash-style sub-style)})))
 
-(defn- style-return-value [style style-hash options]
+(defn- prepare-style-return-value [style style-hash options]
   (let [with-classes (concat (:stylefy.core/with-classes style)
                              (:stylefy.core/with-classes options))
         html-attributes (utils/filter-props options)
         html-attributes-class (:class html-attributes)
         html-attributes-inline-style (:style html-attributes)]
 
-    (assert (nil? html-attributes-inline-style)
-            "HTML attribute :style is not supported in options map. Instead, you should provide your style definitions as the first argument when calling use-style.")
     (assert (or (nil? html-attributes-class)
                 (string? html-attributes-class)
                 (vector? html-attributes-class))
             (str "Unsupported :class type (should be nil, string or vector). Got: " (pr-str html-attributes-class)))
+    (assert (nil? html-attributes-inline-style)
+            "HTML attribute :style is not supported in options map. Instead, you should provide your style definitions as the first argument when calling use-style.")
 
-    (let [contains-media-queries? (some? (:stylefy.core/media style))
-          contains-feature-queries? (some? (:stylefy.core/supports style))
-          excluded-modes #{:hover}
-          contains-modes-not-excluded? (not (empty?
-                                              (filter (comp not excluded-modes)
-                                                      (keys (:stylefy.core/mode style)))))
-          return-map (merge
-                       html-attributes
-                       {:class (cond
-                                 (nil? html-attributes-class)
-                                 (str/join " " (concat with-classes [style-hash]))
+    (merge
+      html-attributes
+      {:class (cond
+                (nil? html-attributes-class)
+                (str/join " " (concat with-classes [style-hash]))
 
-                                 (string? html-attributes-class)
-                                 (str/join " " (concat [html-attributes-class] with-classes [style-hash]))
+                (string? html-attributes-class)
+                (str/join " " (concat [html-attributes-class] with-classes [style-hash]))
 
-                                 (vector? html-attributes-class)
-                                 (str/join " " (concat html-attributes-class with-classes [style-hash])))})
-          inline-style (-> style
-                           (utils/filter-props)
-                           (utils/garden-units->to-css))]
-      (if (dom/style-in-dom? style-hash)
-        return-map
+                (vector? html-attributes-class)
+                (str/join " " (concat html-attributes-class with-classes [style-hash])))})))
+
+(defn- style-return-value [style style-hash options]
+  (let [contains-media-queries? (some? (:stylefy.core/media style))
+        contains-feature-queries? (some? (:stylefy.core/supports style))
+        excluded-modes #{:hover}
+        contains-modes-not-excluded? (not (empty?
+                                            (filter (comp not excluded-modes)
+                                                    (keys (:stylefy.core/mode style)))))
+        return-map (prepare-style-return-value style style-hash options)]
+    (if (dom/style-in-dom? style-hash)
+      return-map
+      ;; The style definition has not been added into the DOM yet, so return the style props
+      ;; as inline style. Inline style gets replaced soon as the style definition
+      ;; is added into the DOM and the component re-renders itself.
+      ;; However, if there are media queries or specific mode definitions, inline styling is probably
+      ;; going to look wrong. Thus, hide the component completely until the DOM is ready.
+      (let [inline-style (-> style
+                             (utils/filter-props)
+                             (utils/garden-units->to-css))]
         (if (or contains-media-queries?
                 contains-feature-queries?
                 contains-modes-not-excluded?)
-          ;; The style definition has not been added into the DOM yet, so return the style props
-          ;; as inline style. Inline style gets replaced soon as the style definition
-          ;; is added into the DOM and the component re-renders itself.
-          ;; However, if there are media queries or specific mode definitions, inline styling is probably
-          ;; going to look wrong. Thus, hide the component completely until the DOM is ready.
           (merge return-map {:style (merge inline-style
                                            {:visibility "hidden"})})
           (merge return-map {:style inline-style}))))))
