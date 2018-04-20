@@ -161,7 +161,7 @@
                                  {:props supports-props :hash hash}
                                  options)]
                            (str "@supports (" supports-selector ") {"
-                                (css garden-options [class-selector style-props])
+                                (css garden-options garden-class-definition)
                                 css-media-queries-inside-supports
                                 "}")))
                        (keys stylefy-supports))]
