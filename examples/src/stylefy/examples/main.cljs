@@ -57,26 +57,28 @@
 (defn- last-number [number]
   (subs (str number) (- (count (str number)) 1) (count (str number))))
 
-(defn- create-bar-style [index]
+(defn- create-bar-style [index max]
   ;; Generates unique, but predictable style, so that caching can be tested.
   {:padding "5px"
-   :width (str (/ index 10) "%")
+   :width (str (float (* (/ index max) 100)) "%")
    :height "30px"
    :color "red"
+   :z-index index ;; Just to make sure every single style is unique
    :margin-bottom "5px"
    :background-color (str "#"
-                          (last-number index)
-                          (last-number index)
-                          (last-number index)
-                          (last-number index)
-                          (last-number index)
-                          (last-number index))})
+                          (rand-int 10)
+                          (rand-int 10)
+                          (rand-int 10)
+                          (rand-int 10)
+                          (rand-int 10)
+                          (rand-int 10))})
 
 (defn stress-test []
   (let [components-count 1000
         state (r/atom :hidden)
         start-time (atom nil)
-        styles (mapv create-bar-style (range 0 components-count))]
+        styles (mapv #(create-bar-style % components-count)
+                     (range 0 components-count))]
     (fn []
       [:div (use-style styles/generic-container)
 
@@ -94,15 +96,16 @@
         :primary]
 
        (when (= @state :visible)
-         (map-indexed (fn [index component]
-                        (when (= index (- components-count 1))
-                          (.log js/console (str "Generation time: "
-                                                (- (.getTime (js/Date.)) @start-time)
-                                                " ms.")))
+         (doall
+           (map-indexed (fn [index component]
+                          (when (= index (- components-count 1))
+                            (.log js/console (str "Generation time: "
+                                                  (- (.getTime (js/Date.)) @start-time)
+                                                  " ms.")))
 
-                        ^{:key index}
-                        [component (use-style (get styles index))])
-                      (map stress-test-item (range 0 components-count))))])))
+                          ^{:key index}
+                          [component (use-style (get styles index))])
+                        (map stress-test-item (range 0 components-count)))))])))
 
 (defn- bs-navbar-item-legacy-syntax [index index-atom text]
   ;; Since version 1.3.0: use-style now supports HTML attributes as the second parameter.
