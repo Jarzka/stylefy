@@ -69,7 +69,7 @@
    :background-color "grey"})
 
 (defn stress-test []
-  (let [components-count 10000
+  (let [components-count 1000
         state (r/atom :hidden)
         start-time (atom nil)
         styles (mapv #(create-bar-style % components-count)
