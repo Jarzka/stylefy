@@ -65,16 +65,10 @@
    :color "red"
    :z-index index ;; Just to make sure every single style is unique
    :margin-bottom "5px"
-   :background-color (str "#"
-                          (rand-int 10)
-                          (rand-int 10)
-                          (rand-int 10)
-                          (rand-int 10)
-                          (rand-int 10)
-                          (rand-int 10))})
+   :background-color "red"})
 
 (defn stress-test []
-  (let [components-count 1000
+  (let [components-count 10000
         state (r/atom :hidden)
         start-time (atom nil)
         styles (mapv #(create-bar-style % components-count)
