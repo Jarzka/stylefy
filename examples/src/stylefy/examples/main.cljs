@@ -62,7 +62,7 @@
   {:padding "5px"
    :width (str (float (* (/ index max) 100)) "%")
    :height "30px"
-   :color "red"
+   :color "black"
    :z-index index ;; Just to make sure every single style is unique
    :margin-bottom "5px"
    :border "1px solid black"
