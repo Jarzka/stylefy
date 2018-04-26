@@ -65,7 +65,8 @@
    :color "red"
    :z-index index ;; Just to make sure every single style is unique
    :margin-bottom "5px"
-   :background-color "red"})
+   :border "1px solid black"
+   :background-color "grey"})
 
 (defn stress-test []
   (let [components-count 10000
