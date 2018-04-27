@@ -128,9 +128,8 @@
 
 (defn- convert-media-queries
   [{:keys [props hash] :as style} options]
-  (when (:stylefy.core/media props)
+  (when-let [stylefy-media-queries (:stylefy.core/media props)]
     (let [class-selector (keyword (str "." hash))
-          stylefy-media-queries (:stylefy.core/media props)
           css-media-queries
           (map
             (fn [media-query]
@@ -147,9 +146,8 @@
 
 (defn- convert-supports-rules
   [{:keys [props hash] :as style} options]
-  (when (:stylefy.core/supports props)
+  (when-let [stylefy-supports (:stylefy.core/supports props)]
     (let [class-selector (keyword (str "." hash))
-          stylefy-supports (:stylefy.core/supports props)
           css-supports (map
                          (fn [supports-selector]
                            (let [supports-props (get stylefy-supports supports-selector)
