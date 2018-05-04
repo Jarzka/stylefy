@@ -73,3 +73,8 @@
                                  :hash (styles/hash-style grid-layout-with-fallback)}
                                 {:pretty-print? false})
          "._stylefy_-978876848{display:flex;flex-direction:row;flex-wrap:wrap}._stylefy_-978876848:hover{background-color:white}@media(max-width:500px){._stylefy_-978876848{display:block}}@supports (display: grid) {._stylefy_-978876848{display:grid;grid-template-columns:1fr 1fr 1fr}@media(max-width:500px){._stylefy_-978876848{grid-template-columns:1fr}._stylefy_-978876848:hover{background-color:grey}}}")))
+
+(deftest custom-selector
+  (is (= (conversion/style->css {:props {:color "red"} :custom-selector "code"}
+                                {:pretty-print? false})
+         "code{color:red}")))

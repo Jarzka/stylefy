@@ -13,8 +13,8 @@
     (mapv #(-> [(keyword (str "&" %)) (% modes)])
           (keys modes))))
 
-(defn- class-selector [class-name]
-  (keyword (str "." class-name)))
+(defn- class-selector [hash]
+  (keyword (str "." hash)))
 
 (defn- convert-base-style
   "Converts Clojure style map into CSS class."
@@ -62,7 +62,11 @@
                                  garden-vendors (convert-stylefy-vendors-to-garden supports-props)
                                  garden-options (or (merge options garden-vendors) {})
                                  css-media-queries-inside-supports
-                                 (convert-media-queries style options)]
+                                 (convert-media-queries
+                                   {:props supports-props
+                                    :hash hash
+                                    :custom-selector custom-selector}
+                                   options)]
                              (str "@supports (" supports-selector ") {"
                                   (css garden-options (into garden-class-definition
                                                             garden-pseudo-classes))
