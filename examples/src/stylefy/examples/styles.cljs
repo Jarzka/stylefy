@@ -16,7 +16,7 @@
                     :font-style "normal"})
 
 ;; Custom named classes can be created, but should only be used when working with
-;; other libraries / frameworks. Normally there is no need to create customly named classes
+;; other libraries / frameworks. Normally there is no need to create custom classes
 ;; when using stylefy.
 (stylefy/class "background-transition"
                {:transition "background-color 1s"})

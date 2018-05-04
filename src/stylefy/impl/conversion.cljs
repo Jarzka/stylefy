@@ -13,12 +13,15 @@
     (mapv #(-> [(keyword (str "&" %)) (% modes)])
           (keys modes))))
 
+(defn- class-selector [class-name]
+  (keyword (str "." class-name)))
+
 (defn- convert-base-style
   "Converts Clojure style map into CSS class."
-  [{:keys [props hash] :as style} options]
+  [{:keys [props hash custom-selector] :as style} options]
   (let [style-props (utils/filter-props props)
-        class-selector (keyword (str "." hash))
-        garden-class-definition [class-selector style-props]
+        css-selector (or custom-selector (class-selector hash))
+        garden-class-definition [css-selector style-props]
         garden-pseudo-classes (convert-stylefy-modes-garden props)
         garden-vendors (convert-stylefy-vendors-to-garden props)
         garden-options (or (merge options garden-vendors) {})
@@ -28,15 +31,15 @@
 
 (defn- convert-media-queries
   "Converts stylefy/media definition into CSS media query."
-  [{:keys [props hash] :as style} options]
+  [{:keys [props hash custom-selector] :as style} options]
   (when-let [stylefy-media-queries (:stylefy.core/media props)]
-    (let [class-selector (keyword (str "." hash))
+    (let [css-selector (or custom-selector (class-selector hash))
           css-media-queries
           (map
             (fn [media-query]
               (let [media-query-props (get stylefy-media-queries media-query)
                     style-props (utils/filter-props media-query-props)
-                    garden-class-definition [class-selector style-props]
+                    garden-class-definition [css-selector style-props]
                     garden-pseudo-classes (convert-stylefy-modes-garden media-query-props)
                     garden-vendors (convert-stylefy-vendors-to-garden media-query-props)
                     garden-options (or (merge options garden-vendors) {})]
@@ -47,21 +50,19 @@
 
 (defn- convert-supports-rules
   "Converts stylefy/supports definition into CSS feature query."
-  [{:keys [props hash] :as style} options]
+  [{:keys [props hash custom-selector] :as style} options]
   (when-let [stylefy-supports (:stylefy.core/supports props)]
-    (let [class-selector (keyword (str "." hash))
+    (let [css-selector (or custom-selector (class-selector hash))
           css-supports (map
                          (fn [supports-selector]
                            (let [supports-props (get stylefy-supports supports-selector)
                                  style-props (utils/filter-props supports-props)
-                                 garden-class-definition [class-selector style-props]
+                                 garden-class-definition [css-selector style-props]
                                  garden-pseudo-classes (convert-stylefy-modes-garden style-props)
                                  garden-vendors (convert-stylefy-vendors-to-garden supports-props)
                                  garden-options (or (merge options garden-vendors) {})
                                  css-media-queries-inside-supports
-                                 (convert-media-queries
-                                   {:props supports-props :hash hash}
-                                   options)]
+                                 (convert-media-queries style options)]
                              (str "@supports (" supports-selector ") {"
                                   (css garden-options (into garden-class-definition
                                                             garden-pseudo-classes))

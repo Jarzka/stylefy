@@ -38,12 +38,15 @@
                                  (css properties))
                                @font-faces-in-use)
         custom-tags-in-use (map (fn [tag-definition]
-                                  (css [(keyword (::tag-name tag-definition))
-                                        (::tag-properties tag-definition)]))
+                                  (conversion/style->css
+                                    {:props (::tag-properties tag-definition)
+                                     :custom-selector (::tag-name tag-definition)}))
                                 @custom-tags-in-use)
         custom-classes-in-use (map (fn [class-definition]
-                                     (css [(keyword (str "." (::class-name class-definition)))
-                                           (::class-properties class-definition)]))
+                                     (conversion/style->css
+                                       {:props (::class-properties class-definition)
+                                        :custom-selector (conversion/class-selector
+                                                           (::class-name class-definition))}))
                                    @custom-classes-in-use)]
     (dommy/set-text! node-constant (apply str (concat font-faces-in-use
                                                       keyframes-in-css
