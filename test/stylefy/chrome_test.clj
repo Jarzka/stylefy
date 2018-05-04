@@ -7,4 +7,4 @@
   (build-and-test "test"
                   '[stylefy.tests.core-test
                     stylefy.tests.styles-test
-                    stylefy.tests.dom-test]))
+                    stylefy.tests.conversion-test]))
