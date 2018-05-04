@@ -14,6 +14,7 @@
           (keys modes))))
 
 (defn- convert-base-style
+  "Converts Clojure style map into CSS class."
   [{:keys [props hash] :as style} options]
   (let [style-props (utils/filter-props props)
         class-selector (keyword (str "." hash))
@@ -26,6 +27,7 @@
     css-class))
 
 (defn- convert-media-queries
+  "Converts stylefy/media definition into CSS media query."
   [{:keys [props hash] :as style} options]
   (when-let [stylefy-media-queries (:stylefy.core/media props)]
     (let [class-selector (keyword (str "." hash))
@@ -44,6 +46,7 @@
       (apply str css-media-queries))))
 
 (defn- convert-supports-rules
+  "Converts stylefy/supports definition into CSS feature query."
   [{:keys [props hash] :as style} options]
   (when-let [stylefy-supports (:stylefy.core/supports props)]
     (let [class-selector (keyword (str "." hash))
