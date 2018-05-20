@@ -121,6 +121,8 @@
                      (every? string? with-classes-style)))
             (str "with-classes argument inside style map must be a vector of strings, got: " (pr-str with-classes-style)))
 
+    (dom/check-stylefy-initialisation)
+
     (let [style-with-global-vendors (when-not (empty? style) (add-global-vendors style))
           style-hash (hash-style style-with-global-vendors)
           already-created (dom/style-by-hash style-hash)]

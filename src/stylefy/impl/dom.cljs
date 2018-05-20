@@ -9,6 +9,7 @@
             [clojure.set :as set])
   (:require-macros [reagent.ratom :refer [run!]]))
 
+(def stylefy-initialised? (r/atom false))
 (def styles-in-use (r/atom {})) ;; style hash -> props
 (def keyframes-in-use (r/atom []))
 (def font-faces-in-use (r/atom []))
@@ -94,7 +95,12 @@
   (request-dom-update))
 
 (defn init-dom-update []
-  (continuously-update-styles-in-dom!))
+  (continuously-update-styles-in-dom!)
+  (reset! stylefy-initialised? true))
+
+(defn check-stylefy-initialisation []
+  (when-not @stylefy-initialised?
+    (.warn js/console (str "stylefy has not been initialised correctly. Call stylefy/init once when your application starts."))))
 
 (defn init-styles-in-use [options]
   (when (:use-caching? options)
