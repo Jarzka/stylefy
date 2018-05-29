@@ -27,6 +27,7 @@ stylefy makes it possible to define UI component styles as Clojure data. Interna
 - Feature queries (CSS @supports query)
 - Style caching using local storage (must be turned on separately)
 - Small and simple core API
+- Automatic style reloading with [Figwheel](https://github.com/bhauman/lein-figwheel)
 - All features are tested to work with Chrome, Firefox, Edge & Internet Explorer 11
 
 # Requirements
