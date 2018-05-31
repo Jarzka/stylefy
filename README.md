@@ -47,6 +47,7 @@ Yes, it is possible to easily attach styles to components with Garden too if you
 
 Yup, for example:
 - [Finnish Transport Agency: National Access Point and digitalization tools](https://github.com/finnishtransportagency/mmtis-national-access-point)
+- [Solita Rooms](https://github.com/solita/solita-rooms)
 - [My personal website](https://github.com/Jarzka/Voimala.org). I converted it from SASS to stylefy, see diff [here](https://github.com/Jarzka/Voimala.org/compare/ac776c50d2b6e61786c7771efaf397a5fe28557e...d9d547f25b6bfbe375c501ac09a387a1060a5eef).
 
 Are you using stylefy in your (public) project? Send me a message.
