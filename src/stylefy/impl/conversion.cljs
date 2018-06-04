@@ -1,7 +1,8 @@
 (ns stylefy.impl.conversion
   (:require [garden.core :refer [css]]
             [stylefy.impl.utils :as utils]
-            [garden.stylesheet :refer [at-media at-keyframes at-font-face]]))
+            [garden.stylesheet :refer [at-media at-keyframes at-font-face]]
+            [clojure.string :as str]))
 
 (defn- convert-stylefy-vendors-to-garden [props]
   (when-let [vendors (:stylefy.core/vendors props)]
@@ -10,7 +11,12 @@
 
 (defn- convert-stylefy-modes-garden [props]
   (let [modes (:stylefy.core/mode props)]
-    (mapv #(-> [(keyword (str "&" %)) (% modes)])
+    (mapv (fn [mode-name]
+            (assert (or (keyword? mode-name)
+                        (and (string? mode-name)
+                             (str/starts-with? mode-name ":")))
+                    (str "Mode must be specified as a keyword or string beginning with colon, got: " (pr-str mode-name)))
+            [(keyword (str "&" mode-name)) (get modes mode-name)])
           (keys modes))))
 
 (defn- class-selector [hash]

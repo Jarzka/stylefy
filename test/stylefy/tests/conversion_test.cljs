@@ -28,11 +28,26 @@
          "._stylefy_-216657570{border:1px solid black;border-radius:5px;-webkit-border-radius:5px;-moz-border-radius:5px;-o-border-radius:5px;cursor:pointer}")))
 
 (def style-mode {::stylefy/mode {:hover {:background-color "#AAAAAA"}}})
+(def style-mode-double-colon {::stylefy/mode {"::-webkit-progress-bar" {:-webkit-appearance "none"}}})
+(def style-incorrect-mode {::stylefy/mode {"-webkit-progress-bar" {:-webkit-appearance "none"}}})
 
 (deftest mode-style->css
   (is (= (conversion/style->css {:props style-mode :hash (styles/hash-style style-mode)}
                                 {:pretty-print? false})
          "._stylefy_-2110434399{}._stylefy_-2110434399:hover{background-color:#AAAAAA}")))
+
+(deftest mode-style-double-colon->css
+  (is (= (conversion/style->css {:props style-mode-double-colon :hash (styles/hash-style style-mode-double-colon)}
+                                {:pretty-print? false})
+         "._stylefy_-1391954833{}._stylefy_-1391954833::-webkit-progress-bar{-webkit-appearance:none}")))
+
+(deftest incorrect-mode->css
+  (try
+    (conversion/style->css {:props style-incorrect-mode :hash (styles/hash-style style-incorrect-mode)}
+                           {:pretty-print? false})
+    (is false "Error was not thrown")
+    (catch js/Error e
+      (is true "Error was thrown as expected"))))
 
 (def responsive-style {:background-color "red"
                        :border-radius "10px"
