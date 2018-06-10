@@ -57,7 +57,7 @@ Are you using stylefy in your (public) project? Send me a message.
 Add the following line to your Leiningen project:
 
 ```clj
-[stylefy "1.6.0-beta1"]
+[stylefy "1.6.0"]
 ```
 
 # Usage
