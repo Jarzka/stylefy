@@ -11,7 +11,7 @@ ClojureScript library for styling UI components with ease.
 
 # Introduction
 
-stylefy makes it possible to define UI component styles as Clojure data and attach them into components easily. When styles are defined as Clojure data, they can be easily transformed with Clojure's powerful functions (like merge) and parametrised. The styles are converted to CSS on-demand, and since the converted CSS is handled internally by the library, there is no need to worry about things like writing selectors, name conflicts, difficult cascading, dead CSS code etc.
+stylefy makes it possible to define UI component styles as Clojure data and attach them into components easily. When styles are defined as Clojure data, they can be easily transformed with Clojure's powerful functions (like merge) and parametrised. Styles are converted to CSS on-demand, and since the converted CSS is handled internally by the library, there is no need to worry about things like writing selectors, name conflicts, difficult cascading, dead CSS code etc.
 
 # Features
 
