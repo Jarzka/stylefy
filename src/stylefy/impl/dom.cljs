@@ -2,12 +2,15 @@
   (:require [dommy.core :as dommy]
             [reagent.core :as r]
             [garden.core :refer [css]]
+            [cljs.core.async :refer [<! timeout]]
             [stylefy.impl.cache :as cache]
             [stylefy.impl.utils :as utils]
             [stylefy.impl.conversion :as conversion]
             [garden.stylesheet :refer [at-media at-keyframes at-font-face]]
             [clojure.set :as set])
-  (:require-macros [reagent.ratom :refer [run!]]))
+  (:require-macros
+    [reagent.ratom :refer [run!]]
+    [cljs.core.async.macros :refer [go]]))
 
 (def stylefy-initialised? (r/atom false))
 (def styles-in-use (r/atom {})) ;; style hash -> props
@@ -62,9 +65,6 @@
 
 (declare continuously-update-styles-in-dom!)
 
-(defn- request-dom-update []
-  (.requestAnimationFrame js/window continuously-update-styles-in-dom!))
-
 (defn- update-styles-in-dom!
   "Updates style tag if needed."
   []
@@ -87,16 +87,13 @@
             (mark-styles-added-in-dom!))
         (.error js/console "stylefy is unable to find the required <style> tags!")))))
 
-(defn- continuously-update-styles-in-dom!
+(defn- asyncronously-update-dom
   "Updates style tag if needed."
   []
-  (when @dom-needs-update?
-    (update-styles-in-dom!))
-  (request-dom-update))
-
-(defn init-dom-update []
-  (continuously-update-styles-in-dom!)
-  (reset! stylefy-initialised? true))
+  (when-not @dom-needs-update?
+    (reset! dom-needs-update? true)
+    (go
+      (update-styles-in-dom!))))
 
 (defn check-stylefy-initialisation []
   (when-not @stylefy-initialised?
@@ -111,7 +108,7 @@
       (reset! styles-in-use (or (cache/read-cache-value
                                   cache/cache-key-styles)
                                 {}))
-      (reset! dom-needs-update? true)
+      (asyncronously-update-dom)
       (update-styles-in-dom!))))
 
 (defn- save-style!
@@ -122,7 +119,7 @@
   (let [style-css (conversion/style->css style)
         style-to-be-saved (assoc props ::css style-css)]
     (swap! styles-in-use assoc hash style-to-be-saved)
-    (reset! dom-needs-update? true)))
+    (asyncronously-update-dom)))
 
 (defn style-in-dom? [style-hash]
   (boolean (::in-dom? (style-by-hash style-hash))))
@@ -130,23 +127,23 @@
 (defn add-keyframes [identifier & frames]
   (let [garden-definition (apply at-keyframes identifier frames)]
     (swap! keyframes-in-use conj garden-definition)
-    (reset! dom-needs-update? true)
+    (asyncronously-update-dom)
     garden-definition))
 
 (defn add-font-face [properties]
   (let [garden-definition (at-font-face properties)]
     (swap! font-faces-in-use conj garden-definition)
-    (reset! dom-needs-update? true)
+    (asyncronously-update-dom)
     garden-definition))
 
 (defn add-tag [name properties]
   (let [custom-tag-definition {::tag-name name ::tag-properties properties}]
     (swap! custom-tags-in-use conj custom-tag-definition)
-    (reset! dom-needs-update? true)
+    (asyncronously-update-dom)
     custom-tag-definition))
 
 (defn add-class [name properties]
   (let [custom-class-definition {::class-name name ::class-properties properties}]
     (swap! custom-classes-in-use conj custom-class-definition)
-    (reset! dom-needs-update? true)
+    (asyncronously-update-dom)
     custom-class-definition))
