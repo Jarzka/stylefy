@@ -63,8 +63,6 @@
                                        #(-> {% (assoc (get @styles-in-use %) ::in-dom? true)})
                                        (keys @styles-in-use)))))
 
-(declare continuously-update-styles-in-dom!)
-
 (defn- update-styles-in-dom!
   "Updates style tag if needed."
   []
