@@ -27,7 +27,7 @@ Currently stylefy works only with SPA applications using [Reagent](https://githu
 - Keyframes (for CSS animations)
 - Font-face (for 3rd party web fonts)
 - Feature queries (CSS @supports query)
-- Style caching using local storage
+- Style caching using local storage (can be turned off)
 - Small and simple core API
 - Automatic style reloading with [Figwheel](https://github.com/bhauman/lein-figwheel)
 - All features are tested to work with Chrome, Firefox, Edge & Internet Explorer 11
