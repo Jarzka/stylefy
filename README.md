@@ -11,7 +11,9 @@ ClojureScript library for styling UI components with ease.
 
 # Introduction
 
-stylefy makes it possible to define UI component styles as Clojure data. Internally the defined styles are converted to CSS classes by using [Garden](https://github.com/noprompt/garden) and inserted into the DOM at runtime. When styles are defined as Clojure data, they can be easily transformed with Clojure's powerful functions (like merge) and parametrised. Also, since the converted CSS is handled internally by the library, there is no need to worry about things like name conflicts, difficult cascading, dead CSS code etc.
+stylefy makes it possible to define UI component styles as Clojure data and attach them into components easily. When styles are defined as Clojure data, they can be easily transformed with Clojure's powerful functions (like merge) and parametrised. Styles are converted to CSS on-demand, and since the converted CSS is handled internally by the library, there is no need to worry about things like writing selectors, name conflicts, difficult cascading, dead CSS code etc.
+
+stylefy uses [Garden](https://github.com/noprompt/garden) in the background to do most of its CSS conversions. 
 
 Currently stylefy works only with SPA applications using [Reagent](https://github.com/reagent-project/reagent).
 
@@ -36,9 +38,9 @@ Currently stylefy works only with SPA applications using [Reagent](https://githu
 
 ## How is this library different than Garden?
 
-Garden is awesome, but it's "just" a Clojure to CSS generator. If you want to use Garden to style your page, you are pretty much going to write CSS code as usual, i.e. write classes and selectors to stylize things on the page. You also need to avoid CSS quirks like name conflicts and make sure you always handle CSS cascading process correcly. stylefy helps you with this; you just write your style definition and attach it to your component in the render function by calling *use-style*. There is no need to write CSS classes or selectors, no need to worry about name conflicts etc.
+Garden is awesome, but it's "just" a Clojure to CSS generator. If you want to use Garden to style your page, you are pretty much going to write CSS code as usual, i.e. write classes and selectors to stylize things on the page. You also need to avoid CSS quirks like name conflicts and make sure you always handle CSS cascading process correcly. stylefy helps you with this; you just write your style definition in a map and attach it to your component in the render function by calling *use-style*. There is no need to write CSS classes or selectors, no need to worry about name conflicts etc.
 
-Yes, it is possible to easily attach styles to components with Garden too if you use inline styles. But if you use stylefy, all your style definitions are converted to unique CSS classes automatically and the corresponding class is attached to your component. This is more effective than using inline-styles, especially if the same component exists multiple times on the same page. The style is defined only once in the CSS class, not multiple times in each component instance. Also, pseudoclasses (:hover etc.) and media queries are difficult (impossible) to work with inline styles. For stylefy, this is not a problem, as it allows you to define pseudoclasses and media queries and converts them to CSS code automatically.
+Yes, it is possible to easily attach styles to components with Garden too if you use inline styles. But if you use stylefy, all your style definitions are converted to unique CSS classes automatically and the corresponding class is attached to your component. This is more effective than using inline-styles, especially if the same component exists multiple times on the same page. The style is defined only once in the CSS class, not multiple times in each component instance. Also, some CSS features like pseudoclasses (:hover etc.), media queries and feature queries are not possible to use as inline styles. For stylefy, this is not a problem, as it allows you to define pseudoclasses and media queries within the style map and converts everything to CSS automatically.
 
 ## Any real projects using stylefy?
 
