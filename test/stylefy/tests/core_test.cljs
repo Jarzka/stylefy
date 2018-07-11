@@ -325,16 +325,12 @@
       (catch js/Error e
         (is true "Error was thrown as expected")))))
 
-(deftest init
-  (let [update-styles-in-dom-called (atom false)]
-    (with-redefs [;; No DOM manipulation here, just check that the function
-                  ;; was called
-                  dom/update-styles-in-dom! #(reset! update-styles-in-dom-called true)
-                  ;; No .requestAnimationFrame in Phantom,
-                  ;; use a simple function call instead
-                  dom/request-dom-update #(dom/update-styles-in-dom!)]
-                 (stylefy/init)
-                 (is (true? @update-styles-in-dom-called)))))
+(deftest dom-update-is-requested
+  (let [dom-update-requested? (atom false)]
+    (with-redefs [dom/asynchronously-update-dom #(reset! dom-update-requested? true)]
+      (stylefy/init)
+      (stylefy/use-style {:color "red"})
+      (is (true? @dom-update-requested?)))))
 
 (deftest font-face
   (is (= (css {:pretty-print? false}
