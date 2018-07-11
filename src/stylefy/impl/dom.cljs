@@ -21,7 +21,7 @@
 
 (def ^:private stylefy-node-id :#_stylefy-styles_)
 (def ^:private stylefy-constant-node-id :#_stylefy-constant-styles_)
-(def ^:private dom-needs-update? (atom false))
+(def ^:private dom-update-requested? (atom false))
 
 (defn- style-by-hash [style-hash]
   (when style-hash
@@ -66,12 +66,12 @@
 (defn- update-styles-in-dom!
   "Updates style tag if needed."
   []
-  (when @dom-needs-update?
+  (when @dom-update-requested?
     (let [node (dommy/sel1 stylefy-node-id)
           node-constant (dommy/sel1 stylefy-constant-node-id)]
       (if (and node node-constant)
         (do (update-style-tags! node node-constant)
-            (reset! dom-needs-update? false)
+            (reset! dom-update-requested? false)
 
             (try
               (cache/cache-styles (apply merge
@@ -89,8 +89,8 @@
 (defn- asynchronously-update-dom
   "Updates style tag if needed."
   []
-  (when-not @dom-needs-update?
-    (reset! dom-needs-update? true)
+  (when-not @dom-update-requested?
+    (reset! dom-update-requested? true)
     (go
       (update-styles-in-dom!))))
 
