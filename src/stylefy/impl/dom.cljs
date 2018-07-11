@@ -86,7 +86,7 @@
             (mark-styles-added-in-dom!))
         (.error js/console "stylefy is unable to find the required <style> tags!")))))
 
-(defn- asyncronously-update-dom
+(defn- asynchronously-update-dom
   "Updates style tag if needed."
   []
   (when-not @dom-needs-update?
@@ -105,7 +105,7 @@
     (when-let [cached-styles (cache/read-cache-value
                                cache/cache-key-styles)]
       (reset! styles-in-use (or cached-styles {}))
-      (asyncronously-update-dom)
+      (asynchronously-update-dom)
       (update-styles-in-dom!))))
 
 (defn- save-style!
@@ -116,7 +116,7 @@
   (let [style-css (conversion/style->css style)
         style-to-be-saved (assoc props ::css style-css)]
     (swap! styles-in-use assoc hash style-to-be-saved)
-    (asyncronously-update-dom)))
+    (asynchronously-update-dom)))
 
 (defn style-in-dom? [style-hash]
   (boolean (::in-dom? (style-by-hash style-hash))))
@@ -124,23 +124,23 @@
 (defn add-keyframes [identifier & frames]
   (let [garden-definition (apply at-keyframes identifier frames)]
     (swap! keyframes-in-use conj garden-definition)
-    (asyncronously-update-dom)
+    (asynchronously-update-dom)
     garden-definition))
 
 (defn add-font-face [properties]
   (let [garden-definition (at-font-face properties)]
     (swap! font-faces-in-use conj garden-definition)
-    (asyncronously-update-dom)
+    (asynchronously-update-dom)
     garden-definition))
 
 (defn add-tag [name properties]
   (let [custom-tag-definition {::tag-name name ::tag-properties properties}]
     (swap! custom-tags-in-use conj custom-tag-definition)
-    (asyncronously-update-dom)
+    (asynchronously-update-dom)
     custom-tag-definition))
 
 (defn add-class [name properties]
   (let [custom-class-definition {::class-name name ::class-properties properties}]
     (swap! custom-classes-in-use conj custom-class-definition)
-    (asyncronously-update-dom)
+    (asynchronously-update-dom)
     custom-class-definition))
