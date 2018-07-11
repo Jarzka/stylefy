@@ -25,7 +25,7 @@ stylefy makes it possible to define UI component styles as Clojure data. Interna
 - Keyframes (for CSS animations)
 - Font-face (for 3rd party web fonts)
 - Feature queries (CSS @supports query)
-- Style caching using local storage (must be turned on separately)
+- Style caching using local storage
 - Small and simple core API
 - Automatic style reloading with [Figwheel](https://github.com/bhauman/lein-figwheel)
 - All features are tested to work with Chrome, Firefox, Edge & Internet Explorer 11
@@ -57,7 +57,7 @@ Are you using stylefy in your (public) project? Send me a message.
 Add the following line to your Leiningen project:
 
 ```clj
-[stylefy "1.6.0"]
+[stylefy "1.7.0"]
 ```
 
 # Usage
@@ -373,13 +373,13 @@ As has been told, stylefy converts style definition to unique CSS classes automa
 
 stylefy supports style caching with HTML5 local storage. The converted CSS code is added into local storage and loaded from there when the page is reloaded.
 
-Caching with local storage is turned off by default. You can turn it on in the initialisation function:
+As from version 1.7.0, caching with local storage is turned on by default. You can turn it off in the initialisation function:
 
 ```clojure
-  (stylefy/init {:use-caching? true})
+  (stylefy/init {:use-caching? false})
 ```
 
-By default, the cache is never cleared. You can clear it manually by calling:
+By default, the cache is cleared in three days. You can clear it manually by calling:
 
 ```clojure
 (require '[stylefy.cache :as stylefy-cache])
@@ -388,14 +388,12 @@ By default, the cache is never cleared. You can clear it manually by calling:
 
 ### Cache options
 
-Cache options support automatic cache clearing when a certain amount of time is passed. You can turn it on like this:
+Cache options support automatic cache clearing when a certain amount of time is passed.
 
 ```clojure
 (stylefy/init {:use-caching? true
-               :cache-options {:expires 60}}) ; Cache is cleared after 60 seconds
+               :cache-options {:expires (* 1 60 60 24 7)}}) ; Cache is cleared after 7 weeks
 ```
-
-In local development environment, it is recommended to keep the cache clearing interval relatively frequent (like one hour or day). In production environment, the interval should be a few days, depending how often the CSS code is going to change.
 
 ## Units and colors
 
