@@ -80,6 +80,7 @@
                                            (keys @styles-in-use))))
               (catch :default e
                 (.warn js/console (str "Unable to cache styles, error: " e))
+                (cache/clear-styles)
                 e))
 
             (mark-styles-added-in-dom!))
@@ -97,15 +98,13 @@
   (when-not @stylefy-initialised?
     (.warn js/console (str "stylefy has not been initialised correctly. Call stylefy/init once when your application starts."))))
 
-(defn init-styles-in-use [options]
-  (when (:use-caching? options)
+(defn init-cache [options]
+  (when (not= (:use-caching? options) false)
     (cache/use-caching! (:cache-options options))
 
     (when-let [cached-styles (cache/read-cache-value
                                cache/cache-key-styles)]
-      (reset! styles-in-use (or (cache/read-cache-value
-                                  cache/cache-key-styles)
-                                {}))
+      (reset! styles-in-use (or cached-styles {}))
       (asyncronously-update-dom)
       (update-styles-in-dom!))))
 

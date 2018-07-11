@@ -263,7 +263,7 @@
 
 (defn ^:export start []
   (stylefy/init {:use-caching? true
-                 :cache-options {:expires 60} ; For testing purposes, normally you want to use much higher value.
+                 :cache-options {:expires (* 1 60 60 24 3)}
                  :global-vendor-prefixes {::stylefy/vendors ["webkit" "moz" "o"]
                                           ::stylefy/auto-prefix #{:border-radius}}})
   (custom-tags/custom-tag-styles)

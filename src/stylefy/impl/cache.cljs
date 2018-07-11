@@ -10,6 +10,7 @@
 (def cache-key-styles (str cache-prefix "styles"))
 (def cache-key-created (str cache-prefix "created"))
 (def cache-styles? (atom false))
+(def default-cache-expiration-time-s (* 1 60 60 * 24 * 3))
 
 (defn now-in-seconds []
   (.floor js/Math (/ (.now js/Date) 1000)))
@@ -35,13 +36,13 @@
 (defn use-caching! [cache-options]
   (reset! cache-styles? true)
 
-  ;; Cache is empty, set creation date.
+  ;; If cache is empty, set creation date.
   (when-not (read-cache-value cache-key-created)
     (.info js/console "Setting cache creation date.")
     (set-cache-created-time (now-in-seconds)))
 
   (when (cache-expired? (read-cache-value cache-key-created)
-                        (:expires cache-options)
+                        (or (:expires cache-options) default-cache-expiration-time-s)
                         (now-in-seconds))
     (clear-styles)
     (.info js/console "stylefy cache expired. The cache has been cleared.")

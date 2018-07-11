@@ -92,7 +92,7 @@
                               These properties are globally prefixed in all CSS code."
   ([] (init {}))
   ([options]
-   (dom/init-styles-in-use options)
+   (dom/init-cache options)
    (impl-styles/init-global-vendor-prefixes options)
    (reset! dom/stylefy-initialised? true)))
 
