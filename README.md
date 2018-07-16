@@ -389,7 +389,7 @@ Cache options support automatic cache clearing when a certain amount of time is 
 
 ```clojure
 (stylefy/init {:use-caching? true
-               :cache-options {:expires (* 1 60 60 24 7)}}) ; Cache is cleared after 7 weeks
+               :cache-options {:expires (* 1 60 60 24 7)}}) ; Cache is cleared after 7 days
 ```
 
 ## Units and colors
