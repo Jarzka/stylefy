@@ -376,7 +376,7 @@ As from version 1.7.0, caching with local storage is turned on by default. You c
   (stylefy/init {:use-caching? false})
 ```
 
-By default, the cache is cleared in three days. You can clear it manually by calling:
+By default, the cache is cleared in seven days. You can clear it manually by calling:
 
 ```clojure
 (require '[stylefy.cache :as stylefy-cache])

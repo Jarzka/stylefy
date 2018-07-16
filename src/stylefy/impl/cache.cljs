@@ -10,7 +10,7 @@
 (def cache-key-styles (str cache-prefix "styles"))
 (def cache-key-created (str cache-prefix "created"))
 (def cache-styles? (atom false))
-(def default-cache-expiration-time-s (* 1 60 60 * 24 * 3))
+(def default-cache-expiration-time-s (* 1 60 60 * 24 * 7))
 
 (defn now-in-seconds []
   (.floor js/Math (/ (.now js/Date) 1000)))
