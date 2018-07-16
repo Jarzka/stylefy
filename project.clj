@@ -5,10 +5,10 @@
                  [org.clojure/clojurescript "1.9.946"]
                  [prismatic/dommy "1.1.0"]
                  [reagent "0.7.0"]
-                 [garden "1.3.2"]]
+                 [garden "1.3.2"]
+                 [org.clojure/core.async "0.3.443"]]
   :plugins [[lein-cljsbuild "1.1.2"]
             [lein-doo "0.1.7"]
-            [org.clojure/core.async "0.3.443"]
             [lein-codox "0.10.3"]]
   :profiles {:dev {:dependencies [[clj-chrome-devtools "20180310"]]}}
   :codox {:language :clojurescript
