@@ -98,9 +98,18 @@ To use it in a component, use the *use-style* function:
     text])
 ```
 
+*use-style* accepts HTML attributes as the second parameter:
+
+```clojure
+(defn- button [text]
+  [:div (use-style button-style {:on-click #(.log js/console "Click!")
+                                 :class "some-3rd-party-button-class"})
+    text])
+```
+
 Calling use-style asks stylefy to save the style (if it has not been saved already) and add it into the DOM as CSS class as soon as possible. The return value is a map pointing to the created class, and the given style properties as inline style. Inline style is needed until the CSS code has been generated and inserted into the DOM. When the DOM is ready, the component is forced to re-render itself and use only class definition.
 
-If the style contains some specific definitions that cannot be present as inline style (some specific modes or media queries), the component is going to be hidden for a small amount of time until the CSS style is added into the DOM. The styles can also be added into the DOM beforehand by calling *prepare-styles*. Calling this function on :component-will-mount makes sure the styles are completely ready to be used when the component needs them.
+If the style contains some specific definitions that cannot be present as inline style (some specific modes or media queries), the component is going to be hidden for a few milliseconds until the CSS style is added into the DOM. This should not be a problem, but if needed, the style can also be added into the DOM beforehand by calling *prepare-styles*. Calling this function on :component-will-mount makes sure the style is completely ready to be used when the component needs it.
 
 ```clojure
 (r/create-class
@@ -112,15 +121,6 @@ If the style contains some specific definitions that cannot be present as inline
 ```
 
 It's good to keep in mind that most of the time *prepare-styles* is not needed but calling *use-style* should be enough.
-
-*use-style* accepts HTML attributes as the second parameter:
-
-```clojure
-(defn- button [text]
-  [:div (use-style button-style {:on-click #(.log js/console "Click!")
-                                 :class "some-3rd-party-button-class"})
-    text])
-```
 
 ## Combine & parametrise styles
 
