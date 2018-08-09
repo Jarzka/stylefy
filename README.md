@@ -120,7 +120,7 @@ If the style contains some specific definitions that cannot be present as inline
                [:div (use-style style3)]])})
 ```
 
-It's good to keep in mind that most of the time *prepare-styles* is not needed but calling *use-style* should be enough.
+It's good to keep in mind that most of the time *prepare-styles* is not needed but calling *use-style* should be enough. Also, when caching is used, the style will be ready after its CSS has been created for the first time.
 
 ## Combine & parametrise styles
 
