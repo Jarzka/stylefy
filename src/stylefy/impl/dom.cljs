@@ -13,11 +13,11 @@
     [cljs.core.async.macros :refer [go]]))
 
 (def stylefy-initialised? (r/atom false))
-(def styles-in-use (r/atom {})) ;; style hash -> map containing keys ::css & ::in-dom?
-(def keyframes-in-use (r/atom []))
-(def font-faces-in-use (r/atom []))
-(def custom-tags-in-use (r/atom []))
-(def custom-classes-in-use (r/atom []))
+(def styles-in-use (r/atom {})) ;; style hash -> map containing keys: ::css & ::in-dom?
+(def keyframes-in-use (r/atom [])) ;; Vector of maps containing keys: ::css
+(def font-faces-in-use (r/atom [])) ;; Vector of maps containing keys: ::css
+(def custom-tags-in-use (r/atom [])) ;; Vector of maps containing keys: ::css
+(def custom-classes-in-use (r/atom [])) ;; Vector of maps containing keys: ::css
 
 (def ^:private stylefy-node-id :#_stylefy-styles_)
 (def ^:private stylefy-constant-node-id :#_stylefy-constant-styles_)
@@ -32,25 +32,17 @@
   (let [styles-in-css (map (fn [style-hash]
                              (::css (style-by-hash style-hash)))
                            (keys @styles-in-use))
-        ;; TODO Keyframes, font-faces, custom classes are not going to change once defined.
-        ;; Now we re-convert those to CSS every single time this function is called.
-        ;; We should use the converted CSS when it has been created.
         keyframes-in-css (map (fn [keyframes]
-                                (css keyframes))
+                                (::css keyframes))
                               @keyframes-in-use)
         font-faces-in-use (map (fn [properties]
-                                 (css properties))
+                                 (::css properties))
                                @font-faces-in-use)
         custom-tags-in-use (map (fn [tag-definition]
-                                  (conversion/style->css
-                                    {:props (::tag-properties tag-definition)
-                                     :custom-selector (::tag-name tag-definition)}))
+                                  (::css tag-definition))
                                 @custom-tags-in-use)
-        custom-classes-in-use (map (fn [class-definition]
-                                     (conversion/style->css
-                                       {:props (::class-properties class-definition)
-                                        :custom-selector (conversion/class-selector
-                                                           (::class-name class-definition))}))
+        custom-classes-in-use (map (fn [tag-definition]
+                                     (::css tag-definition))
                                    @custom-classes-in-use)]
     (dommy/set-text! node-constant (apply str (concat font-faces-in-use
                                                       keyframes-in-css
@@ -58,7 +50,8 @@
                                                       custom-classes-in-use)))
     (dommy/set-text! node (apply str styles-in-css))))
 
-(defn- mark-styles-added-in-dom! []
+(defn- mark-all-styles-added-in-dom! []
+  ;; TODO Also mark keyframes, font-faces, custom tags and custom classes
   (reset! styles-in-use (apply merge (map
                                        #(-> {% (assoc (get @styles-in-use %) ::in-dom? true)})
                                        (keys @styles-in-use)))))
@@ -83,7 +76,7 @@
                 (cache/clear-styles)
                 e))
 
-            (mark-styles-added-in-dom!))
+            (mark-all-styles-added-in-dom!))
         (.error js/console "stylefy is unable to find the required <style> tags!")))))
 
 (defn- asynchronously-update-dom
@@ -122,25 +115,25 @@
   (boolean (::in-dom? (style-by-hash style-hash))))
 
 (defn add-keyframes [identifier & frames]
-  (let [garden-definition (apply at-keyframes identifier frames)]
-    (swap! keyframes-in-use conj garden-definition)
-    (asynchronously-update-dom)
-    garden-definition))
+  (swap! keyframes-in-use conj {::css (css (apply at-keyframes identifier frames))})
+  (asynchronously-update-dom)
+  nil)
 
 (defn add-font-face [properties]
-  (let [garden-definition (at-font-face properties)]
-    (swap! font-faces-in-use conj garden-definition)
-    (asynchronously-update-dom)
-    garden-definition))
+  (swap! font-faces-in-use conj {::css (css (at-font-face properties))})
+  (asynchronously-update-dom)
+  nil)
 
 (defn add-tag [name properties]
-  (let [custom-tag-definition {::tag-name name ::tag-properties properties}]
-    (swap! custom-tags-in-use conj custom-tag-definition)
-    (asynchronously-update-dom)
-    custom-tag-definition))
+  (swap! custom-tags-in-use conj {::css (conversion/style->css
+                                          {:props properties
+                                           :custom-selector name})})
+  (asynchronously-update-dom)
+  nil)
 
 (defn add-class [name properties]
-  (let [custom-class-definition {::class-name name ::class-properties properties}]
-    (swap! custom-classes-in-use conj custom-class-definition)
-    (asynchronously-update-dom)
-    custom-class-definition))
+  (swap! custom-classes-in-use conj {::css (conversion/style->css
+                                             {:props properties
+                                              :custom-selector (conversion/class-selector name)})})
+  (asynchronously-update-dom)
+  nil)
