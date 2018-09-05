@@ -106,7 +106,7 @@
   (assert props "Unable to save empty style!")
   (assert hash "Unable to save style without hash!")
   (let [style-css (conversion/style->css style)
-        style-to-be-saved (assoc props ::css style-css)]
+        style-to-be-saved {::css style-css}]
     (swap! styles-in-use assoc hash style-to-be-saved)
     (asynchronously-update-dom)))
 
