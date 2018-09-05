@@ -13,7 +13,7 @@ ClojureScript library for styling UI components with ease.
 
 stylefy makes it possible to define UI component styles as Clojure data and attach them into components easily. When styles are defined as Clojure data, they can be easily transformed with Clojure's powerful functions (like merge) and parametrised. Styles are converted to CSS on-demand, and since the converted CSS is handled internally by the library, there is no need to worry about things like writing selectors, name conflicts, difficult cascading, dead CSS code etc.
 
-stylefy uses [Garden](https://github.com/noprompt/garden) in the background to do most of its CSS conversions. 
+Currently stylefy works only with SPA applications using [Reagent](https://github.com/reagent-project/reagent). stylefy uses [Garden](https://github.com/noprompt/garden) in the background to do most of its CSS conversions. 
 
 # Features
 
@@ -27,15 +27,10 @@ stylefy uses [Garden](https://github.com/noprompt/garden) in the background to d
 - Keyframes (for CSS animations)
 - Font-face (for 3rd party web fonts)
 - Feature queries (CSS @supports query)
-- Style caching using local storage (must be turned on separately)
+- Style caching using local storage (can be turned off)
 - Small and simple core API
 - Automatic style reloading with [Figwheel](https://github.com/bhauman/lein-figwheel)
 - All features are tested to work with Chrome, Firefox, Edge & Internet Explorer 11
-
-# Requirements
-
-- Currently stylefy works only with SPA applications using [Reagent](https://github.com/reagent-project/reagent). This is because stylefy forces all components to re-render themselves when currently used styles are changed. This requirement has been implemented using Reagent atom, which is deref'd in all components calling *use-style*.
-- Your browser needs to support requestAnimationFrame. However, all major browsers have supported it for a long time, so this should not be problem.
 
 # FAQ
 
@@ -59,7 +54,7 @@ Are you using stylefy in your (public) project? Send me a message.
 Add the following line to your Leiningen project:
 
 ```clj
-[stylefy "1.6.0"]
+[stylefy "1.7.0"]
 ```
 
 # Usage
@@ -103,9 +98,18 @@ To use it in a component, use the *use-style* function:
     text])
 ```
 
+*use-style* accepts HTML attributes as the second parameter:
+
+```clojure
+(defn- button [text]
+  [:div (use-style button-style {:on-click #(.log js/console "Click!")
+                                 :class "some-3rd-party-button-class"})
+    text])
+```
+
 Calling use-style asks stylefy to save the style (if it has not been saved already) and add it into the DOM as CSS class as soon as possible. The return value is a map pointing to the created class, and the given style properties as inline style. Inline style is needed until the CSS code has been generated and inserted into the DOM. When the DOM is ready, the component is forced to re-render itself and use only class definition.
 
-If the style contains some specific definitions that cannot be present as inline style (some specific modes or media queries), the component is going to be hidden for a small amount of time until the CSS style is added into the DOM. The styles can also be added into the DOM beforehand by calling *prepare-styles*. Calling this function on :component-will-mount makes sure the styles are completely ready to be used when the component needs them.
+If the style contains some specific definitions that cannot be present as inline style (some specific modes or media queries), the component is going to be hidden for a few milliseconds until the CSS style is added into the DOM. This should not be a problem, but if needed, the style can also be added into the DOM beforehand by calling *prepare-styles*. Calling this function on :component-will-mount makes sure the style is completely ready to be used when the component needs it.
 
 ```clojure
 (r/create-class
@@ -116,16 +120,7 @@ If the style contains some specific definitions that cannot be present as inline
                [:div (use-style style3)]])})
 ```
 
-It's good to keep in mind that most of the time *prepare-styles* is not needed but calling *use-style* should be enough.
-
-*use-style* accepts HTML attributes as the second parameter:
-
-```clojure
-(defn- button [text]
-  [:div (use-style button-style {:on-click #(.log js/console "Click!")
-                                 :class "some-3rd-party-button-class"})
-    text])
-```
+It's good to keep in mind that most of the time *prepare-styles* is not needed but calling *use-style* should be enough. Also, when caching is used, the style will be ready after its CSS has been created for the first time.
 
 ## Combine & parametrise styles
 
@@ -375,13 +370,13 @@ As has been told, stylefy converts style definition to unique CSS classes automa
 
 stylefy supports style caching with HTML5 local storage. The converted CSS code is added into local storage and loaded from there when the page is reloaded.
 
-Caching with local storage is turned off by default. You can turn it on in the initialisation function:
+As from version 1.7.0, caching with local storage is turned on by default. You can turn it off in the initialisation function:
 
 ```clojure
-  (stylefy/init {:use-caching? true})
+  (stylefy/init {:use-caching? false})
 ```
 
-By default, the cache is never cleared. You can clear it manually by calling:
+By default, the cache is cleared in seven days. You can clear it manually by calling:
 
 ```clojure
 (require '[stylefy.cache :as stylefy-cache])
@@ -390,14 +385,12 @@ By default, the cache is never cleared. You can clear it manually by calling:
 
 ### Cache options
 
-Cache options support automatic cache clearing when a certain amount of time is passed. You can turn it on like this:
+Cache options support automatic cache clearing when a certain amount of time is passed.
 
 ```clojure
 (stylefy/init {:use-caching? true
-               :cache-options {:expires 60}}) ; Cache is cleared after 60 seconds
+               :cache-options {:expires (* 1 60 60 24 7)}}) ; Cache is cleared after 7 days
 ```
-
-In local development environment, it is recommended to keep the cache clearing interval relatively frequent (like one hour or day). In production environment, the interval should be a few days, depending how often the CSS code is going to change.
 
 ## Units and colors
 

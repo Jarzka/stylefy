@@ -95,7 +95,7 @@
                                                         (keys (:stylefy.core/mode style)))))
             inline-style (-> style
                              (utils/filter-props)
-                             (utils/garden-units->to-css))]
+                             (utils/garden-units->css))]
         (if (or contains-media-queries?
                 contains-feature-queries?
                 contains-modes-not-excluded?)

@@ -14,7 +14,7 @@
   [props]
   (apply dissoc props (filter namespace (keys props))))
 
-(defn garden-units->to-css
+(defn garden-units->css
   "Checks all values in the map and converts all Garden units to CSS."
   [props]
   (reduce

@@ -5,6 +5,7 @@
                  [prismatic/dommy "1.1.0"]
                  [garden "1.3.2"]
                  [reagent "0.6.0"]
+                 [org.clojure/core.async "0.3.443"]
                  [com.andrewmcveigh/cljs-time "0.5.0"]
                  [figwheel "0.5.10"]]
   :plugins [[lein-cljsbuild "1.1.2"]
