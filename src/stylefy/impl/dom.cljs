@@ -10,7 +10,7 @@
   (:require-macros [reagent.ratom :refer [run!]]))
 
 (def stylefy-initialised? (r/atom false))
-(def styles-in-use (r/atom {})) ;; style hash -> props
+(def styles-in-use (r/atom {})) ;; style hash -> map containing keys ::css & ::in-dom?
 (def keyframes-in-use (r/atom []))
 (def font-faces-in-use (r/atom []))
 (def custom-tags-in-use (r/atom []))
