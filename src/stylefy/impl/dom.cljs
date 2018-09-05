@@ -51,7 +51,6 @@
     (dommy/set-text! node (apply str styles-in-css))))
 
 (defn- mark-all-styles-added-in-dom! []
-  ;; TODO Also mark keyframes, font-faces, custom tags and custom classes
   (reset! styles-in-use (apply merge (map
                                        #(-> {% (assoc (get @styles-in-use %) ::in-dom? true)})
                                        (keys @styles-in-use)))))
