@@ -356,13 +356,15 @@
          {:stylefy.impl.dom/tag-name "code"
           :stylefy.impl.dom/tag-properties {:background-color :lightyellow}}))
   (is (= @stylefy.impl.dom/custom-tags-in-use
-         [{:stylefy.impl.dom/tag-name "code", :stylefy.impl.dom/tag-properties {:background-color :lightyellow}}])))
+         [{:stylefy.impl.dom/css "code {\n  background-color: lightyellow;\n}"}])))
 
 (deftest class
   (is (= (stylefy/class "background-transition"
                         {:transition "background-color 1s;"})
          {::stylefy.impl.dom/class-name "background-transition"
-          ::stylefy.impl.dom/class-properties {:transition "background-color 1s;"}})))
+          ::stylefy.impl.dom/class-properties {:transition "background-color 1s;"}}))
+  (is (= @stylefy.impl.dom/custom-classes-in-use
+         [{:stylefy.impl.dom/css ".background-transition {\n  transition: background-color 1s;;\n}"}])))
 
 (deftest prepare-styles
   (testing "Good argument"
