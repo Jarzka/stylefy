@@ -52,7 +52,7 @@
           ;; - class-prefix is only for class naming, the style looks the same with it or without
           hashable-style (dissoc hashable-style :stylefy.core/sub-styles :stylefy.core/class-prefix)
           class-prefix (if @use-custom-class-prefix?
-                         (or (check-custom-class-prefix (:stylefy.core/class-prefix style)) default-class-prefix)
+                         (check-custom-class-prefix (:stylefy.core/class-prefix style))
                          default-class-prefix)]
       (str class-prefix "_" (hash hashable-style)))))
 
