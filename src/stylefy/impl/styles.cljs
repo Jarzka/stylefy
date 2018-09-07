@@ -21,6 +21,19 @@
           :stylefy.core/auto-prefix (set/union (:stylefy.core/auto-prefix @global-vendor-prefixes)
                                                (:stylefy.core/auto-prefix style))}))
 
+(defn- check-custom-class-prefix
+  "Checks that the value is valid and returns as properly formatted prefix."
+  [custom-class-prefix]
+  (assert (or
+            (string? custom-class-prefix)
+            (keyword? custom-class-prefix)
+            (nil? custom-class-prefix))
+          (str "Custom class prefix should be either string, keyword or nil, got: " (pr-str custom-class-prefix)))
+
+  (cond (string? custom-class-prefix) custom-class-prefix
+        (keyword? custom-class-prefix) (name custom-class-prefix)
+        (nil? custom-class-prefix) default-class-prefix))
+
 (defn hash-style [style]
   (when (not (empty? style))
     (let [hashable-garden-units (reduce
@@ -38,9 +51,8 @@
           ;; does not define the actual properties of this style.
           hashable-style (dissoc hashable-style :stylefy.core/sub-styles)
           class-prefix (if @use-custom-class-prefix?
-                         ;; TODO Check that class-prefix is string, keyword or nil. In case of keyword, convert to string
                          ;; TODO Add test
-                         (or (:stylefy.core/class-prefix style) default-class-prefix)
+                         (or (check-custom-class-prefix (:stylefy.core/class-prefix style)) default-class-prefix)
                          default-class-prefix)]
       (str class-prefix "_" (hash hashable-style)))))
 
