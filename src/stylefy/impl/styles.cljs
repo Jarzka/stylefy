@@ -11,7 +11,7 @@
 
 (def global-vendor-prefixes (atom {:stylefy.core/vendors #{}
                                    :stylefy.core/auto-prefix #{}}))
-(def default-class-prefix "stylefy")
+(def default-class-prefix "_stylefy")
 (def use-custom-class-prefix? (atom false))
 
 (defn- add-global-vendors [style]
@@ -47,11 +47,11 @@
                                   {}
                                   (keys (utils/filter-props style)))
           hashable-style (merge style hashable-garden-units)
-          ;; Hash style without its sub-styles. ::sub-styles is only a link to other styles, it
-          ;; does not define the actual properties of this style.
-          hashable-style (dissoc hashable-style :stylefy.core/sub-styles)
+          ;; Hash style without certain special keywords:
+          ;; - sub-styles is only a link to other styles, it does not define the actual properties of this style.
+          ;; - class-prefix is only for class naming, the style looks the same with it or without
+          hashable-style (dissoc hashable-style :stylefy.core/sub-styles :stylefy.core/class-prefix)
           class-prefix (if @use-custom-class-prefix?
-                         ;; TODO Add test
                          (or (check-custom-class-prefix (:stylefy.core/class-prefix style)) default-class-prefix)
                          default-class-prefix)]
       (str class-prefix "_" (hash hashable-style)))))
