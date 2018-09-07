@@ -172,5 +172,4 @@
              :stylefy.core/auto-prefix (:stylefy.core/auto-prefix global-vendor-prefixes-options)})))
 
 (defn init-custom-class-prefix [options]
-  (let [use-custom-class-prefix? (boolean (:use-custom-class-prefix? options))]
-    (reset! use-custom-class-prefix?)))
+  (reset! use-custom-class-prefix? (boolean (:use-custom-class-prefix? options))))
