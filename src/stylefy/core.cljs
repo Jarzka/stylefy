@@ -102,6 +102,7 @@
                               It is recommended to set this to true only in development / test environment."
   ([] (init {}))
   ([options]
+   (impl-styles/init-custom-class-prefix options)
    (dom/init-cache options)
    (impl-styles/init-global-vendor-prefixes options)
    (reset! dom/stylefy-initialised? true)))
