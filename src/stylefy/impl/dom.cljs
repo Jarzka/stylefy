@@ -114,25 +114,29 @@
   (boolean (::in-dom? (style-by-hash style-hash))))
 
 (defn add-keyframes [identifier & frames]
-  (swap! keyframes-in-use conj {::css (css (apply at-keyframes identifier frames))})
+  (let [garden-definition (apply at-keyframes identifier frames)]
+    (swap! keyframes-in-use conj {::css (css garden-definition)})
   (asynchronously-update-dom)
-  nil)
+  garden-definition))
 
 (defn add-font-face [properties]
-  (swap! font-faces-in-use conj {::css (css (at-font-face properties))})
-  (asynchronously-update-dom)
-  nil)
+  (let [garden-definition (at-font-face properties)]
+    (swap! font-faces-in-use conj {::css (css garden-definition)})
+    (asynchronously-update-dom)
+    garden-definition))
 
 (defn add-tag [name properties]
-  (swap! custom-tags-in-use conj {::css (conversion/style->css
-                                          {:props properties
-                                           :custom-selector name})})
-  (asynchronously-update-dom)
-  nil)
+  (let [custom-tag-definition {::tag-name name ::tag-properties properties}]
+    (swap! custom-tags-in-use conj {::css (conversion/style->css
+                                            {:props (::tag-properties custom-tag-definition)
+                                             :custom-selector (::tag-name custom-tag-definition)})})
+    (asynchronously-update-dom)
+    custom-tag-definition))
 
 (defn add-class [name properties]
-  (swap! custom-classes-in-use conj {::css (conversion/style->css
-                                             {:props properties
-                                              :custom-selector (conversion/class-selector name)})})
-  (asynchronously-update-dom)
-  nil)
+  (let [custom-class-definition {::class-name name ::class-properties properties}]
+    (swap! custom-classes-in-use conj {::css (conversion/style->css
+                                               {:props (::class-properties custom-class-definition)
+                                                :custom-selector (conversion/class-selector (::class-name custom-class-definition))})})
+    (asynchronously-update-dom)
+    custom-class-definition))
