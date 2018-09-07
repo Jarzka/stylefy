@@ -25,14 +25,15 @@
   "Checks that the value is valid and returns as properly formatted prefix."
   [custom-class-prefix]
   (assert (or
+            (nil? custom-class-prefix)
             (string? custom-class-prefix)
-            (keyword? custom-class-prefix)
-            (nil? custom-class-prefix))
+            (keyword? custom-class-prefix))
           (str "Custom class prefix should be either string, keyword or nil, got: " (pr-str custom-class-prefix)))
 
-  (cond (string? custom-class-prefix) custom-class-prefix
+  (cond (nil? custom-class-prefix)
+        (string? custom-class-prefix) custom-class-prefix
         (keyword? custom-class-prefix) (name custom-class-prefix)
-        (nil? custom-class-prefix) default-class-prefix))
+        default-class-prefix))
 
 (defn hash-style [style]
   (when (not (empty? style))
