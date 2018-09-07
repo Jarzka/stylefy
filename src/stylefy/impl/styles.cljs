@@ -38,6 +38,8 @@
           ;; does not define the actual properties of this style.
           hashable-style (dissoc hashable-style :stylefy.core/sub-styles)
           class-prefix (if @use-custom-class-prefix?
+                         ;; TODO Check that class-prefix is string, keyword or nil. In case of keyword, convert to string
+                         ;; TODO Add test
                          (or (:stylefy.core/class-prefix style) default-class-prefix)
                          default-class-prefix)]
       (str class-prefix "_" (hash hashable-style)))))
