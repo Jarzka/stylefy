@@ -72,6 +72,7 @@
                                                   {:border-radius 0}}})})
 
 (def boostrap-navbar-overrides {:background-color "#DDDDDD"
+                                ::stylefy/class-prefix "bootstrap-override"
                                 ::stylefy/sub-styles {:link {:font-weight "bold"}}})
 
 (def boostrap-navbar {:background-color "#DDDDDD"
