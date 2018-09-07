@@ -35,8 +35,8 @@
           ;; Hash style without its sub-styles. ::sub-styles is only a link to other styles, it
           ;; does not define the actual properties of this style.
           hashable-style (dissoc hashable-style :stylefy.core/sub-styles)
-          class-prefix (or (:stylefy.core/class-prefix style) "_stylefy_")]
-      (str class-prefix (hash hashable-style)))))
+          class-prefix (or (:stylefy.core/class-prefix style) "stylefy")]
+      (str class-prefix "_" (hash hashable-style)))))
 
 (defn- create-style! [{:keys [props hash] :as style}]
   (dom/save-style! {:props props :hash hash})
