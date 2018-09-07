@@ -51,9 +51,9 @@
   (with-redefs [styles/use-custom-class-prefix? (atom true)]
     (let [default-hash (styles/hash-style style-box)
           custom-prefix-hash (styles/hash-style (assoc style-box ::stylefy/class-prefix "hello-from-cljs-test"))]
+
       (is (= default-hash style-box-expected-hash))
-      (is (= custom-prefix-hash "hello-from-cljs-test_-2018943876"))
-      (is (not= default-hash style-box-expected-hash)))))
+      (is (not= default-hash custom-prefix-hash)))))
 
 (deftest hash-sub-styles
   ;; ::sub-styles is only a link to other styles, it
