@@ -45,6 +45,7 @@
 
    ::class-prefix      Custom prefix for generated class names. If not given, the default prefix will be used.
                        Custom prefix can be used for debugging and automatic software testing purposes.
+                       Note that you need to set custom class prefixes on in the init function.
 
    Options is an optional map, which contains HTML attributes (:class, :href, :src etc.).
    It can also contain the the following features:
