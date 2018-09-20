@@ -39,6 +39,46 @@
 (deftest hash-style
   (is (= (styles/hash-style style-box) style-box-expected-hash)))
 
+(deftest hash-style-with-custom-prefix
+  ;; Default case: custom class prefixes are disabled globally by default
+  (let [default-hash (styles/hash-style style-box)
+        custom-prefix-hash (styles/hash-style (assoc style-box ::stylefy/class-prefix "hello-from-cljs-test"))]
+    (is (= default-hash style-box-expected-hash))
+    (is (= custom-prefix-hash "_stylefy_-2018943876"))
+    (is (= default-hash style-box-expected-hash)))
+
+  ;; Custom class prefixes are enabled globally
+  (with-redefs [styles/use-custom-class-prefix? (atom true)]
+    (let [default-hash (styles/hash-style style-box)
+          custom-prefix-hash (styles/hash-style (assoc style-box ::stylefy/class-prefix "hello-from-cljs-test"))]
+
+      (is (= default-hash style-box-expected-hash))
+      (is (not= default-hash custom-prefix-hash))))
+
+  ;; Custom class prefix is a keyword
+  (with-redefs [styles/use-custom-class-prefix? (atom true)]
+    (let [default-hash (styles/hash-style style-box)
+          custom-prefix-hash (styles/hash-style (assoc style-box ::stylefy/class-prefix :hello-from-cljs-test))]
+
+      (is (= default-hash style-box-expected-hash))
+      (is (not= default-hash custom-prefix-hash))))
+
+  ;; Custom class prefix is nil -> use default
+  (with-redefs [styles/use-custom-class-prefix? (atom true)]
+    (let [default-hash (styles/hash-style style-box)
+          custom-prefix-hash (styles/hash-style (assoc style-box ::stylefy/class-prefix nil))]
+      (is (= default-hash style-box-expected-hash))
+      (is (= custom-prefix-hash "_stylefy_-2018943876"))
+      (is (= default-hash style-box-expected-hash))))
+
+  ;; Custom class prefix is something else
+  (with-redefs [styles/use-custom-class-prefix? (atom true)]
+    (try
+      (styles/hash-style (assoc style-box ::stylefy/class-prefix {}))
+      (is false "Error was not thrown")
+      (catch js/Error e
+        (is true "Error was thrown as expected")))))
+
 (deftest hash-sub-styles
   ;; ::sub-styles is only a link to other styles, it
   ;; does not define the actual properties of this style.

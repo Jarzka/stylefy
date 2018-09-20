@@ -263,6 +263,7 @@
 
 (defn ^:export start []
   (stylefy/init {:use-caching? true
+                 :use-custom-class-prefix? true
                  :cache-options {:expires (* 1 60 60 24 7)}
                  :global-vendor-prefixes {::stylefy/vendors ["webkit" "moz" "o"]
                                           ::stylefy/auto-prefix #{:border-radius}}})

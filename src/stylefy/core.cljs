@@ -20,7 +20,9 @@
 
    The given 'style' parameter is a map which contains CSS style properties
    (as supported by Garden library). There can also be special namespaced keywords
-   along with the style definitions:
+   along with the style definitions.
+
+   Core features:
 
    ::sub-styles        Makes it possible to define a named style map inside of the main style map.
                        The contents of ::sub-styles should be a map,
@@ -38,6 +40,12 @@
    ::auto-prefix       A set of style properties that should be prefixed with ::vendors.
    ::with-classes      A collection of additional class names that should always be used with
                        this style definition.
+
+   Additional features:
+
+   ::class-prefix      Custom prefix for generated class names. If not given, the default prefix will be used.
+                       Custom prefix can be used for debugging and automatic software testing purposes.
+                       Note that you need to set custom class prefixes on in the init function.
 
    Options is an optional map, which contains HTML attributes (:class, :href, :src etc.).
    It can also contain the the following features:
@@ -79,19 +87,23 @@
   the DOM as CSS classes.
 
   The following options are supported:
-    use-caching?              If true, caches the generated CSS code using localstorage
+    :use-caching?             If true, caches the generated CSS code using localstorage
                               so that future page loads work faster. Defaults to false.
                               Also check :cache-options.
-    cache-options             A map which can contain the following keywords:
-      expires                 Number of seconds after the cache is cleared automatically.
+    :cache-options            A map which can contain the following keywords:
+      :expires                Number of seconds after the cache is cleared automatically.
                               For example, value 604800 clears the cache after one week.
                               By default, the cache is never cleared automatically.
                               You can also clear the cache manually by calling stylefy.cache/clear.
-    global-vendor-prefixes    A map containing a set of ::stylefy/vendors and
+    :global-vendor-prefixes   A map containing a set of ::stylefy/vendors and
                               ::stylefy/auto-prefix properties.
-                              These properties are globally prefixed in all CSS code."
+                              These properties are globally prefixed in all CSS code.
+    :use-custom-class-prefix? If set to true, custom class prefix is used if the style map contains it.
+                              By default, this is set to false.
+                              It is recommended to set this to true only in development / test environment."
   ([] (init {}))
   ([options]
+   (impl-styles/init-custom-class-prefix options)
    (dom/init-cache options)
    (impl-styles/init-global-vendor-prefixes options)
    (reset! dom/stylefy-initialised? true)))
@@ -170,12 +182,3 @@
   (assert (every? map? (remove nil? styles))
           (str "Every style should be a map or nil, got: " (pr-str styles)))
   (impl-styles/prepare-styles styles))
-
-;; Style maps can contain the following special keywords,
-;; which are referenced to this namespace:
-;;  :stylefy.core/sub-styles
-;;  :stylefy.core/media
-;;  :stylefy.core/mode
-;;  :stylefy.core/vendors
-;;  :stylefy.core/auto-prefix
-;;  :stylefy.core/supports

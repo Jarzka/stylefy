@@ -1,4 +1,4 @@
-(defproject stylefy "1.7.0"
+(defproject stylefy "1.8.0"
   :description "Library for styling UI components"
   :url "https://github.com/Jarzka/stylefy"
   :dependencies [[org.clojure/clojure "1.9.0"]
@@ -22,4 +22,9 @@
                        {:id "prod"
                         :source-paths ["src"]
                         :compiler {:output-to "stylefy.js"
-                                   :optimizations :advanced}}]})
+                                   :optimizations :advanced}}]}
+  :jvm-opts ~(let [version     (System/getProperty "java.version")
+                   [major _ _] (clojure.string/split version #"\.")]
+               (if (>= (java.lang.Integer/parseInt major) 9)
+                 ["--add-modules" "java.xml.bind"]
+                 [])))

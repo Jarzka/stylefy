@@ -11,6 +11,8 @@
 
 (def global-vendor-prefixes (atom {:stylefy.core/vendors #{}
                                    :stylefy.core/auto-prefix #{}}))
+(def default-class-prefix "_stylefy")
+(def use-custom-class-prefix? (atom false))
 
 (defn- add-global-vendors [style]
   (merge style
@@ -18,6 +20,19 @@
                                            (:stylefy.core/vendors style))
           :stylefy.core/auto-prefix (set/union (:stylefy.core/auto-prefix @global-vendor-prefixes)
                                                (:stylefy.core/auto-prefix style))}))
+
+(defn- check-custom-class-prefix
+  "Checks that the value is valid and returns as properly formatted prefix."
+  [custom-class-prefix]
+  (assert (or
+            (nil? custom-class-prefix)
+            (string? custom-class-prefix)
+            (keyword? custom-class-prefix))
+          (str "Custom class prefix should be either string, keyword or nil, got: " (pr-str custom-class-prefix)))
+
+  (cond (nil? custom-class-prefix) default-class-prefix
+        (string? custom-class-prefix) custom-class-prefix
+        (keyword? custom-class-prefix) (name custom-class-prefix)))
 
 (defn hash-style [style]
   (when (not (empty? style))
@@ -32,10 +47,14 @@
                                   {}
                                   (keys (utils/filter-props style)))
           hashable-style (merge style hashable-garden-units)
-          ;; Hash style without its sub-styles. ::sub-styles is only a link to other styles, it
-          ;; does not define the actual properties of this style.
-          hashable-style (dissoc hashable-style :stylefy.core/sub-styles)]
-      (str "_stylefy_" (hash hashable-style)))))
+          ;; Hash style without certain special keywords:
+          ;; - sub-styles is only a link to other styles, it does not define the actual properties of this style.
+          ;; - class-prefix is only for class naming, the style looks the same with it or without
+          hashable-style (dissoc hashable-style :stylefy.core/sub-styles :stylefy.core/class-prefix)
+          class-prefix (if @use-custom-class-prefix?
+                         (check-custom-class-prefix (:stylefy.core/class-prefix style))
+                         default-class-prefix)]
+      (str class-prefix "_" (hash hashable-style)))))
 
 (defn- create-style! [{:keys [props hash] :as style}]
   (dom/save-style! {:props props :hash hash})
@@ -165,3 +184,6 @@
     (reset! global-vendor-prefixes
             {:stylefy.core/vendors (:stylefy.core/vendors global-vendor-prefixes-options)
              :stylefy.core/auto-prefix (:stylefy.core/auto-prefix global-vendor-prefixes-options)})))
+
+(defn init-custom-class-prefix [options]
+  (reset! use-custom-class-prefix? (boolean (:use-custom-class-prefix? options))))
