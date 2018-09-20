@@ -65,7 +65,7 @@ Add the following line to your Leiningen project:
 
 ## Init
 
-Add the following *style* tags on your page's *head* tag. It is **recommended** that these tags are the last style tags in the header** so that possible other styles are not going to override them.
+Add the following *style* tags on your page's *head* tag. It is **recommended** that these tags are the last style tags in the *header* so that possible other styles do not override them.
 
 The first tag is going to contain CSS definitions that are not going to change (font-face, keyframes etc.). The second will contain class definitions that are added into the DOM on-demand when components need them.
 
