@@ -19,6 +19,7 @@
 (def custom-tags-in-use (r/atom [])) ;; Vector of maps containing keys: ::css
 (def custom-classes-in-use (r/atom [])) ;; Vector of maps containing keys: ::css
 
+(def ^:private stylefy-root-node (atom nil))
 (def ^:private stylefy-node-id :#_stylefy-styles_)
 (def ^:private stylefy-constant-node-id :#_stylefy-constant-styles_)
 (def ^:private dom-update-requested? (atom false))
@@ -55,12 +56,17 @@
                                        #(-> {% (assoc (get @styles-in-use %) ::in-dom? true)})
                                        (keys @styles-in-use)))))
 
+(defn- get-stylefy-node [id]
+  (if (nil? @stylefy-root-node)
+    (dommy/sel1 id)
+    (dommy/sel1 @stylefy-root-node id)))
+
 (defn- update-styles-in-dom!
   "Updates style tag if needed."
   []
   (when @dom-update-requested?
-    (let [node (dommy/sel1 stylefy-node-id)
-          node-constant (dommy/sel1 stylefy-constant-node-id)]
+    (let [node (get-stylefy-node stylefy-node-id)
+          node-constant (get-stylefy-node stylefy-constant-node-id)]
       (if (and node node-constant)
         (do (update-style-tags! node node-constant)
             (reset! dom-update-requested? false)
@@ -89,6 +95,10 @@
 (defn check-stylefy-initialisation []
   (when-not @stylefy-initialised?
     (.warn js/console (str "stylefy has not been initialised correctly. Call stylefy/init once when your application starts."))))
+
+(defn init-stylefy-root-node [options]
+  (when (:stylefy-root-node options)
+    (reset! stylefy-root-node (:stylefy-root-node options))))
 
 (defn init-cache [options]
   (when (not= (:use-caching? options) false)
