@@ -19,9 +19,10 @@
 (def custom-tags-in-use (r/atom [])) ;; Vector of maps containing keys: ::css
 (def custom-classes-in-use (r/atom [])) ;; Vector of maps containing keys: ::css
 
-(def ^:private stylefy-root-node (atom nil))
-(def ^:private stylefy-node-id :#_stylefy-styles_)
-(def ^:private stylefy-constant-node-id :#_stylefy-constant-styles_)
+(def ^:private stylefy-node-id "#_stylefy-styles_")
+(def ^:private stylefy-constant-node-id "#_stylefy-constant-styles_")
+(def ^:private stylefy-base-node (atom nil)) ;; Used when running multiple instances of stylefy on the same page
+(def stylefy-instance-id (atom nil)) ;; Used when running multiple instances of stylefy on the same page
 (def ^:private dom-update-requested? (atom false))
 
 (defn- style-by-hash [style-hash]
@@ -56,59 +57,63 @@
                                        #(-> {% (assoc (get @styles-in-use %) ::in-dom? true)})
                                        (keys @styles-in-use)))))
 
-(defn- get-stylefy-node [id]
-  (if (nil? @stylefy-root-node)
-    (dommy/sel1 id)
-    (dommy/sel1 @stylefy-root-node id)))
+(defn- get-stylefy-node [id base-node instance-id]
+  (let [final-id (str id (when instance-id (str instance-id)))]
+    (if (nil? base-node)
+      (dommy/sel1 final-id)
+      (dommy/sel1 base-node final-id))))
 
-(defn- update-styles-in-dom!
-  "Updates style tag if needed."
+(defn- update-dom
   []
-  (when @dom-update-requested?
-    (let [node (get-stylefy-node stylefy-node-id)
-          node-constant (get-stylefy-node stylefy-constant-node-id)]
-      (if (and node node-constant)
-        (do (update-style-tags! node node-constant)
-            (reset! dom-update-requested? false)
+  (let [node (get-stylefy-node stylefy-node-id @stylefy-base-node @stylefy-instance-id)
+        node-constant (get-stylefy-node stylefy-constant-node-id @stylefy-base-node @stylefy-instance-id)]
+    (if (and node node-constant)
+      (do (update-style-tags! node node-constant)
+          (reset! dom-update-requested? false)
 
-            (try
-              (cache/cache-styles (apply merge
-                                         (map
-                                           #(-> {% (dissoc (get @styles-in-use %) ::in-dom?)})
-                                           (keys @styles-in-use))))
-              (catch :default e
-                (.warn js/console (str "Unable to cache styles, error: " e))
-                (cache/clear-styles)
-                e))
+          (try
+            (cache/cache-styles (apply merge
+                                       (map
+                                         #(-> {% (dissoc (get @styles-in-use %) ::in-dom?)})
+                                         (keys @styles-in-use)))
+                                @stylefy-instance-id)
+            (catch :default e
+              (.warn js/console (str "Unable to cache styles, error: " e))
+              (cache/clear-styles @stylefy-instance-id)
+              e))
 
-            (mark-all-styles-added-in-dom!))
-        (.error js/console "stylefy is unable to find the required <style> tags!")))))
+          (mark-all-styles-added-in-dom!))
+      (.error js/console "stylefy is unable to find the required <style> tags!"))))
 
 (defn- asynchronously-update-dom
   "Updates style tag if needed."
   []
-  (when-not @dom-update-requested?
-    (reset! dom-update-requested? true)
-    (go
-      (update-styles-in-dom!))))
+  (when @stylefy-initialised?
+    (when-not @dom-update-requested? ;; Important. Only one update per tick. Otherwise, this is going to be very slow.
+      (reset! dom-update-requested? true)
+      (go
+        (update-dom)))))
 
 (defn check-stylefy-initialisation []
   (when-not @stylefy-initialised?
     (.warn js/console (str "stylefy has not been initialised correctly. Call stylefy/init once when your application starts."))))
 
-(defn init-stylefy-root-node [options]
-  (when (:stylefy-root-node options)
-    (reset! stylefy-root-node (:stylefy-root-node options))))
+(defn init-multi-instance [{:keys [multi-instance] :as options}]
+  (let [base-node (:base-node multi-instance)
+        instance-id (:instance-id multi-instance)]
+    (assert (or (nil? instance-id)
+                (string? instance-id))
+            (str "instance-id must be string. Got: " (pr-str base-node instance-id)))
+    (reset! stylefy-base-node base-node)
+    (reset! stylefy-instance-id instance-id)))
 
 (defn init-cache [options]
   (when (not= (:use-caching? options) false)
-    (cache/use-caching! (:cache-options options))
+    (cache/use-caching! (:cache-options options) @stylefy-instance-id)
 
     (when-let [cached-styles (cache/read-cache-value
-                               cache/cache-key-styles)]
-      (reset! styles-in-use (or cached-styles {}))
-      (asynchronously-update-dom)
-      (update-styles-in-dom!))))
+                               (cache/cache-key-styles @stylefy-instance-id))]
+      (reset! styles-in-use (or cached-styles {})))))
 
 (defn- save-style!
   "Stores the style in an atom. The style is going to be added into the DOM soon."
@@ -126,8 +131,8 @@
 (defn add-keyframes [identifier & frames]
   (let [garden-definition (apply at-keyframes identifier frames)]
     (swap! keyframes-in-use conj {::css (css garden-definition)})
-  (asynchronously-update-dom)
-  garden-definition))
+    (asynchronously-update-dom)
+    garden-definition))
 
 (defn add-font-face [properties]
   (let [garden-definition (at-font-face properties)]

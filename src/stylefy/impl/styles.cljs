@@ -177,7 +177,7 @@
       (when-let [sub-styles (vals (:stylefy.core/sub-styles style))]
         (prepare-styles sub-styles))))
 
-  (dom/update-styles-in-dom!))
+  (dom/update-dom))
 
 (defn init-global-vendor-prefixes [options]
   (let [global-vendor-prefixes-options (:global-vendor-prefixes options)]
