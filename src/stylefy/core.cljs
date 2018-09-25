@@ -83,9 +83,6 @@
 (defn init
   "Initialises stylefy.
 
-  Internally checks cache once and starts checking if new styles need to be added into
-  the DOM as CSS classes.
-
   The following options are supported:
     :use-caching?             If true, caches the generated CSS code using localstorage
                               so that future page loads work faster. Defaults to false.
@@ -100,14 +97,24 @@
                               These properties are globally prefixed in all CSS code.
     :use-custom-class-prefix? If set to true, custom class prefix is used if the style map contains it.
                               By default, this is set to false.
-                              It is recommended to set this to true only in development / test environment."
+                              It is recommended to set this to true only in development / test environment.
+    :multi-instance           Provides support for multiple stylefy instances.
+                              This can be used if you need to run multiple SPA applications
+                              on the same page and at least two of them are using stylefy.
+      :base-node              Base node where this instance's <style> tags are queried. Not required.
+      :instance-id            Unique string (for example app name). This is used as suffix for stylefy's <style> tags
+                              so make sure you name each instance's <style> tags correctly. For example:
+                              <style id=\"_stylefy-styles_myapp\">
+                              <style id=\"_stylefy-constant-styles_myapp\">
+                              This value is also used as suffix in caching."
   ([] (init {}))
   ([options]
    (impl-styles/init-custom-class-prefix options)
-   (dom/init-stylefy-root-node options)
+   (dom/init-multi-instance options)
    (dom/init-cache options)
    (impl-styles/init-global-vendor-prefixes options)
-   (reset! dom/stylefy-initialised? true)))
+   (reset! dom/stylefy-initialised? true)
+   (dom/update-dom))) ;; Update can be synchronous on init
 
 (defn keyframes
   "Adds the given keyframe definition to DOM.
