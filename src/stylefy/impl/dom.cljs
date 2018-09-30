@@ -89,7 +89,7 @@
   "Updates style tag if needed."
   []
   (when @stylefy-initialised?
-    (when-not @dom-update-requested? ;; Important. Only one update per tick. Otherwise, this is going to be very slow.
+    (when-not @dom-update-requested? ; Important. Only one update per tick. Otherwise, this is going to be very slow.
       (reset! dom-update-requested? true)
       (go
         (update-dom)))))
