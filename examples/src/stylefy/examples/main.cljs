@@ -1,5 +1,6 @@
 (ns stylefy.examples.main
   (:require [reagent.core :as r]
+            [dommy.core :as dommy]
             [stylefy.examples.styles :as styles]
             [stylefy.examples.table :as table]
             [stylefy.examples.grid :as grid]
