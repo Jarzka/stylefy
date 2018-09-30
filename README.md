@@ -28,6 +28,7 @@ Currently stylefy works only with SPA applications using [Reagent](https://githu
 - Font-face (for 3rd party web fonts)
 - Feature queries (CSS @supports query)
 - Style caching using local storage (can be turned off)
+- Multi-instance support (you can run multiple apps using stylefy on the same web page)
 - Small and simple core API
 - Automatic style reloading with [Figwheel](https://github.com/bhauman/lein-figwheel)
 - All features are tested to work with Chrome, Firefox, Edge & Internet Explorer 11
@@ -54,7 +55,7 @@ Are you using stylefy in your (public) project? Send me a message.
 Add the following line to your Leiningen project:
 
 ```clj
-[stylefy "1.8.0"]
+[stylefy "1.9.0"]
 ```
 
 # Usage
@@ -390,6 +391,22 @@ Cache options support automatic cache clearing when a certain amount of time is 
 ```clojure
 (stylefy/init {:use-caching? true
                :cache-options {:expires (* 1 60 60 24 7)}}) ; Cache is cleared after 7 days
+```
+
+# Multi-instance support
+
+If you need to run multiple apps using stylefy on the same web page, use your app name as a suffix in the *style* tag id.
+
+```html
+<style id="_stylefy-constant-styles_myapp"></style>
+<style id="_stylefy-styles_myapp"></style>
+```
+
+Then init stylefy with multi-instance support. Instance-id is a unique string (for example app name). Base-node is an optional base node for style tags (handly if you use web components).
+
+```clojure
+(stylefy/init {:multi-instance {:base-node (dommy/sel1 "#myapp")
+                                :instance-id "myapp"}})
 ```
 
 ## Units and colors
