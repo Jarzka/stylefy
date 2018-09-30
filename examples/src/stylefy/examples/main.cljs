@@ -263,6 +263,8 @@
 
 (defn ^:export start []
   (stylefy/init {:use-caching? true
+                 ;:multi-instance {:base-node nil
+                 ;                 :instance-id "example"}
                  :use-custom-class-prefix? true
                  :cache-options {:expires (* 1 60 60 24 7)}
                  :global-vendor-prefixes {::stylefy/vendors ["webkit" "moz" "o"]
