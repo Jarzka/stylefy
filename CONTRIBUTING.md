@@ -1,8 +1,8 @@
 # First things first
 
-Pull requests are welcome. However, if you have an idea how to improve the project (fix a bug, implement a new feature etc.), create an issue so that we can discuss it.
+Pull requests are welcome. However, if you have an idea how to improve the project (fix a bug, implement a new feature etc.), create an issue first so that we can discuss it.
 
-Our aim is to keep this project backwards compatible. This means that changes should not break existing implementations or change the public API of the library. All current tests should pass after making changes.
+This project is aimed to remain backwards compatible. This means that changes should not break existing implementations or change the public API of the library. All current tests should pass after making changes. Also, the promise of this project is to keep the core API small and simple.
 
 # Run tests
 
