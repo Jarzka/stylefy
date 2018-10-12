@@ -109,7 +109,10 @@
 
     (when-let [cached-styles (cache/read-cache-value
                                (cache/cache-key-styles @stylefy-instance-id))]
-      (reset! styles-as-css (or cached-styles {})))))
+      (reset! styles-as-css (or cached-styles {}))
+      (reset! styles-in-dom (apply merge (map
+                                           #(-> {% (r/atom false)})
+                                           (keys cached-styles)))))))
 
 (defn- save-style!
   "Stores the style in an atom. The style is going to be added into the DOM soon."
@@ -119,6 +122,7 @@
   (let [style-css (conversion/style->css style)
         style-to-be-saved {::css style-css}]
     (swap! styles-as-css assoc hash style-to-be-saved)
+    (swap! styles-in-dom assoc hash (r/atom false))
     (asynchronously-update-dom)))
 
 (defn style-in-dom? [style-hash]
