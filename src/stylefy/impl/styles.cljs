@@ -147,9 +147,6 @@
                  (not already-created))
         (create-style! {:props style-with-global-vendors :hash style-hash}))
 
-      ;; Deref to make sure the component re-renders itself if its "CSS in DOM" state changes.
-      @(get @dom/styles-in-dom style-hash)
-
       (style-return-value style-with-global-vendors style-hash options))))
 
 (defn use-sub-style! [style sub-style options]
