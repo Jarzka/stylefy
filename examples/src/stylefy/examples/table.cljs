@@ -12,6 +12,7 @@
                   :cell {:padding "5px"}}})
 
 (defn table [options schema data]
+  (.log js/console "Render table")
   [:div (use-style table-style)
    [:table (use-sub-style table-style :table)
     [:thead (use-sub-style table-style :thead)

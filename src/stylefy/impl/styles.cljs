@@ -123,10 +123,6 @@
           (merge return-map {:style inline-style}))))))
 
 (defn use-style! [style options]
-  ;; Deref to make sure components re-render themselves when styles-in-use updates
-  ;; so that we can get rid of inline styles and use only classes as soon as possible.
-  @dom/styles-in-use
-
   (let [with-classes-options (:stylefy.core/with-classes options)
         with-classes-style (:stylefy.core/with-classes style)]
 
@@ -145,6 +141,10 @@
     (let [style-with-global-vendors (when-not (empty? style) (add-global-vendors style))
           style-hash (hash-style style-with-global-vendors)
           already-created (dom/style-by-hash style-hash)]
+
+      ;; Deref to make sure the component re-renders itself if its "CSS in DOM" state changes.
+      @dom/styles-as-css
+      (let [css-in-dom (get @dom/styles-in-dom style-hash)])
 
       (when (and (not (empty? style-with-global-vendors))
                  (some? style-hash)
