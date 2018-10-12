@@ -123,7 +123,7 @@
   (let [style-css (conversion/style->css style)
         style-to-be-saved {::css style-css}]
     (swap! styles-as-css assoc hash style-to-be-saved)
-    (swap! styles-in-dom assoc hash (r/atom false))
+    (swap! styles-in-dom assoc hash (r/atom false)) ; Note: r/atom, to be usable in component render methods.
     (asynchronously-update-dom)))
 
 (defn style-in-dom? [style-hash]
