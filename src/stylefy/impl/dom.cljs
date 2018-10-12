@@ -13,7 +13,8 @@
     [cljs.core.async.macros :refer [go]]))
 
 (def stylefy-initialised? (r/atom false))
-(def styles-in-use (r/atom {})) ;; style hash -> map containing keys: ::css & ::in-dom?
+(def styles-in-dom (atom {})) ;; style hash -> r/atom with boolean value
+(def styles-as-css (r/atom {})) ;; style hash -> map containing keys: ::css &
 (def keyframes-in-use (r/atom [])) ;; Vector of maps containing keys: ::css
 (def font-faces-in-use (r/atom [])) ;; Vector of maps containing keys: ::css
 (def custom-tags-in-use (r/atom [])) ;; Vector of maps containing keys: ::css
@@ -27,13 +28,13 @@
 
 (defn- style-by-hash [style-hash]
   (when style-hash
-    (get @styles-in-use style-hash)))
+    (get @styles-as-css style-hash)))
 
 (defn- update-style-tags!
   [node node-constant]
   (let [styles-in-css (map (fn [style-hash]
                              (::css (style-by-hash style-hash)))
-                           (keys @styles-in-use))
+                           (keys @styles-as-css))
         keyframes-in-css (map (fn [keyframes]
                                 (::css keyframes))
                               @keyframes-in-use)
@@ -53,9 +54,8 @@
     (dommy/set-text! node (apply str styles-in-css))))
 
 (defn- mark-all-styles-added-in-dom! []
-  (reset! styles-in-use (apply merge (map
-                                       #(-> {% (assoc (get @styles-in-use %) ::in-dom? true)})
-                                       (keys @styles-in-use)))))
+  (doseq [style-hash (keys @styles-in-dom)]
+    (reset! (get @styles-in-dom style-hash) true)))
 
 (defn- get-stylefy-node [id base-node instance-id]
   (let [final-id (str id (when instance-id (str instance-id)))]
@@ -72,11 +72,7 @@
           (reset! dom-update-requested? false)
 
           (try
-            (cache/cache-styles (apply merge
-                                       (map
-                                         #(-> {% (dissoc (get @styles-in-use %) ::in-dom?)})
-                                         (keys @styles-in-use)))
-                                @stylefy-instance-id)
+            (cache/cache-styles @styles-as-css @stylefy-instance-id)
             (catch :default e
               (.warn js/console (str "Unable to cache styles, error: " e))
               (cache/clear-styles @stylefy-instance-id)
@@ -113,7 +109,7 @@
 
     (when-let [cached-styles (cache/read-cache-value
                                (cache/cache-key-styles @stylefy-instance-id))]
-      (reset! styles-in-use (or cached-styles {})))))
+      (reset! styles-as-css (or cached-styles {})))))
 
 (defn- save-style!
   "Stores the style in an atom. The style is going to be added into the DOM soon."
@@ -122,11 +118,11 @@
   (assert hash "Unable to save style without hash!")
   (let [style-css (conversion/style->css style)
         style-to-be-saved {::css style-css}]
-    (swap! styles-in-use assoc hash style-to-be-saved)
+    (swap! styles-as-css assoc hash style-to-be-saved)
     (asynchronously-update-dom)))
 
 (defn style-in-dom? [style-hash]
-  (boolean (::in-dom? (style-by-hash style-hash))))
+  (boolean @(get @styles-in-dom style-hash)))
 
 (defn add-keyframes [identifier & frames]
   (let [garden-definition (apply at-keyframes identifier frames)]
