@@ -12,13 +12,13 @@
     [reagent.ratom :refer [run!]]
     [cljs.core.async.macros :refer [go]]))
 
-(def stylefy-initialised? (r/atom false))
+(def stylefy-initialised? (atom false))
 (def styles-in-dom (atom {})) ;; style hash -> r/atom with boolean value
-(def styles-as-css (r/atom {})) ;; style hash -> map containing keys: ::css &
-(def keyframes-in-use (r/atom [])) ;; Vector of maps containing keys: ::css
-(def font-faces-in-use (r/atom [])) ;; Vector of maps containing keys: ::css
-(def custom-tags-in-use (r/atom [])) ;; Vector of maps containing keys: ::css
-(def custom-classes-in-use (r/atom [])) ;; Vector of maps containing keys: ::css
+(def styles-as-css (atom {})) ;; style hash -> map containing keys: ::css &
+(def keyframes-in-use (atom [])) ;; Vector of maps containing keys: ::css
+(def font-faces-in-use (atom [])) ;; Vector of maps containing keys: ::css
+(def custom-tags-in-use (atom [])) ;; Vector of maps containing keys: ::css
+(def custom-classes-in-use (atom [])) ;; Vector of maps containing keys: ::css
 
 (def ^:private stylefy-node-id "#_stylefy-styles_")
 (def ^:private stylefy-constant-node-id "#_stylefy-constant-styles_")
