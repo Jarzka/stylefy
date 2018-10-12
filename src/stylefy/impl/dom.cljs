@@ -111,6 +111,7 @@
                                (cache/cache-key-styles @stylefy-instance-id))]
       (reset! styles-as-css (or cached-styles {}))
       (reset! styles-in-dom (apply merge (map
+                                           ;; Note: r/atom, to be usable in component render methods.
                                            #(-> {% (r/atom false)})
                                            (keys cached-styles)))))))
 
