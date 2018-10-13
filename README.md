@@ -401,7 +401,7 @@ If you need to run multiple apps using stylefy on the same web page, use your ap
 <style id="_stylefy-styles_myapp"></style>
 ```
 
-Then init stylefy with multi-instance support. Instance-id is a unique string (for example app name). Base-node is an optional base node for style tags (handly if you use web components).
+Then init stylefy with multi-instance support. Instance-id is a unique string (for example app name). Base-node is an optional base node for style tags (handy if you use web components).
 
 ```clojure
 (stylefy/init {:multi-instance {:base-node (dommy/sel1 "#myapp")
