@@ -19,10 +19,9 @@ Currently stylefy works only with SPA applications using [Reagent](https://githu
 
 - Define styles as Clojure data, for any UI element
 - Sub-styles help you to define a style for your component and all the elements inside of it in a single map
-- Use any 3rd party classes or frameworks (such as Bootstrap) easily with stylefy, override style props if necessary
-- Supports CSS pseudo-classes & pseudo-elements via modes.
-- Vendor prefixes, define which vendor prefixes are used and which properties should be prefixed
-- Globally defined vendor prefixes
+- Use any 3rd party CSS or framework (such as Bootstrap) easily with stylefy, override style props if necessary
+- Supports CSS pseudo-classes & pseudo-elements via modes
+- Vendor prefixes, define which vendor prefixes are used and which properties should be prefixed (locally or globally)
 - Media queries, define how your style looks on various screen sizes
 - Keyframes (for CSS animations)
 - Font-face (for 3rd party web fonts)
