@@ -47,6 +47,7 @@ Yup, for example:
 - [Velho Design System](https://github.com/velho-allianssi/velho-ds)
 - [Solita Rooms](https://github.com/solita/solita-rooms)
 - [My personal website](https://github.com/Jarzka/Voimala.org)
+- And [various other projects](https://github.com/search?q=_stylefy-constant-styles_&type=Code)
 
 # Installation
 
