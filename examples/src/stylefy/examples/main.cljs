@@ -55,10 +55,7 @@
   (fn [style]
     [:div style index]))
 
-(defn- last-number [number]
-  (subs (str number) (- (count (str number)) 1) (count (str number))))
-
-(defn- create-bar-style [index max]
+(defn- create-bar-style [background index max]
   ;; Generates unique, but predictable style, so that caching can be tested.
   {:padding "5px"
    :width (str (float (* (/ index max) 100)) "%")
@@ -67,15 +64,16 @@
    :z-index index ;; Just to make sure every single style is unique
    :margin-bottom "5px"
    :border "1px solid black"
-   :background-color "grey"})
+   :background-color background})
 
 (defn stress-test []
   (let [components-count 1000
         state (r/atom :hidden)
         start-time (atom nil)
-        styles (mapv #(create-bar-style % components-count)
+        styles (mapv #(create-bar-style "grey" % components-count)
                      (range 0 components-count))]
     (fn []
+      (.log js/console "Render stress test")
       [:div (use-style styles/generic-container)
 
        [button
@@ -102,6 +100,28 @@
                           ^{:key index}
                           [component (use-style (get styles index))])
                         (map stress-test-item (range 0 components-count)))))])))
+
+(defn- add-style-test []
+  (let [comps (r/atom [])
+        max 100]
+    (fn []
+      (.log js/console "Render add style test")
+      [:div
+       ;; When this button is clicked, only the render method of this component should be called.
+       [button "Add component"
+        (fn []
+          (when (< (count @comps) max)
+            (swap! comps conj
+                   (fn []
+                     (let [style (create-bar-style "#005511" (count @comps) max)]
+                       (fn []
+                         [:div (use-style style)]))))))
+        :primary]
+       (map-indexed
+         (fn [index component]
+           ^{:key index}
+           [component])
+         @comps)])))
 
 (defn- bs-navbar-item-legacy-syntax [index index-atom text]
   ;; Since version 1.3.0: use-style now supports HTML attributes as the second parameter.
@@ -217,6 +237,10 @@
    [:h1 "Stress test"]
    [:p "Styles are added into the DOM on-demand when they are used for the first time. Clicking the button below generates 1000 different looking components dynamically. The components are first styled with inline styles until the DOM has been updated and we can begin using CSS classes to save memory."]
    [stress-test]
+
+   [:h1 "Stress test 2"]
+   [:p "Press the button to dynamically insert more styles into DOM."]
+   [add-style-test]
 
    [:h1 "Boostrap navbar"]
    [:p "You can also assign any classes to elements normally. Here we use Boostrap classes to construct simple navbars. We also override some BS styles."]
