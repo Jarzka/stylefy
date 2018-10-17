@@ -14,7 +14,7 @@
 
 (def stylefy-initialised? (atom false))
 (def styles-in-dom (atom {})) ;; style hash -> r/atom with boolean value
-(def styles-as-css (atom {})) ;; style hash -> map containing keys: ::css &
+(def styles-as-css (atom {})) ;; style hash -> map containing keys: ::css
 (def keyframes-in-use (atom [])) ;; Vector of maps containing keys: ::css
 (def font-faces-in-use (atom [])) ;; Vector of maps containing keys: ::css
 (def custom-tags-in-use (atom [])) ;; Vector of maps containing keys: ::css
