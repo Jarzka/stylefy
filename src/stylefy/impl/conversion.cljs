@@ -19,7 +19,7 @@
             [(keyword (str "&" mode-name)) (get modes mode-name)])
           (keys modes))))
 
-(defn- class-selector [hash]
+(defn class-selector [hash]
   (keyword (str "." hash)))
 
 (defn- convert-base-style

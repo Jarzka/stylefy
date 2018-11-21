@@ -26,7 +26,7 @@
 (def stylefy-instance-id (atom nil)) ;; Used when running multiple instances of stylefy on the same page
 (def ^:private dom-update-requested? (atom false))
 
-(defn- style-by-hash [style-hash]
+(defn style-by-hash [style-hash]
   (when style-hash
     (get @styles-as-css style-hash)))
 
@@ -63,7 +63,7 @@
       (dommy/sel1 final-id)
       (dommy/sel1 base-node final-id))))
 
-(defn- update-dom
+(defn update-dom
   []
   (let [node (get-stylefy-node stylefy-node-id @stylefy-base-node @stylefy-instance-id)
         node-constant (get-stylefy-node stylefy-constant-node-id @stylefy-base-node @stylefy-instance-id)]
@@ -115,7 +115,7 @@
                                            #(-> {% (r/atom false)})
                                            (keys cached-styles)))))))
 
-(defn- save-style!
+(defn save-style!
   "Stores the style in an atom. The style is going to be added into the DOM soon."
   [{:keys [props hash] :as style}]
   (assert props "Unable to save empty style!")

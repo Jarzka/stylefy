@@ -10,7 +10,7 @@
 (def cache-styles? (atom false))
 (def default-cache-expiration-time-s (* 1 60 60 * 24 * 7))
 
-(defn- cache-key-styles [instance-id]
+(defn cache-key-styles [instance-id]
   (str cache-prefix "styles"
        (when instance-id
          (str "_" instance-id))))
