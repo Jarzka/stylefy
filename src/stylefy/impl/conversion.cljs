@@ -91,7 +91,9 @@
     (let [css-parent-selector (or custom-selector (class-selector hash))
           css-inner-styles (map
                              (fn [inner-style]
-                               (let [inner-selector-and-css-props (clojure.walk/walk #(if (map? %) inner-style %)
+                               (let [inner-selector-and-css-props (clojure.walk/walk #(if (map? %)
+                                                                                        (utils/filter-css-props %)
+                                                                                        %)
                                                                                      identity
                                                                                      inner-style)
                                      garden-style-definition (into [css-parent-selector] [inner-selector-and-css-props])

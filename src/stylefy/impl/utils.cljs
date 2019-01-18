@@ -6,13 +6,14 @@
             [garden.units :as units]
             [garden.types :as types]
             [garden.compiler :as compiler]
-            [garden.stylesheet :refer [at-media at-keyframes at-font-face]])
+            [garden.stylesheet :refer [at-media at-keyframes at-font-face]]
+            [clojure.string :as str])
   (:require-macros [reagent.ratom :refer [run!]]))
 
 (defn filter-css-props
-  "Removes namespaced keywords from a map."
+  "Removes stylefy's namespaced keywords from the given map."
   [props]
-  (apply dissoc props (filter namespace (keys props))))
+  (apply dissoc props (filter #(str/starts-with? (namespace %) "stylefy") (keys props))))
 
 (defn garden-units->css
   "Checks all values in the map and converts all Garden units to CSS."
