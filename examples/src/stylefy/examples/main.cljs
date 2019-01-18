@@ -3,6 +3,7 @@
             [dommy.core :as dommy]
             [stylefy.examples.styles :as styles]
             [stylefy.examples.table :as table]
+            [stylefy.examples.hoverbox :as hoverbox]
             [stylefy.examples.grid :as grid]
             [stylefy.examples.full-page :as full-page]
             [stylefy.examples.custom-tags :as custom-tags]
@@ -220,7 +221,7 @@
     "This is text content, hover me!"]
 
    [:h1 "Component with multiple sub elements"]
-   [:p "Styled by using sub-styles"]
+   [:p "Rows are styled by using sub-styles"]
    [table/table
     {:title "Example grid"}
     [{:title "Product" :name :name}
@@ -229,6 +230,9 @@
     [{:name "Apple" :id 13 :price 1}
      {:name "Orange" :id 35 :price 2}
      {:name "Banana" :id 15 :price 3}]]
+
+   [:p "A box in a box, uses inner style to make hovering the parent affect the child style."]
+   [hoverbox/hoverbox]
 
    [:h1 "Component with internal state"]
    [:p "This component contains a different style in different states. The styles are generated and inserted into DOM on-demand."]
