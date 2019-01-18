@@ -16,6 +16,9 @@
                         (and (string? mode-name)
                              (str/starts-with? mode-name ":")))
                     (str "Mode must be specified as a keyword or string beginning with colon, got: " (pr-str mode-name)))
+            (when (and (string? mode-name)
+                       (> (count (str/split mode-name " ")) 1))
+              (.warn js/console (str "Incorrect mode detected, should not contain spaces. Mode was: " (pr-str mode-name))))
             [(keyword (str "&" mode-name)) (get modes mode-name)])
           (keys modes))))
 
