@@ -16,11 +16,11 @@
    ::stylefy/sub-styles {:innerbox {:width "100%"
                                     :height "100%"
                                     :background-color "#444444"}}
-   ;; Inner style is a powerful way to define styles for child components when you absolutely need to write
+   ;; Manual style is a powerful way to define styles for child components when you absolutely need to write
    ;; custom CSS selectors. However, great power comes with a great responsibility.
-   ;; Since inner style definitions rely on Garden syntax, stylefy's special keyword definitions are not supported.
-   ;; You are pretty much on your own here. Inner styling should be an exception rather than a rule.
-   ::stylefy/inner [[:&:hover [:.innerbox
+   ;; Since manual style definitions rely on Garden syntax, stylefy's special keyword definitions are not supported.
+   ;; You are pretty much on your own here. Manual styling should be an exception rather than a rule.
+   ::stylefy/manual [[:&:hover [:.innerbox
                                {:background-color "#999999"}
                                [:&:hover {:background-color "#EEEEEE"}]]]
                     (at-media mobile-media-query [:&:hover [:.innerbox

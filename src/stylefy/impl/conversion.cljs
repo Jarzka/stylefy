@@ -84,23 +84,23 @@
                          (keys stylefy-supports))]
       (apply str css-supports))))
 
-(defn- convert-inner-styles
-  "Converts stylefy/inner definition into CSS."
+(defn- convert-manual-styles
+  "Converts stylefy/manual definition into CSS."
   [{:keys [props hash custom-selector] :as style} options]
-  (when-let [stylefy-inner-styles (:stylefy.core/inner props)]
+  (when-let [stylefy-manual-styles (:stylefy.core/manual props)]
     (let [css-parent-selector (or custom-selector (class-selector hash))
-          css-inner-styles (map
-                             (fn [inner-style]
-                               (let [inner-selector-and-css-props (clojure.walk/walk #(if (map? %)
+          css-manual-styles (map
+                             (fn [manual-style]
+                               (let [manual-selector-and-css-props (clojure.walk/walk #(if (map? %)
                                                                                         (utils/filter-css-props %)
                                                                                         %)
                                                                                      identity
-                                                                                     inner-style)
-                                     garden-style-definition (into [css-parent-selector] [inner-selector-and-css-props])
+                                                                                     manual-style)
+                                     garden-style-definition (into [css-parent-selector] [manual-selector-and-css-props])
                                      css-class (css options garden-style-definition)]
                                  css-class))
-                             stylefy-inner-styles)]
-      (apply str css-inner-styles))))
+                             stylefy-manual-styles)]
+      (apply str css-manual-styles))))
 
 (defn style->css
   "Converts the given style to CSS. Options are sent directly to Garden"
@@ -109,8 +109,8 @@
    (let [css-class (convert-base-style-into-class style options)
          css-media-queries (convert-media-queries style options)
          css-supports (convert-supports-rules style options)
-         css-inner-styles (convert-inner-styles style options)]
+         css-manual-styles (convert-manual-styles style options)]
      (str css-class
           css-media-queries
           css-supports
-          css-inner-styles))))
+          css-manual-styles))))
