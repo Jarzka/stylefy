@@ -21,7 +21,7 @@
 
    The given 'style' parameter is a map which contains CSS style properties
    (as supported by Garden library). There can also be special namespaced keywords
-   along with the style definitions.
+   along with the style definitions. These are:
 
    Core features:
 
@@ -35,8 +35,12 @@
    ::mode              A map in which keys are mode names and values are style properties.
                        Internally all modes are converted to CSS pseudoclasses. You can use any mode name
                        that is a valid CSS speudoclass.
-   ::media             A map in which keys are maps presenting CSS media query definitions, and values
+   ::media             A map in which keys are strings presenting CSS support query definitions, and values
+                       are style maps which are used when the feature query is active.
+                       Vendor prefixes and modes can be used inside the media query style map.
+   ::supports          A map in which keys are maps presenting CSS media query definitions, and values
                        are style maps which are used when the media query is active.
+                       Vendor prefixes, media queries and modes can be used inside the support query style map.
    ::vendors           A vector of vendor prefixes that are used with ::auto-prefix.
    ::auto-prefix       A set of style properties that should be prefixed with ::vendors.
    ::with-classes      A collection of additional class names that should always be used with
