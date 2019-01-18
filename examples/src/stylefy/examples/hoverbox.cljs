@@ -21,11 +21,11 @@
    ;; Since manual style definitions rely on Garden syntax, stylefy's special keyword definitions are not supported.
    ;; You are pretty much on your own here. Manual styling should be an exception rather than a rule.
    ::stylefy/manual [[:&:hover [:.innerbox
-                               {:background-color "#999999"}
-                               [:&:hover {:background-color "#EEEEEE"}]]]
-                    (at-media mobile-media-query [:&:hover [:.innerbox
-                                                            {:background-color "#666666"}
-                                                            [:&:hover {:background-color "#111111"}]]])]
+                                {:background-color "#999999"}
+                                [:&:hover {:background-color "#EEEEEE"}]]]
+                     (at-media mobile-media-query [:&:hover [:.innerbox
+                                                             {:background-color "#666666"}
+                                                             [:&:hover {:background-color "#111111"}]]])]
    ::stylefy/media {{:max-width "550px"}
                     {:width "200px"
                      ::stylefy/mode {:hover {:background-color "#336633"}}}}})
