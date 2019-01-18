@@ -109,6 +109,8 @@
                               This value is also used as suffix in caching."
   ([] (init {}))
   ([options]
+   (when @dom/stylefy-initialised?
+     (.warn js/console "Attempted to initialise stylefy more than once."))
    (impl-styles/init-custom-class-prefix options)
    (dom/init-multi-instance options)
    (dom/init-cache options)
