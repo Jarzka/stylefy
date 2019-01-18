@@ -13,7 +13,9 @@
 (defn filter-css-props
   "Removes stylefy's namespaced keywords from the given map."
   [props]
-  (apply dissoc props (filter #(str/starts-with? (namespace %) "stylefy") (keys props))))
+  (apply dissoc props (filter #(and (namespace %)
+                                    (str/starts-with? (namespace %) "stylefy"))
+                              (keys props))))
 
 (defn garden-units->css
   "Checks all values in the map and converts all Garden units to CSS."
