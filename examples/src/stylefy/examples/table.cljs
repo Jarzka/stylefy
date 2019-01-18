@@ -2,14 +2,15 @@
   (:require [reagent.core :as r]
             [stylefy.core :as stylefy :refer [use-style use-sub-style]]))
 
-(def table-style {::stylefy/sub-styles
-                 {:thead {:background-color "#66AA66"}
-                  :table {:border-collapse "collapse"}
-                  :row-even {:background-color "#DDDDDD"
+(def table-style {:margin-bottom "1rem"
+                  ::stylefy/sub-styles
+                  {:thead {:background-color "#66AA66"}
+                   :table {:border-collapse "collapse"}
+                   :row-even {:background-color "#DDDDDD"
+                              ::stylefy/mode {:hover {:background-color "#BBBBBB"}}}
+                   :row-odd {:background-color "#EEEEEE"
                              ::stylefy/mode {:hover {:background-color "#BBBBBB"}}}
-                  :row-odd {:background-color "#EEEEEE"
-                            ::stylefy/mode {:hover {:background-color "#BBBBBB"}}}
-                  :cell {:padding "5px"}}})
+                   :cell {:padding "5px"}}})
 
 (defn table [options schema data]
   [:div (use-style table-style)
