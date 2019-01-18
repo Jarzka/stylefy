@@ -91,19 +91,11 @@
     (let [css-parent-selector (or custom-selector (class-selector hash))
           css-inner-styles (map
                              (fn [inner-style]
-                               (assert (and
-                                         (map? (last (flatten inner-style)))
-                                         (= (count (filter map? (flatten inner-style))) 1))
-                                       (str "Inner style selector must contain only one selector path and one style map. Got: " (pr-str inner-style)))
-                               (let [inner-style-props (last (flatten inner-style))
-                                     inner-style-css-props (utils/filter-css-props inner-style-props)
-                                     inner-selector-and-css-props (clojure.walk/walk #(if (map? %) inner-style-css-props %)
+                               (let [inner-selector-and-css-props (clojure.walk/walk #(if (map? %) inner-style %)
                                                                                      identity
                                                                                      inner-style)
                                      garden-style-definition (into [css-parent-selector] [inner-selector-and-css-props])
-                                     garden-vendors (convert-stylefy-vendors-to-garden inner-style-props)
-                                     garden-options (or (merge options garden-vendors) {})
-                                     css-class (css garden-options garden-style-definition)]
+                                     css-class (css options garden-style-definition)]
                                  css-class))
                              stylefy-inner-styles)]
       (apply str css-inner-styles))))
