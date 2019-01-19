@@ -32,7 +32,7 @@
    ::mode              A map in which keys are mode names and values are style properties.
                        Internally all modes are converted to CSS pseudoclasses or pseudoelements.
                        You can use any mode name that is a valid CSS speudoclass.
-   ::media             A map in which keys are maps presenting CSS support query definitions, and values
+   ::media             A map in which keys are maps presenting CSS media query definitions, and values
                        are style maps which are used when the media query is active.
                        Vendor prefixes and modes can be used inside the media query style map.
    ::supports          A map in which keys are strings presenting CSS feature query definitions, and values
