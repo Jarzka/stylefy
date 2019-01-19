@@ -26,7 +26,7 @@
                      (at-media mobile-media-query [:&:hover [:.innerbox
                                                              {:background-color "#666666"}
                                                              [:&:hover {:background-color "#111111"}]]])]
-   ::stylefy/media {{:max-width "550px"}
+   ::stylefy/media {mobile-media-query
                     {:width "200px"
                      ::stylefy/mode {:hover {:background-color "#336633"}}}}})
 
