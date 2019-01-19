@@ -78,6 +78,7 @@
                                 {"display: grid"
                                  {:display "grid"
                                   :grid-template-columns "1fr 1fr 1fr"
+                                  ::stylefy/mode {:hover {:background-color "#111111"}}
                                   ;; Make CSS Grid responsive
                                   ::stylefy/media {{:max-width "500px"}
                                                    {:grid-template-columns "1fr"
@@ -88,7 +89,7 @@
   (is (= (conversion/style->css {:props grid-layout-with-fallback
                                  :hash (styles/hash-style grid-layout-with-fallback)}
                                 {:pretty-print? false})
-         "._stylefy_-978876848{display:flex;flex-direction:row;flex-wrap:wrap}._stylefy_-978876848:hover{background-color:white}@media(max-width:500px){._stylefy_-978876848{display:block}}@supports (display: grid) {._stylefy_-978876848{display:grid;grid-template-columns:1fr 1fr 1fr}@media(max-width:500px){._stylefy_-978876848{grid-template-columns:1fr}._stylefy_-978876848:hover{background-color:grey}}}")))
+         "._stylefy_-782791788{display:flex;flex-direction:row;flex-wrap:wrap}._stylefy_-782791788:hover{background-color:white}@media(max-width:500px){._stylefy_-782791788{display:block}}@supports (display: grid) {._stylefy_-782791788{display:grid;grid-template-columns:1fr 1fr 1fr}._stylefy_-782791788:hover{background-color:#111111}@media(max-width:500px){._stylefy_-782791788{grid-template-columns:1fr}._stylefy_-782791788:hover{background-color:grey}}}")))
 
 (deftest custom-selector
   (let [style {:color "red"}]
