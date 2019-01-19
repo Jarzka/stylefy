@@ -2,6 +2,7 @@
   (:require [cljs.test :as test :refer-macros [deftest is testing]]
             [stylefy.core :as stylefy]
             [stylefy.impl.styles :as styles]
+            [garden.stylesheet :refer [at-media]]
             [stylefy.impl.conversion :as conversion]
             [clojure.string :as str]))
 
@@ -90,6 +91,32 @@
          "._stylefy_-978876848{display:flex;flex-direction:row;flex-wrap:wrap}._stylefy_-978876848:hover{background-color:white}@media(max-width:500px){._stylefy_-978876848{display:block}}@supports (display: grid) {._stylefy_-978876848{display:grid;grid-template-columns:1fr 1fr 1fr}@media(max-width:500px){._stylefy_-978876848{grid-template-columns:1fr}._stylefy_-978876848:hover{background-color:grey}}}")))
 
 (deftest custom-selector
-  (is (= (conversion/style->css {:props {:color "red"} :custom-selector "code"}
-                                {:pretty-print? false})
-         "code{color:red}")))
+  (let [style {:color "red"}]
+    (is (= (conversion/style->css {:props style :hash (styles/hash-style style)
+                                   :custom-selector "code"}
+                                  {:pretty-print? false})
+           "code{color:red}"))))
+
+(deftest manual-mode
+  (let [media-query {:max-width "550px"}
+        style {:width "500px"
+               :height "200px"
+               :padding "33px"
+               :margin-bottom "10px"
+               :background-color "#55AA55"
+               ::stylefy/class-prefix "seppo"
+               ::stylefy/mode {:hover {:background-color "#99DD99"}}
+               ::stylefy/sub-styles {:innerbox {:width "100%"
+                                                :height "100%"
+                                                :background-color "#444444"}}
+               ::stylefy/manual [[:&:hover [:.innerbox
+                                            {:background-color "#999999"}
+                                            [:&:hover {:background-color "#EEEEEE"}]]]
+                                 (at-media media-query [:&:hover [:.innerbox
+                                                                  {:background-color "#666666"}
+                                                                  [:&:hover {:background-color "#111111"}]]])]
+               ::stylefy/media {media-query
+                                {:width "200px"
+                                 ::stylefy/mode {:hover {:background-color "#336633"}}}}}]
+    (is (= (conversion/style->css {:props style :hash (styles/hash-style style)} {:pretty-print? false})
+           "._stylefy_640089058{background-color:#55AA55;width:500px;padding:33px;margin-bottom:10px;height:200px}._stylefy_640089058:hover{background-color:#99DD99}@media(max-width:550px){._stylefy_640089058{width:200px}._stylefy_640089058:hover{background-color:#336633}}._stylefy_640089058:hover .innerbox{background-color:#999999}._stylefy_640089058:hover .innerbox:hover{background-color:#EEEEEE}@media(max-width:550px){._stylefy_640089058:hover .innerbox{background-color:#666666}._stylefy_640089058:hover .innerbox:hover{background-color:#111111}}"))))
