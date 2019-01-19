@@ -418,7 +418,7 @@ Cache options support automatic cache clearing when a certain amount of time is 
                :cache-options {:expires (* 1 60 60 24 7)}}) ; Cache is cleared after 7 days
 ```
 
-# Multi-instance support
+## Multi-instance support
 
 If you need to run multiple apps using stylefy on the same web page, use your app name as a suffix in the **style** tag id.
 
@@ -434,7 +434,7 @@ Then init stylefy with multi-instance support. Instance-id is a unique string (f
                                 :instance-id "myapp"}})
 ```
 
-# Debugging and testing
+## Debugging and testing
 
 If you want to test your user interface by examining CSS class names, stylefy's automatically generated class names can become a hassle. To make testing and debugging easier, you can use your own prefix in stylefy's automatically generated class names:
 
