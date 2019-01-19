@@ -7,10 +7,8 @@
 (defn use-style
   "Defines a style for a component by converting the given style map in to an unique CSS class,
    and returning a pointer (a map with :class keyword) to it so that the component can use it.
-
    To keep the rendering process fast, use-style works asynchronously, meaning that it
    does not add the generated CSS class into the DOM immediately, but very soon instead.
-
    If the style has not been added into the DOM yet, it returns the given props as inline style,
    so that the component looks good even if CSS class has not been generated yet.
 
@@ -26,20 +24,19 @@
    Core features:
 
    ::sub-styles        Makes it possible to define a named style map inside of the main style map.
-                       The contents of ::sub-styles should be a map,
-                       in which keys define the name of the sub-style and
-                       values contain the style properties.
+                       The contents of ::sub-styles should be a map, in which keys define the name of
+                       the sub-style and values contain the style properties.
                        Sub-styles are nothing special, they are supposed to contain the same contents
                        as the main style map. ::sub-styles helps you to define styles that are closely
                        related to the main style map but do not deserve their own 'def'.
    ::mode              A map in which keys are mode names and values are style properties.
-                       Internally all modes are converted to CSS pseudoclasses. You can use any mode name
-                       that is a valid CSS speudoclass.
-   ::media             A map in which keys are strings presenting CSS support query definitions, and values
-                       are style maps which are used when the feature query is active.
-                       Vendor prefixes and modes can be used inside the media query style map.
-   ::supports          A map in which keys are maps presenting CSS media query definitions, and values
+                       Internally all modes are converted to CSS pseudoclasses or pseudoelements.
+                       You can use any mode name that is a valid CSS speudoclass.
+   ::media             A map in which keys are maps presenting CSS support query definitions, and values
                        are style maps which are used when the media query is active.
+                       Vendor prefixes and modes can be used inside the media query style map.
+   ::supports          A map in which keys are strings presenting CSS feature query definitions, and values
+                       are style maps which are used when the supports query is active.
                        Vendor prefixes, media queries and modes can be used inside the support query style map.
    ::vendors           A vector of vendor prefixes that are used with ::auto-prefix.
    ::auto-prefix       A set of style properties that should be prefixed with ::vendors.
