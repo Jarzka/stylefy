@@ -53,7 +53,7 @@
                        Note that you need to set custom class prefixes on in the init function.
 
    Options is an optional map, which contains HTML attributes (:class, :href, :src etc.).
-   It can also contain the the following features:
+   It can also contain the following special keywords features:
 
    ::with-classes       DEPRECATED. A vector of additional class names used with the current style.
                         Deprecated since version 1.3.0: The options map can now contain
