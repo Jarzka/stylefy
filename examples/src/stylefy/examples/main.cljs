@@ -231,7 +231,7 @@
      {:name "Orange" :id 35 :price 2}
      {:name "Banana" :id 15 :price 3}]]
 
-   [:p "A box in a box, uses manual style to make hovering the parent brighten the child box style (darken on mobile)"]
+   [:p "A box in a box, written in manual mode to make hovering the parent brighten the child box style (darken on mobile)"]
    [hoverbox/hoverbox]
 
    [:h1 "Component with internal state"]
