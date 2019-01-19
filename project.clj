@@ -22,9 +22,4 @@
                        {:id "prod"
                         :source-paths ["src"]
                         :compiler {:output-to "stylefy.js"
-                                   :optimizations :advanced}}]}
-  :jvm-opts ~(let [version     (System/getProperty "java.version")
-                   [major _ _] (clojure.string/split version #"\.")]
-               (if (>= (java.lang.Integer/parseInt major) 9)
-                 ["--add-modules" "java.xml.bind"]
-                 [])))
+                                   :optimizations :advanced}}]})
