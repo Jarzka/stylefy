@@ -434,6 +434,53 @@ Then init stylefy with multi-instance support. Instance-id is a unique string (f
                                 :instance-id "myapp"}})
 ```
 
+# Manual mode
+
+Manual mode can be used to style child elements with manually written CSS selectors using Garden syntax. It should be used only for corner cases in which complex CSS selectors are needed. For the most part, it is recommended to use **sub-styles*** for styling child elements.
+
+```clojure
+(def mobile-media-query {:max-width "550px"})
+
+(def hoverbox-style
+  {:width "500px"
+   :height "200px"
+   :padding "33px"
+   :margin-bottom "10px"
+   :background-color "#55AA55"
+   ::stylefy/sub-styles {:innerbox {:width "100%"
+                                    :height "100%"
+                                    :background-color "#444444"}}
+   ;; Change the background color of the child element when the parent element is being hovered.
+   ;; This is a corner case that stylefy cannot handle directly, so we use manual mode to resolve it.
+   ::stylefy/manual [[:&:hover [:.innerbox
+                                ;; Brighten by default
+                                {:background-color "#999999"}]]
+                     (at-media mobile-media-query [:&:hover [:.innerbox
+                                                             ;; Darker on mobile
+                                                             {:background-color "#666666"}]])]
+   ::stylefy/media {mobile-media-query
+                    {:width "100%"}}})
+
+(defn hoverbox []
+  [:div (use-style hoverbox-style)
+   [:div.innerbox (use-sub-style hoverbox-style :innerbox)]])
+```
+
+# Debugging and testing
+
+If you want to test your user interface by examining CSS class names, stylefy's automatically generated class names can become a hassle. To make testing and debugging easier, you can use your own prefix in stylefy's automatically generated class names:
+
+```clojure
+(def my-style {:color "red"
+               ::stylefy/class-prefix "debugthis"}
+```
+
+Notice that you need to turn custom prefixes on separately on the init function:
+
+```clojure
+(stylefy/init {:use-custom-class-prefix? true})
+```
+
 ## Units and colors
 
 You can use Garden's [Unit](https://github.com/noprompt/garden/wiki/Units-%26-Arithmetic) and [Color](https://github.com/noprompt/garden/wiki/Color) helpers with stylefy.
