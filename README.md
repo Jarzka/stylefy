@@ -36,7 +36,7 @@ Currently stylefy works only with SPA applications using [Reagent](https://githu
 
 ## How is this library different than Garden?
 
-Garden is awesome, but it's "only" a Clojure to CSS generator. If you want to use Garden to style your page, you are pretty much going to write CSS code as usual, i.e. write classes and selectors to stylize things on the page. You also need to avoid CSS quirks like name conflicts and make sure you always handle CSS cascading process correcly. stylefy helps you with this; you just write your style definition in a map and attach it to your component in the render function by calling *use-style*. There is no need to write CSS classes or selectors, no need to worry about name conflicts etc
+Garden is awesome, but it's "only" a Clojure to CSS generator. If you want to use Garden to style your page, you are pretty much going to write CSS code as usual, i.e. write classes and selectors to stylize things on the page. You also need to avoid CSS quirks like name conflicts and make sure you always handle CSS cascading process correcly. stylefy helps you with this; you just write your style definition in a map and attach it to your component in the render function by calling **use-style**. There is no need to write CSS classes or selectors, no need to worry about name conflicts etc
 
 Yes, it is possible to easily attach styles to components with Garden too if you use inline styles. But if you use stylefy, all your style definitions are converted to unique CSS classes automatically and the corresponding class is attached to your component. This is more effective than using inline-styles, especially if the same component exists multiple times on the same page. The style is defined only once in the CSS class, not multiple times in each component instance. Also, some CSS features like pseudoclasses (:hover etc.), media queries and feature queries are not available to use as inline styles. For stylefy, this is not a problem, as it allows you to define pseudoclasses and media queries within the style map and converts everything to CSS automatically.
 
@@ -67,7 +67,7 @@ Add the following line to your Leiningen project:
 
 ## Init
 
-Add the following *style* tags on your page's *head* tag. It is **recommended** that these tags are the last style tags in the *header* so that possible other styles do not override them.
+Add the following **style** tags on your page's **head** tag. It is **recommended** that these tags are the last style tags in the **header** so that it is less likely that possible other styles would override them.
 
 The first tag is going to contain CSS definitions that are not going to change (font-face, keyframes etc.). The second will contain class definitions that are added into the DOM on-demand when components need them.
 
@@ -76,7 +76,7 @@ The first tag is going to contain CSS definitions that are not going to change (
 <style id="_stylefy-styles_"></style>
 ```
 
-Then, call *stylefy/init* once when your application starts:
+Then, call **stylefy/init** once when your application starts:
 
 ```clojure
 (stylefy/init)
@@ -92,7 +92,7 @@ Create a style as a normal Clojure map:
                    :border "1px solid black"})
 ```
 
-To use it in a component, use the *use-style* function:
+To use it in a component, use the **use-style** function:
 
 ```clojure
 (defn- button [text]
@@ -100,7 +100,7 @@ To use it in a component, use the *use-style* function:
     text])
 ```
 
-*use-style* accepts HTML attributes as the second parameter:
+**use-style** accepts HTML attributes as the second parameter:
 
 ```clojure
 (defn- button [text]
@@ -109,9 +109,34 @@ To use it in a component, use the *use-style* function:
     text])
 ```
 
-Calling use-style asks stylefy to save the style (if it has not been saved already) and add it into the DOM as CSS class as soon as possible. The return value is a map pointing to the created class, and the given style properties as inline style. Inline style is needed until the CSS code has been generated and inserted into the DOM. When the DOM is ready, the component is forced to re-render itself and use only class definition.
+### Passing styles to components
 
-If the style contains some specific definitions that cannot be present as inline style (some specific modes or media queries), the component is going to be hidden for a few milliseconds until the CSS style is added into the DOM. This should not be a problem, but if needed, the style can also be added into the DOM beforehand by calling *prepare-styles*. Calling this function on :component-will-mount makes sure the style is completely ready to be used when the component needs it.
+**use-style** is designed to be called only inside component render functions to define styles for **HTML** elements. If you need to pass styles to Reagent components, pass them as regular Clojure maps, and call **use-style** last, only for HTML elements:
+
+```clojure
+(defn- button-with-custom-style [text style]
+   [:div (use-style style {:on-click #(.log js/console "Click!"))
+     text])
+     
+(defn- button-wrapper []
+  [:div
+    ;; This is OK
+    [button-with-custom-style "Hello" {:padding "25px"
+                                       :background-color "#BBBBBB"
+                                       :border "1px solid black"}]
+    ;; This is NOT ok
+    [button-with-custom-style "Hello" (use-style {:padding "25px"
+                                                  :background-color "#BBBBBB"
+                                                  :border "1px solid black"})]])
+```
+
+### How it works (technical details)
+
+Calling **use-style** asks stylefy to save the style (if it has not been saved already) and add it into the DOM as CSS class asynchronously (soon, but not immediately). The return value is a map containing the given style properties as inline style. It is needed until the CSS class has been generated and inserted into the DOM. When the DOM is ready, the component is forced to re-render itself and use only the CSS class definition.
+
+You might ask why does **use-style** work asynchronously? Consider a case when one or more components are going to be rendered and all of them are calling **use-style** very many times with different style maps. In this case, updating the DOM on every single call would slow the rendering process down. To keep the rendering fast, the idea is to collect as many style maps as possible during a single render event, convert all of them to CSS and add into the DOM at once.
+
+If the style contains some specific definitions that cannot be present as inline style (some specific modes or media queries), the component is going to be hidden for a few milliseconds with CSS **visibility** set to **hidden**, until the converted CSS style is added into the DOM. In most cases, this should not be a problem, but if needed, styles can also be added into the DOM synchronously (immediately) by calling **prepare-styles**. It is recommended to call this function during the *:component-will-mount* lifecycle method. It makes sure the given styles are completely ready to be used when the component needs it.
 
 ```clojure
 (r/create-class
@@ -122,7 +147,7 @@ If the style contains some specific definitions that cannot be present as inline
                [:div (use-style style3)]])})
 ```
 
-It's good to keep in mind that most of the time *prepare-styles* is not needed but calling *use-style* should be enough. Also, when caching is used, the style will be ready after its CSS has been created for the first time.
+It's good to keep in mind that most of the time **prepare-styles** is not needed, but calling **use-style** is enough. Also, when caching is used, the style will be ready after its CSS has been created for the first time.
 
 ## Combine & parametrise styles
 
@@ -146,7 +171,7 @@ Define how your style looks in different modes, such as when mouse is on top of 
                                      "::-webkit-progress-bar" {:-webkit-appearance "none"}}})
 ```
 
-stylefy modes are pretty much the same thing as pseudoclasses in CSS and they simply create a new "class:mode" selector for you style. The reason for not using the name pseudoclass is completely self-willed; I think "pseudoclass" simply means nothing, when "mode" is a little bit more informative what CSS pseudoclasses are supposed to do.
+stylefy modes are pretty much the same thing as pseudoclasses in CSS and they simply create a new "class:mode" selector for you style. The reason for not using the name pseudoclass is completely self-willed; I think "mode" as a name is a little bit more informative than CSS pseudoclasses.
 
 ## Sub-styles
 
@@ -268,7 +293,6 @@ Define how your style looks when certain CSS features are supported by the brows
 
 You can use modes, media queries, and vendor prefixes inside feature query style map.
 
-
 ## 3rd party classes
 
 Use 3rd party classes along with stylefy definitions:
@@ -315,7 +339,7 @@ Alternative syntax:
 
 ## Font-face
 
-Call *stylefy/font-face* and the given font-face is added into the DOM as CSS code.
+Call **stylefy/font-face** and the given font-face is added into the DOM as CSS code asynchronously.
 
 ```clojure
 (stylefy/font-face {:font-family "open_sans"
@@ -327,7 +351,7 @@ Call *stylefy/font-face* and the given font-face is added into the DOM as CSS co
 
 ## Keyframes
 
-Call *stylefy/keyframes* and the given keyframes are added into the DOM as CSS code.
+Call **stylefy/keyframes** and the given keyframes are added into the DOM as CSS code asynchronously.
 
 ```clojure
 (stylefy/keyframes "simple-animation"
@@ -344,7 +368,7 @@ Call *stylefy/keyframes* and the given keyframes are added into the DOM as CSS c
 
 ## Custom class names
 
-As has been told, stylefy converts style definition to unique CSS classes automatically and there is no need to worry about class names. It can, however, be useful to be able to generate custom named classes for example when working with 3rd party libraries / frameworks. For this purpose, call *stylefy/class*:
+As has been told, stylefy converts style definition to unique CSS classes automatically and there is no need to worry about class names. It can, however, be useful to be able to generate custom named classes for example when working with 3rd party libraries / frameworks. For this purpose, call **stylefy/class**:
 
 ```clojure
 ;; This generates a CSS class with the name "background-transition" and adds it into the DOM.
@@ -357,7 +381,7 @@ As has been told, stylefy converts style definition to unique CSS classes automa
 
 ## Custom tag styles
 
-As has been told, stylefy converts style definition to unique CSS classes automatically and there is no need to worry about writing selectors for HTML tags. However, custom tag styles can be useful for setting styles on base elements, like html or body. For this purpose, call *stylefy/tag*:
+As has been told, stylefy converts style definition to unique CSS classes automatically and there is no need to worry about writing selectors for HTML tags. However, custom tag styles can be useful for setting styles on base elements, like html or body. For this purpose, call **stylefy/tag**:
 
 ```clojure
 ;; This generates a CSS tag selector and style for "body" element
@@ -378,7 +402,7 @@ As from version 1.7.0, caching with local storage is turned on by default. You c
   (stylefy/init {:use-caching? false})
 ```
 
-By default, the cache is cleared in seven days. You can clear it manually by calling:
+By default, the cache is cleared in seven days. You can also clear it manually by calling:
 
 ```clojure
 (require '[stylefy.cache :as stylefy-cache])
@@ -396,7 +420,7 @@ Cache options support automatic cache clearing when a certain amount of time is 
 
 # Multi-instance support
 
-If you need to run multiple apps using stylefy on the same web page, use your app name as a suffix in the *style* tag id.
+If you need to run multiple apps using stylefy on the same web page, use your app name as a suffix in the **style** tag id.
 
 ```html
 <style id="_stylefy-constant-styles_myapp"></style>
@@ -408,6 +432,21 @@ Then init stylefy with multi-instance support. Instance-id is a unique string (f
 ```clojure
 (stylefy/init {:multi-instance {:base-node (dommy/sel1 "#myapp")
                                 :instance-id "myapp"}})
+```
+
+# Debugging and testing
+
+If you want to test your user interface by examining CSS class names, stylefy's automatically generated class names can become a hassle. To make testing and debugging easier, you can use your own prefix in stylefy's automatically generated class names:
+
+```clojure
+(def my-style {:color "red"
+               ::stylefy/class-prefix "debugthis"}
+```
+
+Notice that you need to turn custom prefixes on separately on the init function:
+
+```clojure
+(stylefy/init {:use-custom-class-prefix? true})
 ```
 
 ## Units and colors
