@@ -111,7 +111,7 @@ To use it in a component, use the **use-style** function:
 
 ### Passing styles to components
 
-**use-style** is designed to be called only inside component render functions, to define styles for **HTML** elements. If you need to pass styles to Reagent components, pass them as regular Clojure maps, and call **use-style** last only for HTML elements:
+**use-style** is designed to be called only inside component render functions to define styles for **HTML** elements. If you need to pass styles to Reagent components, pass them as regular Clojure maps, and call **use-style** last, only for HTML elements:
 
 ```clojure
 (defn- button-with-custom-style [text style]
