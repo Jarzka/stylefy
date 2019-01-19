@@ -7,8 +7,7 @@
                  [reagent "0.6.0"]
                  [org.clojure/core.async "0.3.443"]
                  [com.andrewmcveigh/cljs-time "0.5.0"]
-                 [figwheel "0.5.18"]
-                 [javax.xml.bind/jaxb-api "2.3.0"]]
+                 [figwheel "0.5.18"]]
   :plugins [[lein-cljsbuild "1.1.7"]
             [lein-figwheel "0.5.18"]]
   :cljsbuild {:builds [{:id "dev"
