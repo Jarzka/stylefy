@@ -16,7 +16,7 @@
    ::stylefy/sub-styles {:innerbox {:width "100%"
                                     :height "100%"
                                     :background-color "#444444"}}
-   ;; Manual style is a powerful way to define styles for child components when you absolutely need to write
+   ;; Manual mode is a powerful way to define styles for child components when you absolutely need to write
    ;; custom CSS selectors. However, great power comes with a great responsibility.
    ;; Since manual style definitions rely on Garden syntax, stylefy's special keyword definitions are not supported.
    ;; You are pretty much on your own here. Manual styling should be an exception rather than a rule.
