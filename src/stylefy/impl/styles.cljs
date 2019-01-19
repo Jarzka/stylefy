@@ -110,7 +110,7 @@
       ;; going to look wrong. Thus, hide the component completely until the DOM is ready.
       (let [contains-media-queries? (some? (:stylefy.core/media style))
             contains-feature-queries? (some? (:stylefy.core/supports style))
-            contains-manua-mode? (some? (:stylefy.core/manual style))
+            contains-manual-mode? (some? (:stylefy.core/manual style))
             excluded-modes #{:hover}
             contains-modes-not-excluded? (not (empty?
                                                 (filter (comp not excluded-modes)
@@ -120,7 +120,7 @@
                              (utils/garden-units->css))]
         (if (or contains-media-queries?
                 contains-feature-queries?
-                contains-manua-mode?
+                contains-manual-mode?
                 contains-modes-not-excluded?)
           (merge return-map {:style (merge inline-style
                                            {:visibility "hidden"})})
