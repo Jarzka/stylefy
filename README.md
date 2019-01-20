@@ -451,7 +451,7 @@ Notice that you need to turn custom prefixes on separately on the init function:
 
 # Manual mode
 
-Manual mode can be used to style child elements with manually written CSS selectors using Garden syntax. It should be used only for corner cases in which complex CSS selectors are needed. For the most part, it is recommended to use **sub-styles*** for styling child elements.
+Manual mode can be used to style child elements with manually written CSS selectors using Garden syntax. It should be used only for **corner cases** in which complex CSS selectors are needed to achieve some style result. For the most part, it is recommended to use **sub-styles*** for styling child elements. To avoid confusion, stylefy's special keywords do not work in manual mode.
 
 ```clojure
 (def mobile-media-query {:max-width "550px"})
