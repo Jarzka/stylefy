@@ -171,7 +171,7 @@ Define how your style looks in different modes, such as when mouse is on top of 
                                      "::-webkit-progress-bar" {:-webkit-appearance "none"}}})
 ```
 
-stylefy modes are pretty much the same thing as pseudoclasses in CSS and they simply create a new "class:mode" selector for you style. The reason for not using the name pseudoclass is completely self-willed; I think "mode" as a name is a little bit more informative than CSS pseudoclasses.
+stylefy modes are pretty much the same thing as pseudoclasses/pseudoelements in CSS and they simply create a new "class:mode" selector for your style. The reason for not using the name pseudoclass is completely self-willed; I think "mode" as a name is a little bit more informative than CSS pseudoclasses.
 
 ## Sub-styles
 
