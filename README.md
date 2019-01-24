@@ -269,6 +269,8 @@ Define how your style looks on various screen sizes:
 
 You can also use modes and vendor prefixes inside media query style map.
 
+For syntax help, see Garden's [documentation](https://github.com/noprompt/garden/wiki/Media-Queries).
+
 ## Feature queries
 
 Define how your style looks when certain CSS features are supported by the browser:
@@ -483,6 +485,8 @@ An example of such corner case is a situation in which we want to change the sty
   [:div (use-style hoverbox-style)
    [:div.innerbox (use-sub-style hoverbox-style :innerbox)]])
 ```
+
+For syntax help, see Garden's [documentation](https://github.com/noprompt/garden/wiki/Syntax).
 
 ## Units and colors
 
