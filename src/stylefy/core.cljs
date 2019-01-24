@@ -49,8 +49,9 @@
                        Custom prefix can be used for debugging and automatic software testing purposes.
                        Note that you need to set custom class prefixes on in the init function.
    ::manual            Manual mode can be used to style child elements with manually written CSS selectors
-                       using Garden syntax. It should be used only for corner cases in which complex
-                       CSS selectors are needed. For the most part, it is recommended to use ::sub-styles.
+                       using Garden syntax. It should be used only for styling 3rd party components and
+                       resolving corner cases in which complex CSS selectors are needed.
+                       For the most part, it is recommended to use ::sub-styles.
 
    Options is an optional map, which contains HTML attributes (:class, :href, :src etc.).
    It can also contain the following special keywords features:
