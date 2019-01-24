@@ -28,9 +28,9 @@ Currently stylefy works only with SPA applications using [Reagent](https://githu
 - Feature queries (CSS @supports query)
 - Style caching using local storage (can be turned off)
 - Multi-instance support (you can run multiple apps using stylefy on the same web page)
+- Manual mode for styling 3rd party components and resolving corner cases in which complex CSS selectors are needed
 - Small and simple core API
 - Automatic style reloading with [Figwheel](https://github.com/bhauman/lein-figwheel)
-- Manual mode for styling 3rd party components and resolving corner cases in which complex CSS selectors are needed
 - All features are tested to work with Chrome, Firefox, Edge & Internet Explorer 11
 
 # FAQ
