@@ -1,4 +1,4 @@
-(defproject stylefy "1.10.1"
+(defproject stylefy "1.11.0"
   :description "Library for styling UI components"
   :url "https://github.com/Jarzka/stylefy"
   :dependencies [[org.clojure/clojure "1.9.0"]
@@ -7,7 +7,7 @@
                  [reagent "0.7.0"]
                  [garden "1.3.2"]
                  [org.clojure/core.async "0.3.443"]]
-  :plugins [[lein-cljsbuild "1.1.2"]
+  :plugins [[lein-cljsbuild "1.1.7"]
             [lein-doo "0.1.7"]
             [lein-codox "0.10.3"]]
   :profiles {:dev {:dependencies [[clj-chrome-devtools "20180310"]]}}
@@ -22,9 +22,4 @@
                        {:id "prod"
                         :source-paths ["src"]
                         :compiler {:output-to "stylefy.js"
-                                   :optimizations :advanced}}]}
-  :jvm-opts ~(let [version     (System/getProperty "java.version")
-                   [major _ _] (clojure.string/split version #"\.")]
-               (if (>= (java.lang.Integer/parseInt major) 9)
-                 ["--add-modules" "java.xml.bind"]
-                 [])))
+                                   :optimizations :advanced}}]})

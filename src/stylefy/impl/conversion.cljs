@@ -16,18 +16,21 @@
                         (and (string? mode-name)
                              (str/starts-with? mode-name ":")))
                     (str "Mode must be specified as a keyword or string beginning with colon, got: " (pr-str mode-name)))
+            (when (and (string? mode-name)
+                       (> (count (str/split mode-name " ")) 1))
+              (.warn js/console (str "Incorrect mode detected, should not contain spaces. Mode was: " (pr-str mode-name))))
             [(keyword (str "&" mode-name)) (get modes mode-name)])
           (keys modes))))
 
 (defn class-selector [hash]
   (keyword (str "." hash)))
 
-(defn- convert-base-style
+(defn- convert-base-style-into-class
   "Converts Clojure style map into CSS class."
   [{:keys [props hash custom-selector] :as style} options]
-  (let [style-props (utils/filter-props props)
+  (let [css-props (utils/filter-css-props props)
         css-selector (or custom-selector (class-selector hash))
-        garden-class-definition [css-selector style-props]
+        garden-class-definition [css-selector css-props]
         garden-pseudo-classes (convert-stylefy-modes-garden props)
         garden-vendors (convert-stylefy-vendors-to-garden props)
         garden-options (or (merge options garden-vendors) {})
@@ -44,8 +47,8 @@
           (map
             (fn [media-query]
               (let [media-query-props (get stylefy-media-queries media-query)
-                    style-props (utils/filter-props media-query-props)
-                    garden-class-definition [css-selector style-props]
+                    media-query-css-props (utils/filter-css-props media-query-props)
+                    garden-class-definition [css-selector media-query-css-props]
                     garden-pseudo-classes (convert-stylefy-modes-garden media-query-props)
                     garden-vendors (convert-stylefy-vendors-to-garden media-query-props)
                     garden-options (or (merge options garden-vendors) {})]
@@ -62,9 +65,9 @@
           css-supports (map
                          (fn [supports-selector]
                            (let [supports-props (get stylefy-supports supports-selector)
-                                 style-props (utils/filter-props supports-props)
-                                 garden-class-definition [css-selector style-props]
-                                 garden-pseudo-classes (convert-stylefy-modes-garden style-props)
+                                 supports-css-props (utils/filter-css-props supports-props)
+                                 garden-class-definition [css-selector supports-css-props]
+                                 garden-pseudo-classes (convert-stylefy-modes-garden supports-props)
                                  garden-vendors (convert-stylefy-vendors-to-garden supports-props)
                                  garden-options (or (merge options garden-vendors) {})
                                  css-media-queries-inside-supports
@@ -81,11 +84,33 @@
                          (keys stylefy-supports))]
       (apply str css-supports))))
 
+(defn- convert-manual-styles
+  "Converts stylefy/manual definition into CSS."
+  [{:keys [props hash custom-selector] :as style} options]
+  (when-let [stylefy-manual-styles (:stylefy.core/manual props)]
+    (let [css-parent-selector (or custom-selector (class-selector hash))
+          css-manual-styles (map
+                             (fn [manual-style]
+                               (let [manual-selector-and-css-props (clojure.walk/walk #(if (map? %)
+                                                                                        (utils/filter-css-props %)
+                                                                                        %)
+                                                                                     identity
+                                                                                     manual-style)
+                                     garden-style-definition (into [css-parent-selector] [manual-selector-and-css-props])
+                                     css-class (css options garden-style-definition)]
+                                 css-class))
+                             stylefy-manual-styles)]
+      (apply str css-manual-styles))))
+
 (defn style->css
   "Converts the given style to CSS. Options are sent directly to Garden"
   ([style] (style->css style {}))
   ([{:keys [props hash] :as style} options]
-   (let [css-class (convert-base-style style options)
+   (let [css-class (convert-base-style-into-class style options)
          css-media-queries (convert-media-queries style options)
-         css-supports (convert-supports-rules style options)]
-     (str css-class css-media-queries css-supports))))
+         css-supports (convert-supports-rules style options)
+         css-manual-styles (convert-manual-styles style options)]
+     (str css-class
+          css-media-queries
+          css-supports
+          css-manual-styles))))

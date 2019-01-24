@@ -32,21 +32,11 @@
 
 (defn- update-style-tags!
   [node node-constant]
-  (let [styles-in-css (map (fn [style-hash]
-                             (::css (style-by-hash style-hash)))
-                           (keys @styles-as-css))
-        keyframes-in-css (map (fn [keyframes]
-                                (::css keyframes))
-                              @keyframes-in-use)
-        font-faces-in-use (map (fn [properties]
-                                 (::css properties))
-                               @font-faces-in-use)
-        custom-tags-in-use (map (fn [tag-definition]
-                                  (::css tag-definition))
-                                @custom-tags-in-use)
-        custom-classes-in-use (map (fn [tag-definition]
-                                     (::css tag-definition))
-                                   @custom-classes-in-use)]
+  (let [styles-in-css (map (comp ::css style-by-hash) (keys @styles-as-css))
+        keyframes-in-css (map ::css @keyframes-in-use)
+        font-faces-in-use (map ::css @font-faces-in-use)
+        custom-tags-in-use (map ::css @custom-tags-in-use)
+        custom-classes-in-use (map ::css @custom-classes-in-use)]
     (dommy/set-text! node-constant (apply str (concat font-faces-in-use
                                                       keyframes-in-css
                                                       custom-tags-in-use
@@ -115,7 +105,7 @@
                                            #(-> {% (r/atom false)})
                                            (keys cached-styles)))))))
 
-(defn save-style!
+(defn- save-style!
   "Stores the style in an atom. The style is going to be added into the DOM soon."
   [{:keys [props hash] :as style}]
   (assert props "Unable to save empty style!")

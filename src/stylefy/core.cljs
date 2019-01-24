@@ -7,35 +7,37 @@
 (defn use-style
   "Defines a style for a component by converting the given style map in to an unique CSS class,
    and returning a pointer (a map with :class keyword) to it so that the component can use it.
-
-   Calling use-style does not immediately add the generated CSS class to DOM, because doing this
-   in a single render would slow everything down if use-style is called multiple times.
-   If the style has not been added into the DOM yet, it also returns the given props as inline style, so that
-   the component looks good even if CSS class has not been generated yet.
+   To keep the rendering process fast, use-style works asynchronously, meaning that it
+   does not add the generated CSS class into the DOM immediately, but very soon instead.
+   If the style has not been added into the DOM yet, it returns the given props as inline style,
+   so that the component looks good even if CSS class has not been generated yet.
 
    Important exception: if the style contains specific modes or media query definitions,
-   {:style {:visibility \"hidden\"}} is returned until the DOM is ready.
-   This is done because these definitions cannot be present as inline style.
-   If this is a problem, see prepare-styles function.
+   which cannot be used as inline style, {:style {:visibility \"hidden\"}} is returned.
+   Thus, the component is going to be hidden for a few milliseconds.
+   In most cases, this is not a problem, but if you want to avoid it, see prepare-styles function.
 
    The given 'style' parameter is a map which contains CSS style properties
    (as supported by Garden library). There can also be special namespaced keywords
-   along with the style definitions.
+   along with the style definitions. These are:
 
    Core features:
 
    ::sub-styles        Makes it possible to define a named style map inside of the main style map.
-                       The contents of ::sub-styles should be a map,
-                       in which keys define the name of the sub-style and
-                       values contain the style properties.
+                       The contents of ::sub-styles should be a map, in which keys define the name of
+                       the sub-style and values contain the style properties.
                        Sub-styles are nothing special, they are supposed to contain the same contents
                        as the main style map. ::sub-styles helps you to define styles that are closely
                        related to the main style map but do not deserve their own 'def'.
    ::mode              A map in which keys are mode names and values are style properties.
-                       Internally all modes are converted to CSS pseudoclasses. You can use any mode name
-                       that is a valid CSS speudoclass.
+                       Internally all modes are converted to CSS pseudoclasses or pseudoelements.
+                       You can use any mode name that is a valid CSS speudoclass.
    ::media             A map in which keys are maps presenting CSS media query definitions, and values
                        are style maps which are used when the media query is active.
+                       Vendor prefixes and modes can be used inside the media query style map.
+   ::supports          A map in which keys are strings presenting CSS feature query definitions, and values
+                       are style maps which are used when the supports query is active.
+                       Vendor prefixes, media queries and modes can be used inside the support query style map.
    ::vendors           A vector of vendor prefixes that are used with ::auto-prefix.
    ::auto-prefix       A set of style properties that should be prefixed with ::vendors.
    ::with-classes      A collection of additional class names that should always be used with
@@ -46,9 +48,13 @@
    ::class-prefix      Custom prefix for generated class names. If not given, the default prefix will be used.
                        Custom prefix can be used for debugging and automatic software testing purposes.
                        Note that you need to set custom class prefixes on in the init function.
+   ::manual            Manual mode can be used to style child elements with manually written CSS selectors
+                       using Garden syntax. It should be used only for styling 3rd party components and
+                       resolving corner cases in which complex CSS selectors are needed.
+                       For the most part, it is recommended to use ::sub-styles.
 
    Options is an optional map, which contains HTML attributes (:class, :href, :src etc.).
-   It can also contain the the following features:
+   It can also contain the following special keywords features:
 
    ::with-classes       DEPRECATED. A vector of additional class names used with the current style.
                         Deprecated since version 1.3.0: The options map can now contain
@@ -109,6 +115,8 @@
                               This value is also used as suffix in caching."
   ([] (init {}))
   ([options]
+   (when @dom/stylefy-initialised?
+     (.warn js/console "Attempted to initialise stylefy more than once."))
    (impl-styles/init-custom-class-prefix options)
    (dom/init-multi-instance options)
    (dom/init-cache options)
@@ -117,7 +125,7 @@
    (dom/update-dom))) ;; Update can be synchronous on init
 
 (defn keyframes
-  "Adds the given keyframe definition to DOM.
+  "Adds the given keyframe definition into the DOM asynchronously.
    Identifier is the name of the keyframes.
    Frames are given in the same form as Garden accepts them.
 
@@ -132,7 +140,7 @@
   (apply dom/add-keyframes identifier frames))
 
 (defn font-face
-  "Adds the given font-face definition to DOM.
+  "Adds the given font-face definition into the DOM asynchronously.
    Properties are given in the same form as Garden accepts them.
 
    Example:
@@ -145,7 +153,8 @@
   (dom/add-font-face properties))
 
 (defn tag
-  "Creates a CSS selector for the given tag and properties.
+  "Creates a CSS selector for the given tag and properties and adds it into the DOM asynchronously.
+
    Normally you should let stylefy convert your style maps to unique CSS classes by calling
    use-style, instead of creating tag selectors. However, custom tag styles
    can be useful for setting styles on base elements, like html or body.
@@ -159,7 +168,8 @@
   (dom/add-tag name properties))
 
 (defn class
-  "Creates a CSS class with the given name and properties.
+  "Creates a CSS class with the given name and properties and adds it into the DOM asynchronously.
+
    Normally you should let stylefy convert your style maps to unique CSS classes by calling
    use-style. Thus, there is usually no need to create customly named classes when using stylefy,
    unless you work with some 3rd party framework.
@@ -173,11 +183,11 @@
   (dom/add-class name properties))
 
 (defn prepare-styles
-  "Will convert the given styles and their sub-styles to CSS
-   and add them into the DOM immediately, all at once.
+  "Converts the given styles and their sub-styles to CSS and adds them into the DOM
+   synchronously (immediately).
 
    Normally, when you call use-style, the given style is converted to CSS and will
-   be added into the DOM very soon. Until then, the style is returned as inline style, except
+   be added into the DOM asynchronously. Until then, the style is returned as inline style, except
    if it cannot be present as inline style (it contains some specific modes and media queries).
    In this purpose, it can be useful to ask stylefy to prepare
    certain styles before they are used in a component. This way, components using these styles

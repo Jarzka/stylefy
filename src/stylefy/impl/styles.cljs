@@ -45,12 +45,14 @@
                                                 (instance? color/CSSColor prop-value))
                                         (assoc result prop-key (compiler/render-css prop-value)))))
                                   {}
-                                  (keys (utils/filter-props style)))
+                                  (keys (utils/filter-css-props style)))
           hashable-style (merge style hashable-garden-units)
           ;; Hash style without certain special keywords:
-          ;; - sub-styles is only a link to other styles, it does not define the actual properties of this style.
+          ;; - sub-styles is only a link to other styles, it does not define the actual properties of this style
           ;; - class-prefix is only for class naming, the style looks the same with it or without
-          hashable-style (dissoc hashable-style :stylefy.core/sub-styles :stylefy.core/class-prefix)
+          hashable-style (dissoc hashable-style
+                                 :stylefy.core/sub-styles
+                                 :stylefy.core/class-prefix)
           class-prefix (if @use-custom-class-prefix?
                          (check-custom-class-prefix (:stylefy.core/class-prefix style))
                          default-class-prefix)]
@@ -69,7 +71,7 @@
   [style style-hash options]
   (let [with-classes (concat (:stylefy.core/with-classes style)
                              (:stylefy.core/with-classes options))
-        html-attributes (utils/filter-props options)
+        html-attributes (utils/filter-css-props options)
         html-attributes-class (:class html-attributes)
         html-attributes-inline-style (:style html-attributes)
         final-class (str/trim
@@ -104,19 +106,21 @@
       ;; The style definition has not been added into the DOM yet, so return the style props
       ;; as inline style. Inline style gets replaced soon as the style definition
       ;; is added into the DOM and the component re-renders itself.
-      ;; However, if there are media queries or specific mode definitions, inline styling is probably
+      ;; However, if there are media queries, specific mode definitions etc., inline styling is probably
       ;; going to look wrong. Thus, hide the component completely until the DOM is ready.
       (let [contains-media-queries? (some? (:stylefy.core/media style))
             contains-feature-queries? (some? (:stylefy.core/supports style))
+            contains-manual-mode? (some? (:stylefy.core/manual style))
             excluded-modes #{:hover}
             contains-modes-not-excluded? (not (empty?
                                                 (filter (comp not excluded-modes)
                                                         (keys (:stylefy.core/mode style)))))
             inline-style (-> style
-                             (utils/filter-props)
+                             (utils/filter-css-props)
                              (utils/garden-units->css))]
         (if (or contains-media-queries?
                 contains-feature-queries?
+                contains-manual-mode?
                 contains-modes-not-excluded?)
           (merge return-map {:style (merge inline-style
                                            {:visibility "hidden"})})
