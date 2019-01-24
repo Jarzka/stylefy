@@ -136,7 +136,7 @@ Combine or parametrise styles however you like:
     [button-with-custom-style "Hello" {:padding "25px"
                                        :background-color "#BBBBBB"
                                        :border "1px solid black"}]
-    ;; This is NOT ok
+    ;; This is NOT ok, because use-style would be called twice
     [button-with-custom-style "Hello" (use-style {:padding "25px"
                                                   :background-color "#BBBBBB"
                                                   :border "1px solid black"})]])
