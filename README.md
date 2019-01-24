@@ -452,7 +452,7 @@ Notice that you need to turn custom prefixes on separately on the init function:
 
 # Manual mode
 
-Manual mode can be used to style child elements with manually written CSS selectors using Garden syntax. It should be used only for corner cases in which complex CSS selectors are needed, or when you want to style some 3rd party child components that do not take style props as parameters. The selector and the style written in manual mode will be scoped inside the element in which you use the style map with **use-style**. To avoid confusion, stylefy's special keywords do not work in manual mode. For the most part, it is recommended to use **sub-styles*** for styling child elements.
+Manual mode can be used to style child elements with manually written CSS selectors using Garden syntax. It should be used only for **corner cases** in which complex CSS selectors are needed, or when you want to style some **3rd party child components** that do not take style props as parameters. The selector and the style written in manual mode will be scoped inside the element in which you use the style map with **use-style**. To avoid confusion, stylefy's special keywords do not work in manual mode. For the most part, it is recommended to use **sub-styles*** for styling child elements.
 
 An example of such corner case is a situation in which we want to change the style of some child element when the parent element is being hovered:
 
