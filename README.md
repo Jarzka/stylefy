@@ -57,7 +57,7 @@ Yup, for example:
 Add the following line to your Leiningen project:
 
 ```clj
-[stylefy "1.10.1"]
+[stylefy "1.11.0"]
 ```
 
 # Usage
@@ -462,7 +462,7 @@ An example of such corner case is a situation in which we want to change the sty
 (def mobile-media-query {:max-width "550px"})
 
 (def hoverbox-style
-  {:width "500px"
+  {:width "500px"1
    :height "200px"
    :padding "33px"
    :margin-bottom "10px"
