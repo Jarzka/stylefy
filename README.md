@@ -110,6 +110,17 @@ To use it in a component, use the **use-style** function:
     text])
 ```
 
+### Combine & parametrise styles
+
+Combine or parametrise styles however you like:
+
+```clojure
+(def primary-button (merge generic-button {:background-color "rgb(88, 121, 193)"}))
+
+(defn button-style [background-color]
+  (merge generic-button {:background-color background-color}))
+```
+
 ### Passing styles to components
 
 **use-style** is designed to be called only inside component render functions to define styles for **HTML** elements. If you need to pass styles to Reagent components, pass them as regular Clojure maps, and call **use-style** last, only for HTML elements:
@@ -149,17 +160,6 @@ If the style contains some specific definitions that cannot be present as inline
 ```
 
 It's good to keep in mind that most of the time **prepare-styles** is not needed, but calling **use-style** is enough. Also, when caching is used, the style will be ready after its CSS has been created for the first time.
-
-## Combine & parametrise styles
-
-Combine or parametrise styles however you like:
-
-```clojure
-(def primary-button (merge generic-button {:background-color "rgb(88, 121, 193)"}))
-
-(defn button-style [background-color]
-  (merge generic-button {:background-color background-color}))
-```
 
 ## Modes
 
@@ -452,7 +452,9 @@ Notice that you need to turn custom prefixes on separately on the init function:
 
 # Manual mode
 
-Manual mode can be used to style child elements with manually written CSS selectors using Garden syntax. It should be used only for **corner cases** in which complex CSS selectors are needed to achieve some style result. For the most part, it is recommended to use **sub-styles*** for styling child elements. The selector and the style written in manual mode will be scoped inside the element in which you use the style map with **use-style**. To avoid confusion, stylefy's special keywords do not work in manual mode.
+Manual mode can be used to style child elements with manually written CSS selectors using Garden syntax. It should be used only for corner cases in which complex CSS selectors are needed, or when you want to style some 3rd party child components that do not take style props as parameters. The selector and the style written in manual mode will be scoped inside the element in which you use the style map with **use-style**. To avoid confusion, stylefy's special keywords do not work in manual mode. For the most part, it is recommended to use **sub-styles*** for styling child elements.
+
+An example of such corner case is a situation in which we want to change the style of some child element when the parent element is being hovered:
 
 ```clojure
 (def mobile-media-query {:max-width "550px"})
