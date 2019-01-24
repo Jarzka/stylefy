@@ -91,16 +91,15 @@
 
   The following options are supported:
     :use-caching?             If true, caches the generated CSS code using localstorage
-                              so that future page loads work faster. Defaults to false.
+                              so that future page loads work faster. Defaults to true since version 1.7.0.
                               Also check :cache-options.
     :cache-options            A map which can contain the following keywords:
       :expires                Number of seconds after the cache is cleared automatically.
                               For example, value 604800 clears the cache after one week.
                               By default, the cache is never cleared automatically.
                               You can also clear the cache manually by calling stylefy.cache/clear.
-    :global-vendor-prefixes   A map containing a set of ::stylefy/vendors and
-                              ::stylefy/auto-prefix properties.
-                              These properties are globally prefixed in all CSS code.
+    :global-vendor-prefixes   A map containing a set of ::stylefy/vendors and ::stylefy/auto-prefix properties.
+                              These properties are globally prefixed in all stylefy style maps.
     :use-custom-class-prefix? If set to true, custom class prefix is used if the style map contains it.
                               By default, this is set to false.
                               It is recommended to set this to true only in development / test environment.
