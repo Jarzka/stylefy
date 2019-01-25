@@ -105,7 +105,7 @@
                                            #(-> {% (r/atom false)})
                                            (keys cached-styles)))))))
 
-(defn- save-style!
+(defn save-style!
   "Stores the style in an atom. The style is going to be added into the DOM soon."
   [{:keys [props hash] :as style}]
   (assert props "Unable to save empty style!")
