@@ -57,7 +57,7 @@ Yup, for example:
 Add the following line to your Leiningen project:
 
 ```clj
-[stylefy "1.11.0"]
+[stylefy "1.11.1"]
 ```
 
 # Usage
