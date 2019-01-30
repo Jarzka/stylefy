@@ -207,7 +207,7 @@ Another version using deeper sub-style nesting:
     [:li (use-style (sub-style list-container-style :list :item)) "List element 3"]]])
 ```
 
-Sub-styles are nothing special, they are supposed to contain the same contents as the main style map. ::sub-styles helps you to define styles that are closely related to the main style map but do not deserve their own 'def'.
+Sub-styles are nothing special, they are supposed to contain the same contents as the main style map. If you wish, you can always omit them and use regular **use-style** without any sub-styles. However, sub-styles help you to define styles that are closely related to each other (usually component's root element style and its child elements) in a single map, which can make style maintenance easier.
 
 ## Vendor prefixes
 
