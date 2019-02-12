@@ -421,21 +421,9 @@ Cache options support automatic cache clearing when a certain amount of time is 
                :cache-options {:expires (* 1 60 60 24 7)}}) ; Cache is cleared after 7 days
 ```
 
-## Multi-instance support
+## Units and colors
 
-If you need to run multiple apps using stylefy on the same web page, use your app name as a suffix in the **style** tag id.
-
-```html
-<style id="_stylefy-constant-styles_myapp"></style>
-<style id="_stylefy-styles_myapp"></style>
-```
-
-Then init stylefy with multi-instance support. Instance-id is a unique string (for example app name). Base-node is an optional base node for style tags (handy if you use web components).
-
-```clojure
-(stylefy/init {:multi-instance {:base-node (dommy/sel1 "#myapp")
-                                :instance-id "myapp"}})
-```
+You can use Garden's [Unit](https://github.com/noprompt/garden/wiki/Units-%26-Arithmetic) and [Color](https://github.com/noprompt/garden/wiki/Color) helpers with stylefy.
 
 ## Debugging and testing
 
@@ -450,6 +438,24 @@ Notice that you need to turn custom prefixes on separately on the init function:
 
 ```clojure
 (stylefy/init {:use-custom-class-prefix? true})
+```
+
+# Advanved features 
+
+## Multi-instance support
+
+Running multiple apps using stylefy on the same web page is currently possible if every app is built separately (every app contains its own JS file). Every instance can use its own style tag, so use your app name as a suffix in the **style** tag id.
+
+```html
+<style id="_stylefy-constant-styles_myapp"></style>
+<style id="_stylefy-styles_myapp"></style>
+```
+
+Then init stylefy with multi-instance support. Instance-id is a unique string (for example app name). Base-node is an optional base node for style tags (handy if you use web components).
+
+```clojure
+(stylefy/init {:multi-instance {:base-node (dommy/sel1 "#myapp")
+                                :instance-id "myapp"}})
 ```
 
 ## Manual mode
@@ -488,11 +494,7 @@ An example of such corner case is a situation in which we want to change the sty
 
 For syntax help, see Garden's [documentation](https://github.com/noprompt/garden/wiki/Syntax).
 
-## Units and colors
-
-You can use Garden's [Unit](https://github.com/noprompt/garden/wiki/Units-%26-Arithmetic) and [Color](https://github.com/noprompt/garden/wiki/Color) helpers with stylefy.
-
-## More examples
+# More examples
 
 More examples available here: https://github.com/Jarzka/stylefy/tree/master/examples/src/stylefy/examples
 
