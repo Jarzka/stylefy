@@ -440,7 +440,7 @@ Notice that you need to turn custom prefixes on separately on the init function:
 (stylefy/init {:use-custom-class-prefix? true})
 ```
 
-# Advanved features 
+# Advanced features 
 
 ## Multi-instance support
 
