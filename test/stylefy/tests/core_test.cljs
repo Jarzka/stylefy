@@ -8,16 +8,18 @@
             [garden.units :as units]
             [clojure.string :as str]))
 
-(def style-box {:border "1px solid black"
+(def css-props {:border "1px solid black"
                 :background-color "#FFDDDD"
                 :text-align :center
                 :padding "5px"
                 :width "150px"
-                :height "150px"
-                :stylefy.core/mode {:hover {:background-color "red"}}
-                :stylefy.core/vendors #{"moz"}
-                :stylefy.core/auto-prefix #{:border-radius}
-                :stylefy.core/sub-styles {:sub-box {:border "1px solid black"}}})
+                :height "150px"})
+
+(def style-box (merge css-props
+                      {:stylefy.core/mode {:hover {:background-color "red"}}
+                       :stylefy.core/vendors #{"moz"}
+                       :stylefy.core/auto-prefix #{:border-radius}
+                       :stylefy.core/sub-styles {:sub-box {:border "1px solid black"}}}))
 
 (deftest use-style
   (testing "Use style"
@@ -26,13 +28,7 @@
       ;; This is the first time we use this style map -> inline style shoule be returned
       (is (map? (:style return)))
       ;; Inline style does not contain namespaced keywords:
-      (is (= (:style return)
-             {:border "1px solid black"
-              :background-color "#FFDDDD"
-              :text-align :center
-              :padding "5px"
-              :width "150px"
-              :height "150px"}))))
+      (is (= (:style return) css-props))))
 
   (testing "Use style with :hover mode"
     (let [return (stylefy/use-style (merge style-box
@@ -40,13 +36,7 @@
       (is (string? (:class return)))
       (is (map? (:style return)))
       ;; Inline style does not contain namespaced keywords and it's not hidden.
-      (is (= (:style return)
-             {:border "1px solid black"
-              :background-color "#FFDDDD"
-              :text-align :center
-              :padding "5px"
-              :width "150px"
-              :height "150px"}))))
+      (is (= (:style return) css-props))))
 
   (testing "Use style with :foo mode"
     (let [return (stylefy/use-style (merge style-box
@@ -55,14 +45,7 @@
       (is (map? (:style return)))
       ;; Inline style does not contain namespaced keywords and it IS hidden, because only
       ;; certain modes can be accepted without hiding the component
-      (is (= (:style return)
-             {:border "1px solid black"
-              :background-color "#FFDDDD"
-              :text-align :center
-              :visibility "hidden"
-              :padding "5px"
-              :width "150px"
-              :height "150px"}))))
+      (is (= (:style return) (assoc css-props :visibility "hidden")))))
 
   (testing "Use style with media query"
     (let [return (stylefy/use-style (merge style-box
@@ -71,14 +54,16 @@
       (is (string? (:class return)))
       (is (map? (:style return)))
       ;; Inline style hides the component (media queries do not work as inline style)
-      (is (= (:style return)
-             {:border "1px solid black"
-              :background-color "#FFDDDD"
-              :text-align :center
-              :padding "5px"
-              :visibility "hidden"
-              :width "150px"
-              :height "150px"}))))
+      (is (= (:style return) (assoc css-props :visibility "hidden")))))
+
+  (testing "Use style with manual mode"
+    (let [return (stylefy/use-style (merge style-box
+                                           {:stylefy.core/manual [[:&:hover [:.innerbox
+                                                                             {:background-color "#999999"}]]]}))]
+      (is (string? (:class return)))
+      (is (map? (:style return)))
+      ;; Inline style hides the component (manual mode do not work as inline style)
+      (is (= (:style return) (assoc css-props :visibility "hidden")))))
 
   (testing "Use style with feature query"
     (let [return (stylefy/use-style (merge style-box
@@ -87,14 +72,7 @@
       (is (string? (:class return)))
       (is (map? (:style return)))
       ;; Inline style hides the component (feature queries do not work as inline style)
-      (is (= (:style return)
-             {:border "1px solid black"
-              :background-color "#FFDDDD"
-              :text-align :center
-              :padding "5px"
-              :visibility "hidden"
-              :width "150px"
-              :height "150px"}))))
+      (is (= (:style return) (assoc css-props :visibility "hidden")))))
 
   (testing "Use nil style"
     (let [return (stylefy/use-style nil)]
