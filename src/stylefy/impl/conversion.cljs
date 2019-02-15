@@ -11,7 +11,7 @@
   (reduce
     (fn [result next-key]
       (let [value (next-key props)]
-        (if (utils/is-garden-unit? value)
+        (if (utils/is-garden-value? value)
           (assoc result next-key (compiler/render-css value))
           result)))
     props
