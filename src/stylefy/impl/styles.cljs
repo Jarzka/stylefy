@@ -40,7 +40,7 @@
                                   ;; hashable (different contents = different hash)
                                   (fn [result prop-key]
                                     (let [prop-value (prop-key style)]
-                                      (when (utils/is-garden-value? prop-key)
+                                      (when (utils/is-garden-value? prop-value)
                                         (assoc result prop-key (compiler/render-css prop-value)))))
                                   {}
                                   (keys (utils/filter-css-props style)))
