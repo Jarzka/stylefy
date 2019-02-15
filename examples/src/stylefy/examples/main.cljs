@@ -222,7 +222,7 @@
                      :height (gu/rem 25)
                      :color (gc/rgb 255 255 255)
                      :background-image (url "images/background.jpg")})
-    "With defined with pc unit, height with rem unit, color with rgb, background as a custom defcssfn function."]])
+    "Defined with pc unit, height with rem unit, color with rgb, background as a custom defcssfn function."]])
 
 (defn- simple-examples []
   [:div (use-style (merge styles/root
