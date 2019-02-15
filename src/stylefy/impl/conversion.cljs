@@ -2,7 +2,20 @@
   (:require [garden.core :refer [css]]
             [stylefy.impl.utils :as utils]
             [garden.stylesheet :refer [at-media at-keyframes at-font-face]]
-            [clojure.string :as str]))
+            [clojure.string :as str]
+            [garden.compiler :as compiler]))
+
+(defn garden-units->css
+  "Checks all values in the map and converts all Garden units to CSS."
+  [props]
+  (reduce
+    (fn [result next-key]
+      (let [value (next-key props)]
+        (if (utils/is-garden-unit? value)
+          (assoc result next-key (compiler/render-css value))
+          result)))
+    props
+    (keys props)))
 
 (defn- convert-stylefy-vendors-to-garden [props]
   (when-let [vendors (:stylefy.core/vendors props)]

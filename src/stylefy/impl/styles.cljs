@@ -2,11 +2,10 @@
   (:require [stylefy.impl.dom :as dom]
             [garden.core :refer [css]]
             [clojure.string :as str]
-            [garden.units :as units]
             [stylefy.impl.utils :as utils]
+            [stylefy.impl.conversion :as conversion]
             [clojure.set :as set]
-            [garden.color :as color]
-            [garden.types :as types]
+
             [garden.compiler :as compiler]))
 
 (def global-vendor-prefixes (atom {:stylefy.core/vendors #{}
@@ -41,8 +40,7 @@
                                   ;; hashable (different contents = different hash)
                                   (fn [result prop-key]
                                     (let [prop-value (prop-key style)]
-                                      (when (or (instance? types/CSSUnit prop-value)
-                                                (instance? color/CSSColor prop-value))
+                                      (when (utils/is-garden-unit? prop-key)
                                         (assoc result prop-key (compiler/render-css prop-value)))))
                                   {}
                                   (keys (utils/filter-css-props style)))
@@ -117,7 +115,7 @@
                                                         (keys (:stylefy.core/mode style)))))
             inline-style (-> style
                              (utils/filter-css-props)
-                             (utils/garden-units->css))]
+                             (conversion/garden-units->css))]
         (if (or contains-media-queries?
                 contains-feature-queries?
                 contains-manual-mode?
