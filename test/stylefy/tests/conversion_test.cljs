@@ -115,15 +115,15 @@
     (is (= (conversion/style->css {:props simple-style-with-garden-px-unit
                                    :hash (styles/hash-style simple-style-with-garden-px-unit)}
                                   {:pretty-print? false})
-           "._stylefy_-903335928{margin-top:50px}"))
+           "._stylefy_1894794598{margin-top:50px}"))
     (is (= (conversion/style->css {:props style-with-rem-and-rgb
                                    :hash (styles/hash-style style-with-rem-and-rgb)}
                                   {:pretty-print? false})
-           "._stylefy_-982634073{margin-top:3rem;color:#ff0000}"))
+           "._stylefy_943569046{margin-top:3rem;color:#ff0000}"))
     (is (= (conversion/style->css {:props style-with-pc-rem-rgb-url
                                    :hash (styles/hash-style style-with-pc-rem-rgb-url)}
                                   {:pretty-print? false})
-           "._stylefy_1898032045{padding:1rem;width:50pc;height:25rem;color:#ffffff;background-image:url(images/background.jpg)}"))))
+           "._stylefy_943569046{padding:1rem;width:50pc;height:25rem;color:#ffffff;background-image:url(images/background.jpg)}"))))
 
 (deftest manual-mode
   (testing "Simple manual mode map"
