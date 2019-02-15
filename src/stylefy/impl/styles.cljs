@@ -5,7 +5,6 @@
             [stylefy.impl.utils :as utils]
             [stylefy.impl.conversion :as conversion]
             [clojure.set :as set]
-
             [garden.compiler :as compiler]))
 
 (def global-vendor-prefixes (atom {:stylefy.core/vendors #{}
