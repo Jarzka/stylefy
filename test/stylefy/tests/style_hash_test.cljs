@@ -1,4 +1,4 @@
-(ns stylefy.tests.styles-test
+(ns stylefy.tests.style-hash-test
   (:require [cljs.test :as test :refer-macros [deftest is testing]]
             [stylefy.core :as stylefy]
             [garden.units :as units]

@@ -6,5 +6,5 @@
 (deftest chrome-test
   (build-and-test "test"
                   '[stylefy.tests.core-test
-                    stylefy.tests.styles-test
+                    stylefy.tests.style-hash-test
                     stylefy.tests.conversion-test]))
