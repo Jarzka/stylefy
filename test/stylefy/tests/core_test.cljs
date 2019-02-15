@@ -62,7 +62,7 @@
                                                                              {:background-color "#999999"}]]]}))]
       (is (string? (:class return)))
       (is (map? (:style return)))
-      ;; Inline style hides the component (manual mode do not work as inline style)
+      ;; Inline style hides the component (manual mode does not work as inline style)
       (is (= (:style return) (assoc css-props :visibility "hidden")))))
 
   (testing "Use style with feature query"
