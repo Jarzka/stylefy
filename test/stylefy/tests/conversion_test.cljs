@@ -123,7 +123,7 @@
     (is (= (conversion/style->css {:props style-with-pc-rem-rgb-url
                                    :hash (styles/hash-style style-with-pc-rem-rgb-url)}
                                   {:pretty-print? false})
-           "._stylefy_1898032045{padding:1rem;width:50pc;height:25rem;color:#ffffff;background-image:url(images/background.jpg"))))
+           "._stylefy_1898032045{padding:1rem;width:50pc;height:25rem;color:#ffffff;background-image:url(images/background.jpg)}"))))
 
 (deftest manual-mode
   (testing "Simple manual mode map"
