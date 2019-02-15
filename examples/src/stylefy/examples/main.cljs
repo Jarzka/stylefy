@@ -1,6 +1,8 @@
 (ns stylefy.examples.main
   (:require [reagent.core :as r]
             [dommy.core :as dommy]
+            [garden.units :as gu]
+            [garden.color :as gc]
             [stylefy.examples.styles :as styles]
             [stylefy.examples.table :as table]
             [stylefy.examples.hoverbox :as hoverbox]
@@ -10,7 +12,8 @@
             [cljs.core.async :refer [<! timeout]]
             [stylefy.core :as stylefy :refer [use-style sub-style use-sub-style]]
             [stylefy.cache :as stylefy-cache])
-  (:require-macros [cljs.core.async.macros :refer [go]]))
+  (:require-macros [cljs.core.async.macros :refer [go]]
+                   [garden.def :refer [defcssfn]]))
 
 (defn- button-style-by-type [type]
   (case type
@@ -203,6 +206,16 @@
                                              {:on-click #(swap! active-state not)})
        "Click me!"])))
 
+(defn- garden-units []
+  [:div
+   [:h1 "Garden units"]
+   [:p "Garden units should work without problems. Examples:"]
+   [:p (use-style {:margin-top (gu/px 50)})
+    "Margin top defined with Garden px unit (50px)"]
+   [:p (use-style {:margin-top (gu/rem 3)
+                   :color (gc/rgb 255 0 0)})
+    "Margin top defined with Garden rem unit (3rem) and color with rgb"]])
+
 (defn- simple-examples []
   [:div (use-style (merge styles/root
                           styles/general-styles))
@@ -271,6 +284,8 @@
    [:h1 "Feature queries"]
    [:p "The following example is rendered using CSS Grid if supported by the browser. If not, it uses Flexbox fallback as the default style. stylefy also supports media queries inside feature queries!"]
    [grid/grid]
+
+   [garden-units]
 
    [:h1 "Caching"]
    [:p "stylefy supports style caching, which means that the generated CSS code is saved into the offline storage and retrieved from there when the page is reloaded. This way, styles once generated do not need to be generated again and the page loads faster. Caching can be turned on manually, and it also needs to be cleared manually."]
