@@ -3,7 +3,7 @@
   :dependencies [[org.clojure/clojure "1.8.0"]
                  [org.clojure/clojurescript "1.9.542"]
                  [prismatic/dommy "1.1.0"]
-                 [garden "1.3.2"]
+                 [garden "1.3.6"]
                  [reagent "0.6.0"]
                  [org.clojure/core.async "0.3.443"]
                  [com.andrewmcveigh/cljs-time "0.5.0"]
