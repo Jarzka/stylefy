@@ -3,8 +3,11 @@
             [stylefy.core :as stylefy]
             [stylefy.impl.styles :as styles]
             [garden.stylesheet :refer [at-media]]
+            [garden.units :as gu]
+            [garden.color :as gc]
             [stylefy.impl.conversion :as conversion]
-            [clojure.string :as str]))
+            [clojure.string :as str])
+  (:require-macros [garden.def :refer [defcssfn]]))
 
 (def simple-style {:padding "25px"
                    :background-color "#BBBBBB"
@@ -97,6 +100,30 @@
                                    :custom-selector "code"}
                                   {:pretty-print? false})
            "code{color:red}"))))
+
+(defcssfn url)
+
+(deftest garden-units
+  (let [simple-style-with-garden-px-unit {:margin-top (gu/px 50)}
+        style-with-rem-and-rgb {:margin-top (gu/rem 3)
+                                :color (gc/rgb 255 0 0)}
+        style-with-pc-rem-rgb-url {:padding "1rem"
+                                   :width (gu/pc 50)
+                                   :height (gu/rem 25)
+                                   :color (gc/rgb 255 255 255)
+                                   :background-image (url "images/background.jpg")}]
+    (is (= (conversion/style->css {:props simple-style-with-garden-px-unit
+                                   :hash (styles/hash-style simple-style-with-garden-px-unit)}
+                                  {:pretty-print? false})
+           "._stylefy_-903335928{margin-top:50px}"))
+    (is (= (conversion/style->css {:props style-with-rem-and-rgb
+                                   :hash (styles/hash-style style-with-rem-and-rgb)}
+                                  {:pretty-print? false})
+           "._stylefy_-982634073{margin-top:3rem;color:#ff0000}"))
+    (is (= (conversion/style->css {:props style-with-pc-rem-rgb-url
+                                   :hash (styles/hash-style style-with-pc-rem-rgb-url)}
+                                  {:pretty-print? false})
+           "._stylefy_1898032045{padding:1rem;width:50pc;height:25rem;color:#ffffff;background-image:url(images/background.jpg"))))
 
 (deftest manual-mode
   (testing "Simple manual mode map"
