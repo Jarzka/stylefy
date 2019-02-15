@@ -206,6 +206,8 @@
                                              {:on-click #(swap! active-state not)})
        "Click me!"])))
 
+(defcssfn url)
+
 (defn- garden-units []
   [:div
    [:h1 "Garden units"]
@@ -214,7 +216,13 @@
     "Margin top defined with Garden px unit (50px)"]
    [:p (use-style {:margin-top (gu/rem 3)
                    :color (gc/rgb 255 0 0)})
-    "Margin top defined with Garden rem unit (3rem) and color with rgb"]])
+    "Margin top defined with Garden rem unit (3rem) and color with rgb"]
+   [:div (use-style {:padding "1rem"
+                     :width (gu/pc 50)
+                     :height (gu/rem 25)
+                     :color (gc/rgb 255 255 255)
+                     :background-image (url "images/background.jpg")})
+    "With defined with pc unit, height with rem unit, color with rgb, background as a custom defcssfn function."]])
 
 (defn- simple-examples []
   [:div (use-style (merge styles/root
