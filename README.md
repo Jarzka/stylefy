@@ -421,9 +421,9 @@ Cache options support automatic cache clearing when a certain amount of time is 
                :cache-options {:expires (* 1 60 60 24 7)}}) ; Cache is cleared after 7 days
 ```
 
-## Units and colors
+## Garden units and colors
 
-You can use Garden's [Unit](https://github.com/noprompt/garden/wiki/Units-%26-Arithmetic) and [Color](https://github.com/noprompt/garden/wiki/Color) helpers with stylefy.
+You can use Garden's [Unit](https://github.com/noprompt/garden/wiki/Units-%26-Arithmetic) and [Color](https://github.com/noprompt/garden/wiki/Color) helpers with stylefy. You can also use Garden's `defcssfn` macro to create custom CSS functions (notice that `defcssfn` is a macro and needs `garden.core` dependency declaration). 
 
 ## Debugging and testing
 
