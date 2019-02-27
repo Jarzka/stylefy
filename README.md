@@ -23,7 +23,7 @@ stylefy is designed to be used in [SPA](https://en.wikipedia.org/wiki/Single-pag
 - Supports CSS pseudo-classes & pseudo-elements via modes
 - Vendor prefixes, define which vendor prefixes are used and which properties should be prefixed (locally or globally)
 - Media queries, define how your style looks on various screen sizes
-- Feature queries (CSS @supports query)
+- Feature queries, define how your style looks when certain CSS features are not supported by the browsers (uses CSS @supports query)
 - CSS keyframes & font-faces
 - Style caching using local storage (can be turned off)
 - Multi-instance support (you can run multiple apps using stylefy on the same web page)
