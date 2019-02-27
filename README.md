@@ -17,15 +17,14 @@ stylefy is designed to be used in [SPA](https://en.wikipedia.org/wiki/Single-pag
 
 # Features
 
-- Define styles as Clojure data, for any UI element
+- Define styles as Clojure data, for any UI component or HTML tag
 - Sub-styles help you to define a style for your component and all the elements inside of it in a single map
 - Use any 3rd party CSS code (such as Bootstrap) along with stylefy
 - Supports CSS pseudo-classes & pseudo-elements via modes
 - Vendor prefixes, define which vendor prefixes are used and which properties should be prefixed (locally or globally)
 - Media queries, define how your style looks on various screen sizes
-- Keyframes (for CSS animations)
-- Font-face (for 3rd party web fonts)
 - Feature queries (CSS @supports query)
+- CSS keyframes & font-faces
 - Style caching using local storage (can be turned off)
 - Multi-instance support (you can run multiple apps using stylefy on the same web page)
 - Manual mode for styling 3rd party components and resolving corner cases in which complex CSS selectors are needed
