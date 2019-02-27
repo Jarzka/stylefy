@@ -20,11 +20,10 @@ stylefy is designed to be used in [SPA](https://en.wikipedia.org/wiki/Single-pag
 - Define styles as Clojure data, for any UI component or HTML tag
 - Sub-styles help you to define a style for your component and all the elements inside of it in a single map
 - Use any 3rd party CSS code (such as Bootstrap) along with stylefy
-- Supports CSS pseudo-classes & pseudo-elements via modes
 - Vendor prefixes, define which vendor prefixes are used and which properties should be prefixed (locally or globally)
 - Media queries, define how your style looks on various screen sizes
 - Feature queries, define how your style looks when certain CSS features are not supported by the browsers (uses CSS @supports query)
-- CSS keyframes & font-faces
+- CSS pseudo-classes, pseudo-elements, keyframes & font-faces
 - Style caching using local storage (can be turned off)
 - Multi-instance support (you can run multiple apps using stylefy on the same web page)
 - Manual mode for styling 3rd party components and resolving corner cases in which complex CSS selectors are needed
@@ -147,7 +146,8 @@ Calling **use-style** asks stylefy to save the style (if it has not been saved a
 
 You might ask why does **use-style** work asynchronously? Consider a case when one or more components are going to be rendered and all of them are calling **use-style** very many times with different style maps. In this case, updating the DOM on every single call would slow the rendering process down. To keep the rendering fast, the idea is to collect as many style maps as possible during a single render event, convert all of them to CSS and add into the DOM at once.
 
-If the style contains some specific definitions that cannot be present as inline style (some specific modes or media queries), the component is going to be hidden for a few milliseconds with CSS **visibility** set to **hidden**, until the converted CSS style is added into the DOM. In most cases, this should not be a problem, but if needed, styles can also be added into the DOM synchronously (immediately) by calling **prepare-styles**. It is recommended to call this function during the *:component-will-mount* lifecycle method. It makes sure the given styles are completely ready to be used when the component needs it.
+If the style contains some specific definitions that cannot be present as inline style (some specific 
+or media queries), the component is going to be hidden for a few milliseconds with CSS **visibility** set to **hidden**, until the converted CSS style is added into the DOM. In most cases, this should not be a problem, but if needed, styles can also be added into the DOM synchronously (immediately) by calling **prepare-styles**. It is recommended to call this function during the *:component-will-mount* lifecycle method. It makes sure the given styles are completely ready to be used when the component needs it.
 
 ```clojure
 (r/create-class
@@ -160,7 +160,7 @@ If the style contains some specific definitions that cannot be present as inline
 
 It's good to keep in mind that most of the time **prepare-styles** is not needed, but calling **use-style** is enough. Also, when caching is used, the style will be ready after its CSS has been created for the first time.
 
-## Modes
+## Modes (pseudo-classes & pseudo-elements)
 
 Define how your style looks in different modes, such as when mouse is on top of an element using the style:
 
