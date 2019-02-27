@@ -22,8 +22,8 @@ stylefy is designed to be used in [SPA](https://en.wikipedia.org/wiki/Single-pag
 - Use any 3rd party CSS code (such as Bootstrap) along with stylefy
 - Vendor prefixes, define which vendor prefixes are used and which properties should be prefixed (locally or globally)
 - Media queries, define how your style looks on various screen sizes
-- Feature queries, define how your style looks when certain CSS features are not supported by the browsers (uses CSS @supports query)
-- CSS pseudo-classes, pseudo-elements, keyframes & font-faces
+- Feature queries, define how your style looks when certain CSS features are not supported by the browser (uses CSS @supports query)
+- CSS pseudo-classes, pseudo-elements, keyframes & font-faces are supported
 - Style caching using local storage (can be turned off)
 - Multi-instance support (you can run multiple apps using stylefy on the same web page)
 - Manual mode for styling 3rd party components and resolving corner cases in which complex CSS selectors are needed
@@ -55,7 +55,7 @@ Yup, for example:
 Add the following line to your Leiningen project:
 
 ```clj
-[stylefy "1.11.1"]
+[stylefy "1.12.0"]
 ```
 
 # Usage
