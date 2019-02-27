@@ -82,7 +82,7 @@
 
 (defn check-stylefy-initialisation []
   (when-not @stylefy-initialised?
-    (.warn js/console (str "stylefy has not been initialised correctly. Call stylefy/init once when your application starts."))))
+    (.warn js/console (str "use-style called before stylefy was initialised!"))))
 
 (defn init-multi-instance [{:keys [multi-instance] :as options}]
   (let [base-node (:base-node multi-instance)
