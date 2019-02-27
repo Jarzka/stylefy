@@ -52,17 +52,13 @@ Yup, for example:
 
 # Installation
 
-Add the following line to your Leiningen project:
+Add Leiningen project dependency:
 
 ```clj
 [stylefy "1.12.0"]
 ```
 
 # Usage
-
-```clj
-(:require [stylefy.core :as stylefy])
-```
 
 ## Init
 
@@ -73,6 +69,12 @@ The first tag is going to contain CSS definitions that are not going to change (
 ```html
 <style id="_stylefy-constant-styles_"></style>
 <style id="_stylefy-styles_"></style>
+```
+
+Require stylefy:
+
+```clj
+(:require [stylefy.core :as stylefy])
 ```
 
 Then, call **stylefy/init** once when your application starts:
