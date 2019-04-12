@@ -127,7 +127,7 @@ Combine or parametrise styles however you like:
 
 ```clojure
 (defn- button-with-custom-style [text style]
-   [:div (use-style style {:on-click #(.log js/console "Click!"))
+   [:button (use-style style {:on-click #(.log js/console "Click!"))
      text])
      
 (defn- button-wrapper []
