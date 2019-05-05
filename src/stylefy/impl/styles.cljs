@@ -166,15 +166,19 @@
       resolved-sub-style
       (.warn js/console (str "Sub-style " (pr-str sub-styles) " not found in style: " (pr-str style))))))
 
-(defn prepare-styles [styles]
-  (let [styles (remove nil? styles)]
+(defn prepare-styles
+  ([styles]
+   (prepare-styles styles {:update-dom-after-done? true}))
+  ([styles {:keys [update-dom-after-done?] :as options}]
+   (let [styles (remove nil? styles)]
 
-    (doseq [style styles]
-      (use-style! style {})
-      (when-let [sub-styles (vals (:stylefy.core/sub-styles style))]
-        (prepare-styles sub-styles))))
+     (doseq [style styles]
+       (use-style! style {})
+       (when-let [sub-styles (vals (:stylefy.core/sub-styles style))]
+         (prepare-styles sub-styles {:update-dom-after-done? false}))))
 
-  (dom/update-dom))
+   (when update-dom-after-done?
+     (dom/update-dom))))
 
 (defn init-global-vendor-prefixes [options]
   (let [global-vendor-prefixes-options (:global-vendor-prefixes options)]
