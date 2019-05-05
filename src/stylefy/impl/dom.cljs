@@ -71,11 +71,15 @@
           (mark-all-styles-added-in-dom!))
       (.error js/console "stylefy is unable to find the required <style> tags!"))))
 
-(defn- asynchronously-update-dom
-  "Updates style tag if needed."
+(defn- update-dom-if-requested
+  []
+  (when @dom-update-requested?
+    (update-dom)))
+
+(defn- request-asynchronous-dom-update
   []
   (when @stylefy-initialised?
-    (when-not @dom-update-requested? ; Important. Only one update per tick. Otherwise, this is going to be very slow.
+    (when-not @dom-update-requested?
       (reset! dom-update-requested? true)
       (go
         (update-dom)))))
@@ -114,7 +118,7 @@
         style-to-be-saved {::css style-css}]
     (swap! styles-as-css assoc hash style-to-be-saved)
     (swap! styles-in-dom assoc hash (r/atom false)) ; Note: r/atom, to be usable in component render methods.
-    (asynchronously-update-dom)))
+    (request-asynchronous-dom-update)))
 
 (defn style-in-dom? [style-hash]
   ;; Note: This function does Reagent atom dereference.
@@ -125,13 +129,13 @@
 (defn add-keyframes [identifier & frames]
   (let [garden-definition (apply at-keyframes identifier frames)]
     (swap! keyframes-in-use conj {::css (css garden-definition)})
-    (asynchronously-update-dom)
+    (request-asynchronous-dom-update)
     garden-definition))
 
 (defn add-font-face [properties]
   (let [garden-definition (at-font-face properties)]
     (swap! font-faces-in-use conj {::css (css garden-definition)})
-    (asynchronously-update-dom)
+    (request-asynchronous-dom-update)
     garden-definition))
 
 (defn add-tag [name properties]
@@ -139,7 +143,7 @@
     (swap! custom-tags-in-use conj {::css (conversion/style->css
                                             {:props (::tag-properties custom-tag-definition)
                                              :custom-selector (::tag-name custom-tag-definition)})})
-    (asynchronously-update-dom)
+    (request-asynchronous-dom-update)
     custom-tag-definition))
 
 (defn add-class [name properties]
@@ -147,5 +151,5 @@
     (swap! custom-classes-in-use conj {::css (conversion/style->css
                                                {:props (::class-properties custom-class-definition)
                                                 :custom-selector (conversion/class-selector (::class-name custom-class-definition))})})
-    (asynchronously-update-dom)
+    (request-asynchronous-dom-update)
     custom-class-definition))

@@ -168,17 +168,17 @@
 
 (defn prepare-styles
   ([styles]
-   (prepare-styles styles {:update-dom-after-done? true}))
-  ([styles {:keys [update-dom-after-done?] :as options}]
+   (prepare-styles styles {:request-dom-after-done? true}))
+  ([styles {:keys [request-dom-after-done?] :as options}]
    (let [styles (remove nil? styles)]
 
      (doseq [style styles]
        (use-style! style {})
        (when-let [sub-styles (vals (:stylefy.core/sub-styles style))]
-         (prepare-styles sub-styles {:update-dom-after-done? false}))))
+         (prepare-styles sub-styles {:request-dom-after-done? false}))))
 
-   (when update-dom-after-done?
-     (dom/update-dom))))
+   (when request-dom-after-done?
+     (dom/update-dom-if-requested))))
 
 (defn init-global-vendor-prefixes [options]
   (let [global-vendor-prefixes-options (:global-vendor-prefixes options)]

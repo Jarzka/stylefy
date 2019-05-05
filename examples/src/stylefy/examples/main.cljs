@@ -327,5 +327,4 @@
                  :cache-options {:expires (* 1 60 60 24 7)}
                  :global-vendor-prefixes {::stylefy/vendors ["webkit" "moz" "o"]
                                           ::stylefy/auto-prefix #{:border-radius}}})
-  (custom-tags/custom-tag-styles)
   (r/render main (.getElementById js/document "app")))

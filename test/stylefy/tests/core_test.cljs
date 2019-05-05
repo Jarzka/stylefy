@@ -305,7 +305,7 @@
 
 (deftest dom-update-is-requested
   (let [dom-update-requested? (atom false)]
-    (with-redefs [dom/asynchronously-update-dom #(reset! dom-update-requested? true)]
+    (with-redefs [dom/request-asynchronous-dom-update #(reset! dom-update-requested? true)]
       (is (nil? (stylefy/init)))
       (stylefy/use-style {:color "red"})
       (is (true? @dom-update-requested?)))))
