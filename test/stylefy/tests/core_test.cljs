@@ -368,3 +368,29 @@
       (is false "Expected an error to be thrown.")
       (catch js/Error e
         (is true "Error was thrown as expected")))))
+
+(deftest prepare-style
+  (let [style {:background-color :red}]
+    (testing "Return value"
+      (is (= (stylefy/prepare-style style) style)))
+
+    (testing "Good argument"
+      (try
+        (is (= (stylefy/prepare-style style) style))
+        (is true "Error was not thrown as expected")
+        (catch js/Error e
+          (is false "Error was thrown"))))
+
+    (testing "Good nil argument"
+      (try
+        (is (nil? (stylefy/prepare-style nil)))
+        (is true "Error was not thrown as expected")
+        (catch js/Error e
+          (is false "Error was thrown"))))
+
+    (testing "Bad argument: vector of styles"
+      (try
+        (stylefy/prepare-style [style style])
+        (is false "Expected an error to be thrown.")
+        (catch js/Error e
+          (is true "Error was thrown as expected"))))))
