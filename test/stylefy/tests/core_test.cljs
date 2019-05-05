@@ -306,7 +306,7 @@
 (deftest dom-update-is-requested
   (let [dom-update-requested? (atom false)]
     (with-redefs [dom/asynchronously-update-dom #(reset! dom-update-requested? true)]
-      (stylefy/init)
+      (is (nil? (stylefy/init)))
       (stylefy/use-style {:color "red"})
       (is (true? @dom-update-requested?)))))
 
@@ -345,6 +345,9 @@
          [{:stylefy.impl.dom/css ".background-transition {\n  transition: background-color 1s;;\n}"}])))
 
 (deftest prepare-styles
+  (testing "Return value"
+    (is (nil? (stylefy/prepare-styles [{:foo :bar} nil {:foo :bar}]))))
+
   (testing "Good argument"
     (try
       (stylefy/prepare-styles [{:foo :bar} nil {:foo :bar}])

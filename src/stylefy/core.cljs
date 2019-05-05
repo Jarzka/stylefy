@@ -190,10 +190,7 @@
    if it cannot be present as inline style (it contains some specific modes and media queries).
    In this purpose, it can be useful to ask stylefy to prepare
    certain styles before they are used in a component. This way, components using these styles
-   can start using CSS classes and media queries immediately.
-
-   This function should be called when a component is going to be created
-   (in :component-will-mount lifecycle method)."
+   can start using CSS classes and media queries immediately."
   [styles]
   (assert (seqable? styles) (str "Styles should be seqable, got: " (pr-str styles)))
   (assert (every? map? (remove nil? styles))
