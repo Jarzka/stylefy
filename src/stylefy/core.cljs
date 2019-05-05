@@ -203,7 +203,7 @@
   (impl-styles/prepare-styles styles))
 
 (defn prepare-style
-  "Same as prepare-styles, but takes only one style map as an argument, prepares it
+  "Same as prepare-styles, but takes only one style map as a parameter, prepares it
    and returns it. Can be used easily along with use-style: (use-style (prepare-style style)).
 
    Since prepare-style works synchronously, it can become slow if called multiple times
