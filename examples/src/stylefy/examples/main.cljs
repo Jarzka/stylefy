@@ -37,23 +37,29 @@
 (defn stateful-component []
   (let [switch #(if (= :on %) :off :on)
         state (r/atom :on)]
-    (r/create-class
-      ;; Make sure all state styles are prepared to be used.
-      ;; This is not mandatory, stylefy prepares styles on-demand when use-style
-      ;; is called and returns the given style as inline style until the style is
-      ;; converted to CSS class and added to DOM.
-      ;; However, the state styles contain media queries, which cannot be
-      ;; present as inline style, so stylefy would hide the component for a small amount of time
-      ;; until the styles are added into DOM. We want that all state styles are converted and
-      ;; present in the DOM when this component is created, so we prepare the styles first.
-      {:component-will-mount #(stylefy/prepare-styles (vals styles/stateful-component))
+    ;; Make sure the state style is prepared before we use it.
+    ;; Normally, when use-style is called, it returns the given style as an inline style
+    ;; until the style is converted to CSS and added into the DOM.
+    ;; However, the state styles contain media queries, which cannot be
+    ;; present as inline style, so stylefy would hide the component for a small amount of time
+    ;; until the styles are added into DOM, which creates a bad flickering effect.
+    ;; To prevent this from happening, we prepare the state style before we use it.
+    (fn []
+      [:div (use-style (stylefy/prepare-style (@state styles/stateful-component)))
+       (if (= @state :on)
+         [:p "The component's current state is ON"]
+         [:p "The component's current state is OFF"])
+       [button "Switch" #(reset! state (switch @state)) :primary]])
+
+    ;; Alternative version using prepare-styles:
+    #_{:component-will-mount #(stylefy/prepare-styles (vals styles/stateful-component))
        :render
        (fn []
          [:div (use-style (@state styles/stateful-component))
           (if (= @state :on)
             [:p "The component's current state is ON"]
             [:p "The component's current state is OFF"])
-          [button "Switch" #(reset! state (switch @state)) :primary]])})))
+          [button "Switch" #(reset! state (switch @state)) :primary]])}))
 
 (defn- stress-test-item [index]
   (fn [style]
