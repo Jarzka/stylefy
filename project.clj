@@ -6,7 +6,6 @@
                  [prismatic/dommy "1.1.0"]
                  [reagent "0.7.0"]
                  [garden "1.3.6"]
-                 [javax.xml.bind/jaxb-api "2.4.0-b180830.0359"]
                  [org.clojure/core.async "0.3.443"]]
   :plugins [[lein-cljsbuild "1.1.7"]
             [lein-doo "0.1.7"]
