@@ -52,14 +52,15 @@
        [button "Switch" #(reset! state (switch @state)) :primary]])
 
     ;; Alternative version using prepare-styles:
-    #_{:component-will-mount #(stylefy/prepare-styles (vals styles/stateful-component))
-       :render
-       (fn []
-         [:div (use-style (@state styles/stateful-component))
-          (if (= @state :on)
-            [:p "The component's current state is ON"]
-            [:p "The component's current state is OFF"])
-          [button "Switch" #(reset! state (switch @state)) :primary]])}))
+    #_(r/create-class
+        {:component-will-mount #(stylefy/prepare-styles (vals styles/stateful-component))
+         :render
+         (fn []
+           [:div (use-style (@state styles/stateful-component))
+            (if (= @state :on)
+              [:p "The component's current state is ON"]
+              [:p "The component's current state is OFF"])
+            [button "PRÖÖT PRÖÖT" #(reset! state (switch @state)) :primary]])})))
 
 (defn- stress-test-item [index]
   (fn [style]
