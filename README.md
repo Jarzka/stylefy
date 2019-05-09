@@ -55,7 +55,7 @@ Yup, for example:
 Add Leiningen project dependency:
 
 ```clj
-[stylefy "1.12.0"]
+[stylefy "1.13.0"]
 ```
 
 # Usage

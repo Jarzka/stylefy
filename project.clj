@@ -9,7 +9,7 @@
                  [org.clojure/core.async "0.3.443"]]
   :plugins [[lein-cljsbuild "1.1.7"]
             [lein-doo "0.1.7"]
-            [lein-codox "0.10.3"]]
+            [lein-codox "0.10.6"]]
   :profiles {:dev {:dependencies [[clj-chrome-devtools "20180310"]]}}
   :codox {:language :clojurescript
           :output-path "doc"
