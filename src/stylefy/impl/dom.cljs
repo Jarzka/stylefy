@@ -31,24 +31,24 @@
     (get @styles-as-css style-hash)))
 
 (defn- update-style-tags!
-  [node-stylefy node-constant]
+  [node-stylefy node-stylefy-constant]
   (let [styles-in-css (map (comp ::css style-by-hash) (keys @styles-as-css))
         keyframes-in-css (map ::css @keyframes-in-use)
         font-faces-in-use (map ::css @font-faces-in-use)
         custom-tags-in-use (map ::css @custom-tags-in-use)
         custom-classes-in-use (map ::css @custom-classes-in-use)
-        new-node-constant-text (apply str (concat font-faces-in-use
+        new-style-constant-css (apply str (concat font-faces-in-use
                                                   keyframes-in-css
                                                   custom-tags-in-use
                                                   custom-classes-in-use))
-        new-node-style (apply str styles-in-css)]
-    ; Do not update node contents if there are no new styles to be added.
+        new-style-css (apply str styles-in-css)]
+    ; Do not update this node contents if there are no new styles to be added.
     ; This is important, because even if setting the same contents should have no effect,
     ; it can cause font flickering in some browsers.
-    (when-not (= (dommy/text node-constant) new-node-constant-text)
-      (dommy/set-text! node-constant new-node-constant-text))
-    (when-not (= (dommy/text node-stylefy) new-node-style)
-      (dommy/set-text! node-stylefy new-node-style))))
+    (when-not (= (dommy/text node-stylefy-constant) new-style-constant-css)
+      (dommy/set-text! node-stylefy-constant new-style-constant-css))
+
+    (dommy/set-text! node-stylefy new-style-css)))
 
 (defn- mark-all-styles-added-in-dom! []
   (doseq [style-hash (keys @styles-in-dom)]
@@ -63,9 +63,9 @@
 (defn update-dom
   []
   (let [node-stylefy (get-stylefy-node stylefy-node-id @stylefy-base-node @stylefy-instance-id)
-        node-constant (get-stylefy-node stylefy-constant-node-id @stylefy-base-node @stylefy-instance-id)]
-    (if (and node-stylefy node-constant)
-      (do (update-style-tags! node-stylefy node-constant)
+        node-stylefy-constant (get-stylefy-node stylefy-constant-node-id @stylefy-base-node @stylefy-instance-id)]
+    (if (and node-stylefy node-stylefy-constant)
+      (do (update-style-tags! node-stylefy node-stylefy-constant)
           (reset! dom-update-requested? false)
 
           (try
