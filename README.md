@@ -43,12 +43,7 @@ TLDR; stylefy it's like using inline CSS, but with full support for all CSS feat
 
 ## Any real projects using stylefy?
 
-Yup, for example:
-- [Finnish Transport Agency: National Access Point and digitalization tools](https://github.com/finnishtransportagency/mmtis-national-access-point)
-- [Velho Design System](https://github.com/velho-allianssi/velho-ds)
-- [Solita Rooms](https://github.com/solita/solita-rooms)
-- [My personal website](https://github.com/Jarzka/Voimala.org)
-- And [various other projects](https://github.com/search?q=_stylefy-constant-styles_&type=Code)
+Yup, for example: [Finnish Transport Agency: National Access Point and digitalization tools](https://github.com/finnishtransportagency/mmtis-national-access-point), [Velho Design System](https://github.com/velho-allianssi/velho-ds), [Solita Rooms](https://github.com/solita/solita-rooms), [My personal website](https://github.com/Jarzka/Voimala.org), and [various other projects](https://github.com/search?q=_stylefy-constant-styles_&type=Code)
 
 # Installation
 
