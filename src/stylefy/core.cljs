@@ -185,17 +185,32 @@
   "Converts the given styles and their sub-styles to CSS and adds them into the DOM
    synchronously (immediately).
 
-   Normally, when you call use-style, the given style is converted to CSS and will
-   be added into the DOM asynchronously. Until then, the style is returned as inline style, except
-   if it cannot be present as inline style (it contains some specific modes and media queries).
-   In this purpose, it can be useful to ask stylefy to prepare
-   certain styles before they are used in a component. This way, components using these styles
-   can start using CSS classes and media queries immediately.
+   When you call use-style, the given style is converted to CSS and will
+   be added into the DOM asynchronously. Until then, the style is returned as inline style,
+   except if it cannot be present as inline style, in which case the style is going to be
+   hidden for a (very) short period of time. In most cases, this should not be a problem,
+   but if needed, styles can also be added into the DOM synchronously (immediately)
+   by calling this function. It is recommended to call this function during the
+   :component-will-mount lifecycle method. It makes sure the given styles are
+   completely ready to be used when the component needs them.
 
-   This function should be called when a component is going to be created
-   (in :component-will-mount lifecycle method)."
+   It's good to keep in mind that most of the time this function is not needed,
+   but calling use-style is enough."
   [styles]
   (assert (seqable? styles) (str "Styles should be seqable, got: " (pr-str styles)))
   (assert (every? map? (remove nil? styles))
           (str "Every style should be a map or nil, got: " (pr-str styles)))
   (impl-styles/prepare-styles styles))
+
+(defn prepare-style
+  "Same as prepare-styles, but takes only one style map as a parameter, prepares it
+   and returns it. Can be used easily along with use-style: (use-style (prepare-style style)).
+
+   Since prepare-style works synchronously, it can become slow if called multiple times
+   during a single render. If this is the case, it is recommended to use prepare-styles
+   instead to prepare as many styles as possible at once."
+  [style]
+  (assert (or (map? style) (nil? style)) (str "Style should be a map or nil, got: " (pr-str style)))
+  (when style
+    (impl-styles/prepare-styles [style]))
+  style)

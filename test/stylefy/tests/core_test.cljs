@@ -305,8 +305,8 @@
 
 (deftest dom-update-is-requested
   (let [dom-update-requested? (atom false)]
-    (with-redefs [dom/asynchronously-update-dom #(reset! dom-update-requested? true)]
-      (stylefy/init)
+    (with-redefs [dom/request-asynchronous-dom-update #(reset! dom-update-requested? true)]
+      (is (nil? (stylefy/init)))
       (stylefy/use-style {:color "red"})
       (is (true? @dom-update-requested?)))))
 
@@ -345,6 +345,9 @@
          [{:stylefy.impl.dom/css ".background-transition {\n  transition: background-color 1s;;\n}"}])))
 
 (deftest prepare-styles
+  (testing "Return value"
+    (is (nil? (stylefy/prepare-styles [{:foo :bar} nil {:foo :bar}]))))
+
   (testing "Good argument"
     (try
       (stylefy/prepare-styles [{:foo :bar} nil {:foo :bar}])
@@ -365,3 +368,29 @@
       (is false "Expected an error to be thrown.")
       (catch js/Error e
         (is true "Error was thrown as expected")))))
+
+(deftest prepare-style
+  (let [style {:background-color :red}]
+    (testing "Return value"
+      (is (= (stylefy/prepare-style style) style)))
+
+    (testing "Good argument"
+      (try
+        (is (= (stylefy/prepare-style style) style))
+        (is true "Error was not thrown as expected")
+        (catch js/Error e
+          (is false "Error was thrown"))))
+
+    (testing "Good nil argument"
+      (try
+        (is (nil? (stylefy/prepare-style nil)))
+        (is true "Error was not thrown as expected")
+        (catch js/Error e
+          (is false "Error was thrown"))))
+
+    (testing "Bad argument: vector of styles"
+      (try
+        (stylefy/prepare-style [style style])
+        (is false "Expected an error to be thrown.")
+        (catch js/Error e
+          (is true "Error was thrown as expected"))))))

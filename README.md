@@ -148,8 +148,13 @@ Calling **use-style** asks stylefy to save the style (if it has not been saved a
 
 You might ask why does **use-style** work asynchronously? Consider a case when one or more components are going to be rendered and all of them are calling **use-style** very many times with different style maps. In this case, updating the DOM on every single call would slow the rendering process down. To keep the rendering fast, the idea is to collect as many style maps as possible during a single render event, convert all of them to CSS and add into the DOM at once.
 
-If the style contains some specific definitions that cannot be present as inline style (some specific 
-or media queries), the component is going to be hidden for a few milliseconds with CSS **visibility** set to **hidden**, until the converted CSS style is added into the DOM. In most cases, this should not be a problem, but if needed, styles can also be added into the DOM synchronously (immediately) by calling **prepare-styles**. It is recommended to call this function during the *:component-will-mount* lifecycle method. It makes sure the given styles are completely ready to be used when the component needs them.
+If the style contains some specific definitions that cannot be present as inline style (some specific or media queries), the HTML element using the style is going to be hidden for a few milliseconds with CSS **visibility** set to **hidden**, until the converted CSS style is added into the DOM. In most cases, this should not be a problem, but if needed, the style can be added into the DOM synchronously by calling **prepare-style**:
+
+```clojure
+[:div (use-style (prepare-style style))]
+```
+
+Because **prepare-style** causes immediate synchronous DOM update, it is not recommended to overuse it, as it can slow the rendering process. If a component needs to prepare multiple styles, it is recommend to call **prepare-styles** during the **component-will-mount** lifecycle method:
 
 ```clojure
 (r/create-class
@@ -160,7 +165,7 @@ or media queries), the component is going to be hidden for a few milliseconds wi
                [:div (use-style style3)]])})
 ```
 
-It's good to keep in mind that most of the time **prepare-styles** is not needed, but calling **use-style** is enough. Also, when caching is used, the style will be ready after its CSS has been created for the first time.
+It's good to keep in mind that most of the time either **prepare-style** or **prepare-styles** is not needed, but calling **use-style** is enough. Also, when caching is used, the style will be ready after its CSS has been created for the first time.
 
 ## Modes (pseudo-classes & pseudo-elements)
 

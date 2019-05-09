@@ -2,18 +2,12 @@
   (:require [reagent.core :as r]
             [stylefy.core :as stylefy]))
 
-(def code-style
-  {:background-color :lightyellow
-   :padding          :5px
-   :border           "1px solid black"})
+(stylefy/tag "code" {:background-color :lightyellow
+                     :padding          :5px
+                     :border           "1px solid black"})
 
-(def ul-style
-  {:list-style-type :upper-roman
-   :margin-top      :10px})
-
-(defn custom-tag-styles []
-  (stylefy/tag "code" code-style)
-  (stylefy/tag "ul" ul-style))
+(stylefy/tag "ul" {:list-style-type :upper-roman
+                   :margin-top      :10px})
 
 (defn custom-tags []
   (fn []

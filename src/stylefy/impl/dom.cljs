@@ -31,17 +31,24 @@
     (get @styles-as-css style-hash)))
 
 (defn- update-style-tags!
-  [node node-constant]
+  [node-stylefy node-stylefy-constant]
   (let [styles-in-css (map (comp ::css style-by-hash) (keys @styles-as-css))
         keyframes-in-css (map ::css @keyframes-in-use)
         font-faces-in-use (map ::css @font-faces-in-use)
         custom-tags-in-use (map ::css @custom-tags-in-use)
-        custom-classes-in-use (map ::css @custom-classes-in-use)]
-    (dommy/set-text! node-constant (apply str (concat font-faces-in-use
-                                                      keyframes-in-css
-                                                      custom-tags-in-use
-                                                      custom-classes-in-use)))
-    (dommy/set-text! node (apply str styles-in-css))))
+        custom-classes-in-use (map ::css @custom-classes-in-use)
+        new-style-constant-css (apply str (concat font-faces-in-use
+                                                  keyframes-in-css
+                                                  custom-tags-in-use
+                                                  custom-classes-in-use))
+        new-style-css (apply str styles-in-css)]
+    ; Do not update this node contents if there are no new styles to be added.
+    ; This is important, because even if setting the same contents should have no effect,
+    ; it can cause font flickering in some browsers.
+    (when-not (= (dommy/text node-stylefy-constant) new-style-constant-css)
+      (dommy/set-text! node-stylefy-constant new-style-constant-css))
+
+    (dommy/set-text! node-stylefy new-style-css)))
 
 (defn- mark-all-styles-added-in-dom! []
   (doseq [style-hash (keys @styles-in-dom)]
@@ -55,10 +62,10 @@
 
 (defn update-dom
   []
-  (let [node (get-stylefy-node stylefy-node-id @stylefy-base-node @stylefy-instance-id)
-        node-constant (get-stylefy-node stylefy-constant-node-id @stylefy-base-node @stylefy-instance-id)]
-    (if (and node node-constant)
-      (do (update-style-tags! node node-constant)
+  (let [node-stylefy (get-stylefy-node stylefy-node-id @stylefy-base-node @stylefy-instance-id)
+        node-stylefy-constant (get-stylefy-node stylefy-constant-node-id @stylefy-base-node @stylefy-instance-id)]
+    (if (and node-stylefy node-stylefy-constant)
+      (do (update-style-tags! node-stylefy node-stylefy-constant)
           (reset! dom-update-requested? false)
 
           (try
@@ -71,11 +78,15 @@
           (mark-all-styles-added-in-dom!))
       (.error js/console "stylefy is unable to find the required <style> tags!"))))
 
-(defn- asynchronously-update-dom
-  "Updates style tag if needed."
+(defn- update-dom-if-requested
+  []
+  (when @dom-update-requested?
+    (update-dom)))
+
+(defn- request-asynchronous-dom-update
   []
   (when @stylefy-initialised?
-    (when-not @dom-update-requested? ; Important. Only one update per tick. Otherwise, this is going to be very slow.
+    (when-not @dom-update-requested?
       (reset! dom-update-requested? true)
       (go
         (update-dom)))))
@@ -114,7 +125,7 @@
         style-to-be-saved {::css style-css}]
     (swap! styles-as-css assoc hash style-to-be-saved)
     (swap! styles-in-dom assoc hash (r/atom false)) ; Note: r/atom, to be usable in component render methods.
-    (asynchronously-update-dom)))
+    (request-asynchronous-dom-update)))
 
 (defn style-in-dom? [style-hash]
   ;; Note: This function does Reagent atom dereference.
@@ -125,13 +136,13 @@
 (defn add-keyframes [identifier & frames]
   (let [garden-definition (apply at-keyframes identifier frames)]
     (swap! keyframes-in-use conj {::css (css garden-definition)})
-    (asynchronously-update-dom)
+    (request-asynchronous-dom-update)
     garden-definition))
 
 (defn add-font-face [properties]
   (let [garden-definition (at-font-face properties)]
     (swap! font-faces-in-use conj {::css (css garden-definition)})
-    (asynchronously-update-dom)
+    (request-asynchronous-dom-update)
     garden-definition))
 
 (defn add-tag [name properties]
@@ -139,7 +150,7 @@
     (swap! custom-tags-in-use conj {::css (conversion/style->css
                                             {:props (::tag-properties custom-tag-definition)
                                              :custom-selector (::tag-name custom-tag-definition)})})
-    (asynchronously-update-dom)
+    (request-asynchronous-dom-update)
     custom-tag-definition))
 
 (defn add-class [name properties]
@@ -147,5 +158,5 @@
     (swap! custom-classes-in-use conj {::css (conversion/style->css
                                                {:props (::class-properties custom-class-definition)
                                                 :custom-selector (conversion/class-selector (::class-name custom-class-definition))})})
-    (asynchronously-update-dom)
+    (request-asynchronous-dom-update)
     custom-class-definition))
