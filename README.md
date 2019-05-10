@@ -28,6 +28,7 @@ stylefy is designed to be used in [SPA](https://en.wikipedia.org/wiki/Single-pag
 - Multi-instance support (you can run multiple apps using stylefy on the same web page)
 - Manual mode for styling 3rd party components and resolving corner cases in which complex CSS selectors are needed
 - Small and simple core API
+- Easy to setup (add it as a dependency, add a few HTML tags and you are ready to go)
 - Automatic style reloading with [Figwheel](https://github.com/bhauman/lein-figwheel)
 - All features are tested to work with Chrome, Firefox, Edge & Internet Explorer 11
 
