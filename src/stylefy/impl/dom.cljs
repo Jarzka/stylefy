@@ -15,7 +15,7 @@
 (def stylefy-initialised? (atom false))
 (def styles-in-dom (atom {})) ;; style hash -> r/atom with boolean value
 (def styles-as-css (atom {})) ;; style hash -> map containing keys: ::css
-(def keyframes-in-use (atom [])) ;; Vector of maps containing keys: ::css
+(def keyframes-in-use (atom {})) ;; keyframe identifier -> css
 (def font-faces-in-use (atom [])) ;; Vector of maps containing keys: ::css
 (def custom-tags-in-use (atom [])) ;; Vector of maps containing keys: ::css
 (def custom-classes-in-use (atom [])) ;; Vector of maps containing keys: ::css
@@ -32,19 +32,19 @@
 
 (defn- update-style-tags!
   [node-stylefy node-stylefy-constant]
-  (let [styles-in-css (map (comp ::css style-by-hash) (keys @styles-as-css))
-        keyframes-in-css (map ::css @keyframes-in-use)
-        font-faces-in-use (map ::css @font-faces-in-use)
-        custom-tags-in-use (map ::css @custom-tags-in-use)
-        custom-classes-in-use (map ::css @custom-classes-in-use)
+  (let [styles-in-css          (map (comp ::css style-by-hash) (keys @styles-as-css))
+        keyframes-in-css       (values keyframes-in-use)
+        font-faces-in-use      (map ::css @font-faces-in-use)
+        custom-tags-in-use     (map ::css @custom-tags-in-use)
+        custom-classes-in-use  (map ::css @custom-classes-in-use)
         new-style-constant-css (apply str (concat font-faces-in-use
                                                   keyframes-in-css
                                                   custom-tags-in-use
                                                   custom-classes-in-use))
-        new-style-css (apply str styles-in-css)]
-    ; Do not update this node contents if there are no new styles to be added.
-    ; This is important, because even if setting the same contents should have no effect,
-    ; it can cause font flickering in some browsers.
+        new-style-css          (apply str styles-in-css)]
+    ;; Do not update this node contents if there are no new styles to be added.
+    ;; This is important, because even if setting the same contents should have no effect,
+    ;; it can cause font flickering in some browsers.
     (when-not (= (dommy/text node-stylefy-constant) new-style-constant-css)
       (dommy/set-text! node-stylefy-constant new-style-constant-css))
 
@@ -135,7 +135,7 @@
 
 (defn add-keyframes [identifier & frames]
   (let [garden-definition (apply at-keyframes identifier frames)]
-    (swap! keyframes-in-use conj {::css (css garden-definition)})
+    (swap! keyframes-in-use assoc identifier (css garden-definition))
     (request-asynchronous-dom-update)
     garden-definition))
 
