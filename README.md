@@ -144,7 +144,7 @@ Calling **use-style** asks stylefy to save the style (if it has not been saved a
 
 You might ask why does **use-style** work asynchronously? Consider a case when one or more components are going to be rendered and all of them are calling **use-style** very many times with different style maps. In this case, updating the DOM on every single call would slow the rendering process down. To keep the rendering fast, the idea is to collect as many style maps as possible during a single render event, convert all of them to CSS and add into the DOM at once.
 
-If the style contains some specific definitions that cannot be present as inline style (some specific or media queries), the HTML element using the style is going to be hidden for a few milliseconds with CSS **visibility** set to **hidden**, until the converted CSS style is added into the DOM. In most cases, this should not be a problem, but if needed, the style can be added into the DOM synchronously by calling **prepare-style**:
+If the style contains some specific definitions that cannot be present as inline style (some specific modes or media queries), the HTML element using the style is going to be hidden for a few milliseconds with CSS **visibility** set to **hidden**, until the converted CSS style is added into the DOM. In most cases, this should not be a problem, but if needed, the style can be added into the DOM synchronously by calling **prepare-style**:
 
 ```clojure
 [:div (use-style (prepare-style style))]
