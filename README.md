@@ -51,7 +51,7 @@ Yup, for example: [Finnish National Access Point](https://github.com/finnishtran
 Add Leiningen project dependency:
 
 ```clj
-[stylefy "1.13.0"]
+[stylefy "1.13.1"]
 ```
 
 # Usage
