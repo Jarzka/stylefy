@@ -327,6 +327,41 @@
                                   {:background-color "blue"}]))
          "@keyframes simple-animation{from{background-color:red}to{background-color:blue}}")))
 
+(deftest update-keyframes
+  (reset! stylefy.impl.dom/keyframes-in-use {})
+  (stylefy/keyframes "animation-a"
+                     [:from
+                      {:background-color "red"}]
+                     [:to
+                      {:background-color "blue"}])
+
+  (stylefy/keyframes "animation-a"
+                     [:from
+                      {:background-color "blue"}]
+                     [:to
+                      {:background-color "red"}])
+
+  (stylefy/keyframes "animation-b"
+                     [:from
+                      {:background-color "blue"}]
+                     [:to
+                      {:background-color "red"}])
+
+  (is (= (count (keys @stylefy.impl.dom/keyframes-in-use))
+         2))
+
+  (is (= @stylefy.impl.dom/keyframes-in-use
+         {"animation-a" (css (stylefy/keyframes "animation-a"
+                                                [:from
+                                                 {:background-color "blue"}]
+                                                [:to
+                                                 {:background-color "red"}]))
+          "animation-b" (css (stylefy/keyframes "animation-b"
+                                                [:from
+                                                 {:background-color "blue"}]
+                                                [:to
+                                                 {:background-color "red"}]))})))
+
 (deftest tag
   (reset! stylefy.impl.dom/custom-tags-in-use [])
   (is (= (stylefy/tag "code"
