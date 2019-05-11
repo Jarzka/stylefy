@@ -14,7 +14,10 @@
 
 (def stylefy-initialised? (atom false))
 (def styles-in-dom (atom {})) ;; style hash -> r/atom with boolean value
+(def ^:private dom-update-requested? (atom false))
+
 (def styles-as-css (atom {})) ;; style hash -> map containing keys: ::css
+
 (def keyframes-in-use (atom {})) ;; keyframe identifier -> css
 (def font-faces-in-use (atom [])) ;; Vector of maps containing keys: ::css
 (def custom-tags-in-use (atom [])) ;; Vector of maps containing keys: ::css
@@ -24,7 +27,6 @@
 (def ^:private stylefy-constant-node-id "#_stylefy-constant-styles_")
 (def ^:private stylefy-base-node (atom nil)) ;; Used when running multiple instances of stylefy on the same page
 (def stylefy-instance-id (atom nil)) ;; Used when running multiple instances of stylefy on the same page
-(def ^:private dom-update-requested? (atom false))
 
 (defn style-by-hash [style-hash]
   (when style-hash
