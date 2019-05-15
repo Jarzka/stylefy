@@ -35,7 +35,7 @@
 (defn- update-style-tags!
   [node-stylefy node-stylefy-constant]
   (let [styles-in-css          (map (comp ::css style-by-hash) (keys @styles-as-css))
-        keyframes-in-css       (values keyframes-in-use)
+        keyframes-in-css       (vals @keyframes-in-use)
         font-faces-in-use      (map ::css @font-faces-in-use)
         custom-tags-in-use     (map ::css @custom-tags-in-use)
         custom-classes-in-use  (map ::css @custom-classes-in-use)
