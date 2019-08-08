@@ -25,7 +25,7 @@ stylefy is designed to be used in [SPA](https://en.wikipedia.org/wiki/Single-pag
 - Feature queries, define how your style looks when certain CSS features are not supported by the browser (uses CSS @supports query)
 - CSS pseudo-classes, pseudo-elements, keyframes & font-faces are supported
 - Style caching using local storage (can be turned off)
-- Multi-instance support (you can run multiple apps using stylefy on the same web page)
+- Multi-instance support (you can run multiple apps using stylefy on the same web page if all apps are built separately)
 - Manual mode for styling 3rd party components and resolving corner cases in which complex CSS selectors are needed
 - Small and simple core API
 - Easy to setup (add it as a dependency, add a few HTML tags and you are ready to go)
