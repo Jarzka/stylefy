@@ -70,12 +70,12 @@
     (catch js/Error e
       (is true "Error was thrown as expected"))))
 
-(deftest complex-map-mode->css
+(deftest multiple-modes-in-map->css
   (is (= (conversion/style->css {:props style-with-multiple-modes-in-map :hash (styles/hash-style style-with-multiple-modes-in-map)}
                                 {:pretty-print? false})
          "._stylefy_-1666363255{background-color:white}._stylefy_-1666363255:hover{background-color:#AAAAAA}._stylefy_-1666363255:active{background-color:#FFFFFF}._stylefy_-1666363255::before{content:Hello}")))
 
-(deftest vector-mode->css
+(deftest multiple-modes-in-vector->css
   (is (= (conversion/style->css {:props style-with-multiple-modes-in-vector :hash (styles/hash-style style-with-multiple-modes-in-vector)}
                                 {:pretty-print? false})
          "._stylefy_-1983611204{background-color:white}._stylefy_-1983611204:hover{background-color:#AAAAAA}._stylefy_-1983611204:active{background-color:#FFFFFF}._stylefy_-1983611204::before{content:Hello}")))
@@ -86,7 +86,7 @@
          (conversion/style->css {:props style-with-multiple-modes-in-vector :hash "same_has_for_testing_purposes"}
                                 {:pretty-print? false}))))
 
-(deftest vector-mode-different-order->css
+(deftest multiple-modes-in-vector-different-order->css
   (is (= (conversion/style->css {:props style-with-multiple-modes-in-vector-different-order :hash (styles/hash-style style-with-multiple-modes-in-vector-different-order)}
                                 {:pretty-print? false})
          "._stylefy_899322923{background-color:white}._stylefy_899322923::before{content:Hello}._stylefy_899322923:hover{background-color:#ffedcf}._stylefy_899322923:active{background-color:blue;color:white}")))
