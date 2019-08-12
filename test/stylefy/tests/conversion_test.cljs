@@ -41,10 +41,12 @@
 (def style-with-mode-double-colon {::stylefy/mode {"::-webkit-progress-bar" {:-webkit-appearance "none"}}})
 (def style-with-incorrect-mode-start {::stylefy/mode {"-webkit-progress-bar" {:-webkit-appearance "none"}}})
 (def style-with-incorrect-mode-spaces {::stylefy/mode {"::webkit progress bar" {:-webkit-appearance "none"}}})
-(def style-with-multiple-modes-in-map {::stylefy/mode {:hover {:background-color "#AAAAAA"}
+(def style-with-multiple-modes-in-map {:background-color "white"
+                                       ::stylefy/mode {:hover {:background-color "#AAAAAA"}
                                                        :active {:background-color "#FFFFFF"}
                                                        "::before" {:content "Hello"}}})
-(def style-with-multiple-modes-in-vector {::stylefy/mode [[:hover {:background-color "#ffedcf"}]
+(def style-with-multiple-modes-in-vector {:background-color "white"
+                                          ::stylefy/mode [[:hover {:background-color "#ffedcf"}]
                                                           [:active {:background-color "blue" :color "white"}]
                                                           ["::before" {:content "Hello"}]]})
 (deftest mode->css
@@ -76,12 +78,12 @@
 (deftest complex-map-mode->css
   (is (= (conversion/style->css {:props style-with-multiple-modes-in-map :hash (styles/hash-style style-with-multiple-modes-in-map)}
                                 {:pretty-print? false})
-         "._stylefy_-2110434399{}._stylefy_-2110434399:hover{background-color:#AAAAAA}")))
+         "._stylefy_1916142360{background-color:white}._stylefy_1916142360:hover{background-color:#AAAAAA}._stylefy_1916142360:active{background-color:#FFFFFF}._stylefy_1916142360::before{content:Hello}")))
 
 (deftest vector-mode->css
   (is (= (conversion/style->css {:props style-with-multiple-modes-in-vector :hash (styles/hash-style style-with-multiple-modes-in-vector)}
                                 {:pretty-print? false})
-         "._stylefy_-2110434399{}._stylefy_-2110434399:hover{background-color:#AAAAAA}")))
+         "._stylefy_741944781{background-color:white}._stylefy_741944781:hover{background-color:#ffedcf}._stylefy_741944781:active{background-color:blue;color:white}._stylefy_741944781::before{content:Hello}")))
 
 ; Media queries
 
