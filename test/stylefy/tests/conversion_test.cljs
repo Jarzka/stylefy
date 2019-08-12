@@ -20,7 +20,7 @@
                                 {:pretty-print? false})
          "._stylefy_878532438{padding:25px;background-color:#BBBBBB;border:1px solid black}")))
 
-; Vendor prefixex
+; Vendor prefixes
 
 (def clickable {:cursor :pointer})
 
