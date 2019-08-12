@@ -9,6 +9,8 @@
             [clojure.string :as str])
   (:require-macros [garden.def :refer [defcssfn]]))
 
+; Basic tests
+
 (def simple-style {:padding "25px"
                    :background-color "#BBBBBB"
                    :border "1px solid black"})
@@ -17,6 +19,8 @@
   (is (= (conversion/style->css {:props simple-style :hash (styles/hash-style simple-style)}
                                 {:pretty-print? false})
          "._stylefy_878532438{padding:25px;background-color:#BBBBBB;border:1px solid black}")))
+
+; Vendor prefixex
 
 (def clickable {:cursor :pointer})
 
@@ -31,27 +35,55 @@
                                 {:pretty-print? false})
          "._stylefy_-216657570{border:1px solid black;border-radius:5px;-webkit-border-radius:5px;-moz-border-radius:5px;-o-border-radius:5px;cursor:pointer}")))
 
-(def style-mode {::stylefy/mode {:hover {:background-color "#AAAAAA"}}})
-(def style-mode-double-colon {::stylefy/mode {"::-webkit-progress-bar" {:-webkit-appearance "none"}}})
-(def style-incorrect-mode {::stylefy/mode {"-webkit-progress-bar" {:-webkit-appearance "none"}}})
+; Modes
 
-(deftest mode-style->css
-  (is (= (conversion/style->css {:props style-mode :hash (styles/hash-style style-mode)}
+(def style-with-mode {::stylefy/mode {:hover {:background-color "#AAAAAA"}}})
+(def style-with-mode-double-colon {::stylefy/mode {"::-webkit-progress-bar" {:-webkit-appearance "none"}}})
+(def style-with-incorrect-mode-start {::stylefy/mode {"-webkit-progress-bar" {:-webkit-appearance "none"}}})
+(def style-with-incorrect-mode-spaces {::stylefy/mode {"::webkit progress bar" {:-webkit-appearance "none"}}})
+(def style-with-multiple-modes-in-map {::stylefy/mode {:hover {:background-color "#AAAAAA"}
+                                                       :active {:background-color "#FFFFFF"}
+                                                       "::before" {:content "Hello"}}})
+(def style-with-multiple-modes-in-vector {::stylefy/mode [[:hover {:background-color "#ffedcf"}]
+                                                          [:active {:background-color "blue" :color "white"}]
+                                                          ["::before" {:content "Hello"}]]})
+(deftest mode->css
+  (is (= (conversion/style->css {:props style-with-mode :hash (styles/hash-style style-with-mode)}
                                 {:pretty-print? false})
          "._stylefy_-2110434399{}._stylefy_-2110434399:hover{background-color:#AAAAAA}")))
 
-(deftest mode-style-double-colon->css
-  (is (= (conversion/style->css {:props style-mode-double-colon :hash (styles/hash-style style-mode-double-colon)}
+(deftest mode-double-colon->css
+  (is (= (conversion/style->css {:props style-with-mode-double-colon :hash (styles/hash-style style-with-mode-double-colon)}
                                 {:pretty-print? false})
          "._stylefy_-1391954833{}._stylefy_-1391954833::-webkit-progress-bar{-webkit-appearance:none}")))
 
-(deftest incorrect-mode->css
+(deftest incorrect-mode-start->css
   (try
-    (conversion/style->css {:props style-incorrect-mode :hash (styles/hash-style style-incorrect-mode)}
+    (conversion/style->css {:props style-with-incorrect-mode-start :hash (styles/hash-style style-with-incorrect-mode-start)}
                            {:pretty-print? false})
     (is false "Error was not thrown")
     (catch js/Error e
       (is true "Error was thrown as expected"))))
+
+(deftest incorrect-mode-spaces->css
+  (try
+    (conversion/style->css {:props style-with-incorrect-mode-spaces :hash (styles/hash-style style-with-incorrect-mode-spaces)}
+                           {:pretty-print? false})
+    (is false "Error was not thrown")
+    (catch js/Error e
+      (is true "Error was thrown as expected"))))
+
+(deftest complex-map-mode->css
+  (is (= (conversion/style->css {:props style-with-multiple-modes-in-map :hash (styles/hash-style style-with-multiple-modes-in-map)}
+                                {:pretty-print? false})
+         "._stylefy_-2110434399{}._stylefy_-2110434399:hover{background-color:#AAAAAA}")))
+
+(deftest vector-mode->css
+  (is (= (conversion/style->css {:props style-with-multiple-modes-in-vector :hash (styles/hash-style style-with-multiple-modes-in-vector)}
+                                {:pretty-print? false})
+         "._stylefy_-2110434399{}._stylefy_-2110434399:hover{background-color:#AAAAAA}")))
+
+; Media queries
 
 (def responsive-style {:background-color "red"
                        :border-radius "10px"
@@ -70,7 +102,6 @@
                                 {:pretty-print? false})
          "._stylefy_628215496{background-color:red;border-radius:10px;-webkit-border-radius:10px;-moz-border-radius:10px;-o-border-radius:10px}._stylefy_628215496:hover{background-color:white}@media(max-width:500px){._stylefy_628215496{background-color:blue;border-radius:5px;-webkit-border-radius:5px;-moz-border-radius:5px;-o-border-radius:5px}._stylefy_628215496:hover{background-color:grey}}")))
 
-
 (def grid-layout-with-fallback {:display "flex"
                                 :flex-direction "row"
                                 :flex-wrap "wrap"
@@ -88,6 +119,8 @@
                                                     ::stylefy/mode {:hover
                                                                     {:background-color "grey"}}}}}}})
 
+; Feature queries
+
 (deftest supports->css
   (is (= (conversion/style->css {:props grid-layout-with-fallback
                                  :hash (styles/hash-style grid-layout-with-fallback)}
@@ -100,6 +133,8 @@
                                    :custom-selector "code"}
                                   {:pretty-print? false})
            "code{color:red}"))))
+
+; Garden units
 
 (defcssfn url)
 
@@ -124,6 +159,8 @@
                                    :hash (styles/hash-style style-with-pc-rem-rgb-url)}
                                   {:pretty-print? false})
            "._stylefy_-1057883472{padding:1rem;width:50pc;height:25rem;color:#ffffff;background-image:url(images/background.jpg)}"))))
+
+; Manual mode
 
 (deftest manual-mode
   (testing "Simple manual mode map"
