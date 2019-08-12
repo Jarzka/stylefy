@@ -23,17 +23,19 @@
      :auto-prefix (:stylefy.core/auto-prefix props)}))
 
 (defn- convert-stylefy-modes-garden [props]
-  (let [modes (:stylefy.core/mode props)]
-    (mapv (fn [mode-name]
-            (assert (or (keyword? mode-name)
-                        (and (string? mode-name)
-                             (str/starts-with? mode-name ":")))
-                    (str "Mode must be specified as a keyword or string beginning with colon, got: " (pr-str mode-name)))
-            (when (and (string? mode-name)
-                       (> (count (str/split mode-name " ")) 1))
-              (.warn js/console (str "Incorrect mode detected, should not contain spaces. Mode was: " (pr-str mode-name))))
-            [(keyword (str "&" mode-name)) (get modes mode-name)])
-          (keys modes))))
+  (let [modes (:stylefy.core/mode props)
+        handle-mode (fn [mode-name mode-props]
+                      (assert (or (keyword? mode-name)
+                                  (and (string? mode-name)
+                                       (str/starts-with? mode-name ":")))
+                              (str "Mode must be specified as a keyword or string beginning with colon, got: " (pr-str mode-name)))
+                      (when (and (string? mode-name)
+                                 (> (count (str/split mode-name " ")) 1))
+                        (.warn js/console (str "Incorrect mode detected, should not contain spaces. Mode was: " (pr-str mode-name))))
+                      [(keyword (str "&" mode-name)) (or mode-props (get modes mode-name))])]
+    (cond
+      (map? modes) (mapv handle-mode (keys modes))
+      (vector? modes) (mapv #(handle-mode (first %) (second %)) modes))))
 
 (defn class-selector [hash]
   (keyword (str "." hash)))
