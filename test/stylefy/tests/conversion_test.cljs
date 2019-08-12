@@ -40,7 +40,6 @@
 (def style-with-mode {::stylefy/mode {:hover {:background-color "#AAAAAA"}}})
 (def style-with-mode-double-colon {::stylefy/mode {"::-webkit-progress-bar" {:-webkit-appearance "none"}}})
 (def style-with-incorrect-mode-start {::stylefy/mode {"-webkit-progress-bar" {:-webkit-appearance "none"}}})
-(def style-with-incorrect-mode-spaces {::stylefy/mode {"::webkit progress bar" {:-webkit-appearance "none"}}})
 (def style-with-multiple-modes-in-map {:background-color "white"
                                        ::stylefy/mode {:hover {:background-color "#AAAAAA"}
                                                        :active {:background-color "#FFFFFF"}
@@ -66,14 +65,6 @@
 (deftest incorrect-mode-start->css
   (try
     (conversion/style->css {:props style-with-incorrect-mode-start :hash (styles/hash-style style-with-incorrect-mode-start)}
-                           {:pretty-print? false})
-    (is false "Error was not thrown")
-    (catch js/Error e
-      (is true "Error was thrown as expected"))))
-
-(deftest incorrect-mode-spaces->css
-  (try
-    (conversion/style->css {:props style-with-incorrect-mode-spaces :hash (styles/hash-style style-with-incorrect-mode-spaces)}
                            {:pretty-print? false})
     (is false "Error was not thrown")
     (catch js/Error e
