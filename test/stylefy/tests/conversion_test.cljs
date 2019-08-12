@@ -49,6 +49,10 @@
                                           ::stylefy/mode [[:hover {:background-color "#ffedcf"}]
                                                           [:active {:background-color "blue" :color "white"}]
                                                           ["::before" {:content "Hello"}]]})
+(def style-with-multiple-modes-in-vector-different-order {:background-color "white"
+                                                          ::stylefy/mode [["::before" {:content "Hello"}]
+                                                                          [:hover {:background-color "#ffedcf"}]
+                                                                          [:active {:background-color "blue" :color "white"}]]})
 (deftest mode->css
   (is (= (conversion/style->css {:props style-with-mode :hash (styles/hash-style style-with-mode)}
                                 {:pretty-print? false})
@@ -84,6 +88,11 @@
   (is (= (conversion/style->css {:props style-with-multiple-modes-in-vector :hash (styles/hash-style style-with-multiple-modes-in-vector)}
                                 {:pretty-print? false})
          "._stylefy_741944781{background-color:white}._stylefy_741944781:hover{background-color:#ffedcf}._stylefy_741944781:active{background-color:blue;color:white}._stylefy_741944781::before{content:Hello}")))
+
+(deftest vector-mode-different-order->css
+  (is (= (conversion/style->css {:props style-with-multiple-modes-in-vector :hash (styles/hash-style style-with-multiple-modes-in-vector)}
+                                {:pretty-print? false})
+         "._stylefy_741944781{background-color:white}._stylefy_741944781::before{content:Hello}._stylefy_741944781:hover{background-color:#ffedcf}._stylefy_741944781:active{background-color:blue;color:white}")))
 
 (deftest map-and-vector-mode->same-css
   (is (= (conversion/style->css {:props style-with-multiple-modes-in-map :hash (styles/hash-style style-with-multiple-modes-in-map)}
@@ -179,24 +188,24 @@
 
   (testing "Complex manual mode selector"
     (let [media-query {:max-width "550px"}
-         style {:width "500px"
-                :height "200px"
-                :padding "33px"
-                :margin-bottom "10px"
-                :background-color "#55AA55"
-                ::stylefy/class-prefix "seppo"
-                ::stylefy/mode {:hover {:background-color "#99DD99"}}
-                ::stylefy/sub-styles {:innerbox {:width "100%"
-                                                 :height "100%"
-                                                 :background-color "#444444"}}
-                ::stylefy/manual [[:&:hover [:.innerbox
-                                             {:background-color "#999999"}
-                                             [:&:hover {:background-color "#EEEEEE"}]]]
-                                  (at-media media-query [:&:hover [:.innerbox
-                                                                   {:background-color "#666666"}
-                                                                   [:&:hover {:background-color "#111111"}]]])]
-                ::stylefy/media {media-query
-                                 {:width "200px"
-                                  ::stylefy/mode {:hover {:background-color "#336633"}}}}}]
-     (is (= (conversion/style->css {:props style :hash (styles/hash-style style)} {:pretty-print? false})
-            "._stylefy_640089058{width:500px;height:200px;padding:33px;margin-bottom:10px;background-color:#55AA55}._stylefy_640089058:hover{background-color:#99DD99}@media(max-width:550px){._stylefy_640089058{width:200px}._stylefy_640089058:hover{background-color:#336633}}._stylefy_640089058:hover .innerbox{background-color:#999999}._stylefy_640089058:hover .innerbox:hover{background-color:#EEEEEE}@media(max-width:550px){._stylefy_640089058:hover .innerbox{background-color:#666666}._stylefy_640089058:hover .innerbox:hover{background-color:#111111}}")))))
+          style {:width "500px"
+                 :height "200px"
+                 :padding "33px"
+                 :margin-bottom "10px"
+                 :background-color "#55AA55"
+                 ::stylefy/class-prefix "seppo"
+                 ::stylefy/mode {:hover {:background-color "#99DD99"}}
+                 ::stylefy/sub-styles {:innerbox {:width "100%"
+                                                  :height "100%"
+                                                  :background-color "#444444"}}
+                 ::stylefy/manual [[:&:hover [:.innerbox
+                                              {:background-color "#999999"}
+                                              [:&:hover {:background-color "#EEEEEE"}]]]
+                                   (at-media media-query [:&:hover [:.innerbox
+                                                                    {:background-color "#666666"}
+                                                                    [:&:hover {:background-color "#111111"}]]])]
+                 ::stylefy/media {media-query
+                                  {:width "200px"
+                                   ::stylefy/mode {:hover {:background-color "#336633"}}}}}]
+      (is (= (conversion/style->css {:props style :hash (styles/hash-style style)} {:pretty-print? false})
+             "._stylefy_640089058{width:500px;height:200px;padding:33px;margin-bottom:10px;background-color:#55AA55}._stylefy_640089058:hover{background-color:#99DD99}@media(max-width:550px){._stylefy_640089058{width:200px}._stylefy_640089058:hover{background-color:#336633}}._stylefy_640089058:hover .innerbox{background-color:#999999}._stylefy_640089058:hover .innerbox:hover{background-color:#EEEEEE}@media(max-width:550px){._stylefy_640089058:hover .innerbox{background-color:#666666}._stylefy_640089058:hover .innerbox:hover{background-color:#111111}}")))))
