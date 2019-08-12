@@ -73,23 +73,23 @@
 (deftest complex-map-mode->css
   (is (= (conversion/style->css {:props style-with-multiple-modes-in-map :hash (styles/hash-style style-with-multiple-modes-in-map)}
                                 {:pretty-print? false})
-         "._stylefy_1916142360{background-color:white}._stylefy_1916142360:hover{background-color:#AAAAAA}._stylefy_1916142360:active{background-color:#FFFFFF}._stylefy_1916142360::before{content:Hello}")))
+         "._stylefy_-1666363255{background-color:white}._stylefy_-1666363255:hover{background-color:#AAAAAA}._stylefy_-1666363255:active{background-color:#FFFFFF}._stylefy_-1666363255::before{content:Hello}")))
 
 (deftest vector-mode->css
   (is (= (conversion/style->css {:props style-with-multiple-modes-in-vector :hash (styles/hash-style style-with-multiple-modes-in-vector)}
                                 {:pretty-print? false})
-         "._stylefy_741944781{background-color:white}._stylefy_741944781:hover{background-color:#ffedcf}._stylefy_741944781:active{background-color:blue;color:white}._stylefy_741944781::before{content:Hello}")))
+         "._stylefy_-603029808{background-color:white}._stylefy_-603029808:hover{background-color:#ffedcf}._stylefy_-603029808:active{background-color:blue;color:white}._stylefy_-603029808::before{content:Hello}")))
 
-(deftest map-and-vector-mode->same-css
-  (is (= (conversion/style->css {:props style-with-multiple-modes-in-map :hash (styles/hash-style style-with-multiple-modes-in-map)}
+(deftest map-and-vector-mode->same-css-props
+  (is (= (conversion/style->css {:props style-with-multiple-modes-in-map :hash "same_has_for_testing_purposes"}
                                 {:pretty-print? false})
-         (conversion/style->css {:props style-with-multiple-modes-in-vector :hash (styles/hash-style style-with-multiple-modes-in-vector)}
+         (conversion/style->css {:props style-with-multiple-modes-in-vector :hash "same_has_for_testing_purposes"}
                                 {:pretty-print? false}))))
 
 (deftest vector-mode-different-order->css
   (is (= (conversion/style->css {:props style-with-multiple-modes-in-vector-different-order :hash (styles/hash-style style-with-multiple-modes-in-vector-different-order)}
                                 {:pretty-print? false})
-         "._stylefy_741944781{background-color:white}._stylefy_741944781::before{content:Hello}._stylefy_741944781:hover{background-color:#ffedcf}._stylefy_741944781:active{background-color:blue;color:white}")))
+         "._stylefy_899322923{background-color:white}._stylefy_899322923::before{content:Hello}._stylefy_899322923:hover{background-color:#ffedcf}._stylefy_899322923:active{background-color:blue;color:white}")))
 
 ; Media queries
 
