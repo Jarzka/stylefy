@@ -170,19 +170,19 @@ stylefy modes are pretty much the same thing as pseudoclasses/pseudoelements in 
 Here is an example of how to define a style with modes:
 
 ```clojure
-(def simple-element {:background-color "rgb(88, 121, 193)"
-                     ::stylefy/mode {:hover {:background-color "rgb(98, 131, 213)"}
-                                     :before {:content "'CSS generated content'"}
-                                     "::-webkit-progress-bar" {:-webkit-appearance "none"}}})
+(def style-with-modes {:background-color "rgb(88, 121, 193)"
+                       ::stylefy/mode {:hover {:background-color "rgb(98, 131, 213)"}
+                                       :before {:content "'CSS generated content'"}
+                                       "::-webkit-progress-bar" {:-webkit-appearance "none"}}})
 ```
 
 In some cases the order of CSS pseudo elements is important, so writing modes in vector format is also supported:
 
 ```clojure
-(def simple-element {:background-color "white"
-                     ::stylefy/mode [[:before {:content "'CSS generated content'"}]
-                                     [:hover {:background-color "#ffedcf"}]
-                                     [:active {:background-color "blue" :color "white"}]]})
+(def style-with-modes {:background-color "white"
+                       ::stylefy/mode [[:before {:content "'CSS generated content'"}]
+                                       [:hover {:background-color "#ffedcf"}]
+                                       [:active {:background-color "blue" :color "white"}]]})
 ```
 
 ## Sub-styles
