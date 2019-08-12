@@ -45,8 +45,8 @@
                                                        :active {:background-color "#FFFFFF"}
                                                        "::before" {:content "Hello"}}})
 (def style-with-multiple-modes-in-vector {:background-color "white"
-                                          ::stylefy/mode [[:hover {:background-color "#ffedcf"}]
-                                                          [:active {:background-color "blue" :color "white"}]
+                                          ::stylefy/mode [[:hover {:background-color "#AAAAAA"}]
+                                                          [:active {:background-color "#FFFFFF"}]
                                                           ["::before" {:content "Hello"}]]})
 (def style-with-multiple-modes-in-vector-different-order {:background-color "white"
                                                           ::stylefy/mode [["::before" {:content "Hello"}]
@@ -78,7 +78,7 @@
 (deftest vector-mode->css
   (is (= (conversion/style->css {:props style-with-multiple-modes-in-vector :hash (styles/hash-style style-with-multiple-modes-in-vector)}
                                 {:pretty-print? false})
-         "._stylefy_-603029808{background-color:white}._stylefy_-603029808:hover{background-color:#ffedcf}._stylefy_-603029808:active{background-color:blue;color:white}._stylefy_-603029808::before{content:Hello}")))
+         "._stylefy_-603029808{background-color:white}._stylefy_-603029808:hover{background-color:#AAAAAA}._stylefy_-603029808:active{background-color:#FFFFFF}._stylefy_-603029808::before{content:Hello}")))
 
 (deftest map-and-vector-mode->same-css-props
   (is (= (conversion/style->css {:props style-with-multiple-modes-in-map :hash "same_has_for_testing_purposes"}
