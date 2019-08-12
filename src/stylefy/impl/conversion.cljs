@@ -22,7 +22,7 @@
     {:vendors vendors
      :auto-prefix (:stylefy.core/auto-prefix props)}))
 
-(defn- convert-stylefy-modes-garden [props]
+(defn- convert-stylefy-modes-to-garden [props]
   (let [modes (:stylefy.core/mode props)
         handle-mode (fn [mode-name mode-props]
                       (assert (or (keyword? mode-name)
@@ -46,7 +46,7 @@
   (let [css-props (utils/filter-css-props props)
         css-selector (or custom-selector (class-selector hash))
         garden-class-definition [css-selector css-props]
-        garden-pseudo-classes (convert-stylefy-modes-garden props)
+        garden-pseudo-classes (convert-stylefy-modes-to-garden props)
         garden-vendors (convert-stylefy-vendors-to-garden props)
         garden-options (or (merge options garden-vendors) {})
         css-class (css garden-options (into garden-class-definition
@@ -64,7 +64,7 @@
               (let [media-query-props (get stylefy-media-queries media-query)
                     media-query-css-props (utils/filter-css-props media-query-props)
                     garden-class-definition [css-selector media-query-css-props]
-                    garden-pseudo-classes (convert-stylefy-modes-garden media-query-props)
+                    garden-pseudo-classes (convert-stylefy-modes-to-garden media-query-props)
                     garden-vendors (convert-stylefy-vendors-to-garden media-query-props)
                     garden-options (or (merge options garden-vendors) {})]
                 (css garden-options (at-media media-query (into garden-class-definition
@@ -82,7 +82,7 @@
                            (let [supports-props (get stylefy-supports supports-selector)
                                  supports-css-props (utils/filter-css-props supports-props)
                                  garden-class-definition [css-selector supports-css-props]
-                                 garden-pseudo-classes (convert-stylefy-modes-garden supports-props)
+                                 garden-pseudo-classes (convert-stylefy-modes-to-garden supports-props)
                                  garden-vendors (convert-stylefy-vendors-to-garden supports-props)
                                  garden-options (or (merge options garden-vendors) {})
                                  css-media-queries-inside-supports
