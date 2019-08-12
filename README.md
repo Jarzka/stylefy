@@ -165,7 +165,9 @@ It's good to keep in mind that most of the time either **prepare-style** or **pr
 
 ## Modes (pseudo-classes & pseudo-elements)
 
-Define how your style looks in different modes, such as when mouse is on top of an element using the style:
+stylefy modes are pretty much the same thing as pseudoclasses/pseudoelements in CSS and they simply create a new "class:mode" selector for your style. The reason for not using the name pseudoclass is completely self-willed; I think "mode" as a name is a little bit more informative than CSS pseudoclasses.
+
+Here is an example of how to define a style with modes:
 
 ```clojure
 (def simple-element {:background-color "rgb(88, 121, 193)"
@@ -174,7 +176,14 @@ Define how your style looks in different modes, such as when mouse is on top of 
                                      "::-webkit-progress-bar" {:-webkit-appearance "none"}}})
 ```
 
-stylefy modes are pretty much the same thing as pseudoclasses/pseudoelements in CSS and they simply create a new "class:mode" selector for your style. The reason for not using the name pseudoclass is completely self-willed; I think "mode" as a name is a little bit more informative than CSS pseudoclasses.
+In some cases the order of CSS pseudo elements is important, so writing modes in vector format is also supported:
+
+```clojure
+(def simple-element {:background-color "white"
+                     ::stylefy/mode [[:before {:content "'CSS generated content'"}]
+                                     [:hover {:background-color "#ffedcf"}]
+                                     [:active {:background-color "blue" :color "white"}]]})
+```
 
 ## Sub-styles
 
