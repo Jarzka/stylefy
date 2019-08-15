@@ -104,14 +104,19 @@
       ;; as inline style. Inline style gets replaced soon as the style definition
       ;; is added into the DOM and the component re-renders itself.
       ;; However, if there are media queries, specific mode definitions etc., inline styling is probably
-      ;; going to look wrong. Thus, hide the component completely until the DOM is ready.
+      ;; going to look wrong. In that case, hide the component completely until the DOM is ready.
       (let [contains-media-queries? (some? (:stylefy.core/media style))
             contains-feature-queries? (some? (:stylefy.core/supports style))
             contains-manual-mode? (some? (:stylefy.core/manual style))
             excluded-modes #{:hover}
+            modes (:stylefy.core/mode style)
+            mode-names (cond
+                         (map? modes) (set (keys modes))
+                         (vector? modes) (set (map first modes))
+                         :default #{})
             contains-modes-not-excluded? (not (empty?
                                                 (filter (comp not excluded-modes)
-                                                        (keys (:stylefy.core/mode style)))))
+                                                        mode-names)))
             inline-style (-> style
                              (utils/filter-css-props)
                              (conversion/garden-units->css))]

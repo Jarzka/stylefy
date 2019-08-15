@@ -247,9 +247,8 @@
                                    :after {:content "' - This is CSS :after content'"}
                                    :hover {:color "red"}}})
     "This is text content, hover me!"]
-   [:p (use-style {::stylefy/mode [[:before {:content "'A - '"}]
-                                   [:after {:content "' - B'"}]
-                                   [:hover {:color "red"}]]})
+   [:p (use-style {::stylefy/mode [[:hover  {:background-color "#ffedcf"}]
+                                   [:active {:background-color "blue" :color "white"}]]})
     "Another example created with different syntax"]
 
    [:h1 "Component with multiple sub elements"]
