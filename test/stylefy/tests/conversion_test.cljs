@@ -81,9 +81,9 @@
          "._stylefy_-1983611204{background-color:white}._stylefy_-1983611204:hover{background-color:#AAAAAA}._stylefy_-1983611204:active{background-color:#FFFFFF}._stylefy_-1983611204::before{content:Hello}")))
 
 (deftest map-and-vector-mode->same-css-props
-  (is (= (conversion/style->css {:props style-with-multiple-modes-in-map :hash "same_has_for_testing_purposes"}
+  (is (= (conversion/style->css {:props style-with-multiple-modes-in-map :hash "same_hash_for_testing_purposes"}
                                 {:pretty-print? false})
-         (conversion/style->css {:props style-with-multiple-modes-in-vector :hash "same_has_for_testing_purposes"}
+         (conversion/style->css {:props style-with-multiple-modes-in-vector :hash "same_hash_for_testing_purposes"}
                                 {:pretty-print? false}))))
 
 (deftest multiple-modes-in-vector-different-order->css
