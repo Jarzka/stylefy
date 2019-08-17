@@ -1,6 +1,8 @@
-# stylefy
+<p align="center">
+  <img align="center" width="200" src="stylefy_logo2.png" alt="">
+<p>
 
-<img src="stylefy_logo_small.png" alt="" style="width: 100px; float: right;"/>
+<center>
 
 [![Clojars Project](https://img.shields.io/clojars/v/stylefy.svg)](https://clojars.org/stylefy)
 [![CircleCI](https://circleci.com/gh/Jarzka/stylefy.svg?style=svg)](https://circleci.com/gh/Jarzka/stylefy)
@@ -8,6 +10,8 @@
 ClojureScript library for styling UI components with ease.
 
 [API documentation](https://jarzka.github.io/stylefy/doc)
+
+</center>
 
 # Introduction
 
@@ -165,16 +169,25 @@ It's good to keep in mind that most of the time either **prepare-style** or **pr
 
 ## Modes (pseudo-classes & pseudo-elements)
 
-Define how your style looks in different modes, such as when mouse is on top of an element using the style:
+stylefy modes are pretty much the same thing as pseudoclasses/pseudoelements in CSS and they simply create a new "class:mode" selector for your style. The reason for not using the name pseudoclass is completely self-willed; I think "mode" as a name is a little bit more informative than CSS pseudoclasses.
+
+Here is an example of how to define a style with modes:
 
 ```clojure
-(def simple-element {:background-color "rgb(88, 121, 193)"
-                     ::stylefy/mode {:hover {:background-color "rgb(98, 131, 213)"}
-                                     :before {:content "'CSS generated content'"}
-                                     "::-webkit-progress-bar" {:-webkit-appearance "none"}}})
+(def style-with-modes {:background-color "rgb(88, 121, 193)"
+                       ::stylefy/mode {:hover {:background-color "rgb(98, 131, 213)"}
+                                       :before {:content "'CSS generated content'"}
+                                       "::-webkit-progress-bar" {:-webkit-appearance "none"}}})
 ```
 
-stylefy modes are pretty much the same thing as pseudoclasses/pseudoelements in CSS and they simply create a new "class:mode" selector for your style. The reason for not using the name pseudoclass is completely self-willed; I think "mode" as a name is a little bit more informative than CSS pseudoclasses.
+In some cases the order of CSS pseudo elements is important, so writing modes in vector format is also supported:
+
+```clojure
+(def style-with-modes {:background-color "white"
+                       ::stylefy/mode [[:before {:content "'CSS generated content'"}]
+                                       [:hover {:background-color "#ffedcf"}]
+                                       [:active {:background-color "blue" :color "white"}]]})
+```
 
 ## Sub-styles
 
