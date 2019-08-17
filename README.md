@@ -3,13 +3,12 @@
 </p>
 
 <p align="center">
-    [![Clojars Project](https://img.shields.io/clojars/v/stylefy.svg)](https://clojars.org/stylefy)
-    [![CircleCI](https://circleci.com/gh/Jarzka/stylefy.svg?style=svg)](https://circleci.com/gh/Jarzka/stylefy)
-    
-    ClojureScript library for styling UI components with ease.
-    
-    [API documentation](https://jarzka.github.io/stylefy/doc)
-</p>
+[![Clojars Project](https://img.shields.io/clojars/v/stylefy.svg)](https://clojars.org/stylefy)
+[![CircleCI](https://circleci.com/gh/Jarzka/stylefy.svg?style=svg)](https://circleci.com/gh/Jarzka/stylefy)
+
+ClojureScript library for styling UI components with ease.
+
+[API documentation](https://jarzka.github.io/stylefy/doc)
 
 # Introduction
 
