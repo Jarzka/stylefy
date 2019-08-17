@@ -1,7 +1,7 @@
-(defproject stylefy-examples "0.1"
+(defproject stylefy-examples "1.0-SNAPSHOT"
   :description "Stylefy Examples"
-  :dependencies [[org.clojure/clojure "1.8.0"]
-                 [org.clojure/clojurescript "1.9.542"]
+  :dependencies [[org.clojure/clojure "1.10.1"]
+                 [org.clojure/clojurescript "1.10.520"]
                  [prismatic/dommy "1.1.0"]
                  [garden "1.3.6"]
                  [reagent "0.6.0"]
