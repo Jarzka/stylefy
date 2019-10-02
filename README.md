@@ -106,17 +106,6 @@ To use it in a component, use the **use-style** function:
     text])
 ```
 
-### Combine & parametrise styles
-
-Combine or parametrise styles however you like:
-
-```clojure
-(def primary-button (merge generic-button {:background-color "rgb(88, 121, 193)"}))
-
-(defn button-style [background-color]
-  (merge generic-button {:background-color background-color}))
-```
-
 ### Passing styles to components
 
 **use-style** is designed to be called only inside component render functions to define styles for **HTML** elements. If you need to pass styles to Reagent components, pass them as regular Clojure maps, and call **use-style** last, only for HTML elements:
@@ -136,6 +125,41 @@ Combine or parametrise styles however you like:
     [button-with-custom-style "Hello" (use-style {:padding "25px"
                                                   :background-color "#BBBBBB"
                                                   :border "1px solid black"})]])
+```
+
+### Combine & parametrise styles
+
+Combine or parametrise styles however you like:
+
+```clojure
+; Define a style using some other style as a template
+(def primary-button (merge generic-button {:background-color "rgb(88, 121, 193)"}))
+
+; Generate a style via function
+(defn custom-primary-button-style [color]
+  (merge primary-button {:color color}))
+
+(defn custom-button [text color]
+  [:button (use-style (custom-primary-button-style color))
+    text])
+```
+
+Notice that if your style-generator function takes numeric values, and you know that it's going to be called with numerous of different parameter combinations, it is recommended to use these numeric values via inline styles. Otherwise every possible number combination creates a new CSS class, which is inefficient. So instead of this:
+
+```clojure
+(defn button-with-dynamic-position [text color x y]
+  ; Bad! Every possible parameter combination creates a new CSS class!
+  [:button (use-style (positioned-button color x y))
+    text])
+```
+
+Do something like this:
+
+```clojure
+(defn button-with-dynamic-position [text color x y]
+  [:button (merge (use-style (custom-primary-button-style color))
+                  {:style {:left x :top y}})
+    text])
 ```
 
 ### How it works (technical details)
@@ -406,6 +430,42 @@ As has been told, stylefy converts style definition to unique CSS classes automa
 (stylefy/tag "body" body-style)
 ```
 
+## Manual mode
+
+Manual mode can be used to style child elements with manually written CSS selectors using Garden syntax. It should be used only for **corner cases** in which complex CSS selectors are needed, or when you want to style some **3rd party child components** that do not take style props as parameters. The selector and the style written in manual mode will be scoped inside the element in which you use the style map with **use-style**. To avoid confusion, stylefy's special keywords do not work in manual mode. For the most part, it is recommended to use **sub-styles** for styling child elements.
+
+An example of such corner case is a situation in which we want to change the style of some child element when the parent element is being hovered:
+
+```clojure
+(def mobile-media-query {:max-width "550px"})
+
+(def hoverbox-style
+  {:width "500px"1
+   :height "200px"
+   :padding "33px"
+   :margin-bottom "10px"
+   :background-color "#55AA55"
+   ::stylefy/sub-styles {:innerbox {:width "100%"
+                                    :height "100%"
+                                    :background-color "#444444"}}
+   ;; Change the background color of the child element when the parent element is being hovered.
+   ;; This is a corner case that stylefy cannot handle directly, so we use manual mode to resolve it.
+   ::stylefy/manual [[:&:hover [:.innerbox
+                                ;; Brighten by default
+                                {:background-color "#999999"}]]
+                     (at-media mobile-media-query [:&:hover [:.innerbox
+                                                             ;; Darker on mobile
+                                                             {:background-color "#666666"}]])]
+   ::stylefy/media {mobile-media-query
+                    {:width "100%"}}})
+
+(defn hoverbox []
+  [:div (use-style hoverbox-style)
+   [:div.innerbox (use-sub-style hoverbox-style :innerbox)]])
+```
+
+For syntax help, see Garden's [documentation](https://github.com/noprompt/garden/wiki/Syntax).
+
 ## Style caching
 
 stylefy supports style caching with HTML5 local storage. The converted CSS code is added into local storage and loaded from there when the page is reloaded.
@@ -468,42 +528,6 @@ Then init stylefy with multi-instance support. Instance-id is a unique string (f
 (stylefy/init {:multi-instance {:base-node (dommy/sel1 "#myapp")
                                 :instance-id "myapp"}})
 ```
-
-## Manual mode
-
-Manual mode can be used to style child elements with manually written CSS selectors using Garden syntax. It should be used only for **corner cases** in which complex CSS selectors are needed, or when you want to style some **3rd party child components** that do not take style props as parameters. The selector and the style written in manual mode will be scoped inside the element in which you use the style map with **use-style**. To avoid confusion, stylefy's special keywords do not work in manual mode. For the most part, it is recommended to use **sub-styles** for styling child elements.
-
-An example of such corner case is a situation in which we want to change the style of some child element when the parent element is being hovered:
-
-```clojure
-(def mobile-media-query {:max-width "550px"})
-
-(def hoverbox-style
-  {:width "500px"1
-   :height "200px"
-   :padding "33px"
-   :margin-bottom "10px"
-   :background-color "#55AA55"
-   ::stylefy/sub-styles {:innerbox {:width "100%"
-                                    :height "100%"
-                                    :background-color "#444444"}}
-   ;; Change the background color of the child element when the parent element is being hovered.
-   ;; This is a corner case that stylefy cannot handle directly, so we use manual mode to resolve it.
-   ::stylefy/manual [[:&:hover [:.innerbox
-                                ;; Brighten by default
-                                {:background-color "#999999"}]]
-                     (at-media mobile-media-query [:&:hover [:.innerbox
-                                                             ;; Darker on mobile
-                                                             {:background-color "#666666"}]])]
-   ::stylefy/media {mobile-media-query
-                    {:width "100%"}}})
-
-(defn hoverbox []
-  [:div (use-style hoverbox-style)
-   [:div.innerbox (use-sub-style hoverbox-style :innerbox)]])
-```
-
-For syntax help, see Garden's [documentation](https://github.com/noprompt/garden/wiki/Syntax).
 
 # More examples
 
