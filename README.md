@@ -144,7 +144,7 @@ Combine or parametrise styles however you like:
     text])
 ```
 
-Notice that if your style-generator function takes numeric values, and you know that it's going to be called with numerous of different parameter combinations, it is recommended to use these numeric values via inline styles. Otherwise every possible number combination creates a new CSS class, which is inefficient. So instead of this:
+Notice that if your style-generator function takes numeric values, and you know that it's going to be called with numerous different parameter combinations, it is recommended to use these numeric values via inline styles. Otherwise every possible number combination creates a new CSS class, which is inefficient. So instead of this:
 
 ```clojure
 (defn button-with-dynamic-position [text color x y]
