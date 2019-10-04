@@ -106,6 +106,8 @@ To use it in a component, use the **use-style** function:
     text])
 ```
 
+**use-style** adds the style into the DOM as CSS class on-demand (see "How it works" for more details).
+
 ### Passing styles to components
 
 **use-style** is designed to be called only inside component render functions to define styles for **HTML** elements. If you need to pass styles to Reagent components, pass them as regular Clojure maps, and call **use-style** last, only for HTML elements:
@@ -164,7 +166,7 @@ Do something like this:
 
 ### How it works (technical details)
 
-Calling **use-style** asks stylefy to save the style (if it has not been saved already) and add it into the DOM as CSS class asynchronously (soon, but not immediately). The return value is a map containing the given style properties as inline style. It is needed until the CSS class has been generated and inserted into the DOM. When the DOM is ready, the component is forced to re-render itself and use only the CSS class definition.
+**use-style** saves the style (if it has not been saved already) and adds it into the DOM as CSS class asynchronously (soon, but not immediately). The return value is a map containing the given style properties as inline style. It is needed until the CSS class has been generated and inserted into the DOM. When the DOM is ready, the component is forced to re-render itself and use only the CSS class definition.
 
 You might ask why does **use-style** work asynchronously? Consider a case when one or more components are going to be rendered and all of them are calling **use-style** very many times with different style maps. In this case, updating the DOM on every single call would slow the rendering process down. To keep the rendering fast, the idea is to collect as many style maps as possible during a single render event, convert all of them to CSS and add into the DOM at once.
 
