@@ -106,7 +106,7 @@ To use it in a component, use the **use-style** function:
     text])
 ```
 
-**use-style** adds the style into the DOM as CSS class on-demand (see "How it works" for more details).
+**use-style** adds the style into the DOM as a CSS class on-demand (see "How it works" for more details).
 
 ### Passing styles to components
 
