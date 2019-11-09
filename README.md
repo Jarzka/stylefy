@@ -20,7 +20,6 @@ stylefy is designed to be used in [SPA](https://en.wikipedia.org/wiki/Single-pag
 - Define styles as Clojure data, for any UI component or HTML tag
 - Use any 3rd party CSS code (such as Bootstrap) along with stylefy
 - All important CSS features are supported: pseudo-classes, pseudo-elements, keyframes, font-faces, media queries, feature queries...
-- Custom CSS classes and styles for HTML tags can also be generated easily
 - Define a style for a component and all the elements inside of it in a single map with sub-styles
 - Manual mode can be used for styling 3rd party components and resolving corner cases in which complex CSS selectors are needed
 - Vendor prefixes are supported both locally and globally
