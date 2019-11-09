@@ -11,7 +11,7 @@
 
 # Introduction
 
-stylefy makes it possible to define UI component styles as Clojure data and attach them into components easily. When styles are defined as Clojure data, they can be easily transformed with Clojure's powerful functions (like merge) and parametrised. Styles are converted to CSS on-demand, and since the converted CSS is handled internally by the library, there is usually no need to worry about things like writing selectors, name conflicts, difficult cascading, dead CSS code etc. All in all the purpose of this library is to make writing style code easier and more maintainable.
+stylefy makes it possible to define UI component styles as Clojure data and attach them into components easily. Styles are converted to CSS on-demand and scoped locally to each component. This makes writing style code easy and maintainable.
 
 stylefy is designed to be used in [SPA](https://en.wikipedia.org/wiki/Single-page_application) applications along with [Reagent](https://github.com/reagent-project/reagent). stylefy uses [Garden](https://github.com/noprompt/garden) in the background to do most of its CSS conversions. 
 
@@ -20,13 +20,13 @@ stylefy is designed to be used in [SPA](https://en.wikipedia.org/wiki/Single-pag
 - Define styles as Clojure data, for any UI component or HTML tag
 - Use any 3rd party CSS code (such as Bootstrap) along with stylefy
 - All important CSS features are supported: pseudo-classes, pseudo-elements, keyframes, font-faces, media queries, feature queries...
-- Sub-styles help you to define a style for your component and all the elements inside of it in a single map
+- Custom CSS classes and styles for HTML tags can also be generated easily
+- Define a style for a component and all the elements inside of it in a single map with sub-styles
 - Manual mode can be used for styling 3rd party components and resolving corner cases in which complex CSS selectors are needed
 - Vendor prefixes are supported both locally and globally
 - Style caching using local storage (can be turned off)
 - Multi-instance support (you can run multiple apps using stylefy on the same web page if all apps are built separately)
 - Small and simple core API which is easy to setup
-- Fast, asynchronous rendering
 - Automatic style reloading
 - All features are tested to work with Chrome, Firefox, Edge & Internet Explorer 11
 
