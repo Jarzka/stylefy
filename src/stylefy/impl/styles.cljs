@@ -39,8 +39,9 @@
                                   ;; hashable (different contents = different hash)
                                   (fn [result prop-key]
                                     (let [prop-value (prop-key style)]
-                                      (when (utils/is-garden-value? prop-value)
-                                        (assoc result prop-key (compiler/render-css prop-value)))))
+                                      (if (utils/is-garden-value? prop-value)
+                                        (assoc result prop-key (compiler/render-css prop-value))
+                                        result)))
                                   {}
                                   (keys (utils/filter-css-props style)))
           hashable-style (merge style hashable-garden-units)

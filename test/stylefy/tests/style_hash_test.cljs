@@ -32,13 +32,13 @@
                :line-height line-height
                :padding-bottom (units/rem 1)})
 
-(def h4-style-clone {:font-size (units/rem 2.1)
-                     :line-height line-height
-                     :padding-bottom (units/rem 1)})
+(def h4-style-clone-with-different-key-order {:line-height line-height
+                                              :font-size (units/rem 2.1)
+                                              :padding-bottom (units/rem 1)})
 
-(def h4-style-clone-with-different-garden-values {:font-size (units/rem 2.2)
-                                                  :line-height line-height
-                                                  :padding-bottom (units/rem 1.1)})
+(def h4-style-clone-with-different-garden-values-and-key-order {:line-height line-height
+                                                                :font-size (units/rem 2.2)
+                                                                :padding-bottom (units/rem 1.1)})
 
 (deftest hash-style
   (is (= (styles/hash-style style-box) style-box-expected-hash)))
@@ -91,9 +91,9 @@
          style-box-expected-hash)))
 
 (deftest hash-style-with-garden-units
-  (is (= (styles/hash-style h2-style) "_stylefy_350674637"))
-  (is (= (styles/hash-style h3-style) "_stylefy_2088259725"))
-  (is (= (styles/hash-style h4-style) "_stylefy_1282487896"))
+  (is (= (styles/hash-style h2-style) "_stylefy_154513737"))
+  (is (= (styles/hash-style h3-style) "_stylefy_-1528553558"))
+  (is (= (styles/hash-style h4-style) "_stylefy_-372704016"))
 
   ;; Different Garden units should make style maps structurally different
   (is (not= (styles/hash-style h2-style)
@@ -103,7 +103,7 @@
   (is (not= (styles/hash-style h2-style)
             (styles/hash-style h4-style)))
   (is (not= (styles/hash-style h4-style)
-            (styles/hash-style h4-style-clone-with-different-garden-values)))
-
+            (styles/hash-style h4-style-clone-with-different-garden-values-and-key-order)))
+  ;; Key order does not matter
   (is (= (styles/hash-style h4-style)
-         (styles/hash-style h4-style-clone))))
+         (styles/hash-style h4-style-clone-with-different-key-order))))
