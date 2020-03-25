@@ -150,7 +150,6 @@ Mar 9, 2018
 
 Previously, the second parameter of use-style was an options map, containing only one keyword ::stylefy/with-classes. This feature is now deprecated, but works. If you want to provide additional classes to use-style, you should use the regular HTML :class attribute.
 
-
 # 1.2.0
 
 Dec 15, 2017
