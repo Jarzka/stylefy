@@ -102,8 +102,8 @@
             (styles/hash-style h4-style)))
   (is (not= (styles/hash-style h2-style)
             (styles/hash-style h4-style)))
-  (is (= (styles/hash-style h4-style)
-         (styles/hash-style h4-style-clone-with-different-garden-values)))
+  (is (not= (styles/hash-style h4-style)
+            (styles/hash-style h4-style-clone-with-different-garden-values)))
 
   (is (= (styles/hash-style h4-style)
          (styles/hash-style h4-style-clone))))
