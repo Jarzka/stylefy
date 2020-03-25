@@ -1,5 +1,7 @@
 # 1.15.0
 
+Mar 25, 2020
+
 - Fixes a bug when hashing style maps with Garden units (thanks to @frankitox for reporting this: https://github.com/Jarzka/stylefy/issues/21#issuecomment-603589989)
 - Minor refactoring
 
