@@ -26,7 +26,7 @@ cd examples/resources/public
 python -m SimpleHTTPServer 8000
 ```
 
-Now point your browser to http://localhost:8000/index_dev.html
+Now go to http://localhost:8000/index_dev.html
 
 # Update API DOC
 
