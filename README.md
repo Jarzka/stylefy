@@ -11,25 +11,22 @@
 
 # Introduction
 
-stylefy makes it possible to define UI component styles as Clojure data and attach them into components easily. When styles are defined as Clojure data, they can be easily transformed with Clojure's powerful functions (like merge) and parametrised. Styles are converted to CSS on-demand, and since the converted CSS is handled internally by the library, there is usually no need to worry about things like writing selectors, name conflicts, difficult cascading, dead CSS code etc. All in all the purpose of this library is to make writing style code easier and more maintainable.
+stylefy makes it possible to define UI component styles as Clojure data and attach them into components easily. Styles are converted to CSS on-demand and scoped locally to each component. This makes writing style code easy and maintainable.
 
 stylefy is designed to be used in [SPA](https://en.wikipedia.org/wiki/Single-page_application) applications along with [Reagent](https://github.com/reagent-project/reagent). stylefy uses [Garden](https://github.com/noprompt/garden) in the background to do most of its CSS conversions. 
 
 # Features
 
 - Define styles as Clojure data, for any UI component or HTML tag
-- Sub-styles help you to define a style for your component and all the elements inside of it in a single map
 - Use any 3rd party CSS code (such as Bootstrap) along with stylefy
-- Vendor prefixes, define which vendor prefixes are used and which properties should be prefixed (locally or globally)
-- Media queries, define how your style looks on various screen sizes
-- Feature queries, define how your style looks when certain CSS features are not supported by the browser (uses CSS @supports query)
-- CSS pseudo-classes, pseudo-elements, keyframes & font-faces are supported
-- Style caching using local storage (can be turned off)
+- All important CSS features are supported: pseudo-classes, pseudo-elements, keyframes, font-faces, media queries, feature queries...
+- Manual mode can be used for styling 3rd party components and resolving corner cases in which complex CSS selectors are needed
+- Vendor prefixes are supported both locally and globally
+- CSS caching using local storage (can be turned off)
 - Multi-instance support (you can run multiple apps using stylefy on the same web page if all apps are built separately)
-- Manual mode for styling 3rd party components and resolving corner cases in which complex CSS selectors are needed
-- Small and simple core API
-- Easy to setup (add it as a dependency, add a few HTML tags and you are ready to go)
-- Automatic style reloading with [Figwheel](https://github.com/bhauman/lein-figwheel)
+- Small and simple core API which is easy to setup
+- Fast, asynchronous CSS generation
+- Automatic style reloading
 - All features are tested to work with Chrome, Firefox, Edge & Internet Explorer 11
 
 # FAQ
@@ -106,6 +103,8 @@ To use it in a component, use the **use-style** function:
     text])
 ```
 
+**use-style** adds the style into the DOM as a CSS class on-demand (see "How it works" for more details).
+
 ### Passing styles to components
 
 **use-style** is designed to be called only inside component render functions to define styles for **HTML** elements. If you need to pass styles to Reagent components, pass them as regular Clojure maps, and call **use-style** last, only for HTML elements:
@@ -164,9 +163,9 @@ Do something like this:
 
 ### How it works (technical details)
 
-Calling **use-style** asks stylefy to save the style (if it has not been saved already) and add it into the DOM as CSS class asynchronously (soon, but not immediately). The return value is a map containing the given style properties as inline style. It is needed until the CSS class has been generated and inserted into the DOM. When the DOM is ready, the component is forced to re-render itself and use only the CSS class definition.
+**use-style** saves the style and adds it into the DOM as a CSS class asynchronously (if it's not already there). The return value is a map containing the given style properties as inline style. It is needed until the CSS class has been generated and inserted into the DOM. When the DOM is ready, the component is forced to re-render itself and use only the CSS class definition.
 
-You might ask why does **use-style** work asynchronously? Consider a case when one or more components are going to be rendered and all of them are calling **use-style** very many times with different style maps. In this case, updating the DOM on every single call would slow the rendering process down. To keep the rendering fast, the idea is to collect as many style maps as possible during a single render event, convert all of them to CSS and add into the DOM at once.
+You might ask why does **use-style** work asynchronously? The reason is speed. Consider a case when one or more components are going to be rendered and all of them are calling **use-style** very many times with different style maps. In this case, updating the DOM on every single call would slow the rendering process down. To keep the rendering fast, the idea is to collect as many style maps as possible during a single render event, convert all of them to CSS and add into the DOM at once.
 
 If the style contains some specific definitions that cannot be present as inline style (some specific modes or media queries), the HTML element using the style is going to be hidden for a few milliseconds with CSS **visibility** set to **hidden**, until the converted CSS style is added into the DOM. In most cases, this should not be a problem, but if needed, the style can be added into the DOM synchronously by calling **prepare-style**:
 
