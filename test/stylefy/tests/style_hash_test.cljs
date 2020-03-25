@@ -36,6 +36,10 @@
                      :line-height line-height
                      :padding-bottom (units/rem 1)})
 
+(def h4-style-clone-with-different-garden-values {:font-size (units/rem 2.2)
+                                                  :line-height line-height
+                                                  :padding-bottom (units/rem 1.1)})
+
 (deftest hash-style
   (is (= (styles/hash-style style-box) style-box-expected-hash)))
 
@@ -98,6 +102,8 @@
             (styles/hash-style h4-style)))
   (is (not= (styles/hash-style h2-style)
             (styles/hash-style h4-style)))
+  (is (= (styles/hash-style h4-style)
+         (styles/hash-style h4-style-clone-with-different-garden-values)))
 
   (is (= (styles/hash-style h4-style)
          (styles/hash-style h4-style-clone))))
