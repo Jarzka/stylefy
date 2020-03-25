@@ -45,10 +45,10 @@ Yup, for example: [Finnish National Access Point](https://github.com/finnishtran
 
 # Installation
 
-Add Leiningen project dependency:
+Add dependency:
 
 ```clj
-[stylefy "1.14.0"]
+[stylefy "1.14.1"]
 ```
 
 # Usage
