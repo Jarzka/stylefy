@@ -2,15 +2,13 @@
   (:require [stylefy.impl.dom :as dom]
             [garden.core :refer [css]]
             [clojure.string :as str]
+            [stylefy.impl.hashing :as hashing]
             [stylefy.impl.utils :as utils]
             [stylefy.impl.conversion :as conversion]
-            [clojure.set :as set]
-            [garden.compiler :as compiler]))
+            [clojure.set :as set]))
 
 (def global-vendor-prefixes (atom {:stylefy.core/vendors #{}
                                    :stylefy.core/auto-prefix #{}}))
-(def default-class-prefix "_stylefy")
-(def use-custom-class-prefix? (atom false))
 
 (defn- add-global-vendors [style]
   (merge style
@@ -19,49 +17,12 @@
           :stylefy.core/auto-prefix (set/union (:stylefy.core/auto-prefix @global-vendor-prefixes)
                                                (:stylefy.core/auto-prefix style))}))
 
-(defn- check-custom-class-prefix
-  "Checks that the value is valid and returns as properly formatted prefix."
-  [custom-class-prefix]
-  (assert (or
-            (nil? custom-class-prefix)
-            (string? custom-class-prefix)
-            (keyword? custom-class-prefix))
-          (str "Custom class prefix should be either string, keyword or nil, got: " (pr-str custom-class-prefix)))
-
-  (cond (nil? custom-class-prefix) default-class-prefix
-        (string? custom-class-prefix) custom-class-prefix
-        (keyword? custom-class-prefix) (name custom-class-prefix)))
-
-(defn hash-style [style]
-  (when (not (empty? style))
-    (let [hashable-garden-units (reduce
-                                  ;; Convert Garden units to CSS to make them structurally
-                                  ;; hashable (different contents = different hash)
-                                  (fn [result prop-key]
-                                    (let [prop-value (prop-key style)]
-                                      (if (utils/is-garden-value? prop-value)
-                                        (assoc result prop-key (compiler/render-css prop-value))
-                                        result)))
-                                  {}
-                                  (keys (utils/filter-css-props style)))
-          hashable-style (merge style hashable-garden-units)
-          ;; Hash style without certain special keywords:
-          ;; - sub-styles is only a link to other styles, it does not define the actual properties of this style
-          ;; - class-prefix is only for class naming, the style looks the same with it or without
-          hashable-style (dissoc hashable-style
-                                 :stylefy.core/sub-styles
-                                 :stylefy.core/class-prefix)
-          class-prefix (if @use-custom-class-prefix?
-                         (check-custom-class-prefix (:stylefy.core/class-prefix style))
-                         default-class-prefix)]
-      (str class-prefix "_" (hash hashable-style)))))
-
 (defn- create-style! [{:keys [props hash] :as style}]
   (dom/save-style! {:props props :hash hash})
 
   ;; Create sub-styles (if any)
   (doseq [sub-style (vals (:stylefy.core/sub-styles props))]
-    (create-style! {:props sub-style :hash (hash-style sub-style)})))
+    (create-style! {:props sub-style :hash (hashing/hash-style sub-style)})))
 
 (defn- prepare-style-return-value
   "Given a style, hash and options, returns HTML attributes for a Hiccup component,
@@ -146,7 +107,7 @@
     (dom/check-stylefy-initialisation)
 
     (let [style-with-global-vendors (when-not (empty? style) (add-global-vendors style))
-          style-hash (hash-style style-with-global-vendors)
+          style-hash (hashing/hash-style style-with-global-vendors)
           already-created (dom/style-by-hash style-hash)]
 
       (when (and (not (empty? style-with-global-vendors))
@@ -191,6 +152,3 @@
     (reset! global-vendor-prefixes
             {:stylefy.core/vendors (:stylefy.core/vendors global-vendor-prefixes-options)
              :stylefy.core/auto-prefix (:stylefy.core/auto-prefix global-vendor-prefixes-options)})))
-
-(defn init-custom-class-prefix [options]
-  (reset! use-custom-class-prefix? (boolean (:use-custom-class-prefix? options))))

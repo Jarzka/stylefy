@@ -1,5 +1,5 @@
 (ns stylefy.core
-  (:require [dommy.core :as dommy]
+  (:require [stylefy.impl.hashing :as hashing]
             [stylefy.impl.styles :as impl-styles]
             [stylefy.impl.dom :as dom])
   (:require-macros [reagent.ratom :refer [run!]]))
@@ -116,7 +116,7 @@
   ([options]
    (when @dom/stylefy-initialised?
      (.warn js/console "Attempted to initialise stylefy more than once."))
-   (impl-styles/init-custom-class-prefix options)
+   (hashing/init-custom-class-prefix options)
    (dom/init-multi-instance options)
    (dom/init-cache options)
    (impl-styles/init-global-vendor-prefixes options)
