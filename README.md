@@ -533,10 +533,6 @@ Then init stylefy with multi-instance support. Instance-id is a unique string (f
 
 More examples available here: https://github.com/Jarzka/stylefy/tree/master/examples/src/stylefy/examples
 
-# Changelog
-
-Here: https://github.com/Jarzka/stylefy/releases
-
 # More cool stuff
 
 - Need to namespace or unnamespace keywords in a map? Checkout my other library: [namespacefy](https://github.com/Jarzka/namespacefy)
