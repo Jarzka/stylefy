@@ -2,7 +2,7 @@
 
 Mar 25, 2020
 
-- Fix a bug when hashing style maps with Garden units (thanks to @frankitox for reporting this: https://github.com/Jarzka/stylefy/issues/21#issuecomment-603589989)
+- Fix a bug: style maps with Garden units were sometimes hashed incorrectly (thanks to @frankitox for reporting this: https://github.com/Jarzka/stylefy/issues/21#issuecomment-603589989)
 - Minor refactoring
 
 # 1.14.0
