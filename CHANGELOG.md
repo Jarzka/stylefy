@@ -5,6 +5,8 @@ Mar 25, 2020
 - Fix a bug: style maps with Garden units were sometimes hashed incorrectly (thanks to @frankitox for reporting this: https://github.com/Jarzka/stylefy/issues/21#issuecomment-603589989)
 - Minor refactoring
 
+If you have used stylefy's auto-generated class names in tests, you can expect the values of those tests to change.
+
 # 1.14.0
 
 Aug 17, 2019
