@@ -91,7 +91,7 @@
   (let [time (r/atom (t/now))
         updating? (atom true)]
     (r/create-class
-      {:component-will-mount #(go-loop []
+      {:component-did-mount #(go-loop []
                                        (<! (timeout 1000))
                                        (when @updating?
                                          (reset! time (t/now))
