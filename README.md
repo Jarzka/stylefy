@@ -173,18 +173,7 @@ If the style contains some specific definitions that cannot be present as inline
 [:div (use-style (prepare-style style))]
 ```
 
-Because **prepare-style** causes immediate synchronous DOM update, it is not recommended to overuse it, as it can slow the rendering process. If a component needs to prepare multiple styles, it is recommend to call **prepare-styles** during the **component-will-mount** lifecycle method:
-
-```clojure
-(r/create-class
-  {:component-will-mount #(stylefy/prepare-styles [style1 style2 style3])
-   :render (fn []
-             [:div (use-style style1)
-               [:div (use-style style2)]
-               [:div (use-style style3)]])})
-```
-
-It's good to keep in mind that most of the time either **prepare-style** or **prepare-styles** is not needed, but calling **use-style** is enough. Also, when caching is used, the style will be ready after its CSS has been created for the first time.
+Because **prepare-style** causes immediate synchronous DOM update, it is not recommended to overuse it, as it can slow the rendering process. Also, it's good to keep in mind that most of the time **prepare-style** is not needed, but calling **use-style** is enough. Also, when caching is used, the style will be ready after its CSS has been created for the first time.
 
 ## Modes (pseudo-classes & pseudo-elements)
 
