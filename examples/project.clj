@@ -2,7 +2,6 @@
   :description "Stylefy Examples"
   :dependencies [[org.clojure/clojure "1.10.1"]
                  [org.clojure/clojurescript "1.10.520"]
-                 [org.clojure/tools.logging "1.1.0"]
                  [prismatic/dommy "1.1.0"]
                  [hiccup "1.0.5"]
                  [garden "1.3.6"]
