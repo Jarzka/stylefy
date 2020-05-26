@@ -6,18 +6,6 @@
             [stylefy.impl.state :as state]
             [stylefy.impl.log :as log]))
 
-(def ^:dynamic css-in-context (atom nil))
-
-#?(:clj
-   (defn query-with-styles [query]
-     (binding [stylefy.core/css-in-context (atom nil)]
-       (let [result (query)
-             result-with-styles-attached (str/replace
-                                           result
-                                           #"_stylefy-server-styles-content_"
-                                           (apply str (vals @css-in-context)))]
-         result-with-styles-attached))))
-
 (defn use-style
   "Defines a style for a component by converting the given style map in to an unique CSS class,
    and returning a pointer (a map with :class keyword) to it so that the component can use it.
@@ -143,6 +131,25 @@
    (reset! state/stylefy-initialised? true)
    #?(:cljs (dom/update-dom))))
 
+;
+; Backend only
+;
+
+(def ^:dynamic css-in-context (atom nil))
+
+#?(:clj
+   (defn query-with-styles [query]
+     (binding [stylefy.core/css-in-context (atom nil)]
+       (let [result (query)
+             result-with-styles-attached (str/replace
+                                           result
+                                           #"_stylefy-server-styles-content_"
+                                           (apply str (vals @css-in-context)))]
+         result-with-styles-attached))))
+
+;
+; Frontend only
+;
 #?(:cljs
    (defn keyframes
      "Adds the given keyframe definition into the DOM asynchronously.
