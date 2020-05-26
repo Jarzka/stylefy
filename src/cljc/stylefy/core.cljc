@@ -4,8 +4,7 @@
             [stylefy.impl.styles :as impl-styles]
             #?(:cljs [stylefy.impl.dom :as dom])
             [stylefy.impl.state :as state]
-            [stylefy.impl.log :as log])
-  #_(:require-macros [reagent.ratom :refer [run!]]))
+            [stylefy.impl.log :as log]))
 
 (def ^:dynamic css-in-context (atom nil))
 
