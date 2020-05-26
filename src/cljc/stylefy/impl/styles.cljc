@@ -4,17 +4,19 @@
             #?(:cljs [stylefy.impl.dom :as dom])
             [stylefy.impl.hashing :as hashing]
             [stylefy.impl.utils :as utils]
-            [stylefy.impl.state :as settings]
+            [stylefy.impl.state :as state]
             [stylefy.impl.conversion :as conversion]
             [stylefy.impl.log :as log]
-            [stylefy.impl.state :as state]
             [clojure.set :as set]))
+
+(def global-vendor-prefixes (atom {:stylefy.core/vendors #{}
+                                   :stylefy.core/auto-prefix #{}}))
 
 (defn- add-global-vendors [style]
   (merge style
-         {:stylefy.core/vendors (set/union (:stylefy.core/vendors @state/global-vendor-prefixes)
+         {:stylefy.core/vendors (set/union (:stylefy.core/vendors global-vendor-prefixes)
                                            (:stylefy.core/vendors style))
-          :stylefy.core/auto-prefix (set/union (:stylefy.core/auto-prefix @state/global-vendor-prefixes)
+          :stylefy.core/auto-prefix (set/union (:stylefy.core/auto-prefix global-vendor-prefixes)
                                                (:stylefy.core/auto-prefix style))}))
 
 (defn- create-style! [{:keys [props hash] :as style} style-created-handler]
@@ -107,7 +109,7 @@
                      (every? string? with-classes-style)))
             (str "with-classes argument inside style map must be a vector of strings, got: " (pr-str with-classes-style)))
 
-    (settings/check-stylefy-initialisation)
+    (state/check-stylefy-initialisation)
 
     (let [style-with-global-vendors (when-not (empty? style) (add-global-vendors style))
           style-hash (hashing/hash-style style-with-global-vendors)
@@ -156,6 +158,6 @@
 
 (defn init-global-vendor-prefixes [options]
   (let [global-vendor-prefixes-options (:global-vendor-prefixes options)]
-    (reset! settings/global-vendor-prefixes
+    (reset! global-vendor-prefixes
             {:stylefy.core/vendors (:stylefy.core/vendors global-vendor-prefixes-options)
              :stylefy.core/auto-prefix (:stylefy.core/auto-prefix global-vendor-prefixes-options)})))

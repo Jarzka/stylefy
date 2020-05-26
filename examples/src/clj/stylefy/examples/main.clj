@@ -21,6 +21,9 @@
      (sub-component "Example text is red")]]
    [:script {:src "/js/main.js"}]])
 
+(defn init-stylefy []
+  (stylefy/init))
+
 (defn example-query []
   (stylefy/query-with-styles
     (fn [] (html (example-component)))))

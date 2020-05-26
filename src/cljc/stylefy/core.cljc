@@ -77,21 +77,23 @@
       :clj  (impl-styles/use-style! style options (fn [{:keys [hash css]}]
                                                     (swap! css-in-context assoc hash css))))))
 
-#?(:cljs
-   (defn use-sub-style
-     "Defines style for a component using sub-style.
 
-      The style and options are the same as you would use with use-style.
-      sub-style is the name of the sub-stale in the given style map.
+(defn use-sub-style
+  "Defines style for a component using sub-style.
 
-      If you have a deeper sub-style nesting, ie. you want to get a sub-style from sub-style,
-      take a look at sub-style function."
-     ([style sub-style] (use-sub-style style sub-style {}))
-     ([style sub-style options]
-      (assert (or (map? style) (nil? style)) (str "Style should be a map or nil, got: " (pr-str style)))
-      (assert (or (map? options) (nil? options))
-              (str "Options should be a map or nil, got: " (pr-str options)))
-      (impl-styles/use-sub-style! style sub-style options dom/save-style!))))
+   The style and options are the same as you would use with use-style.
+   sub-style is the name of the sub-stale in the given style map.
+
+   If you have a deeper sub-style nesting, ie. you want to get a sub-style from sub-style,
+   take a look at sub-style function."
+  ([style sub-style] (use-sub-style style sub-style {}))
+  ([style sub-style options]
+   (assert (or (map? style) (nil? style)) (str "Style should be a map or nil, got: " (pr-str style)))
+   (assert (or (map? options) (nil? options))
+           (str "Options should be a map or nil, got: " (pr-str options)))
+   #?(:cljs (impl-styles/use-sub-style! style sub-style options dom/save-style!)
+      :clj  (impl-styles/use-sub-style! style sub-style options (fn [{:keys [hash css]}]
+                                                                  (swap! css-in-context assoc hash css))))))
 
 (defn sub-style
   "Returns sub-style for a given style."
@@ -99,43 +101,47 @@
   (assert (every? keyword? sub-styles) (str "Sub style should be referenced by keyword, got: " (pr-str sub-styles)))
   (apply impl-styles/sub-style (apply conj [style] sub-styles)))
 
-#?(:cljs
-   (defn init
-     "Initialises stylefy.
+(defn init
+  "Initialises stylefy.
 
-     The following options are supported:
-       :use-caching?             If true, caches the generated CSS code using localstorage
-                                 so that future page loads work faster. Defaults to true since version 1.7.0.
-                                 Also check :cache-options.
-       :cache-options            A map which can contain the following keywords:
-         :expires                Number of seconds after the cache is cleared automatically.
-                                 For example, value 604800 clears the cache after one week.
-                                 By default, the cache is never cleared automatically.
-                                 You can also clear the cache manually by calling stylefy.cache/clear.
-       :global-vendor-prefixes   A map containing a set of ::stylefy/vendors and ::stylefy/auto-prefix properties.
-                                 These properties are globally prefixed in all stylefy style maps.
-       :use-custom-class-prefix? If set to true, custom class prefix is used if the style map contains it.
-                                 By default, this is set to false.
-                                 It is recommended to set this to true only in development / test environment.
-       :multi-instance           Provides support for multiple stylefy instances.
-                                 This can be used if you need to run multiple SPA applications
-                                 on the same page and at least two of them are using stylefy.
-         :base-node              Base node where this instance's <style> tags are queried. Not required.
-         :instance-id            Unique string (for example app name). This is used as suffix for stylefy's <style> tags
-                                 so make sure you name each instance's <style> tags correctly. For example:
-                                 <style id=\"_stylefy-styles_myapp\">
-                                 <style id=\"_stylefy-constant-styles_myapp\">
-                                 This value is also used as suffix in caching."
-     ([] (init {}))
-     ([options]
-      (when @state/stylefy-initialised?
-        (log/warn "Attempted to initialise stylefy more than once."))
-      (hashing/init-custom-class-prefix options)
-      (dom/init-multi-instance options)
-      (dom/init-cache options)
-      (impl-styles/init-global-vendor-prefixes options)
-      (reset! state/stylefy-initialised? true)
-      (dom/update-dom)))) ;; Update can be synchronous on init
+  The following options are supported:
+
+  :global-vendor-prefixes     A map containing a set of ::stylefy/vendors and ::stylefy/auto-prefix properties.
+                              These properties are globally prefixed in all stylefy style maps.
+  :use-custom-class-prefix?   If set to true, custom class prefix is used if the style map contains it.
+                              By default, this is set to false.
+                              It is recommended to set this to true only in development / test environment.
+
+  FRONTEND ONLY:
+
+    :use-caching?             If true, caches the generated CSS code using localstorage
+                              so that future page loads work faster. Defaults to true since version 1.7.0.
+                              Also check :cache-options.
+    :cache-options            A map which can contain the following keywords:
+      :expires                Number of seconds after the cache is cleared automatically.
+                              For example, value 604800 clears the cache after one week.
+                              By default, the cache is never cleared automatically.
+                              You can also clear the cache manually by calling stylefy.cache/clear.
+
+    :multi-instance           Provides support for multiple stylefy instances.
+                              This can be used if you need to run multiple SPA applications
+                              on the same page and at least two of them are using stylefy.
+      :base-node              Base node where this instance's <style> tags are queried. Not required.
+      :instance-id            Unique string (for example app name). This is used as suffix for stylefy's <style> tags
+                              so make sure you name each instance's <style> tags correctly. For example:
+                              <style id=\"_stylefy-styles_myapp\">
+                              <style id=\"_stylefy-constant-styles_myapp\">
+                              This value is also used as suffix in caching."
+  ([] (init {}))
+  ([options]
+   (when @state/stylefy-initialised?
+     (log/warn "Attempted to initialise stylefy more than once."))
+   (hashing/init-custom-class-prefix options)
+   #?(:cljs (dom/init-multi-instance options))
+   #?(:cljs (dom/init-cache options))
+   (impl-styles/init-global-vendor-prefixes options)
+   (reset! state/stylefy-initialised? true)
+   #?(:cljs (dom/update-dom))))
 
 #?(:cljs
    (defn keyframes
