@@ -1,4 +1,4 @@
-(defproject stylefy "2.0.0-beta2"
+(defproject stylefy "2.0.0-beta3"
   :description "Library for styling UI components"
   :url "https://github.com/Jarzka/stylefy"
   :dependencies [[org.clojure/clojure "1.9.0"]
@@ -14,9 +14,9 @@
   :codox {:language :clojurescript
           :output-path "doc"
           :source-paths ["src"]}
-  :source-paths ["src/clj" "src/cljc"]
+  :source-paths ["src/clj" "src/cljc" "src/cljs"]
   :cljsbuild {:builds [{:id "test"
-                        :source-paths ["src" "test"]
+                        :source-paths ["src/cljs" "src/cljc" "src/clj" "test"]
                         :compiler {:output-to "target/cljs/test/test.js"
                                    :optimizations :whitespace
                                    :pretty-print true}}
