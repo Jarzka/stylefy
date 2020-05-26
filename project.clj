@@ -14,6 +14,8 @@
   :codox {:language :clojurescript
           :output-path "doc"
           :source-paths ["src"]}
+  :source-paths ["src/clj" "src/cljc"]
+  :test-paths ["test/clj"]
   :cljsbuild {:builds [{:id "test"
                         :source-paths ["src" "test"]
                         :compiler {:output-to "target/cljs/test/test.js"

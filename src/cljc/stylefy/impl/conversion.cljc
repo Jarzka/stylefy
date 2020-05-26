@@ -2,6 +2,7 @@
   (:require [garden.core :refer [css]]
             [stylefy.impl.utils :as utils]
             [garden.stylesheet :refer [at-media at-keyframes at-font-face]]
+            [stylefy.impl.log :as log]
             [clojure.string :as str]
             [garden.compiler :as compiler]))
 
@@ -31,7 +32,7 @@
                               (str "Mode must be specified as a keyword or string beginning with colon, got: " (pr-str mode-name)))
                       (when (and (string? mode-name)
                                  (> (count (str/split mode-name " ")) 1))
-                        (.warn js/console (str "Incorrect mode detected, should not contain spaces. Mode was: " (pr-str mode-name))))
+                        (log/warn (str "Incorrect mode detected, should not contain spaces. Mode was: " (pr-str mode-name))))
                       [(keyword (str "&" mode-name)) (or mode-props (get modes mode-name))])]
     (cond
       (map? modes) (mapv handle-mode (keys modes))

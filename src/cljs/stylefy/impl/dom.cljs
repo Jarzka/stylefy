@@ -7,12 +7,13 @@
             [stylefy.impl.utils :as utils]
             [stylefy.impl.conversion :as conversion]
             [garden.stylesheet :refer [at-media at-keyframes at-font-face]]
-            [clojure.set :as set])
+            [clojure.set :as set]
+            [stylefy.impl.log :as log])
   (:require-macros
     [reagent.ratom :refer [run!]]
     [cljs.core.async.macros :refer [go]]))
 
-(def stylefy-initialised? (atom false))
+
 (def styles-in-dom (atom {})) ;; style hash -> r/atom with boolean value
 (def ^:private dom-update-requested? (atom false))
 
@@ -73,12 +74,12 @@
           (try
             (cache/cache-styles @styles-as-css @stylefy-instance-id)
             (catch :default e
-              (.warn js/console (str "Unable to cache styles, error: " e))
+              (log/warn (str "Unable to cache styles, error: " e))
               (cache/clear-styles @stylefy-instance-id)
               e))
 
           (mark-all-styles-added-in-dom!))
-      (.error js/console "stylefy is unable to find the required <style> tags!"))))
+      (log/error "stylefy is unable to find the required <style> tags!"))))
 
 (defn- update-dom-if-requested
   []
@@ -93,9 +94,7 @@
       (go
         (update-dom)))))
 
-(defn check-stylefy-initialisation []
-  (when-not @stylefy-initialised?
-    (.warn js/console (str "use-style called before stylefy was initialised!"))))
+
 
 (defn init-multi-instance [{:keys [multi-instance] :as options}]
   (let [base-node (:base-node multi-instance)
@@ -120,11 +119,10 @@
 
 (defn save-style!
   "Stores the style in an atom. The style is going to be added into the DOM soon."
-  [{:keys [props hash] :as style}]
-  (assert props "Unable to save empty style!")
+  [{:keys [css hash] :as style}]
+  (assert css "Unable to save empty style!")
   (assert hash "Unable to save style without hash!")
-  (let [style-css (conversion/style->css style)
-        style-to-be-saved {::css style-css}]
+  (let [style-to-be-saved {::css css}]
     (swap! styles-as-css assoc hash style-to-be-saved)
     (swap! styles-in-dom assoc hash (r/atom false)) ; Note: r/atom, to be usable in component render methods.
     (request-asynchronous-dom-update)))
