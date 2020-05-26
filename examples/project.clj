@@ -22,7 +22,6 @@
   :cljsbuild {:builds [{:id "dev"
                         :source-paths ["src/clj"
                                        "src/cljs"
-                                       "../src/clj"
                                        "../src/cljc"
                                        "../src/cljs"]
                         :figwheel {:on-jsload "stylefy.examples.main/start"}
