@@ -11,3 +11,5 @@ pom.xml.asc
 doo-index.html
 .lein-failures
 /out
+.lein-repl-history
+.lein-failures
