@@ -54,7 +54,7 @@ Stable version:
 Latest development version (do not use in production):
 
 ```clj
-[stylefy "2.0.0-beta2"]
+[stylefy "2.0.0-beta3"]
 ```
 
 # Usage
