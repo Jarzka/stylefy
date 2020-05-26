@@ -20,6 +20,6 @@
                                    :optimizations :whitespace
                                    :pretty-print true}}
                        {:id "prod"
-                        :source-paths ["src"]
+                        :source-paths ["src/cljs" "src/cljc" "src/clj"]
                         :compiler {:output-to "stylefy.js"
                                    :optimizations :advanced}}]})

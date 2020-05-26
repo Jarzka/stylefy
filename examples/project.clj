@@ -11,7 +11,11 @@
   :plugins [[lein-cljsbuild "1.1.7"]
             [lein-figwheel "0.5.18"]]
   :cljsbuild {:builds [{:id "dev"
-                        :source-paths ["src" "../src"]
+                        :source-paths ["src/clj"
+                                       "src/cljs"
+                                       "../src/clj"
+                                       "../src/cljc"
+                                       "../src/cljs"]
                         :figwheel {:on-jsload "stylefy.examples.main/start"}
                         :compiler {:output-to "resources/public/js/dev/stylefy.js"
                                    :output-dir "resources/public/js/dev/out"

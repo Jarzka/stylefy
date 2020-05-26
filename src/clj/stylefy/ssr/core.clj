@@ -1,8 +1,11 @@
-(ns stylefy.core
+(ns stylefy.ssr.core
   (:require [stylefy.impl.hashing :as hashing]
             [stylefy.impl.styles :as impl-styles]
-            [stylefy.impl.dom :as dom])
-  (:require-macros [reagent.ratom :refer [run!]]))
+            [stylefy.impl.dom :as dom]))
+
+(defmacro with-styles [body]
+
+  )
 
 (defn use-style
   "Defines a style for a component by converting the given style map in to an unique CSS class,
@@ -65,7 +68,7 @@
    (assert (or (map? options) (nil? options)) (str "Options should be a map or nil, got: " (pr-str options)))
    (impl-styles/use-style! style options)))
 
-(defn use-sub-style
+#_(defn use-sub-style
   "Defines style for a component using sub-style.
 
    The style and options are the same as you would use with use-style.
@@ -75,18 +78,18 @@
    take a look at sub-style function."
   ([style sub-style] (use-sub-style style sub-style {}))
   ([style sub-style options]
-   (assert (or (map? style) (nil? style)) (str "Style should be a map or nil, got: " (pr-str style)))
+   (assert (or (map? style) (nil? st/manyle)) (str "Style should be a map or nil, got: " (pr-str style)))
    (assert (or (map? options) (nil? options))
            (str "Options should be a map or nil, got: " (pr-str options)))
    (impl-styles/use-sub-style! style sub-style options)))
 
-(defn sub-style
+#_(defn sub-style
   "Returns sub-style for a given style."
   [style & sub-styles]
   (assert (every? keyword? sub-styles) (str "Sub style should be referenced by keyword, got: " (pr-str sub-styles)))
   (apply impl-styles/sub-style (apply conj [style] sub-styles)))
 
-(defn init
+#_(defn init
   "Initialises stylefy.
 
   The following options are supported:
@@ -123,7 +126,7 @@
    (reset! dom/stylefy-initialised? true)
    (dom/update-dom))) ;; Update can be synchronous on init
 
-(defn keyframes
+#_(defn keyframes
   "Adds the given keyframe definition into the DOM asynchronously.
    Identifier is the name of the keyframes.
    Frames are given in the same form as Garden accepts them.
@@ -138,7 +141,7 @@
   (assert (string? identifier) (str "Identifier should be string, got: " (pr-str identifier)))
   (apply dom/add-keyframes identifier frames))
 
-(defn font-face
+#_(defn font-face
   "Adds the given font-face definition into the DOM asynchronously.
    Properties are given in the same form as Garden accepts them.
 
@@ -151,7 +154,7 @@
   (assert (map? properties) (str "Properties should be a map, got: " (pr-str properties)))
   (dom/add-font-face properties))
 
-(defn tag
+#_(defn tag
   "Creates a CSS selector for the given tag and properties and adds it into the DOM asynchronously.
 
    Normally you should let stylefy convert your style maps to unique CSS classes by calling
@@ -166,7 +169,7 @@
   (assert (map? properties) (str "Properties should be a map, got: " (pr-str properties)))
   (dom/add-tag name properties))
 
-(defn class
+#_(defn class
   "Creates a CSS class with the given name and properties and adds it into the DOM asynchronously.
 
    Normally you should let stylefy convert your style maps to unique CSS classes by calling
@@ -180,21 +183,3 @@
   (assert (string? name) (str "Name should be a string, got: " (pr-str name)))
   (assert (map? properties) (str "Properties should be a map, got: " (pr-str properties)))
   (dom/add-class name properties))
-
-(defn prepare-styles
-  "Converts the given styles and their sub-styles to CSS and adds them into the DOM
-   synchronously (immediately)."
-  [styles]
-  (assert (seqable? styles) (str "Styles should be seqable, got: " (pr-str styles)))
-  (assert (every? map? (remove nil? styles))
-          (str "Every style should be a map or nil, got: " (pr-str styles)))
-  (impl-styles/prepare-styles styles))
-
-(defn prepare-style
-  "Same as prepare-styles, but takes only one style map as a parameter, prepares it
-   and returns it. Can be used easily along with use-style: (use-style (prepare-style style))."
-  [style]
-  (assert (or (map? style) (nil? style)) (str "Style should be a map or nil, got: " (pr-str style)))
-  (when style
-    (impl-styles/prepare-styles [style]))
-  style)
