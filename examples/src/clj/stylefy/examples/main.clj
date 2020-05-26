@@ -1,7 +1,6 @@
 (ns stylefy.examples.main
   (:require [hiccup.core :refer :all]
-            [stylefy.core :as stylefy :refer [use-style]])
-  #_(:require-macros [stylefy.core.ssr :refer [query-with-styles]]))
+            [stylefy.core :as stylefy :refer [use-style]]))
 
 (defn sub-component [message]
   [:span (use-style {:color :red}) message])

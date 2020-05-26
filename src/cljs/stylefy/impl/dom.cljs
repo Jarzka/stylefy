@@ -4,11 +4,10 @@
             [garden.core :refer [css]]
             [cljs.core.async :refer [<! timeout]]
             [stylefy.impl.cache :as cache]
-            [stylefy.impl.utils :as utils]
             [stylefy.impl.conversion :as conversion]
             [garden.stylesheet :refer [at-media at-keyframes at-font-face]]
-            [clojure.set :as set]
-            [stylefy.impl.log :as log])
+            [stylefy.impl.log :as log]
+            [stylefy.impl.state :as state])
   (:require-macros
     [reagent.ratom :refer [run!]]
     [cljs.core.async.macros :refer [go]]))
@@ -88,13 +87,11 @@
 
 (defn- request-asynchronous-dom-update
   []
-  (when @stylefy-initialised?
+  (when @state/stylefy-initialised?
     (when-not @dom-update-requested?
       (reset! dom-update-requested? true)
       (go
         (update-dom)))))
-
-
 
 (defn init-multi-instance [{:keys [multi-instance] :as options}]
   (let [base-node (:base-node multi-instance)
