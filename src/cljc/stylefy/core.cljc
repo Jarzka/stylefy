@@ -6,6 +6,8 @@
             [stylefy.impl.state :as state]
             [stylefy.impl.log :as log]))
 
+(def ^:dynamic css-in-context (atom nil))
+
 (defn use-style
   "Defines a style for a component by converting the given style map in to an unique CSS class,
    and returning a pointer (a map with :class keyword) to it so that the component can use it.
@@ -134,8 +136,6 @@
 ;
 ; Backend only
 ;
-
-(def ^:dynamic css-in-context (atom nil))
 
 #?(:clj
    (defn query-with-styles [query]
