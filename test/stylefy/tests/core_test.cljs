@@ -219,9 +219,7 @@
   (testing "Use sub-style with class name"
     (let [return (stylefy/use-sub-style style-box :sub-box {:class ["dummy"]})]
       (is (string? (:class return)))
-      (is (str/includes? (:class return) "dummy"))
-      (is (= (:style (get-in style-box [::stylefy/sub-styles :sub-box]))
-             return))))
+      (is (str/includes? (:class return) "dummy"))))
 
   (testing "Use sub-style with additional HTML attribute :style definition"
     (try
