@@ -123,7 +123,7 @@
     (let [style-with-global-vendors (when-not (empty? style) (add-global-vendors style))
           style-hash (hashing/hash-style style-with-global-vendors)
           already-created #?(:cljs (dom/style-by-hash style-hash)
-                             :clj false)]
+                             :clj false)] ; TODO Read from css-in-context?
 
       (when (and (not (empty? style-with-global-vendors))
                  (some? style-hash)
