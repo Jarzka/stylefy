@@ -307,7 +307,7 @@
    [garden-units]
 
    [:h1 "Key order"]
-   [:p "In some rare cases, the order of CSS key properties is important. If we use a regular Clojure map, the order of keys can change in the final CSS output."]
+   [:p "If CSS shorthands are used, the order of CSS key properties is important. If we use a regular Clojure map, the order of keys can change in the final CSS output."]
    [:p "This specific style map renders incorrectly (some background properties are defined before the background itself and these are ignored by the browser):"]
    [:div (merge
            (use-style background-box-incorrect)
