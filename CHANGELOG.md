@@ -2,7 +2,7 @@
 
 May 26, 2020
 
-- **BREAKING** Removes the possibility to pass `::with-classes` to `use-style` via options map (second argument of `use-style`). If you do this, a warning message is logged and the value is ignored. This feature has been marked as deprecated since version 1.3.0 (2018). If you have used `with-classes` in options map, you can easily replace it with `:class`. Notice that passing `::with-classes` via style map (first argument of `use-style`) is still perfectly valid, this change is only related to the options map.
+- **BREAKING** Removes the possibility to pass `::stylefy/with-classes` to `use-style` via options map (second argument of `use-style`). If you do this, a warning message is logged and the value is ignored. This feature has been marked as deprecated since version 1.3.0 (2018). If you have used `::stylefy/with-classes` in options map, you can easily replace it with `:class`. Notice that passing `::stylefy/with-classes` via style map (first argument of `use-style`) is still perfectly valid, this change is only related to the options map.
 - Adds basic support for Server-Side Rendering (SSR). This means that we can now use `use-style` in the backend, when generating Hiccup code. This new feature does not affect how you use stylefy in the frontend. If you don't need SSR, you can simply omit it by doing nothing.
 
 # 1.14.1
