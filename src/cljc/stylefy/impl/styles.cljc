@@ -33,33 +33,42 @@
   "Given a style, hash and options, returns HTML attributes for a Hiccup component,
    or nil if there are not any attributes."
   [style style-hash options]
-  (let [style-with-classes (:stylefy.core/with-classes style)
-        html-attributes (utils/filter-css-props options)
-        html-attributes-class (:class html-attributes)
-        html-attributes-inline-style (:style html-attributes)
-        final-class (str/trim
-                      (cond
-                        (nil? html-attributes-class)
-                        (str/join " " (concat style-with-classes [style-hash]))
 
-                        (string? html-attributes-class)
-                        (str/join " " (concat [html-attributes-class] style-with-classes [style-hash]))
+  (when (:stylefy.core/with-classes options)
+    (log/warn ":stylefy.core/with-classes is deprecated in options map (since 1.3.0, removed in 2.0.0), use :class instead."))
 
-                        (vector? html-attributes-class)
-                        (str/join " " (concat html-attributes-class style-with-classes [style-hash]))))
-        final-html-attributes (merge
-                                html-attributes
-                                (when (not (empty? final-class)) {:class final-class}))]
+  (let [style-with-classes (:stylefy.core/with-classes style)]
+    (when style-with-classes
+      (assert (and (coll? style-with-classes)
+                   (every? #(or (string? %) (nil? %)) style-with-classes))
+              (str "with-classes must be a collection of string class names, got: " (pr-str style-with-classes))))
 
-    (assert (or (nil? html-attributes-class)
-                (string? html-attributes-class)
-                (vector? html-attributes-class))
-            (str "Unsupported :class type (should be nil, string or vector). Got: " (pr-str html-attributes-class)))
-    (assert (nil? html-attributes-inline-style)
-            "HTML attribute :style is not supported in options map. Instead, you should provide your style definitions as the first argument when calling use-style.")
+    (let [html-attributes (utils/filter-css-props options)
+          html-attributes-class (:class html-attributes)
+          html-attributes-inline-style (:style html-attributes)
+          final-class (str/trim
+                        (cond
+                          (nil? html-attributes-class)
+                          (str/join " " (concat style-with-classes [style-hash]))
 
-    (when (not (empty? final-html-attributes))
-      final-html-attributes)))
+                          (string? html-attributes-class)
+                          (str/join " " (concat [html-attributes-class] style-with-classes [style-hash]))
+
+                          (vector? html-attributes-class)
+                          (str/join " " (concat html-attributes-class style-with-classes [style-hash]))))
+          final-html-attributes (merge
+                                  html-attributes
+                                  (when (not (empty? final-class)) {:class final-class}))]
+
+      (assert (or (nil? html-attributes-class)
+                  (string? html-attributes-class)
+                  (vector? html-attributes-class))
+              (str "Unsupported :class type (should be nil, string or vector). Got: " (pr-str html-attributes-class)))
+      (assert (nil? html-attributes-inline-style)
+              "HTML attribute :style is not supported in options map. Instead, you should provide your style definitions as the first argument when calling use-style.")
+
+      (when (not (empty? final-html-attributes))
+        final-html-attributes))))
 
 (defn style-return-value [style style-hash options]
   (let [return-map (prepare-style-return-value style style-hash options)]
