@@ -100,7 +100,6 @@
                               These properties are globally prefixed in all stylefy style maps.
   :use-custom-class-prefix?   If set to true, custom class prefix is used if the style map contains it.
                               By default, this is set to false.
-                              It is recommended to set this to true only in development / test environment.
 
   FRONTEND ONLY:
 
