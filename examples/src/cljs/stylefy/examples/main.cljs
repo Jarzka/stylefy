@@ -123,28 +123,6 @@
            [component])
          @comps)])))
 
-(defn- bs-navbar-item-legacy-syntax [index index-atom text]
-  ;; Since version 1.3.0: use-style now supports HTML attributes as the second parameter.
-  ;; Thus, merging is not needed and ::stylefy/with-classes can be replaced with :class.
-  ;; This example here remains as it is for testing purposes, it has to work
-  ;; for ensuring good backwards compatibility.
-  [:li (merge (use-style styles/clickable
-                         (when (= @index-atom index)
-                           {::stylefy/with-classes ["active"]}))
-              {:role "presentation"
-               :on-click #(reset! index-atom index)})
-   [:a (use-sub-style styles/boostrap-navbar-overrides :link)
-    text]])
-
-(defn- bs-navbar-legacy-syntax []
-  (let [active-index (r/atom 0)]
-    (fn []
-      [:ul.nav.nav-pills (use-style styles/boostrap-navbar-overrides)
-       [bs-navbar-item-legacy-syntax 0 active-index "One"]
-       [bs-navbar-item-legacy-syntax 1 active-index "Two"]
-       [bs-navbar-item-legacy-syntax 2 active-index "Three"]
-       [bs-navbar-item-legacy-syntax 3 active-index "Four"]])))
-
 (defn- bs-navbar-item-current-syntax [index index-atom text]
   [:li (use-style styles/clickable (merge
                                      (when (= @index-atom index)
@@ -268,7 +246,6 @@
 
    [:h1 "Boostrap navbar"]
    [:p "You can also assign any classes to elements normally. Here we use Boostrap classes to construct simple navbars. We also override some BS styles."]
-   [bs-navbar-legacy-syntax]
    [bs-navbar-current-syntax]
    [bs-navbar-alternative-syntax]
 
