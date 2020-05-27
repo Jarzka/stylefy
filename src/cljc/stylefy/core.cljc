@@ -137,7 +137,12 @@
 ;
 
 #?(:clj
-   (defn query-with-styles [query]
+   (defn query-with-styles
+     "Takes a query-fn, which is assumed to return HTML as text, and executes it.
+      If use-style is called during the execution, the generated CSS is kept in temporary memory.
+      When the query has finished, a special value of _stylefy-server-styles-content_ is searched
+      in the output and replaced with the generated CSS. Returns the end result."
+     [query]
      (binding [stylefy.core/css-in-context (atom nil)]
        (let [result (query)
              result-with-styles-attached (str/replace
