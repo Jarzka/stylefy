@@ -198,7 +198,7 @@
                      :background-image (url "images/background.jpg")})
     "Defined with pc unit, height with rem unit, color with rgb, background as a custom defcssfn function."]])
 
-(def background-box-works (sorted-map
+(def background-box-sorted (sorted-map
                             :width "100%"
                             :height "20rem"
                             :font-family "open_sans, Verdana, Helvetica, sans-serif"
@@ -210,6 +210,18 @@
                             :background-size "cover"
                             :margin 0
                             :padding 0))
+
+(def background-box-no-shorthands {:width "100%"
+                                   :height "20rem"
+                                   :font-family "open_sans, Verdana, Helvetica, sans-serif"
+                                   :color "#eaeaea"
+                                   :background-image "url('images/meme.jpg')"
+                                   :background-repeat "no-repeat"
+                                   :background-position "center"
+                                   :background-attachment "fixed"
+                                   :background-size "cover"
+                                   :margin 0
+                                   :padding 0})
 
 (def background-box-incorrect {:font-family "open_sans, Verdana, Helvetica, sans-serif"
                                :color "#121212"
@@ -301,8 +313,9 @@
            (use-style background-box-incorrect)
            {:style {:width "100%" :height "20rem"}})]
    [:p "Workaround is to use a sorted-map (or sorted-map-by):"]
-   [:div (use-style background-box-works)]
-
+   [:div (use-style background-box-sorted)]
+   [:p "Or, probably a better way, not to use shorthand properties:"]
+   [:div (use-style background-box-no-shorthands)]
    [:h1 "Caching"]
    [:p "stylefy supports style caching, which means that the generated CSS code is saved into the offline storage and retrieved from there when the page is reloaded. This way, styles once generated do not need to be generated again and the page loads faster. Caching can be turned on manually, and it also needs to be cleared manually."]
    [button "Clear cache" #(stylefy-cache/clear) :primary]])
