@@ -14,9 +14,9 @@
 
 (defn- add-global-vendors [style]
   (merge style
-         {:stylefy.core/vendors (set/union (:stylefy.core/vendors global-vendor-prefixes)
+         {:stylefy.core/vendors (set/union (:stylefy.core/vendors @global-vendor-prefixes)
                                            (:stylefy.core/vendors style))
-          :stylefy.core/auto-prefix (set/union (:stylefy.core/auto-prefix global-vendor-prefixes)
+          :stylefy.core/auto-prefix (set/union (:stylefy.core/auto-prefix @global-vendor-prefixes)
                                                (:stylefy.core/auto-prefix style))}))
 
 (defn- create-style! [{:keys [props hash] :as style} style-created-handler]
