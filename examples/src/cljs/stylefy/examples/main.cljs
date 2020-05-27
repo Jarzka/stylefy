@@ -123,7 +123,7 @@
            [component])
          @comps)])))
 
-(defn- bs-navbar-item-current-syntax [index index-atom text]
+(defn- bs-navbar-item [index index-atom text]
   [:li (use-style styles/clickable (merge
                                      (when (= @index-atom index)
                                        {:class "active"})
@@ -136,17 +136,17 @@
   (let [active-index (r/atom 0)]
     (fn []
       [:ul.nav.nav-pills (use-style styles/boostrap-navbar-overrides)
-       [bs-navbar-item-current-syntax 0 active-index "A"]
-       [bs-navbar-item-current-syntax 1 active-index "B"]
-       [bs-navbar-item-current-syntax 2 active-index "C"]])))
+       [bs-navbar-item 0 active-index "A"]
+       [bs-navbar-item 1 active-index "B"]
+       [bs-navbar-item 2 active-index "C"]])))
 
 (defn- bs-navbar-alternative-syntax []
   (let [active-index (r/atom 0)]
     (fn []
       ;; In this example, BS navbar classes are attached into the style map directly.
       [:ul (use-style styles/boostrap-navbar)
-       [bs-navbar-item-current-syntax 0 active-index "Hello"]
-       [bs-navbar-item-current-syntax 1 active-index "World!"]])))
+       [bs-navbar-item 0 active-index "Hello"]
+       [bs-navbar-item 1 active-index "World!"]])))
 
 (defn- responsive-layout []
   [:div (use-style styles/responsive-layout)
@@ -280,8 +280,8 @@
     (fn []
       [:div
        [:ul.nav.nav-pills (use-style styles/boostrap-navbar-overrides)
-        [bs-navbar-item-legacy-syntax 0 active-tab "Simple examples"]
-        [bs-navbar-item-legacy-syntax 1 active-tab "Full page example"]]
+        [bs-navbar-item 0 active-tab "Simple examples"]
+        [bs-navbar-item 1 active-tab "Full page example"]]
        (case @active-tab
          0 [simple-examples]
          1 [full-page/full-page])])))
