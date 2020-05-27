@@ -1,11 +1,9 @@
 (ns stylefy.tests.core-test
   (:require [cljs.test :as test :refer-macros [deftest is testing]]
             [stylefy.core :as stylefy]
-            [stylefy.impl.styles :as styles]
             [stylefy.impl.dom :as dom]
             [garden.core :refer [css]]
             [garden.color :as color]
-            [garden.units :as units]
             [clojure.string :as str]))
 
 (def css-props {:border "1px solid black"
@@ -222,8 +220,9 @@
       (is (str/includes? (:class return) "dummy"))))
 
   (testing "Use sub-style with class name along with additional classes"
-    (let [return (stylefy/use-sub-style (assoc style-box
-                                          ::stylefy/with-classes ["additional"])
+    (let [return (stylefy/use-sub-style (assoc-in style-box
+                                                  [::stylefy/sub-styles :sub-box ::stylefy/with-classes]
+                                                  ["additional"])
                                         :sub-box {:class ["dummy"]})]
       (is (string? (:class return)))
       (is (str/includes? (:class return) "additional"))
