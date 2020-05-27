@@ -104,13 +104,13 @@
       (catch js/Error e
         (is true "Error was thrown as expected"))))
 
-  (testing "Use style with option: ::with-classes"
+  (testing "Use style with class name:"
     (let [return (stylefy/use-style style-box
-                                    {::stylefy/with-classes ["dummy"]})]
+                                    {:class ["dummy"]})]
       (is (string? (:class return)))
       (is (str/includes? (:class return) "dummy"))))
 
-  (testing "Use style with HTML attributes and ::with-classes"
+  (testing "Use style with HTML attributes"
     (let [attr-src "image.jpg"
           attr-alt "fail"
           attr-class "myclass"
@@ -142,20 +142,20 @@
     (let [attr-src "image.jpg"
           attr-alt "fail"
           return (stylefy/use-style (assoc style-box
-                                      ::stylefy/with-classes ["dummy"])
+                                      ::stylefy/with-classes ["additional"])
                                     {:src attr-src
                                      :alt attr-alt})]
       (is (= (:src return) attr-src))
       (is (= (:alt return) attr-alt))
       (is (string? (:class return)))
       (is (str/includes? (:class return) "_stylefy_")) ;; Prefix for auto-generated class
-      (is (str/includes? (:class return) "dummy"))))
+      (is (str/includes? (:class return) "additional"))))
 
   (testing "Use style with additional class names attached to it, along with :class"
     (let [attr-src "image.jpg"
           attr-alt "fail"
           return (stylefy/use-style (assoc style-box
-                                      ::stylefy/with-classes ["dummy"])
+                                      ::stylefy/with-classes ["additional"])
                                     {:src attr-src
                                      :alt attr-alt
                                      :class "myclass"})]
@@ -163,7 +163,7 @@
       (is (= (:alt return) attr-alt))
       (is (string? (:class return)))
       (is (str/includes? (:class return) "_stylefy_")) ;; Prefix for auto-generated class
-      (is (str/includes? (:class return) "dummy"))
+      (is (str/includes? (:class return) "additional"))
       (is (str/includes? (:class return) "myclass"))))
 
   (testing "Use style with additional HTML attribute :style definition"
@@ -219,6 +219,14 @@
   (testing "Use sub-style with class name"
     (let [return (stylefy/use-sub-style style-box :sub-box {:class ["dummy"]})]
       (is (string? (:class return)))
+      (is (str/includes? (:class return) "dummy"))))
+
+  (testing "Use sub-style with class name along with additional classes"
+    (let [return (stylefy/use-sub-style (assoc style-box
+                                          ::stylefy/with-classes ["additional"])
+                                        :sub-box {:class ["dummy"]})]
+      (is (string? (:class return)))
+      (is (str/includes? (:class return) "additional"))
       (is (str/includes? (:class return) "dummy"))))
 
   (testing "Use sub-style with additional HTML attribute :style definition"
