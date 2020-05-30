@@ -162,6 +162,8 @@
                    "_stylefy-server-styles-content_"))]
     (is (= result "@keyframes simple-animation {\n\n  from {\n    background-color: red;\n  }\n  \n  to {\n    background-color: blue;\n  }\n\n}"))))
 
+; tags
+
 (deftest tag
   (let [result (stylefy/query-with-styles
                  (fn []
@@ -169,6 +171,8 @@
                                 {:background-color :lightyellow})
                    "_stylefy-server-styles-content_"))]
     (is (= result "code {\n  background-color: lightyellow;\n}"))))
+
+; custom classes
 
 (deftest class
   (let [result (stylefy/query-with-styles
