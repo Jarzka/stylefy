@@ -79,6 +79,8 @@
     (is (str/includes? result "<html>"))
     ; Styles are rendered
     (is (str/includes? result "<style id=\"_stylefy-server-styles_\">"))
+    ; Placeholder is not rendered
+    (is (not (str/includes? result "_stylefy-server-styles-content_")))
     ; Base style is rendered
     (is (str/includes? result "._stylefy_724366761"))
     ; Modes are rendered
