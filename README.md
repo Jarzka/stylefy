@@ -30,7 +30,7 @@ While being originally created with the frontend in mind, stylefy now runs on bo
 
 # Installation
 
-Stable version:
+Stable version (frontend only):
 
 ```clj
 [stylefy "1.14.1"]
