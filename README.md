@@ -11,7 +11,7 @@
 
 # Introduction
 
-stylefy makes it possible to define CSS styles as Clojure data and attach them into HTML elements easily without writing selectors. Styles are converted to CSS on-demand and scoped locally. This makes writing style code easy and maintainable.
+stylefy makes it possible to define CSS styles as Clojure data and attach them into HTML elements easily. Styles are converted to CSS on-demand and scoped locally. This makes writing style code easy and maintainable.
 
 While being originally created with the frontend in mind, stylefy now runs on both Web browsers and servers. On the frontend, it is designed to be used along with [Reagent](https://github.com/reagent-project/reagent). stylefy uses [Garden](https://github.com/noprompt/garden) in the background for most of its CSS conversions. 
 
@@ -33,7 +33,7 @@ While being originally created with the frontend in mind, stylefy now runs on bo
 Add dependency:
 
 ```clj
-[stylefy "2.0.0"]
+[stylefy "2.1.0"]
 ```
 
 # Setup
@@ -103,8 +103,6 @@ Full example:
     (fn [] (html (index)))))
 ```
 
-If you wish to do something else with the generated CSS, you can create your own execution context. Use the implementation of `query-with-styles` as an example.
-
 # Usage
 
 ## Creating & using styles
@@ -134,7 +132,7 @@ To use it in a component, use the **use-style** function:
     text])
 ```
 
-On the frontend, **use-style** adds the style into the DOM as a CSS class and returns its class name (see FAQ for more details). On the server, it saves the generated CSS into the current execution context and returns a class name.
+On the frontend, **use-style** adds the style into the DOM as a CSS class on-demand (see "How it works" for more details). On the server, it returns a class name pointing to the generated CSS code.
 
 ### Passing styles to components
 
@@ -379,9 +377,9 @@ Alternative syntax:
        [bs-navbar-item 3 active-index "Four"]])))
 ```
 
-## Font-face (frontend only)
+## Font-face
 
-Call **stylefy/font-face** and the given font-face is added into the DOM as CSS code asynchronously.
+Call **stylefy/font-face** and the given font-face is added into the DOM as CSS code asynchronously (frontend) or into the current execution context (backend).
 
 ```clojure
 (stylefy/font-face {:font-family "open_sans"
@@ -390,9 +388,9 @@ Call **stylefy/font-face** and the given font-face is added into the DOM as CSS 
                     :font-style "normal"})
 ```
 
-## Keyframes (frontend only)
+## Keyframes
 
-Call **stylefy/keyframes** and the given keyframes are added into the DOM as CSS code asynchronously.
+Call **stylefy/keyframes** and the given keyframes are added into the DOM as CSS code asynchronously (frontend) or into the current execution context (backend).
 
 ```clojure
 (stylefy/keyframes "simple-animation"
@@ -407,31 +405,30 @@ Call **stylefy/keyframes** and the given keyframes are added into the DOM as CSS
                           :animation-iteration-count "infinite"}))
 ```
 
-## Custom tag styles (frontend only)
+## Custom class names
 
-Call **stylefy/keyframes** and the given tag style is added into the DOM as CSS code asynchronously.
-
-```clojure
-;; This generates a CSS tag selector and style for "body" element
-(def body-style
-  {:background-color :lightyellow
-   :padding          :5px})
-
-(stylefy/tag "body" body-style)
-```
-
-
-## Custom class names (frontend only)
-
-As has been told, stylefy converts style maps to unique CSS classes automatically and there is no need to create classes manually. It can, however, be useful to be able to generate custom named classes for example when working with 3rd party libraries / frameworks. For this purpose, call **stylefy/class**, which generates a new CSS class and adds it into the DOM asynchronously.
+As has been told, stylefy converts style definition to unique CSS classes automatically and there is no need to worry about class names. It can, however, be useful to be able to generate custom named classes for example when working with 3rd party libraries / frameworks. For this purpose, call **stylefy/class**:
 
 ```clojure
-;; This generates a CSS class with the name "background-transition" and adds it into the DOM.
+;; This generates a CSS class with the name "background-transition" and adds it into the DOM asynchronously (frontend) or into the current execution context (backend).
 (stylefy/class "background-transition"
                {:transition "background-color 1s"})
 
 ;; Use the generated class in a component like any other class
 [:div.background-transition]
+```
+
+## Custom tag styles (frontend only)
+
+You can generate styles for HTML tags by calling **stylefy/tag**:
+
+```clojure
+;; This generates a CSS tag selector and style for "body" element and adds it into the DOM asynchronously (frontend) or into the current execution context (backend).
+(def body-style
+  {:background-color :lightyellow
+   :padding          :5px})
+
+(stylefy/tag "body" body-style)
 ```
 
 ## Manual mode

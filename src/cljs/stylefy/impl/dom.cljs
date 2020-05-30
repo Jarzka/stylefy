@@ -91,7 +91,8 @@
     (when-not @dom-update-requested?
       (reset! dom-update-requested? true)
       (go
-        (update-dom)))))
+        (update-dom))
+      nil)))
 
 (defn init-multi-instance [{:keys [multi-instance] :as options}]
   (let [base-node (:base-node multi-instance)
@@ -130,30 +131,22 @@
   ;; itself if the "CSS in DOM" state of this specific style hash is changed.
   (boolean @(get @styles-in-dom style-hash)))
 
-(defn add-keyframes [identifier & frames]
-  (let [garden-definition (apply at-keyframes identifier frames)]
-    (swap! keyframes-in-use assoc identifier (css garden-definition))
-    (request-asynchronous-dom-update)
-    garden-definition))
+(defn add-keyframes [identifier garden-syntax]
+  (swap! keyframes-in-use assoc identifier (css garden-syntax))
+  (request-asynchronous-dom-update)
+  nil)
 
-(defn add-font-face [properties]
-  (let [garden-definition (at-font-face properties)]
-    (swap! font-faces-in-use conj {::css (css garden-definition)})
-    (request-asynchronous-dom-update)
-    garden-definition))
+(defn add-font-face [garden-syntax]
+  (swap! font-faces-in-use conj {::css (css garden-syntax)})
+  (request-asynchronous-dom-update)
+  nil)
 
-(defn add-tag [name properties]
-  (let [custom-tag-definition {::tag-name name ::tag-properties properties}]
-    (swap! custom-tags-in-use conj {::css (conversion/style->css
-                                            {:props (::tag-properties custom-tag-definition)
-                                             :custom-selector (::tag-name custom-tag-definition)})})
-    (request-asynchronous-dom-update)
-    custom-tag-definition))
+(defn add-tag [tag-css]
+  (swap! custom-tags-in-use conj {::css tag-css})
+  (request-asynchronous-dom-update)
+  nil)
 
-(defn add-class [name properties]
-  (let [custom-class-definition {::class-name name ::class-properties properties}]
-    (swap! custom-classes-in-use conj {::css (conversion/style->css
-                                               {:props (::class-properties custom-class-definition)
-                                                :custom-selector (conversion/class-selector (::class-name custom-class-definition))})})
-    (request-asynchronous-dom-update)
-    custom-class-definition))
+(defn add-class [class-as-css]
+  (swap! custom-classes-in-use conj {::css class-as-css})
+  (request-asynchronous-dom-update)
+  nil)
