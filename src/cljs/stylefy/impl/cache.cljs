@@ -1,8 +1,5 @@
 (ns stylefy.impl.cache
-  (:require [dommy.core :as dommy]
-            [reagent.core :as r]
-            [garden.core :refer [css]]
-            [stylefy.impl.utils :as utils]
+  (:require [garden.core :refer [css]]
             [garden.stylesheet :refer [at-media at-keyframes at-font-face]])
   (:require-macros [reagent.ratom :refer [run!]]))
 
