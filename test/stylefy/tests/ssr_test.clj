@@ -174,6 +174,6 @@
   (let [result (stylefy/query-with-styles
                  (fn []
                    (stylefy/class "background-transition"
-                                  {:transition "background-color 1s;"})
+                                  {:transition "background-color 1s"})
                    "_stylefy-server-styles-content_"))]
     (is (= result ".background-transition {\n  transition: background-color 1s;\n}"))))
