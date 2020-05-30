@@ -27,7 +27,7 @@ stylefy is designed to be used in [SPA](https://en.wikipedia.org/wiki/Single-pag
 - Small and simple core API which is easy to setup
 - Fast, asynchronous CSS generation
 - Automatic style reloading (via shadow-cljs or Figwheel)
-- Server-Side Rendering (SSR) support (currently in Release Candidate state)
+- Server-Side Rendering (SSR) support (currently Release Candidate)
 - All features are tested to work with Chrome, Firefox, Edge & Internet Explorer 11
 
 # FAQ
