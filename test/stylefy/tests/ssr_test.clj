@@ -136,3 +136,44 @@
       (is (str/includes? result "<body class=\"_stylefy_-348110113\">"))
       ; Sub-component is rendered
       (is (str/includes? result "<span class=\"_stylefy_1606470837\">Example text is red</span>")))))
+
+; font-face
+
+(deftest font-face
+  (let [result (stylefy/query-with-styles
+                 (fn []
+                   (stylefy/font-face {:font-family "open_sans"
+                                       :src "url('../fonts/OpenSans-Regular-webfont.woff') format('woff')"
+                                       :font-weight "normal"
+                                       :font-style "normal"})
+                   "_stylefy-server-styles-content_"))]
+    (is (= result "@font-face {\n  font-family: open_sans;\n  src: url('../fonts/OpenSans-Regular-webfont.woff') format('woff');\n  font-weight: normal;\n  font-style: normal;\n}"))))
+
+; keyframes
+
+(deftest keyframes
+  (let [result (stylefy/query-with-styles
+                 (fn []
+                   (stylefy/keyframes "simple-animation"
+                                      [:from
+                                       {:background-color "red"}]
+                                      [:to
+                                       {:background-color "blue"}])
+                   "_stylefy-server-styles-content_"))]
+    (is (= result "@keyframes simple-animation {\n\n  from {\n    background-color: red;\n  }\n  \n  to {\n    background-color: blue;\n  }\n\n}"))))
+
+(deftest tag
+  (let [result (stylefy/query-with-styles
+                 (fn []
+                   (stylefy/tag "code"
+                                {:background-color :lightyellow})
+                   "_stylefy-server-styles-content_"))]
+    (is (= result "code {\n  background-color: lightyellow;\n}"))))
+
+(deftest class
+  (let [result (stylefy/query-with-styles
+                 (fn []
+                   (stylefy/class "background-transition"
+                                  {:transition "background-color 1s;"})
+                   "_stylefy-server-styles-content_"))]
+    (is (= result ".background-transition {\n  transition: background-color 1s;;\n}"))))
