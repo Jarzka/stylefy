@@ -27,7 +27,7 @@
 (deftest use-style
   (testing "Use style"
     (let [return (stylefy/use-style style-box)]
-      (is (= (:class return) {:class "_stylefy_1149735588"}))
+      (is (= (:class return) "_stylefy_1149735588"))
       ;; This is the first time we use this style map -> inline style shoule be returned
       (is (map? (:style return)))
       ;; Inline style does not contain namespaced keywords. Also, it is not marked as hidden, because
@@ -110,7 +110,7 @@
 
   (testing "Use style with HTML class name (as keyword):"
     (let [return (stylefy/use-style style-box {:class :dummy})]
-      (is (= "_stylefy_1149735588 dummy hello world" (:class return)))))
+      (is (= "_stylefy_1149735588 dummy" (:class return)))))
 
   (testing "Use style with HTML class name (in vector):"
     (let [return (stylefy/use-style style-box {:class ["dummy"]})]
@@ -166,7 +166,7 @@
                                      :alt attr-alt})]
       (is (= (:src return) attr-src))
       (is (= (:alt return) attr-alt))
-      (is ("_stylefy_-594685217 default hello world" (:class return)))))
+      (is (= "_stylefy_-594685217 default hello world" (:class return)))))
 
   (testing "Use style with HTML attributes and additional class name (keyword) attached to it"
     (let [attr-src "image.jpg"
@@ -178,7 +178,7 @@
                                      :alt attr-alt})]
       (is (= (:src return) attr-src))
       (is (= (:alt return) attr-alt))
-      (is ("_stylefy_-594685217 default hello" (:class return)))))
+      (is (= "_stylefy_-594685217 default hello" (:class return)))))
 
   (testing "Use style with additional class names (vector) attached to it"
     (let [attr-src "image.jpg"
