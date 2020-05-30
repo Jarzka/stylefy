@@ -178,7 +178,7 @@
                                      :alt attr-alt})]
       (is (= (:src return) attr-src))
       (is (= (:alt return) attr-alt))
-      (is (= "_stylefy_-594685217 default hello" (:class return)))))
+      (is (= "_stylefy_1638123288 default hello" (:class return)))))
 
   (testing "Use style with additional class names (vector) attached to it"
     (let [attr-src "image.jpg"
