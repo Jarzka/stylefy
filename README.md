@@ -413,6 +413,7 @@ As has been told, stylefy converts style definition to unique CSS classes automa
 ; This generates a CSS class with the name "background-transition" 
 ; and adds it into the DOM asynchronously (frontend) 
 ; or into the current execution context (backend).
+
 (stylefy/class "background-transition"
                {:transition "background-color 1s"})
 
@@ -428,6 +429,7 @@ You can generate styles for HTML tags by calling **stylefy/tag**:
 ; This generates a CSS tag selector and style for "body" element
 ; and adds it into the DOM asynchronously (frontend)
 ; or into the current execution context (backend).
+
 (def body-style
   {:background-color :lightyellow
    :padding          :5px})
