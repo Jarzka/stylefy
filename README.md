@@ -407,22 +407,9 @@ Call **stylefy/keyframes** and the given keyframes are added into the DOM as CSS
                           :animation-iteration-count "infinite"}))
 ```
 
-## Custom class names (frontend only)
-
-As has been told, stylefy converts style definition to unique CSS classes automatically and there is no need to worry about class names. It can, however, be useful to be able to generate custom named classes for example when working with 3rd party libraries / frameworks. For this purpose, call **stylefy/class**:
-
-```clojure
-;; This generates a CSS class with the name "background-transition" and adds it into the DOM.
-(stylefy/class "background-transition"
-               {:transition "background-color 1s"})
-
-;; Use the generated class in a component like any other class
-[:div.background-transition]
-```
-
 ## Custom tag styles (frontend only)
 
-You can generate styles for HTML tags by calling **stylefy/tag**:
+Call **stylefy/keyframes** and the given tag style is added into the DOM as CSS code asynchronously.
 
 ```clojure
 ;; This generates a CSS tag selector and style for "body" element
@@ -431,6 +418,20 @@ You can generate styles for HTML tags by calling **stylefy/tag**:
    :padding          :5px})
 
 (stylefy/tag "body" body-style)
+```
+
+
+## Custom class names (frontend only)
+
+As has been told, stylefy converts style maps to unique CSS classes automatically and there is no need to create classes manually. It can, however, be useful to be able to generate custom named classes for example when working with 3rd party libraries / frameworks. For this purpose, call **stylefy/class**, which generates a new CSS class and adds it into the DOM asynchronously.
+
+```clojure
+;; This generates a CSS class with the name "background-transition" and adds it into the DOM.
+(stylefy/class "background-transition"
+               {:transition "background-color 1s"})
+
+;; Use the generated class in a component like any other class
+[:div.background-transition]
 ```
 
 ## Manual mode
