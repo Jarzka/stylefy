@@ -2,7 +2,7 @@
 
 May 30, 2020
 
-- `:class` in HTML attributes and `:stylefy.core/with-classes` in style map now support additional syntax: keywords and vector of keywords. You can also pass a vector of both keywords and strings if you wish.
+- `:class` in HTML attributes and `:stylefy.core/with-classes` in style map now support additional syntax: you can pass a string, a keyword or a vector of strings or keywords. You can also pass a vector of both keywords and strings if you wish.
 
 # 2.0.0-rc.1
 
