@@ -432,11 +432,8 @@ You can generate styles for HTML tags by calling **stylefy/tag**:
 ; and adds it into the DOM asynchronously (frontend)
 ; or into the current execution context (backend).
 
-(def body-style
-  {:background-color :lightyellow
-   :padding          :5px})
-
-(stylefy/tag "body" body-style)
+(stylefy/tag "body" {:background-color :lightyellow
+                     :padding          :5px})
 ```
 
 ## Manual mode
