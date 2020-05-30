@@ -103,6 +103,8 @@ Full example:
     (fn [] (html (index)))))
 ```
 
+If you wish to do something else with the generated CSS, you can create your own execution context. Use the implementation of `query-with-styles` as an example.
+
 # Usage
 
 ## Creating & using styles
