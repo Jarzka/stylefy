@@ -22,9 +22,10 @@
                        :stylefy.core/auto-prefix #{:border-radius}
                        :stylefy.core/sub-styles {:sub-box {:border "1px solid black"}}}))
 
-; Use style smoke tests
-
 (deftest use-style
+  
+  ; Use style smoke tests
+  
   (testing "Use style"
     (let [return (stylefy/use-style style-box)]
       (is (= (:class return) "_stylefy_1149735588"))
