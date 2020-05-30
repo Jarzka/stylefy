@@ -134,7 +134,7 @@ To use it in a component, use the **use-style** function:
     text])
 ```
 
-On the frontend, **use-style** adds the style into the DOM as a CSS class on-demand (see FAQ for more details). On the server, it returns a class name pointing to the generated CSS code.
+On the frontend, **use-style** adds the style into the DOM as a CSS class on-demand and returns a class pointing to it (see FAQ for more details). On the server, it saves the generated CSS into the current execution context and returns a class name.
 
 ### Passing styles to components
 
