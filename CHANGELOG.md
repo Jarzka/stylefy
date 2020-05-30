@@ -1,3 +1,9 @@
+# 2.1.0
+
+May 30, 2020
+
+- Adds support for calling `keyframes`, `font-face`, `tag` and `class` on the backend.
+
 # 2.0.0
 
 May 30, 2020
