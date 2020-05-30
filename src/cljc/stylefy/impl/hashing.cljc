@@ -22,8 +22,8 @@
 (defn hash-style [style]
   (when (not (empty? style))
     (let [hashable-garden-units (reduce
-                                  ;; Convert Garden units to CSS to make them structurally
-                                  ;; hashable (different contents = different hash)
+                                  ; Convert Garden units to CSS to make them structurally
+                                  ; hashable (different contents = different hash)
                                   (fn [result prop-key]
                                     (let [prop-value (prop-key style)]
                                       (if (utils/is-garden-value? prop-value)
@@ -32,9 +32,9 @@
                                   {}
                                   (keys (utils/remove-special-keywords style)))
           hashable-style (merge style hashable-garden-units)
-          ;; Hash style without certain special keywords:
-          ;; - sub-styles is only a link to other styles, it does not define the actual properties of this style
-          ;; - class-prefix is only for class naming, the style looks the same with it or without
+          ; Hash style without certain special keywords:
+          ; - sub-styles is only a link to other styles, it does not define the actual properties of this style
+          ; - class-prefix is only for class naming, the style looks the same with it or without
           hashable-style (dissoc hashable-style
                                  :stylefy.core/sub-styles
                                  :stylefy.core/class-prefix)

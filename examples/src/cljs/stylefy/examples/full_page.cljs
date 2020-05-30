@@ -100,9 +100,9 @@
        :render
        (fn []
          [:div (use-style clock-body)
-          ;; Clock hands should not use stylefy, because clock-hand will generate
-          ;; many different styles; we do not want to create a new CSS class from each different result.
-          ;; In this case, inline style is a better option.
+          ; Clock hands should not use stylefy, because clock-hand will generate
+          ; many different styles; we do not want to create a new CSS class from each different result.
+          ; In this case, inline style is a better option.
           [:div {:style (clock-hand :second (t/second @time))}]
           [:div {:style (clock-hand :minute (t/minute @time))}]
           [:div {:style (clock-hand :hour (t/hour @time))}]])})))

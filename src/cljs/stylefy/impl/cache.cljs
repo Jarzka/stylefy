@@ -14,7 +14,7 @@
        (when instance-id
          (str "_" instance-id))))
 
-;; Utils
+; Utils
 
 (defn now-in-seconds []
   (.floor js/Math (/ (.now js/Date) 1000)))
@@ -24,7 +24,7 @@
     (< (+ cache-created expiration-age) now)
     false))
 
-;; Cache reading
+; Cache reading
 
 (defn read-cache-value
   "Reads the cache if caching is used."
@@ -33,7 +33,7 @@
     (when-let [cache-contents (.getItem (.-localStorage js/window) key)]
       (cljs.reader/read-string cache-contents))))
 
-;; Cache manipulation
+; Cache manipulation
 
 (defn set-cache-created-time
   ([time-created]
@@ -57,7 +57,7 @@
   ([cache-options instance-id]
    (reset! cache-styles? true)
 
-    ;; If cache is empty, set creation date.
+    ; If cache is empty, set creation date.
    (when-not (read-cache-value (cache-key-created instance-id))
      (set-cache-created-time (now-in-seconds) instance-id))
 

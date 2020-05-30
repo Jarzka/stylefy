@@ -145,11 +145,11 @@ On the frontend, **use-style** adds the style into the DOM as a CSS class on-dem
      
 (defn- button-wrapper []
   [:div
-    ;; This is OK
+    ; This is OK
     [button-with-custom-style "Hello" {:padding "25px"
                                        :background-color "#BBBBBB"
                                        :border "1px solid black"}]
-    ;; This is NOT ok, because use-style would be called twice, second time with incorrect arguments
+    ; This is NOT ok, because use-style would be called twice, second time with incorrect arguments
     [button-with-custom-style "Hello" (use-style {:padding "25px"
                                                   :background-color "#BBBBBB"
                                                   :border "1px solid black"})]])
@@ -314,19 +314,19 @@ For syntax help, see Garden's [documentation](https://github.com/noprompt/garden
 Define how your style looks when certain CSS features are supported by the browser:
 
 ```clojure
-(def grid-style {;; Default style uses Flexbox as fallback
+(def grid-style {; Default style uses Flexbox as fallback
                  :display "flex"
                  :flex-direction "row"
                  :flex-wrap "wrap"
                  ::stylefy/media {{:max-width styles/phone-width}
                                   {:display "block"}}
-                 ;; Use CSS Grid style if it is supported by the browser.
-                 ;; If the browser does not support CSS Grid or feature queries at all, this
-                 ;; block is simply ignored.
+                 ; Use CSS Grid style if it is supported by the browser.
+                 ; If the browser does not support CSS Grid or feature queries at all, this
+                 ; block is simply ignored.
                  ::stylefy/supports {"display: grid"
                                      {:display "grid"
                                       :grid-template-columns "1fr 1fr 1fr"
-                                      ;; Make CSS Grid responsive
+                                      ; Make CSS Grid responsive
                                       ::stylefy/media {{:max-width styles/phone-width}
                                                        {:grid-template-columns "1fr"}}}}})
 
@@ -353,7 +353,7 @@ Alternative syntax:
 (defn- bs-navbar []
   (let [active-index (r/atom 0)]
     (fn []
-      ;; Additional classes can also be attached in the name of the element
+      ; Additional classes can also be attached in the name of the element
       [:ul.nav.nav-pills (use-style styles/boostrap-navbar-overrides)
        [bs-navbar-item 0 active-index "One"]
        [bs-navbar-item 1 active-index "Two"]
@@ -410,11 +410,13 @@ Call **stylefy/keyframes** and the given keyframes are added into the DOM as CSS
 As has been told, stylefy converts style definition to unique CSS classes automatically and there is no need to worry about class names. It can, however, be useful to be able to generate custom named classes for example when working with 3rd party libraries / frameworks. For this purpose, call **stylefy/class**:
 
 ```clojure
-;; This generates a CSS class with the name "background-transition" and adds it into the DOM asynchronously (frontend) or into the current execution context (backend).
+; This generates a CSS class with the name "background-transition" 
+; and adds it into the DOM asynchronously (frontend) 
+; or into the current execution context (backend).
 (stylefy/class "background-transition"
                {:transition "background-color 1s"})
 
-;; Use the generated class in a component like any other class
+; Use the generated class in a component like any other class
 [:div.background-transition]
 ```
 
@@ -423,7 +425,9 @@ As has been told, stylefy converts style definition to unique CSS classes automa
 You can generate styles for HTML tags by calling **stylefy/tag**:
 
 ```clojure
-;; This generates a CSS tag selector and style for "body" element and adds it into the DOM asynchronously (frontend) or into the current execution context (backend).
+; This generates a CSS tag selector and style for "body" element
+; and adds it into the DOM asynchronously (frontend)
+; or into the current execution context (backend).
 (def body-style
   {:background-color :lightyellow
    :padding          :5px})
@@ -449,13 +453,13 @@ An example of such corner case is a situation in which we want to change the sty
    ::stylefy/sub-styles {:innerbox {:width "100%"
                                     :height "100%"
                                     :background-color "#444444"}}
-   ;; Change the background color of the child element when the parent element is being hovered.
-   ;; This is a corner case that stylefy cannot handle directly, so we use manual mode to resolve it.
+   ; Change the background color of the child element when the parent element is being hovered.
+   ; This is a corner case that stylefy cannot handle directly, so we use manual mode to resolve it.
    ::stylefy/manual [[:&:hover [:.innerbox
-                                ;; Brighten by default
+                                ; Brighten by default
                                 {:background-color "#999999"}]]
                      (at-media mobile-media-query [:&:hover [:.innerbox
-                                                             ;; Darker on mobile
+                                                             ; Darker on mobile
                                                              {:background-color "#666666"}]])]
    ::stylefy/media {mobile-media-query
                     {:width "100%"}}})

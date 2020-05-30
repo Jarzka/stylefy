@@ -44,14 +44,14 @@
   (is (= (hashing/hash-style style-box) style-box-expected-hash)))
 
 (deftest hash-style-with-custom-prefix
-  ;; Default case: custom class prefixes are disabled globally by default
+  ; Default case: custom class prefixes are disabled globally by default
   (let [default-hash (hashing/hash-style style-box)
         custom-prefix-hash (hashing/hash-style (assoc style-box ::stylefy/class-prefix "hello-from-cljs-test"))]
     (is (= default-hash style-box-expected-hash))
     (is (= custom-prefix-hash "_stylefy_-2018943876"))
     (is (= default-hash style-box-expected-hash)))
 
-  ;; Custom class prefixes are enabled globally
+  ; Custom class prefixes are enabled globally
   (with-redefs [hashing/use-custom-class-prefix? (atom true)]
     (let [default-hash (hashing/hash-style style-box)
           custom-prefix-hash (hashing/hash-style (assoc style-box ::stylefy/class-prefix "hello-from-cljs-test"))]
@@ -59,7 +59,7 @@
       (is (= default-hash style-box-expected-hash))
       (is (not= default-hash custom-prefix-hash))))
 
-  ;; Custom class prefix is a keyword
+  ; Custom class prefix is a keyword
   (with-redefs [hashing/use-custom-class-prefix? (atom true)]
     (let [default-hash (hashing/hash-style style-box)
           custom-prefix-hash (hashing/hash-style (assoc style-box ::stylefy/class-prefix :hello-from-cljs-test))]
@@ -67,7 +67,7 @@
       (is (= default-hash style-box-expected-hash))
       (is (not= default-hash custom-prefix-hash))))
 
-  ;; Custom class prefix is nil -> use default
+  ; Custom class prefix is nil -> use default
   (with-redefs [hashing/use-custom-class-prefix? (atom true)]
     (let [default-hash (hashing/hash-style style-box)
           custom-prefix-hash (hashing/hash-style (assoc style-box ::stylefy/class-prefix nil))]
@@ -75,7 +75,7 @@
       (is (= custom-prefix-hash "_stylefy_-2018943876"))
       (is (= default-hash style-box-expected-hash))))
 
-  ;; Custom class prefix is something else
+  ; Custom class prefix is something else
   (with-redefs [hashing/use-custom-class-prefix? (atom true)]
     (try
       (hashing/hash-style (assoc style-box ::stylefy/class-prefix {}))
@@ -84,9 +84,9 @@
         (is true "Error was thrown as expected")))))
 
 (deftest hash-sub-styles
-  ;; ::sub-styles is only a link to other styles, it
-  ;; does not define the actual properties of this style.
-  ;; Therefore, the hash should be the same even if the sub-styles does not exist.
+  ; ::sub-styles is only a link to other styles, it
+  ; does not define the actual properties of this style.
+  ; Therefore, the hash should be the same even if the sub-styles does not exist.
   (is (= (hashing/hash-style (dissoc style-box ::stylefy/sub-styles))
          style-box-expected-hash)))
 
@@ -95,7 +95,7 @@
   (is (= (hashing/hash-style h3-style) "_stylefy_-1528553558"))
   (is (= (hashing/hash-style h4-style) "_stylefy_-372704016"))
 
-  ;; Different Garden units should make style maps structurally different
+  ; Different Garden units should make style maps structurally different
   (is (not= (hashing/hash-style h2-style)
             (hashing/hash-style h3-style)))
   (is (not= (hashing/hash-style h3-style)
@@ -104,6 +104,6 @@
             (hashing/hash-style h4-style)))
   (is (not= (hashing/hash-style h4-style)
             (hashing/hash-style h4-style-clone-with-different-garden-values-and-key-order)))
-  ;; Key order does not matter
+  ; Key order does not matter
   (is (= (hashing/hash-style h4-style)
          (hashing/hash-style h4-style-clone-with-different-key-order))))

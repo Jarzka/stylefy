@@ -121,7 +121,7 @@
                                  {:display "grid"
                                   :grid-template-columns "1fr 1fr 1fr"
                                   ::stylefy/mode {:hover {:background-color "#111111"}}
-                                  ;; Make CSS Grid responsive
+                                  ; Make CSS Grid responsive
                                   ::stylefy/media {{:max-width "500px"}
                                                    {:grid-template-columns "1fr"
                                                     ::stylefy/mode {:hover

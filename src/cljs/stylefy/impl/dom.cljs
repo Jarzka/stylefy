@@ -13,20 +13,20 @@
     [cljs.core.async.macros :refer [go]]))
 
 
-(def styles-in-dom (atom {})) ;; style hash -> r/atom with boolean value
+(def styles-in-dom (atom {})) ; style hash -> r/atom with boolean value
 (def ^:private dom-update-requested? (atom false))
 
-(def styles-as-css (atom {})) ;; style hash -> map containing keys: ::css
+(def styles-as-css (atom {})) ; style hash -> map containing keys: ::css
 
-(def keyframes-in-use (atom {})) ;; keyframe identifier -> css
-(def font-faces-in-use (atom [])) ;; Vector of maps containing keys: ::css
-(def custom-tags-in-use (atom [])) ;; Vector of maps containing keys: ::css
-(def custom-classes-in-use (atom [])) ;; Vector of maps containing keys: ::css
+(def keyframes-in-use (atom {})) ; keyframe identifier -> css
+(def font-faces-in-use (atom [])) ; Vector of maps containing keys: ::css
+(def custom-tags-in-use (atom [])) ; Vector of maps containing keys: ::css
+(def custom-classes-in-use (atom [])) ; Vector of maps containing keys: ::css
 
 (def ^:private stylefy-node-id "#_stylefy-styles_")
 (def ^:private stylefy-constant-node-id "#_stylefy-constant-styles_")
-(def ^:private stylefy-base-node (atom nil)) ;; Used when running multiple instances of stylefy on the same page
-(def stylefy-instance-id (atom nil)) ;; Used when running multiple instances of stylefy on the same page
+(def ^:private stylefy-base-node (atom nil)) ; Used when running multiple instances of stylefy on the same page
+(def stylefy-instance-id (atom nil)) ; Used when running multiple instances of stylefy on the same page
 
 (defn style-by-hash [style-hash]
   (when style-hash
@@ -44,9 +44,9 @@
                                                   custom-tags-in-use
                                                   custom-classes-in-use))
         new-style-css          (apply str styles-in-css)]
-    ;; Do not update this node contents if there are no new styles to be added.
-    ;; This is important, because even if setting the same contents should have no effect,
-    ;; it can cause font flickering in some browsers.
+    ; Do not update this node contents if there are no new styles to be added.
+    ; This is important, because even if setting the same contents should have no effect,
+    ; it can cause font flickering in some browsers.
     (when-not (= (dommy/text node-stylefy-constant) new-style-constant-css)
       (dommy/set-text! node-stylefy-constant new-style-constant-css))
 
@@ -111,7 +111,7 @@
                                (cache/cache-key-styles @stylefy-instance-id))]
       (reset! styles-as-css (or cached-styles {}))
       (reset! styles-in-dom (apply merge (map
-                                           ;; Note: r/atom, to be usable in component render methods.
+                                           ; Note: r/atom, to be usable in component render methods.
                                            #(-> {% (r/atom false)})
                                            (keys cached-styles)))))))
 
@@ -126,9 +126,9 @@
     (request-asynchronous-dom-update)))
 
 (defn style-in-dom? [style-hash]
-  ;; Note: This function does Reagent atom dereference.
-  ;; If called inside a component render method (via use-style), it causes the component to re-render
-  ;; itself if the "CSS in DOM" state of this specific style hash is changed.
+  ; Note: This function does Reagent atom dereference.
+  ; If called inside a component render method (via use-style), it causes the component to re-render
+  ; itself if the "CSS in DOM" state of this specific style hash is changed.
   (boolean @(get @styles-in-dom style-hash)))
 
 (defn add-keyframes [identifier garden-syntax]

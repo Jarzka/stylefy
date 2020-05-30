@@ -23,7 +23,7 @@
   (let [style-css (conversion/style->css style)]
     (style-created-handler {:css style-css :hash hash})
 
-    ;; Create sub-styles (if any)
+    ; Create sub-styles (if any)
     (doseq [sub-style (vals (:stylefy.core/sub-styles props))]
       (create-style!
         {:props sub-style :hash (hashing/hash-style sub-style)}
@@ -82,11 +82,11 @@
     #?(:cljs (if (or (empty? style)
                      (dom/style-in-dom? style-hash))
                return-map
-               ;; The style definition has not been added into the DOM yet, so return the style props
-               ;; as inline style. Inline style gets replaced soon as the style definition
-               ;; is added into the DOM and the component re-renders itself.
-               ;; However, if there are media queries, specific mode definitions etc., inline styling is probably
-               ;; going to look wrong. In that case, hide the component completely until the DOM is ready.
+               ; The style definition has not been added into the DOM yet, so return the style props
+               ; as inline style. Inline style gets replaced soon as the style definition
+               ; is added into the DOM and the component re-renders itself.
+               ; However, if there are media queries, specific mode definitions etc., inline styling is probably
+               ; going to look wrong. In that case, hide the component completely until the DOM is ready.
                (let [contains-media-queries? (some? (:stylefy.core/media style))
                      contains-feature-queries? (some? (:stylefy.core/supports style))
                      contains-manual-mode? (some? (:stylefy.core/manual style))

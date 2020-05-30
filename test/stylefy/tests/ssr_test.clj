@@ -35,7 +35,7 @@
                        ::stylefy/supports {"display: grid"
                                            {:display "grid"
                                             :grid-template-columns "1fr 1fr 1fr"
-                                            ;; Make CSS Grid responsive
+                                            ; Make CSS Grid responsive
                                             ::stylefy/media {{:max-width phone-width}
                                                              {:grid-template-columns "1fr"}}}}
                        ::stylefy/manual [[:&:hover [:.innerbox
@@ -176,4 +176,4 @@
                    (stylefy/class "background-transition"
                                   {:transition "background-color 1s;"})
                    "_stylefy-server-styles-content_"))]
-    (is (= result ".background-transition {\n  transition: background-color 1s;;\n}"))))
+    (is (= result ".background-transition {\n  transition: background-color 1s;\n}"))))

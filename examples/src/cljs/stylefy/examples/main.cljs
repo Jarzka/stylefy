@@ -37,13 +37,13 @@
 (defn stateful-component []
   (let [switch #(if (= :on %) :off :on)
         state (r/atom :on)]
-    ;; Make sure the state style is prepared before we use it.
-    ;; Normally, when use-style is called, it returns the given style as an inline style
-    ;; until the style is converted to CSS and added into the DOM.
-    ;; However, the state styles contain media queries, which cannot be
-    ;; present as inline style, so stylefy would hide the component for a small amount of time
-    ;; until the styles are added into DOM, which creates a bad flickering effect.
-    ;; To prevent this from happening, we prepare the state style before we use it.
+    ; Make sure the state style is prepared before we use it.
+    ; Normally, when use-style is called, it returns the given style as an inline style
+    ; until the style is converted to CSS and added into the DOM.
+    ; However, the state styles contain media queries, which cannot be
+    ; present as inline style, so stylefy would hide the component for a small amount of time
+    ; until the styles are added into DOM, which creates a bad flickering effect.
+    ; To prevent this from happening, we prepare the state style before we use it.
     (fn []
       [:div (use-style (stylefy/prepare-style (@state styles/stateful-component)))
        (if (= @state :on)
@@ -56,12 +56,12 @@
     [:div style index]))
 
 (defn- create-bar-style [background index max]
-  ;; Generates unique, but predictable style, so that caching can be tested.
+  ; Generates unique, but predictable style, so that caching can be tested.
   {:padding "5px"
    :width (str (float (* (/ index max) 100)) "%")
    :height "30px"
    :color "black"
-   :z-index index ;; Just to make sure every single style is unique
+   :z-index index ; Just to make sure every single style is unique
    :margin-bottom "5px"
    :border "1px solid black"
    :background-color background})
@@ -107,7 +107,7 @@
     (fn []
       (.log js/console "Render add style test")
       [:div
-       ;; When this button is clicked, only the render method of this component should be called.
+       ; When this button is clicked, only the render method of this component should be called.
        [button "Add component"
         (fn []
           (when (< (count @comps) max)
@@ -143,14 +143,14 @@
 (defn- bs-navbar-alternative-syntax []
   (let [active-index (r/atom 0)]
     (fn []
-      ;; In this example, BS navbar classes are attached into the style map directly.
+      ; In this example, BS navbar classes are attached into the style map directly.
       [:ul (use-style styles/boostrap-navbar)
        [bs-navbar-item 0 active-index "Hello"]
        [bs-navbar-item 1 active-index "World!"]])))
 
 (defn- responsive-layout []
   [:div (use-style styles/responsive-layout)
-   ;; The easiest way to use a sub-style is to call use-sub-style function:
+   ; The easiest way to use a sub-style is to call use-sub-style function:
    [:div (use-sub-style styles/responsive-layout :column1)
     [:p "This is column 1"]
     [:p "This is column 1"]
@@ -162,8 +162,8 @@
     [:p "This is column 2"]
     [:p "This is column 2"]]
    [:div (use-sub-style styles/responsive-layout :column3)
-    ;; If there are more than one level of sub-style nesting, call sub-style to get
-    ;; the desired sub-style and use it.
+    ; If there are more than one level of sub-style nesting, call sub-style to get
+    ; the desired sub-style and use it.
     [:p (use-style (sub-style styles/responsive-layout :column3 :text)) "This is column 3"]
     [:p (use-style (sub-style styles/responsive-layout :column3 :text)) "This is column 3"]]])
 

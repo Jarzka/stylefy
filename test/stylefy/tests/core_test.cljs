@@ -28,10 +28,10 @@
   (testing "Use style"
     (let [return (stylefy/use-style style-box)]
       (is (= (:class return) "_stylefy_1149735588"))
-      ;; This is the first time we use this style map -> inline style shoule be returned
+      ; This is the first time we use this style map -> inline style shoule be returned
       (is (map? (:style return)))
-      ;; Inline style does not contain namespaced keywords. Also, it is not marked as hidden, because
-      ;; the style works perfectly as inline style.
+      ; Inline style does not contain namespaced keywords. Also, it is not marked as hidden, because
+      ; the style works perfectly as inline style.
       (is (= (:style return) css-props))))
 
   (testing "Use nil style"
@@ -49,7 +49,7 @@
                                            {:stylefy.core/mode {:hover {:background-color "blue"}}}))]
       (is (string? (:class return)))
       (is (map? (:style return)))
-      ;; Inline style does not contain namespaced keywords and it's not hidden.
+      ; Inline style does not contain namespaced keywords and it's not hidden.
       (is (= (:style return) css-props))))
 
   (testing "Use style with :foo mode"
@@ -57,8 +57,8 @@
                                            {:stylefy.core/mode {:foo {:background-color "blue"}}}))]
       (is (string? (:class return)))
       (is (map? (:style return)))
-      ;; Inline style does not contain namespaced keywords and it IS hidden, because only
-      ;; certain modes can be accepted without hiding the component
+      ; Inline style does not contain namespaced keywords and it IS hidden, because only
+      ; certain modes can be accepted without hiding the component
       (is (= (:style return) (assoc css-props :visibility "hidden")))))
 
   ; Media queries
@@ -69,7 +69,7 @@
                                                                  {:border "1px solid red"}}}))]
       (is (string? (:class return)))
       (is (map? (:style return)))
-      ;; Inline style hides the component (media queries do not work as inline style)
+      ; Inline style hides the component (media queries do not work as inline style)
       (is (= (:style return) (assoc css-props :visibility "hidden")))))
 
   ; Manual mode
@@ -80,7 +80,7 @@
                                                                              {:background-color "#999999"}]]]}))]
       (is (string? (:class return)))
       (is (map? (:style return)))
-      ;; Inline style hides the component (manual mode does not work as inline style)
+      ; Inline style hides the component (manual mode does not work as inline style)
       (is (= (:style return) (assoc css-props :visibility "hidden")))))
 
   ; Feature query
@@ -91,7 +91,7 @@
                                                                     {:border "1px solid red"}}}))]
       (is (string? (:class return)))
       (is (map? (:style return)))
-      ;; Inline style hides the component (feature queries do not work as inline style)
+      ; Inline style hides the component (feature queries do not work as inline style)
       (is (= (:style return) (assoc css-props :visibility "hidden")))))
 
   (testing "Use nil style with HTML attributes"
@@ -205,7 +205,7 @@
 
   (testing "Use style with additional HTML attribute :style definition"
     (try
-      (stylefy/use-style {:color "blue"} {:style {:color "red"}}) ;; No point here!
+      (stylefy/use-style {:color "blue"} {:style {:color "red"}}) ; No point here!
       (is false "Error was not thrown")
       (catch js/Error e
         (is true "Error was thrown as expected")))))
@@ -305,7 +305,7 @@
       (is (= (:src return) attr-src))
       (is (= (:alt return) attr-alt))
       (is (string? (:class return)))
-      (is (str/includes? (:class return) "_stylefy_")) ;; Prefix for auto-generated class
+      (is (str/includes? (:class return) "_stylefy_")) ; Prefix for auto-generated class
       (is (str/includes? (:class return) "myclass"))))
 
   (testing "Use sub-style with :class vector"
@@ -319,7 +319,7 @@
       (is (= (:src return) attr-src))
       (is (= (:alt return) attr-alt))
       (is (string? (:class return)))
-      (is (str/includes? (:class return) "_stylefy_")) ;; Prefix for auto-generated class
+      (is (str/includes? (:class return) "_stylefy_")) ; Prefix for auto-generated class
       (is (str/includes? (:class return) "myclass myclass2"))))
 
   (testing "Use sub-style that does not exist: returns nil"

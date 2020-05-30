@@ -3,19 +3,19 @@
             [stylefy.core :as stylefy :refer [use-style use-sub-style]]
             [stylefy.examples.styles :as styles]))
 
-(def grid-style {;; Default style uses Flexbox as fallback
+(def grid-style {; Default style uses Flexbox as fallback
                  :display "flex"
                  :flex-direction "row"
                  :flex-wrap "wrap"
                  ::stylefy/media {{:max-width styles/phone-width}
                                   {:display "block"}}
-                 ;; Use CSS Grid style if it is supported by the browser.
-                 ;; If the browser does not support CSS Grid or feature queries at all, this
-                 ;; block is simply ignored.
+                 ; Use CSS Grid style if it is supported by the browser.
+                 ; If the browser does not support CSS Grid or feature queries at all, this
+                 ; block is simply ignored.
                  ::stylefy/supports {"display: grid"
                                      {:display "grid"
                                       :grid-template-columns "1fr 1fr 1fr"
-                                      ;; Make CSS Grid responsive
+                                      ; Make CSS Grid responsive
                                       ::stylefy/media {{:max-width styles/phone-width}
                                                        {:grid-template-columns "1fr"}}}}})
 
@@ -26,7 +26,7 @@
    ::stylefy/media {{:max-width styles/phone-width}
                     {:width "100%"}}
    ::stylefy/supports {"display: grid"
-                       ;; Element width is always well managed by grid.
+                       ; Element width is always well managed by grid.
                        {:width "auto"}}})
 
 (defn grid []

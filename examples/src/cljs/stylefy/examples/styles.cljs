@@ -15,9 +15,9 @@
                     :font-weight "normal"
                     :font-style "normal"})
 
-;; Custom named classes can be created, but should only be used when working with
-;; other libraries / frameworks. Normally there is no need to create custom classes
-;; when using stylefy.
+; Custom named classes can be created, but should only be used when working with
+; other libraries / frameworks. Normally there is no need to create custom classes
+; when using stylefy.
 (stylefy/class "background-transition"
                {:transition "background-color 1s"})
 
@@ -95,7 +95,7 @@
     :column3 (merge column
                     {:background-color "#0000AA"
                      :flex 1
-                     ;; sub-styles can also contain sub-styles
+                     ; sub-styles can also contain sub-styles
                      ::stylefy/sub-styles {:text {:color "red"}}
                      ::stylefy/media {{:max-width phone-width} {:background-color "#000000"}}})}
    ::stylefy/media {{:max-width phone-width} {:display :block}}})
