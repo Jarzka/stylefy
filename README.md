@@ -423,7 +423,7 @@ As has been told, stylefy converts style definition to unique CSS classes automa
 [:div.background-transition]
 ```
 
-## Custom tag styles (frontend only)
+## Custom tag styles
 
 You can generate styles for HTML tags by calling **stylefy/tag**:
 
