@@ -30,16 +30,10 @@ While being originally created with the frontend in mind, stylefy now runs on bo
 
 # Installation
 
-Stable version (frontend only):
+Add dependency:
 
 ```clj
-[stylefy "1.14.1"]
-```
-
-Latest development version (includes SSR support):
-
-```clj
-[stylefy "2.0.0-rc.2"]
+[stylefy "2.0.0"]
 ```
 
 # Setup
