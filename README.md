@@ -85,6 +85,12 @@ Full example:
   (:require [hiccup.core :refer [html]
             [stylefy.core :as stylefy :refer [use-style]]))
 
+(defn add-font-face []
+  (stylefy/font-face {:font-family "open_sans"
+                      :src "url('../fonts/OpenSans-Regular-webfont.woff') format('woff')"
+                      :font-weight "normal"
+                      :font-style "normal"}))
+
 (defn index []
   [:html
    [:head
@@ -100,7 +106,9 @@ Full example:
 (defn example-query []
   ; stylefy must have been initialised at this point
   (stylefy/query-with-styles
-    (fn [] (html (index)))))
+    (fn [] 
+      (add-font-face)
+      (html (index)))))
 ```
 
 If you wish to do something else with the generated CSS, you can create your own execution context. Use the implementation of `query-with-styles` as an example.
