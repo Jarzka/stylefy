@@ -191,6 +191,18 @@
       (is (= (:alt return) attr-alt))
       (is (= "_stylefy_1989766565 additional classname" (:class return)))))
 
+  (testing "Use style with HTML attributes, class name and additional class name attached to it"
+    (let [attr-src "image.jpg"
+          attr-alt "fail"
+          return (stylefy/use-style (assoc style-box
+                                      ::stylefy/with-classes ["hello" :world])
+                                    {:src attr-src
+                                     :class [:default "thing"]
+                                     :alt attr-alt})]
+      (is (= (:src return) attr-src))
+      (is (= (:alt return) attr-alt))
+      (is (= "_stylefy_1161193281 default thing hello world" (:class return)))))
+
   (testing "Use style with additional HTML attribute :style definition"
     (try
       (stylefy/use-style {:color "blue"} {:style {:color "red"}}) ;; No point here!
