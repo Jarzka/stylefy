@@ -9,7 +9,7 @@
             [stylefy.impl.state :as state]
             [stylefy.impl.styles :as impl-styles]))
 
-(def ^:dynamic css-in-context (atom nil))
+#?(:clj (def ^:dynamic css-in-context (atom nil)))
 
 (defn use-style
   "Defines a style for a component by converting the given style map in to an unique CSS class,
