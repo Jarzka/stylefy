@@ -1,6 +1,7 @@
 (ns stylefy.tests.ssr-test
   (:require [clojure.test :refer :all]
             [hiccup.core :refer :all]
+            [garden.stylesheet :refer [at-media]]
             [stylefy.core :as stylefy :refer [use-style]]
             [clojure.string :as str]))
 
@@ -28,15 +29,19 @@
                        :stylefy.core/sub-styles {:sub-box {:border "1px solid black"}}
                        ::stylefy/media {{:max-width phone-width}
                                         {:display "block"}}
-                       ;; Use CSS Grid style if it is supported by the browser.
-                       ;; If the browser does not support CSS Grid or feature queries at all, this
-                       ;; block is simply ignored.
                        ::stylefy/supports {"display: grid"
                                            {:display "grid"
                                             :grid-template-columns "1fr 1fr 1fr"
                                             ;; Make CSS Grid responsive
                                             ::stylefy/media {{:max-width phone-width}
-                                                             {:grid-template-columns "1fr"}}}}}))
+                                                             {:grid-template-columns "1fr"}}}}
+                       ::stylefy/manual [[:&:hover [:.innerbox
+                                                    {:background-color "#999999"}
+                                                    [:&:hover {:background-color "#EEEEEE"}]]]
+                                         (at-media {:max-width phone-width}
+                                                   [:&:hover [:.innerbox
+                                                              {:background-color "#666666"}
+                                                              [:&:hover {:background-color "#111111"}]]])]}))
 
 ; HTML
 
@@ -70,12 +75,22 @@
 (deftest query-with-styles
   (init-stylefy)
   (let [result (index-query)]
+    ; HTML document is rendered
     (is (str/includes? result "<html>"))
+    ; Styles are rendered
     (is (str/includes? result "<style id=\"_stylefy-server-styles_\">"))
-    (is (str/includes? result "_stylefy_-1381757477"))
-    (is (str/includes? result "._stylefy_-1381757477:hover"))
-    (is (str/includes? result "._stylefy_-1381757477:after"))
+    ; Base style is rendered
+    (is (str/includes? result "._stylefy_724366761"))
+    ; Modes are rendered
+    (is (str/includes? result "._stylefy_724366761:hover"))
+    (is (str/includes? result "._stylefy_724366761:after"))
+    ; Media query is rendered
     (is (str/includes? result "@media (max-width: 414px"))
+    ; Feature query is rendered
     (is (str/includes? result "supports (display: grid)"))
-    (is (str/includes? result "<body class=\"_stylefy_-1381757477\">"))
+    ; Manual mode is rendered
+    (is (str/includes? result "._stylefy_724366761:hover .innerbox:hover"))
+    ; Body is rendered
+    (is (str/includes? result "<body class=\"_stylefy_724366761\">"))
+    ; Sub-component is rendered
     (is (str/includes? result "<span class=\"_stylefy_1606470837\">Example text is red</span>"))))
