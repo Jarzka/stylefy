@@ -27,10 +27,11 @@
 (deftest use-style
   (testing "Use style"
     (let [return (stylefy/use-style style-box)]
-      (is (string? (:class return)))
+      (is (= (:class return) {:class "_stylefy_1149735588"}))
       ;; This is the first time we use this style map -> inline style shoule be returned
       (is (map? (:style return)))
-      ;; Inline style does not contain namespaced keywords:
+      ;; Inline style does not contain namespaced keywords. Also, it is not marked as hidden, because
+      ;; the style works perfectly as inline style.
       (is (= (:style return) css-props))))
 
   (testing "Use nil style"
@@ -99,17 +100,39 @@
 
   ; HTML attributes
 
-  (testing "Use style with HTML class name:"
-    (let [return (stylefy/use-style style-box
-                                    {:class ["dummy"]})]
-      (is (string? (:class return)))
-      (is (str/includes? (:class return) "dummy"))))
+  (testing "Use style with HTML class name (as string):"
+    (let [return (stylefy/use-style style-box {:class "dummy"})]
+      (is (= "_stylefy_1149735588 dummy" (:class return)))))
+
+  (testing "Use style with multiple HTML class names (as long string):"
+    (let [return (stylefy/use-style style-box {:class "dummy hello world"})]
+      (is (= "_stylefy_1149735588 dummy hello world" (:class return)))))
+
+  (testing "Use style with HTML class name (as keyword):"
+    (let [return (stylefy/use-style style-box {:class :dummy})]
+      (is (= "_stylefy_1149735588 dummy hello world" (:class return)))))
+
+  (testing "Use style with HTML class name (in vector):"
+    (let [return (stylefy/use-style style-box {:class ["dummy"]})]
+      (is (= "_stylefy_1149735588 dummy" (:class return)))))
+
+  (testing "Use style with multiple HTML class names (in vector):"
+    (let [return (stylefy/use-style style-box {:class ["dummy" "hello" "world"]})]
+      (is (= "_stylefy_1149735588 dummy hello world" (:class return)))))
+
+  (testing "Use style with multiple HTML class names (in vector, both strings and keywords):"
+    (let [return (stylefy/use-style style-box {:class ["dummy" :hello "world"]})]
+      (is (= "_stylefy_1149735588 dummy hello world" (:class return)))))
+
+  (testing "Use style with multiple HTML class names (in vector, both strings, keywords and nils):"
+    (let [return (stylefy/use-style style-box {:class ["dummy" :hello nil nil "world" nil nil]})]
+      (is (= "_stylefy_1149735588 dummy hello world" (:class return)))))
 
   (testing "Use empty style with HTML attributes"
     (let [return (stylefy/use-style {} {:src "image.jpg" :class "myclass"})]
       (is (= return {:src "image.jpg" :class "myclass"}))))
 
-  (testing "Use style with HTML attributes"
+  (testing "Use style with HTML attributes, class is string"
     (let [attr-src "image.jpg"
           attr-alt "fail"
           attr-class "myclass"
@@ -119,51 +142,54 @@
                                      :class attr-class})]
       (is (= (:src return) attr-src))
       (is (= (:alt return) attr-alt))
-      (is (string? (:class return)))
-      (is (str/includes? (:class return) "_stylefy_")) ;; Prefix for auto-generated class
-      (is (str/includes? (:class return) "myclass"))))
+      (is (= "_stylefy_1149735588 myclass" (:class return)))))
 
-  (testing "Use style with :class vector"
+  (testing "Use style with HTML attributes, class is vector"
     (let [attr-src "image.jpg"
           attr-alt "fail"
-          attr-class ["myclass" "myclass2"]
+          attr-class ["myclass1" "myclass2"]
           return (stylefy/use-style style-box
                                     {:src attr-src
                                      :alt attr-alt
                                      :class attr-class})]
       (is (= (:src return) attr-src))
       (is (= (:alt return) attr-alt))
-      (is (string? (:class return)))
-      (is (str/includes? (:class return) "_stylefy_")) ;; Prefix for auto-generated class
-      (is (str/includes? (:class return) "myclass myclass2"))))
+      (is (= "_stylefy_1149735588 myclass1 myclass2" (:class return)))))
 
-  (testing "Use style with additional class names attached to it"
+  (testing "Use style with HTML attributes and additional class names (string) attached to it"
     (let [attr-src "image.jpg"
           attr-alt "fail"
           return (stylefy/use-style (assoc style-box
-                                      ::stylefy/with-classes ["additional"])
+                                      ::stylefy/with-classes "hello world")
+                                    {:src attr-src
+                                     :class "default"
+                                     :alt attr-alt})]
+      (is (= (:src return) attr-src))
+      (is (= (:alt return) attr-alt))
+      (is ("_stylefy_-594685217 default hello world" (:class return)))))
+
+  (testing "Use style with HTML attributes and additional class name (keyword) attached to it"
+    (let [attr-src "image.jpg"
+          attr-alt "fail"
+          return (stylefy/use-style (assoc style-box
+                                      ::stylefy/with-classes :hello)
+                                    {:src attr-src
+                                     :class "default"
+                                     :alt attr-alt})]
+      (is (= (:src return) attr-src))
+      (is (= (:alt return) attr-alt))
+      (is ("_stylefy_-594685217 default hello" (:class return)))))
+
+  (testing "Use style with additional class names (vector) attached to it"
+    (let [attr-src "image.jpg"
+          attr-alt "fail"
+          return (stylefy/use-style (assoc style-box
+                                      ::stylefy/with-classes ["additional" :classname])
                                     {:src attr-src
                                      :alt attr-alt})]
       (is (= (:src return) attr-src))
       (is (= (:alt return) attr-alt))
-      (is (string? (:class return)))
-      (is (str/includes? (:class return) "_stylefy_")) ;; Prefix for auto-generated class
-      (is (str/includes? (:class return) "additional"))))
-
-  (testing "Use style with additional class names attached to it, along with :class"
-    (let [attr-src "image.jpg"
-          attr-alt "fail"
-          return (stylefy/use-style (assoc style-box
-                                      ::stylefy/with-classes ["additional"])
-                                    {:src attr-src
-                                     :alt attr-alt
-                                     :class "myclass"})]
-      (is (= (:src return) attr-src))
-      (is (= (:alt return) attr-alt))
-      (is (string? (:class return)))
-      (is (str/includes? (:class return) "_stylefy_")) ;; Prefix for auto-generated class
-      (is (str/includes? (:class return) "additional"))
-      (is (str/includes? (:class return) "myclass"))))
+      (is (= "_stylefy_1989766565 additional classname" (:class return)))))
 
   (testing "Use style with additional HTML attribute :style definition"
     (try

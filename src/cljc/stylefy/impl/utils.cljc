@@ -9,7 +9,7 @@
                 (garden.types CSSUnit)
                 (garden.color CSSColor)])))
 
-(defn filter-css-props
+(defn remove-special-keywords
   "Removes stylefy's namespaced keywords from the given map."
   [props]
   (apply dissoc props (filter #(and (namespace %)

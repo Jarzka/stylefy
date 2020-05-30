@@ -29,6 +29,24 @@
         {:props sub-style :hash (hashing/hash-style sub-style)}
         style-created-handler))))
 
+(defn- class-into-string
+  "Return class definition as string, or nil of the argument isn il."
+  [class]
+  (when class
+    (cond
+     (string? class) class
+     (keyword? class) (name class)
+     (vector? class) (str/join " "
+                               (remove nil? (mapv class-into-string class))))))
+
+(defn validate-class-definition [class origin]
+  (assert (or (nil? class)
+              (string? class)
+              (keyword? class)
+              (and (vector? class)
+                   (every? #(or (string? %) (keyword? %) (nil? %)) class)))
+          (str "Unsupported " origin " type. It should be nil, keyword, string or vector of strings/keywords). Got: " (pr-str class))))
+
 (defn- prepare-style-return-value
   "Given a style, hash and options, returns HTML attributes for a Hiccup component,
    or nil if there are not any attributes."
@@ -37,35 +55,24 @@
   (when (:stylefy.core/with-classes options)
     (log/warn ":stylefy.core/with-classes is deprecated in options map (since 1.3.0, removed in 2.0.0), use :class instead."))
 
-  (let [style-with-classes (:stylefy.core/with-classes style)]
-    (when style-with-classes
-      (assert (and (coll? style-with-classes)
-                   (every? #(or (string? %) (nil? %)) style-with-classes))
-              (str "with-classes must be a collection of string class names, got: " (pr-str style-with-classes))))
+  (let [style-with-classes (:stylefy.core/with-classes style)
+        html-attributes (utils/remove-special-keywords options)
+        html-attributes-class (:class html-attributes)
+        html-attributes-inline-style (:style html-attributes)]
 
-    (let [html-attributes (utils/filter-css-props options)
-          html-attributes-class (:class html-attributes)
-          html-attributes-inline-style (:style html-attributes)
+    (validate-class-definition html-attributes-class ":class")
+    (validate-class-definition style-with-classes ":stylefy.core/with-classes")
+    (assert (nil? html-attributes-inline-style) "HTML attribute :style is not supported in options map. Instead, you should provide your style definitions as the first argument when calling use-style.")
+
+    (let [class-as-string (class-into-string html-attributes-class)
+          style-with-classes-as-string (class-into-string style-with-classes)
           final-class (str/trim
-                        (cond
-                          (nil? html-attributes-class)
-                          (str/join " " (concat style-with-classes [style-hash]))
-
-                          (string? html-attributes-class)
-                          (str/join " " (concat [html-attributes-class] style-with-classes [style-hash]))
-
-                          (vector? html-attributes-class)
-                          (str/join " " (concat html-attributes-class style-with-classes [style-hash]))))
+                        (str
+                          style-hash " "
+                          (str/join " " (remove nil? [class-as-string style-with-classes-as-string]))))
           final-html-attributes (merge
                                   html-attributes
                                   (when (not (empty? final-class)) {:class final-class}))]
-
-      (assert (or (nil? html-attributes-class)
-                  (string? html-attributes-class)
-                  (vector? html-attributes-class))
-              (str "Unsupported :class type (should be nil, string or vector). Got: " (pr-str html-attributes-class)))
-      (assert (nil? html-attributes-inline-style)
-              "HTML attribute :style is not supported in options map. Instead, you should provide your style definitions as the first argument when calling use-style.")
 
       (when (not (empty? final-html-attributes))
         final-html-attributes))))
@@ -93,46 +100,31 @@
                                                          (filter (comp not excluded-modes)
                                                                  mode-names)))
                      inline-style (-> style
-                                      (utils/filter-css-props)
+                                      (utils/remove-special-keywords)
                                       (conversion/garden-units->css))]
                  (if (or contains-media-queries?
                          contains-feature-queries?
                          contains-manual-mode?
                          contains-modes-not-excluded?)
-                   (merge return-map {:style (merge inline-style
-                                                    {:visibility "hidden"})})
+                   (merge return-map {:style (merge inline-style {:visibility "hidden"})})
                    (merge return-map {:style inline-style}))))
        :clj  return-map)))
 
 (defn use-style! [style options style-created-handler]
-  (let [with-classes-options (:stylefy.core/with-classes options)
-        with-classes-style (:stylefy.core/with-classes style)]
+  (state/check-stylefy-initialisation)
+  (let [style-with-global-vendors (when-not (empty? style) (add-global-vendors style))
+        style-hash (hashing/hash-style style-with-global-vendors)
+        already-created #?(:cljs (dom/style-by-hash style-hash)
+                           :clj false)] ; TODO Read from css-in-context?
 
-    (assert (or (nil? with-classes-options)
-                (and (vector? with-classes-options)
-                     (every? string? with-classes-options)))
-            (str "with-classes argument inside options map must be a vector of strings, got: " (pr-str with-classes-options)))
+    (when (and (not (empty? style-with-global-vendors))
+               (some? style-hash)
+               (not already-created))
+      (create-style!
+        {:props style-with-global-vendors :hash style-hash}
+        style-created-handler))
 
-    (assert (or (nil? with-classes-style)
-                (and (vector? with-classes-style)
-                     (every? string? with-classes-style)))
-            (str "with-classes argument inside style map must be a vector of strings, got: " (pr-str with-classes-style)))
-
-    (state/check-stylefy-initialisation)
-
-    (let [style-with-global-vendors (when-not (empty? style) (add-global-vendors style))
-          style-hash (hashing/hash-style style-with-global-vendors)
-          already-created #?(:cljs (dom/style-by-hash style-hash)
-                             :clj false)] ; TODO Read from css-in-context?
-
-      (when (and (not (empty? style-with-global-vendors))
-                 (some? style-hash)
-                 (not already-created))
-        (create-style!
-          {:props style-with-global-vendors :hash style-hash}
-          style-created-handler))
-
-      (style-return-value style-with-global-vendors style-hash options))))
+    (style-return-value style-with-global-vendors style-hash options)))
 
 (defn use-sub-style! [style sub-style options style-created-handler]
   (let [resolved-sub-style (get (:stylefy.core/sub-styles style) sub-style)]
