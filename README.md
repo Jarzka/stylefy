@@ -96,7 +96,7 @@ Full example:
    [:head
     [:title "Example"]
 
-    [:style {:id "_stylefy-server-styles_"} "_stylefy-server-styles-content_"] ; The generated CSS will be inserted here
+    [:style {:id "_stylefy-server-styles_"} "_stylefy-server-styles-content_"] ; Generated CSS will be inserted here
     [:style {:id "_stylefy-constant-styles_"}]
     [:style {:id "_stylefy-styles_"}]]
 
