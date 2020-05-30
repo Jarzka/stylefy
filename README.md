@@ -30,7 +30,7 @@ While being originally created with the frontend in mind, stylefy now runs on bo
 
 # Installation
 
-Stable version:
+Stable version (frontend only):
 
 ```clj
 [stylefy "1.14.1"]
@@ -100,7 +100,7 @@ Full example:
     [:div (use-style {:text-align :center} {:id "app"})]]])
 
 (defn example-query []
-  ; stylefy must be initialised at this point
+  ; stylefy must have been initialised at this point
   (stylefy/query-with-styles
     (fn [] (html (index)))))
 ```
