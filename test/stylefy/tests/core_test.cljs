@@ -4,6 +4,7 @@
             [stylefy.impl.dom :as dom]
             [garden.core :refer [css]]
             [garden.color :as color]
+            [garden.units :as units]
             [clojure.string :as str]))
 
 (def css-props {:border "1px solid black"
