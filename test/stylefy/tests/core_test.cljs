@@ -7,6 +7,8 @@
             [garden.units :as units]
             [clojure.string :as str]))
 
+; Style definitions for tests:
+
 (def css-props {:border "1px solid black"
                 :background-color "#FFDDDD"
                 :text-align :center
@@ -20,6 +22,8 @@
                        :stylefy.core/auto-prefix #{:border-radius}
                        :stylefy.core/sub-styles {:sub-box {:border "1px solid black"}}}))
 
+; Use style smoke tests
+
 (deftest use-style
   (testing "Use style"
     (let [return (stylefy/use-style style-box)]
@@ -28,6 +32,16 @@
       (is (map? (:style return)))
       ;; Inline style does not contain namespaced keywords:
       (is (= (:style return) css-props))))
+
+  (testing "Use nil style"
+    (let [return (stylefy/use-style nil)]
+      (is (nil? return))))
+
+  (testing "Use empty style"
+    (let [return (stylefy/use-style {})]
+      (is (nil? return))))
+
+  ; Modes
 
   (testing "Use style with :hover mode"
     (let [return (stylefy/use-style (merge style-box
@@ -46,6 +60,8 @@
       ;; certain modes can be accepted without hiding the component
       (is (= (:style return) (assoc css-props :visibility "hidden")))))
 
+  ; Media queries
+
   (testing "Use style with media query"
     (let [return (stylefy/use-style (merge style-box
                                            {:stylefy.core/media {{:max-width "400px"}
@@ -54,6 +70,8 @@
       (is (map? (:style return)))
       ;; Inline style hides the component (media queries do not work as inline style)
       (is (= (:style return) (assoc css-props :visibility "hidden")))))
+
+  ; Manual mode
 
   (testing "Use style with manual mode"
     (let [return (stylefy/use-style (merge style-box
@@ -64,6 +82,8 @@
       ;; Inline style hides the component (manual mode does not work as inline style)
       (is (= (:style return) (assoc css-props :visibility "hidden")))))
 
+  ; Feature query
+
   (testing "Use style with feature query"
     (let [return (stylefy/use-style (merge style-box
                                            {:stylefy.core/supports {"display: grid"
@@ -73,41 +93,21 @@
       ;; Inline style hides the component (feature queries do not work as inline style)
       (is (= (:style return) (assoc css-props :visibility "hidden")))))
 
-  (testing "Use nil style"
-    (let [return (stylefy/use-style nil)]
-      (is (nil? return))))
-
   (testing "Use nil style with HTML attributes"
     (let [return (stylefy/use-style nil {:src "image.jpg" :class "myclass"})]
       (is (= return {:src "image.jpg" :class "myclass"}))))
 
-  (testing "Use empty style"
-    (let [return (stylefy/use-style {})]
-      (is (nil? return))))
+  ; HTML attributes
 
-  (testing "Use empty style with HTML attributes"
-    (let [return (stylefy/use-style {} {:src "image.jpg" :class "myclass"})]
-      (is (= return {:src "image.jpg" :class "myclass"}))))
-
-  (testing "Use garbage style: number"
-    (try
-      (stylefy/use-style 123)
-      (is false "Error was not thrown")
-      (catch js/Error e
-        (is true "Error was thrown as expected"))))
-
-  (testing "Use garbage style: string"
-    (try
-      (stylefy/use-style "foo")
-      (is false "Error was not thrown")
-      (catch js/Error e
-        (is true "Error was thrown as expected"))))
-
-  (testing "Use style with class name:"
+  (testing "Use style with HTML class name:"
     (let [return (stylefy/use-style style-box
                                     {:class ["dummy"]})]
       (is (string? (:class return)))
       (is (str/includes? (:class return) "dummy"))))
+
+  (testing "Use empty style with HTML attributes"
+    (let [return (stylefy/use-style {} {:src "image.jpg" :class "myclass"})]
+      (is (= return {:src "image.jpg" :class "myclass"}))))
 
   (testing "Use style with HTML attributes"
     (let [attr-src "image.jpg"
@@ -172,6 +172,24 @@
       (catch js/Error e
         (is true "Error was thrown as expected")))))
 
+; Invalid styles
+
+(testing "Use garbage style: number"
+  (try
+    (stylefy/use-style 123)
+    (is false "Error was not thrown")
+    (catch js/Error e
+      (is true "Error was thrown as expected"))))
+
+(testing "Use garbage style: string"
+  (try
+    (stylefy/use-style "foo")
+    (is false "Error was not thrown")
+    (catch js/Error e
+      (is true "Error was thrown as expected"))))
+
+; Garden types
+
 (deftest garden-types
   (testing "Garden units are converted correctly"
     (let [return (stylefy/use-style {:width (units/px 50)})]
@@ -186,6 +204,8 @@
       (is (map? (:style return)))
       (is (= (:style return)
              {:color "#050505"})))))
+
+; use-sub-style
 
 (deftest use-sub-style
   (testing "Use sub-style"
@@ -268,6 +288,8 @@
     (let [return (stylefy/use-sub-style style-box :foo)]
       (is (nil? return)))))
 
+; sub-style
+
 (deftest sub-style
   (testing "Get sub-style"
     (let [style-map {::stylefy/sub-styles
@@ -299,12 +321,16 @@
       (catch js/Error e
         (is true "Error was thrown as expected")))))
 
+; DOM
+
 (deftest dom-update-is-requested
   (let [dom-update-requested? (atom false)]
     (with-redefs [dom/request-asynchronous-dom-update #(reset! dom-update-requested? true)]
       (is (nil? (stylefy/init)))
       (stylefy/use-style {:color "red"})
       (is (true? @dom-update-requested?)))))
+
+; font-face
 
 (deftest font-face
   (is (= (css {:pretty-print? false}
@@ -313,6 +339,8 @@
                                   :font-weight "normal"
                                   :font-style "normal"}))
          "@font-face{font-family:open_sans;src:url('../fonts/OpenSans-Regular-webfont.woff') format('woff');font-weight:normal;font-style:normal}")))
+
+; keyframes
 
 (deftest keyframes
   (is (= (css {:pretty-print? false}
@@ -358,6 +386,8 @@
                                                 [:to
                                                  {:background-color "red"}]))})))
 
+; tag
+
 (deftest tag
   (reset! stylefy.impl.dom/custom-tags-in-use [])
   (is (= (stylefy/tag "code"
@@ -374,6 +404,8 @@
           ::stylefy.impl.dom/class-properties {:transition "background-color 1s;"}}))
   (is (= @stylefy.impl.dom/custom-classes-in-use
          [{:stylefy.impl.dom/css ".background-transition {\n  transition: background-color 1s;;\n}"}])))
+
+; prepare-styles
 
 (deftest prepare-styles
   (testing "Return value"
@@ -399,6 +431,8 @@
       (is false "Expected an error to be thrown.")
       (catch js/Error e
         (is true "Error was thrown as expected")))))
+
+; prepare-style
 
 (deftest prepare-style
   (let [style {:background-color :red}]
