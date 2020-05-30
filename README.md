@@ -76,7 +76,7 @@ Assuming you have a query function which generates HTML text, wrap it with `styl
   (fn [] (html (example-component))))
 ```
 
-If `use-style` or some other stylefy function is called during the query execution, the generated CSS is kept in temporary memory. When the query has finished, a special value of `_stylefy-server-styles-content_` is searched in the output and replaced with the generated CSS. The end result is HTML code with styles attached.
+If `use-style`, or some other stylefy function is called during the query execution, the generated CSS is kept in temporary memory. When the query has finished, a special value of `_stylefy-server-styles-content_` is searched in the output and replaced with the generated CSS. The end result is HTML code with styles attached.
       
 Full example:
 
