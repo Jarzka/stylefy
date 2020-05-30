@@ -473,7 +473,7 @@ An example of such corner case is a situation in which we want to change the sty
 
 For syntax help, see Garden's [documentation](https://github.com/noprompt/garden/wiki/Syntax).
 
-## Style caching
+## Style caching (frontend)
 
 stylefy supports style caching for styles generated on the frontend. The styles can be cached in HTML5 local storage. The converted CSS code is added into local storage and loaded from there when the page is reloaded.
 
@@ -520,7 +520,7 @@ Notice that you need to turn custom prefixes on separately on the init function:
 
 # Advanced features 
 
-## Frontend multi-instance support
+## Multi-instance support (frontend)
 
 Running multiple apps using stylefy on the same web page is currently possible if every app is built separately (every app contains its own JS file). Every instance can use its own style tag, so use your app name as a suffix in the **style** tag id.
 
