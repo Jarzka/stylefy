@@ -11,7 +11,7 @@
 
 # Introduction
 
-stylefy makes it possible to define CSS styles as Clojure data and attach them into HTML elements easily. Styles are automatically converted to CSS on-demand and scoped locally. This makes writing style code easy and maintainable.
+stylefy makes it possible to define CSS styles as Clojure data and attach them into HTML elements easily. Styles are converted to CSS on-demand and scoped locally. This makes writing style code easy and maintainable.
 
 While being originally created with the frontend in mind, stylefy now runs on both Web browsers and servers. On the frontend, it is designed to be used along with [Reagent](https://github.com/reagent-project/reagent). stylefy uses [Garden](https://github.com/noprompt/garden) in the background for most of its CSS conversions. 
 
