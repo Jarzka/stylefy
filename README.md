@@ -2,7 +2,7 @@
   <img align="center" width="200" src="stylefy_logo2.png" alt="">
 </p>
 
-<p align="center">ClojureScript library for styling UI components with ease.</p>
+<p align="center">Clojure(Script) library for styling user interface components with ease.</p>
 
 [![Clojars Project](https://img.shields.io/clojars/v/stylefy.svg)](https://clojars.org/stylefy)
 [![CircleCI](https://circleci.com/gh/Jarzka/stylefy.svg?style=svg)](https://circleci.com/gh/Jarzka/stylefy)
@@ -11,38 +11,22 @@
 
 # Introduction
 
-stylefy makes it possible to define UI component styles as Clojure data and attach them into components easily. Styles are converted to CSS on-demand and scoped locally to each component. This makes writing style code easy and maintainable.
+stylefy makes it possible to define CSS styles as Clojure data and attach them into HTML elements easily. Styles are automatically converted to CSS on-demand and scoped locally. This makes writing style code easy and maintainable.
 
-stylefy is designed to be used in [SPA](https://en.wikipedia.org/wiki/Single-page_application) applications along with [Reagent](https://github.com/reagent-project/reagent). stylefy uses [Garden](https://github.com/noprompt/garden) in the background to do most of its CSS conversions. 
+While being originally created with the frontend in mind, stylefy now runs on both Web browsers and servers. On the frontend, it is designed to be used along with [Reagent](https://github.com/reagent-project/reagent). stylefy uses [Garden](https://github.com/noprompt/garden) in the background for most of its CSS conversions. 
 
 # Features
 
-- Define styles as Clojure data, for any UI component or HTML tag
-- Use any 3rd party CSS code (such as Bootstrap) along with stylefy
-- All important CSS features are supported: pseudo-classes, pseudo-elements, keyframes, font-faces, media queries, feature queries...
+- Define styles as Clojure data. All important CSS features are supported: pseudo-classes, pseudo-elements, keyframes, font-faces, media queries, feature queries...
+- Use any 3rd party CSS code along with stylefy
 - Manual mode can be used for styling 3rd party components and resolving corner cases in which complex CSS selectors are needed
 - Vendor prefixes are supported both locally and globally
-- CSS caching using local storage (optional)
-- Multi-instance support (you can run multiple apps using stylefy on the same web page if all apps are built separately)
+- CSS caching on the frontend using local storage (optional)
+- Multi-instance support on the frontend (you can run multiple apps using stylefy on the same web page if all apps are built separately)
 - Small and simple core API which is easy to setup
 - Fast, asynchronous CSS generation
-- Automatic style reloading (via shadow-cljs or Figwheel)
-- Server-Side Rendering (SSR) support (currently Release Candidate)
+- Automatic style reloading (with shadow-cljs or Figwheel)
 - All features are tested to work with Chrome, Firefox, Edge & Internet Explorer 11
-
-# FAQ
-
-## How is this library different than Garden?
-
-Garden is awesome, but it's "only" a Clojure to CSS generator. If you want to use Garden to style your page, you are pretty much going to write CSS code as usual, i.e. write classes and selectors to stylize things on the page. You also need to avoid CSS quirks like name conflicts and make sure you always handle CSS cascading process correctly. stylefy helps you with this; you just write your style definition in a map and attach it to your component in the render function by calling **use-style**. There is no need to write CSS classes or selectors, no need to worry about name conflicts, dead CSS code etc.
-
-Yes, it is possible to easily attach styles to components with Garden too if you use inline styles. But if you use stylefy, all your style definitions are converted to unique CSS classes automatically and the corresponding class is attached to your component. This is more effective than using inline-styles, especially if the same component exists multiple times on the same page. The style is defined only once in the CSS class, not multiple times in each component instance. Also, some CSS features are not available to use as inline styles (pseudoclasses, media queries etc.). For stylefy, this is not a problem, as it allows you to define pseudoclasses and media queries within the style map and converts everything to CSS automatically.
-
-TLDR; stylefy it's like using inline CSS, but with full support for all CSS features that are not normally available when using CSS inline.
-
-## Any real projects using stylefy?
-
-Yup, for example: [Finnish National Access Point](https://github.com/finnishtransportagency/mmtis-national-access-point), [Velho Design System](https://github.com/velho-allianssi/velho-ds), [Solita Rooms](https://github.com/solita/solita-rooms), [My personal website](https://github.com/Jarzka/Pikseli.org), and [various other projects](https://github.com/search?q=_stylefy-constant-styles_&type=Code)
 
 # Installation
 
@@ -52,15 +36,17 @@ Stable version:
 [stylefy "1.14.1"]
 ```
 
-Latest development version:
+Latest development version (includes SSR support):
 
 ```clj
 [stylefy "2.0.0-rc.2"]
 ```
 
-# Usage
+# Setup
 
-## Init
+## Frontend (ClojureScript)
+
+**Follow these steps if you want to use stylefy along with Reagent:**
 
 Add the following **style** tags on your page's **head** tag. It is **recommended** that these tags are the last style tags in the **header** so that it is less likely that possible other styles would override them.
 
@@ -82,6 +68,44 @@ Then, call **stylefy/init** once when your application starts:
 ```clojure
 (stylefy/init)
 ```
+
+## Backend (Clojure)
+
+**Follow these steps if you want to render styles on the server. These steps are not necessary if you only render styles on the frontend.**
+
+Call `(stylefy/init)` once when your server starts.
+
+Assuming you have a query function which generates HTML text, wrap it with `stylefy/query-with-styles`.
+
+```clj
+(stylefy/query-with-styles
+  (fn [] (html (example-component))))
+```
+
+If `use-style` is called during the query execution, the generated CSS is kept in temporary memory. When the query has finished, a special value of `_stylefy-server-styles-content_` is searched in the output and replaced with the generated CSS. The end result is HTML code with styles attached.
+      
+Full example:
+
+```clj
+(defn index []
+  [:html
+   [:head
+    [:title "Example"]
+
+    [:style {:id "_stylefy-server-styles_"} "_stylefy-server-styles-content_"]
+    [:style {:id "_stylefy-constant-styles_"}]
+    [:style {:id "_stylefy-styles_"}]]
+
+   [:body (use-style {:color :black})
+    [:div (use-style {:text-align :center} {:id "app"})]]])
+
+(defn example-query []
+  ; stylefy must be initialised at this point
+  (stylefy/query-with-styles
+    (fn [] (html (index)))))
+```
+
+# Usage
 
 ## Creating & using styles
 
@@ -110,7 +134,7 @@ To use it in a component, use the **use-style** function:
     text])
 ```
 
-**use-style** adds the style into the DOM as a CSS class on-demand (see "How it works" for more details).
+On the frontend, **use-style** adds the style into the DOM as a CSS class on-demand (see "How it works" for more details). On the server, it returns a class name pointing to the generated CSS code.
 
 ### Passing styles to components
 
@@ -167,20 +191,6 @@ Do something like this:
                   {:style {:left x :top y}})
     text])
 ```
-
-### How it works (technical details)
-
-**use-style** saves the style and adds it into the DOM as a CSS class asynchronously (if it's not already there). The return value is a map containing the given style properties as inline style. It is needed until the CSS class has been generated and inserted into the DOM. When the DOM is ready, the component is forced to re-render itself and use only the CSS class definition.
-
-You might ask why does **use-style** work asynchronously? The reason is speed. Consider a case when one or more components are going to be rendered and all of them are calling **use-style** very many times with different style maps. In this case, updating the DOM on every single call would slow the rendering process down. To keep the rendering fast, the idea is to collect as many style maps as possible during a single render event, convert all of them to CSS and add into the DOM at once.
-
-If the style contains some specific definitions that cannot be present as inline style (some specific modes or media queries), the HTML element using the style is going to be hidden for a few milliseconds with CSS **visibility** set to **hidden**, until the converted CSS style is added into the DOM. In most cases, this should not be a problem, but if needed, the style can be added into the DOM synchronously by calling **prepare-style**:
-
-```clojure
-[:div (use-style (prepare-style style))]
-```
-
-Because **prepare-style** causes immediate synchronous DOM update, it is not recommended to overuse it, as it can slow the rendering process. Also, it's good to keep in mind that most of the time **prepare-style** is not needed, but calling **use-style** is enough. Also, when caching is used, the style will be ready after its CSS has been created for the first time.
 
 ## Modes (pseudo-classes & pseudo-elements)
 
@@ -328,7 +338,7 @@ You can use modes, media queries, and vendor prefixes inside feature query style
 
 ## 3rd party classes
 
-Use 3rd party classes along with stylefy definitions:
+You can use 3rd party class names by passing them via `:class` HTML attribute. The value can be a string, a keyword or a vector of strings/keywords.
 
 ```clojure
 (defn- bs-navbar-item [index index-atom text]
@@ -353,7 +363,7 @@ Alternative syntax:
        [bs-navbar-item 3 active-index "Four"]])))
 ```
 
-3rd party classes can also be attached directly into a style map. This means that the defined additional class names are always used with the style:
+3rd party classes can also be attached directly into a style map. This means that the defined additional class names are always used with the style. It accepts the same syntax as `:class`.
 
 ```clojure
 (def boostrap-navbar {:background-color "#DDDDDD"
@@ -369,8 +379,7 @@ Alternative syntax:
        [bs-navbar-item 3 active-index "Four"]])))
 ```
 
-
-## Font-face
+## Font-face (frontend only)
 
 Call **stylefy/font-face** and the given font-face is added into the DOM as CSS code asynchronously.
 
@@ -381,8 +390,7 @@ Call **stylefy/font-face** and the given font-face is added into the DOM as CSS 
                     :font-style "normal"})
 ```
 
-
-## Keyframes
+## Keyframes (frontend only)
 
 Call **stylefy/keyframes** and the given keyframes are added into the DOM as CSS code asynchronously.
 
@@ -399,7 +407,7 @@ Call **stylefy/keyframes** and the given keyframes are added into the DOM as CSS
                           :animation-iteration-count "infinite"}))
 ```
 
-## Custom class names
+## Custom class names (frontend only)
 
 As has been told, stylefy converts style definition to unique CSS classes automatically and there is no need to worry about class names. It can, however, be useful to be able to generate custom named classes for example when working with 3rd party libraries / frameworks. For this purpose, call **stylefy/class**:
 
@@ -412,9 +420,9 @@ As has been told, stylefy converts style definition to unique CSS classes automa
 [:div.background-transition]
 ```
 
-## Custom tag styles
+## Custom tag styles (frontend only)
 
-As has been told, stylefy converts style definition to unique CSS classes automatically and there is no need to worry about writing selectors for HTML tags. However, custom tag styles can be useful for setting styles on base elements, like html or body. For this purpose, call **stylefy/tag**:
+You can generate styles for HTML tags by calling **stylefy/tag**:
 
 ```clojure
 ;; This generates a CSS tag selector and style for "body" element
@@ -463,7 +471,7 @@ For syntax help, see Garden's [documentation](https://github.com/noprompt/garden
 
 ## Style caching
 
-stylefy supports style caching with HTML5 local storage. The converted CSS code is added into local storage and loaded from there when the page is reloaded.
+stylefy supports style caching for styles generated on the frontend. The styles can be cached in HTML5 local storage. The converted CSS code is added into local storage and loaded from there when the page is reloaded.
 
 As from version 1.7.0, caching with local storage is turned on by default. You can turn it off in the initialisation function:
 
@@ -508,7 +516,7 @@ Notice that you need to turn custom prefixes on separately on the init function:
 
 # Advanced features 
 
-## Multi-instance support
+## Frontend multi-instance support
 
 Running multiple apps using stylefy on the same web page is currently possible if every app is built separately (every app contains its own JS file). Every instance can use its own style tag, so use your app name as a suffix in the **style** tag id.
 
@@ -523,6 +531,34 @@ Then init stylefy with multi-instance support. Instance-id is a unique string (f
 (stylefy/init {:multi-instance {:base-node (dommy/sel1 "#myapp")
                                 :instance-id "myapp"}})
 ```
+
+# FAQ
+
+## How is this library different than Garden?
+
+Garden is awesome, but it's "only" a Clojure to CSS generator. If you want to use Garden to style your page, you are pretty much going to write CSS code as usual, i.e. write classes and selectors to stylize things on the page. You also need to avoid CSS quirks like name conflicts and make sure you always handle CSS cascading process correctly. stylefy helps you with this; you just write your style definition in a map and attach it to your component in the render function by calling **use-style**. There is no need to write CSS classes or selectors, no need to worry about name conflicts, dead CSS code etc.
+
+Yes, it is possible to easily attach styles to components with Garden too if you use inline styles. But if you use stylefy, all your style definitions are converted to unique CSS classes automatically and the corresponding class is attached to your component. This is more effective than using inline-styles, especially if the same component exists multiple times on the same page. The style is defined only once in the CSS class, not multiple times in each component instance. Also, some CSS features are not available to use as inline styles (pseudoclasses, media queries etc.). For stylefy, this is not a problem, as it allows you to define pseudoclasses and media queries within the style map and converts everything to CSS automatically.
+
+TLDR; stylefy it's like using inline CSS, but with full support for all CSS features that are not normally available when using CSS inline.
+
+## How does the CSS generation work on the frontend?
+
+**use-style** saves the style and adds it into the DOM as a CSS class asynchronously (if it's not already there). The return value is a map containing the given style properties as inline style. It is needed until the CSS class has been generated and inserted into the DOM. When the DOM is ready, the component is forced to re-render itself and use only the CSS class definition.
+
+You might ask why does **use-style** work asynchronously? The reason is speed. Consider a case when one or more components are going to be rendered and all of them are calling **use-style** very many times with different style maps. In this case, updating the DOM on every single call would slow the rendering process down. To keep the rendering fast, the idea is to collect as many style maps as possible during a single render event, convert all of them to CSS and add into the DOM at once.
+
+If the style contains some specific definitions that cannot be present as inline style (some specific modes or media queries), the HTML element using the style is going to be hidden for a few milliseconds with CSS **visibility** set to **hidden**, until the converted CSS style is added into the DOM. In most cases, this should not be a problem, but if needed, the style can be added into the DOM synchronously by calling **prepare-style**:
+
+```clojure
+[:div (use-style (prepare-style style))]
+```
+
+Because **prepare-style** causes immediate synchronous DOM update, it is not recommended to overuse it, as it can slow the rendering process. Also, it's good to keep in mind that most of the time **prepare-style** is not needed, but calling **use-style** is enough. Also, when caching is used, the style will be ready after its CSS has been created for the first time.
+
+## Any real projects using stylefy?
+
+Yup, for example: [Finnish National Access Point](https://github.com/finnishtransportagency/mmtis-national-access-point), [Velho Design System](https://github.com/velho-allianssi/velho-ds), [Solita Rooms](https://github.com/solita/solita-rooms), [My personal website](https://github.com/Jarzka/Pikseli.org), and [various other projects](https://github.com/search?q=_stylefy-constant-styles_&type=Code)
 
 # More examples
 
