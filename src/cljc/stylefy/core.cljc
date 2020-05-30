@@ -1,10 +1,13 @@
 (ns stylefy.core
   (:require [clojure.string :as str]
-            [stylefy.impl.hashing :as hashing]
-            [stylefy.impl.styles :as impl-styles]
+            [garden.core :refer [css]]
+            [garden.stylesheet :refer [at-media at-keyframes at-font-face]]
+            [stylefy.impl.conversion :as conversion]
             #?(:cljs [stylefy.impl.dom :as dom])
+            [stylefy.impl.hashing :as hashing]
+            [stylefy.impl.log :as log]
             [stylefy.impl.state :as state]
-            [stylefy.impl.log :as log]))
+            [stylefy.impl.styles :as impl-styles]))
 
 (def ^:dynamic css-in-context (atom nil))
 
@@ -65,7 +68,7 @@
    (assert (or (map? options) (nil? options)) (str "Options should be a map or nil, got: " (pr-str options)))
    #?(:cljs (impl-styles/use-style! style options dom/save-style!)
       :clj  (impl-styles/use-style! style options (fn [{:keys [hash css]}]
-                                                    (swap! css-in-context assoc hash css))))))
+                                                    (swap! css-in-context assoc-in [:stylefy-classes hash] css))))))
 
 
 (defn use-sub-style
@@ -83,7 +86,7 @@
            (str "Options should be a map or nil, got: " (pr-str options)))
    #?(:cljs (impl-styles/use-sub-style! style sub-style options dom/save-style!)
       :clj  (impl-styles/use-sub-style! style sub-style options (fn [{:keys [hash css]}]
-                                                                  (swap! css-in-context assoc hash css))))))
+                                                                  (swap! css-in-context assoc-in [:stylefy-classes hash] css))))))
 
 (defn sub-style
   "Returns sub-style for a given style."
@@ -132,6 +135,82 @@
    (reset! state/stylefy-initialised? true)
    #?(:cljs (dom/update-dom))))
 
+(defn keyframes
+  "Frontend: Adds the given keyframe definition into the DOM asynchronously.
+   Backend: Adds the given keyframe definition into the current context.
+
+   Identifier is the name of the keyframes.
+   Frames are given in the same form as Garden accepts them.
+
+   Example:
+   (stylefy/keyframes \"simple-animation\"
+                       [:from
+                        {:opacity 0}]
+                       [:to
+                        {:opacity 1}])"
+  [identifier & frames]
+  (assert (string? identifier) (str "Identifier should be string, got: " (pr-str identifier)))
+  (let [garden-syntax (apply at-keyframes identifier frames)]
+    #?(:cljs (dom/add-keyframes identifier garden-syntax)
+       :clj  (swap! css-in-context assoc-in [:keyframes identifier] (css garden-syntax)))))
+
+(defn font-face
+  "Frontend: Adds the given font-face definition into the DOM asynchronously.
+   Backend: Adds the given font-face definition into the current context.
+
+   Properties are given in the same form as Garden accepts them.
+
+   Example:
+   (stylefy/font-face {:font-family \"open_sans\"
+                       :src \"url('../fonts/OpenSans-Regular-webfont.woff') format('woff')\"
+                       :font-weight \"normal\"
+                       :font-style \"normal\"})"
+  [properties]
+  (assert (map? properties) (str "Properties should be a map, got: " (pr-str properties)))
+
+  (let [garden-syntax (at-font-face properties)]
+    #?(:cljs (dom/add-font-face properties)
+       :clj  (swap! css-in-context assoc :font-faces
+                    (conj (:font-faces @css-in-context) (css garden-syntax))))))
+
+(defn tag
+  "Frontend: Creates a CSS selector for the given tag and properties and adds it into the DOM asynchronously.
+   Backend: Creates a CSS selector for the given tag and properties and adds it into the current context.
+
+   Normally you should let stylefy convert your style maps to unique CSS classes by calling
+   use-style, instead of creating tag selectors. However, custom tag styles
+   can be useful for setting styles on base elements, like html or body.
+
+   Example:
+   (stylefy/tag \"code\"
+                 {:background-color \"lightyellow\"})"
+  [name properties]
+  (assert (string? name) (str "Tag name should be a string, got: " (pr-str name)))
+  (assert (map? properties) (str "Properties should be a map, got: " (pr-str properties)))
+
+  (let [tag-as-css (conversion/style->css {:props properties :custom-selector name})]
+    #?(:cljs (dom/add-tag tag-as-css)
+       :clj  (swap! css-in-context assoc-in [:tags name] tag-as-css))))
+
+(defn class
+  "Frontend: Creates a CSS class with the given name and properties and adds it into the DOM asynchronously.
+   Backend: Creates a CSS class with the given name and properties and adds it into the the current context.
+
+   Normally you should let stylefy convert your style maps to unique CSS classes by calling
+   use-style. Thus, there is usually no need to create customly named classes when using stylefy,
+   unless you work with some 3rd party framework.
+
+   Example:
+   (stylefy/class \"enter-transition\"
+                   {:transition \"background-color 2s\"})"
+  [name properties]
+  (assert (string? name) (str "Name should be a string, got: " (pr-str name)))
+  (assert (map? properties) (str "Properties should be a map, got: " (pr-str properties)))
+
+  (let [class-as-css (conversion/style->css {:props properties :custom-selector (conversion/class-selector name)})]
+    #?(:cljs (dom/add-class class-as-css)
+       :clj  (swap! css-in-context assoc-in [:classes name] class-as-css))))
+
 ;
 ; Backend only
 ;
@@ -145,76 +224,18 @@
      [query]
      (binding [stylefy.core/css-in-context (atom nil)]
        (let [result (query)
-             result-with-styles-attached (str/replace
-                                           result
-                                           #"_stylefy-server-styles-content_"
-                                           (apply str (vals @css-in-context)))]
+             css (str
+                   (apply str (:font-faces @css-in-context))
+                   (apply str (vals (:keyframes @css-in-context)))
+                   (apply str (vals (:tags @css-in-context)))
+                   (apply str (vals (:classes @css-in-context)))
+                   (apply str (vals (:stylefy-classes @css-in-context))))
+             result-with-styles-attached (str/replace result #"_stylefy-server-styles-content_" css)]
          result-with-styles-attached))))
 
 ;
 ; Frontend only
 ;
-#?(:cljs
-   (defn keyframes
-     "Adds the given keyframe definition into the DOM asynchronously.
-      Identifier is the name of the keyframes.
-      Frames are given in the same form as Garden accepts them.
-
-      Example:
-      (stylefy/keyframes \"simple-animation\"
-                          [:from
-                           {:opacity 0}]
-                          [:to
-                           {:opacity 1}])"
-     [identifier & frames]
-     (assert (string? identifier) (str "Identifier should be string, got: " (pr-str identifier)))
-     (apply dom/add-keyframes identifier frames)))
-
-#?(:cljs
-   (defn font-face
-     "Adds the given font-face definition into the DOM asynchronously.
-      Properties are given in the same form as Garden accepts them.
-
-      Example:
-      (stylefy/font-face {:font-family \"open_sans\"
-                          :src \"url('../fonts/OpenSans-Regular-webfont.woff') format('woff')\"
-                          :font-weight \"normal\"
-                          :font-style \"normal\"})"
-     [properties]
-     (assert (map? properties) (str "Properties should be a map, got: " (pr-str properties)))
-     (dom/add-font-face properties)))
-
-#?(:cljs
-   (defn tag
-     "Creates a CSS selector for the given tag and properties and adds it into the DOM asynchronously.
-
-      Normally you should let stylefy convert your style maps to unique CSS classes by calling
-      use-style, instead of creating tag selectors. However, custom tag styles
-      can be useful for setting styles on base elements, like html or body.
-
-      Example:
-      (stylefy/tag \"code\"
-                    {:background-color \"lightyellow\"})"
-     [name properties]
-     (assert (string? name) (str "Tag name should be a string, got: " (pr-str name)))
-     (assert (map? properties) (str "Properties should be a map, got: " (pr-str properties)))
-     (dom/add-tag name properties)))
-
-#?(:cljs
-   (defn class
-     "Creates a CSS class with the given name and properties and adds it into the DOM asynchronously.
-
-      Normally you should let stylefy convert your style maps to unique CSS classes by calling
-      use-style. Thus, there is usually no need to create customly named classes when using stylefy,
-      unless you work with some 3rd party framework.
-
-      Example:
-      (stylefy/class \"enter-transition\"
-                      {:transition \"background-color 2s\"})"
-     [name properties]
-     (assert (string? name) (str "Name should be a string, got: " (pr-str name)))
-     (assert (map? properties) (str "Properties should be a map, got: " (pr-str properties)))
-     (dom/add-class name properties)))
 
 #?(:cljs
    (defn prepare-styles

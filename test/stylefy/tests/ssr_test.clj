@@ -71,34 +71,68 @@
 (defn init-stylefy []
   (stylefy/init))
 
+(defn constant-styles []
+  (stylefy/keyframes "simple-animation"
+                     [:from
+                      {:opacity 0}]
+                     [:to
+                      {:opacity 1}])
+
+  (stylefy/font-face {:font-family "open_sans"
+                      :src "url('../fonts/OpenSans-Regular-webfont.woff') format('woff')"
+                      :font-weight "normal"
+                      :font-style "normal"})
+
+  (stylefy/tag "code"
+               {:background-color "lightyellow"})
+
+  (stylefy/class "enter-transition"
+                 {:transition "background-color 2s"}))
+
 (defn index-query []
+
   (stylefy/query-with-styles
-    (fn [] (html (example-component)))))
+    (fn []
+      (constant-styles)
+      (html (example-component)))))
 
 (deftest query-with-styles
   (init-stylefy)
-  (let [result (index-query)]
-    ; HTML document is rendered
-    (is (str/includes? result "<html>"))
-    ; Styles are rendered
-    (is (str/includes? result "<style id=\"_stylefy-server-styles_\">"))
-    ; Garden units are rendered
-    (is (str/includes? result "height: 666px;"))
-    (is (str/includes? result "color: #7b7b7b;"))
-    ; Placeholder is NOT rendered
-    (is (not (str/includes? result "_stylefy-server-styles-content_")))
-    ; Base style is rendered
-    (is (str/includes? result "._stylefy_-348110113"))
-    ; Modes are rendered
-    (is (str/includes? result "._stylefy_-348110113:hover"))
-    (is (str/includes? result "._stylefy_-348110113:after"))
-    ; Media query is rendered
-    (is (str/includes? result "@media (max-width: 414px"))
-    ; Feature query is rendered
-    (is (str/includes? result "supports (display: grid)"))
-    ; Manual mode is rendered
-    (is (str/includes? result "._stylefy_-348110113:hover .innerbox:hover"))
-    ; Body is rendered
-    (is (str/includes? result "<body class=\"_stylefy_-348110113\">"))
-    ; Sub-component is rendered
-    (is (str/includes? result "<span class=\"_stylefy_1606470837\">Example text is red</span>"))))
+
+  (testing "Query with no styles (no use-style calls)"
+    (is (= "" (stylefy/query-with-styles (fn [] "")))))
+
+  (testing "HTML with styles"
+    (let [result (index-query)]
+      ; HTML document is rendered
+      (is (str/includes? result "<html>"))
+      ; Font-faces are rendered
+      (is (str/includes? result "font-family: open_sans;"))
+      ; Keyframes are rendered
+      (is (str/includes? result "@keyframes simple-animation"))
+      ; Tags selectors are rendered
+      (is (str/includes? result "background-color: lightyellow;"))
+      ; Transitions are rendered
+      (is (str/includes? result "transition: background-color 2s;"))
+      ; Styles are rendered
+      (is (str/includes? result "<style id=\"_stylefy-server-styles_\">"))
+      ; Garden units are rendered
+      (is (str/includes? result "height: 666px;"))
+      (is (str/includes? result "color: #7b7b7b;"))
+      ; Placeholder is NOT rendered
+      (is (not (str/includes? result "_stylefy-server-styles-content_")))
+      ; Base style is rendered
+      (is (str/includes? result "._stylefy_-348110113"))
+      ; Modes are rendered
+      (is (str/includes? result "._stylefy_-348110113:hover"))
+      (is (str/includes? result "._stylefy_-348110113:after"))
+      ; Media query is rendered
+      (is (str/includes? result "@media (max-width: 414px"))
+      ; Feature query is rendered
+      (is (str/includes? result "supports (display: grid)"))
+      ; Manual mode is rendered
+      (is (str/includes? result "._stylefy_-348110113:hover .innerbox:hover"))
+      ; Body is rendered
+      (is (str/includes? result "<body class=\"_stylefy_-348110113\">"))
+      ; Sub-component is rendered
+      (is (str/includes? result "<span class=\"_stylefy_1606470837\">Example text is red</span>")))))
