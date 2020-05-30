@@ -33,7 +33,7 @@ While being originally created with the frontend in mind, stylefy now runs on bo
 Add dependency:
 
 ```clj
-[stylefy "2.0.0"]
+[stylefy "2.1.0"]
 ```
 
 # Setup
