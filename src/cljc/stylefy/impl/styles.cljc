@@ -30,7 +30,7 @@
         style-created-handler))))
 
 (defn- class-into-string
-  "Return class definition as string, or nil of the argument isn il."
+  "Return class definition as string, or nil if the argument is nil."
   [class]
   (when class
     (cond
