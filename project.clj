@@ -1,4 +1,4 @@
-(defproject stylefy "2.1.0"
+(defproject stylefy "2.1.1"
   :description "Library for styling UI components"
   :url "https://github.com/Jarzka/stylefy"
   :dependencies [[org.clojure/clojure "1.9.0"]
