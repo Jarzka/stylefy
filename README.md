@@ -87,6 +87,10 @@ If `use-style` is called during the query execution, the generated CSS is kept i
 Full example:
 
 ```clj
+(ns my.app
+  (:require [hiccup.core :refer [html]
+            [stylefy.core :as stylefy :refer [use-style]]))
+
 (defn index []
   [:html
    [:head
