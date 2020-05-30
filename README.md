@@ -26,7 +26,8 @@ stylefy is designed to be used in [SPA](https://en.wikipedia.org/wiki/Single-pag
 - Multi-instance support (you can run multiple apps using stylefy on the same web page if all apps are built separately)
 - Small and simple core API which is easy to setup
 - Fast, asynchronous CSS generation
-- Automatic style reloading
+- Automatic style reloading (via shadow-cljs or Figwheel)
+- Server-Side Rendering (SSR) support (currently in Release Candidate state)
 - All features are tested to work with Chrome, Firefox, Edge & Internet Explorer 11
 
 # FAQ
