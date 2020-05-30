@@ -169,7 +169,7 @@
   (assert (map? properties) (str "Properties should be a map, got: " (pr-str properties)))
 
   (let [garden-syntax (at-font-face properties)]
-    #?(:cljs (dom/add-font-face properties)
+    #?(:cljs (dom/add-font-face garden-syntax)
        :clj  (swap! css-in-context assoc :font-faces
                     (conj (:font-faces @css-in-context) (css garden-syntax))))))
 
