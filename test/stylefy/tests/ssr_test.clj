@@ -1,6 +1,8 @@
 (ns stylefy.tests.ssr-test
   (:require [clojure.test :refer :all]
             [hiccup.core :refer :all]
+            [garden.color :as gc]
+            [garden.units :as gu]
             [garden.stylesheet :refer [at-media]]
             [stylefy.core :as stylefy :refer [use-style]]
             [clojure.string :as str]))
@@ -14,7 +16,8 @@
                 :text-align :center
                 :padding "5px"
                 :width "150px"
-                :height "150px"})
+                :color (gc/rgb 123 123 123)
+                :height (gu/px 666)})
 
 (def style-box (merge css-props
                       {:stylefy.core/mode {:hover {:background-color "red"}
@@ -79,20 +82,23 @@
     (is (str/includes? result "<html>"))
     ; Styles are rendered
     (is (str/includes? result "<style id=\"_stylefy-server-styles_\">"))
-    ; Placeholder is not rendered
+    ; Garden units are rendered
+    (is (str/includes? result "height: 666px;"))
+    (is (str/includes? result "color: #7b7b7b;"))
+    ; Placeholder is NOT rendered
     (is (not (str/includes? result "_stylefy-server-styles-content_")))
     ; Base style is rendered
-    (is (str/includes? result "._stylefy_724366761"))
+    (is (str/includes? result "._stylefy_-348110113"))
     ; Modes are rendered
-    (is (str/includes? result "._stylefy_724366761:hover"))
-    (is (str/includes? result "._stylefy_724366761:after"))
+    (is (str/includes? result "._stylefy_-348110113:hover"))
+    (is (str/includes? result "._stylefy_-348110113:after"))
     ; Media query is rendered
     (is (str/includes? result "@media (max-width: 414px"))
     ; Feature query is rendered
     (is (str/includes? result "supports (display: grid)"))
     ; Manual mode is rendered
-    (is (str/includes? result "._stylefy_724366761:hover .innerbox:hover"))
+    (is (str/includes? result "._stylefy_-348110113:hover .innerbox:hover"))
     ; Body is rendered
-    (is (str/includes? result "<body class=\"_stylefy_724366761\">"))
+    (is (str/includes? result "<body class=\"_stylefy_-348110113\">"))
     ; Sub-component is rendered
     (is (str/includes? result "<span class=\"_stylefy_1606470837\">Example text is red</span>"))))
