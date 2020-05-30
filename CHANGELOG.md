@@ -2,7 +2,7 @@
 
 May 30, 2020
 
-As summary of changes from the RC-versions:
+A summary of changes from the RC-versions:
 
 - **BREAKING** Removes the possibility to pass `::stylefy/with-classes` to `use-style` via options map (second argument of `use-style`). If you do this, a warning message is logged and the value is ignored. This feature has been marked as deprecated since version 1.3.0 (2018). If you have used `::stylefy/with-classes` in options map, you can easily replace it with `:class`. Notice that passing `::stylefy/with-classes` via style map (first argument of `use-style`) is still perfectly valid, this change is only related to the options map.
 - `:class` in HTML attributes and `:stylefy.core/with-classes` in style map now support additional syntax: you can pass a string, a keyword or a vector of strings or keywords. You can also pass a vector of both keywords and strings if you wish. `nil` is also accepted and it will be ignored. Discussion: https://github.com/Jarzka/stylefy/issues/44
