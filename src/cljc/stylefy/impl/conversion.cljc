@@ -2,6 +2,7 @@
   (:require [garden.core :refer [css]]
             [stylefy.impl.utils :as utils]
             [garden.stylesheet :refer [at-media at-keyframes at-font-face]]
+            [stylefy.impl.log :as log]
             [clojure.string :as str]
             [garden.compiler :as compiler]))
 
@@ -31,10 +32,10 @@
                               (str "Mode must be specified as a keyword or string beginning with colon, got: " (pr-str mode-name)))
                       (when (and (string? mode-name)
                                  (> (count (str/split mode-name " ")) 1))
-                        (.warn js/console (str "Incorrect mode detected, should not contain spaces. Mode was: " (pr-str mode-name))))
-                      [(keyword (str "&" mode-name)) (or mode-props (get modes mode-name))])]
+                        (log/warn (str "Incorrect mode detected, should not contain spaces. Mode was: " (pr-str mode-name))))
+                      [(keyword (str "&" mode-name)) mode-props])]
     (cond
-      (map? modes) (mapv handle-mode (keys modes))
+      (map? modes) (mapv #(handle-mode % (get modes %)) (keys modes))
       (vector? modes) (mapv #(handle-mode (first %) (second %)) modes))))
 
 (defn class-selector [hash]
@@ -43,7 +44,7 @@
 (defn- convert-base-style-into-class
   "Converts Clojure style map into CSS class."
   [{:keys [props hash custom-selector] :as style} options]
-  (let [css-props (utils/filter-css-props props)
+  (let [css-props (utils/remove-special-keywords props)
         css-selector (or custom-selector (class-selector hash))
         garden-class-definition [css-selector css-props]
         garden-pseudo-classes (convert-stylefy-modes-to-garden props)
@@ -62,7 +63,7 @@
           (map
             (fn [media-query]
               (let [media-query-props (get stylefy-media-queries media-query)
-                    media-query-css-props (utils/filter-css-props media-query-props)
+                    media-query-css-props (utils/remove-special-keywords media-query-props)
                     garden-class-definition [css-selector media-query-css-props]
                     garden-pseudo-classes (convert-stylefy-modes-to-garden media-query-props)
                     garden-vendors (convert-stylefy-vendors-to-garden media-query-props)
@@ -80,7 +81,7 @@
           css-supports (map
                          (fn [supports-selector]
                            (let [supports-props (get stylefy-supports supports-selector)
-                                 supports-css-props (utils/filter-css-props supports-props)
+                                 supports-css-props (utils/remove-special-keywords supports-props)
                                  garden-class-definition [css-selector supports-css-props]
                                  garden-pseudo-classes (convert-stylefy-modes-to-garden supports-props)
                                  garden-vendors (convert-stylefy-vendors-to-garden supports-props)
@@ -107,7 +108,7 @@
           css-manual-styles (map
                              (fn [manual-style]
                                (let [manual-selector-and-css-props (clojure.walk/walk #(if (map? %)
-                                                                                        (utils/filter-css-props %)
+                                                                                        (utils/remove-special-keywords %)
                                                                                         %)
                                                                                      identity
                                                                                      manual-style)

@@ -123,29 +123,7 @@
            [component])
          @comps)])))
 
-(defn- bs-navbar-item-legacy-syntax [index index-atom text]
-  ;; Since version 1.3.0: use-style now supports HTML attributes as the second parameter.
-  ;; Thus, merging is not needed and ::stylefy/with-classes can be replaced with :class.
-  ;; This example here remains as it is for testing purposes, it has to work
-  ;; for ensuring good backwards compatibility.
-  [:li (merge (use-style styles/clickable
-                         (when (= @index-atom index)
-                           {::stylefy/with-classes ["active"]}))
-              {:role "presentation"
-               :on-click #(reset! index-atom index)})
-   [:a (use-sub-style styles/boostrap-navbar-overrides :link)
-    text]])
-
-(defn- bs-navbar-legacy-syntax []
-  (let [active-index (r/atom 0)]
-    (fn []
-      [:ul.nav.nav-pills (use-style styles/boostrap-navbar-overrides)
-       [bs-navbar-item-legacy-syntax 0 active-index "One"]
-       [bs-navbar-item-legacy-syntax 1 active-index "Two"]
-       [bs-navbar-item-legacy-syntax 2 active-index "Three"]
-       [bs-navbar-item-legacy-syntax 3 active-index "Four"]])))
-
-(defn- bs-navbar-item-current-syntax [index index-atom text]
+(defn- bs-navbar-item [index index-atom text]
   [:li (use-style styles/clickable (merge
                                      (when (= @index-atom index)
                                        {:class "active"})
@@ -158,17 +136,17 @@
   (let [active-index (r/atom 0)]
     (fn []
       [:ul.nav.nav-pills (use-style styles/boostrap-navbar-overrides)
-       [bs-navbar-item-current-syntax 0 active-index "A"]
-       [bs-navbar-item-current-syntax 1 active-index "B"]
-       [bs-navbar-item-current-syntax 2 active-index "C"]])))
+       [bs-navbar-item 0 active-index "A"]
+       [bs-navbar-item 1 active-index "B"]
+       [bs-navbar-item 2 active-index "C"]])))
 
 (defn- bs-navbar-alternative-syntax []
   (let [active-index (r/atom 0)]
     (fn []
       ;; In this example, BS navbar classes are attached into the style map directly.
       [:ul (use-style styles/boostrap-navbar)
-       [bs-navbar-item-current-syntax 0 active-index "Hello"]
-       [bs-navbar-item-current-syntax 1 active-index "World!"]])))
+       [bs-navbar-item 0 active-index "Hello"]
+       [bs-navbar-item 1 active-index "World!"]])))
 
 (defn- responsive-layout []
   [:div (use-style styles/responsive-layout)
@@ -220,6 +198,41 @@
                      :background-image (url "images/background.jpg")})
     "Defined with pc unit, height with rem unit, color with rgb, background as a custom defcssfn function."]])
 
+(def background-box-sorted (sorted-map
+                            :width "100%"
+                            :height "20rem"
+                            :font-family "open_sans, Verdana, Helvetica, sans-serif"
+                            :color "#eaeaea"
+                            :background "url('images/meme.jpg')"
+                            :background-repeat "no-repeat"
+                            :background-position "center"
+                            :background-attachment "fixed"
+                            :background-size "cover"
+                            :margin 0
+                            :padding 0))
+
+(def background-box-no-shorthands {:width "100%"
+                                   :height "20rem"
+                                   :font-family "open_sans, Verdana, Helvetica, sans-serif"
+                                   :color "#eaeaea"
+                                   :background-image "url('images/meme.jpg')"
+                                   :background-repeat "no-repeat"
+                                   :background-position "center"
+                                   :background-attachment "fixed"
+                                   :background-size "cover"
+                                   :margin 0
+                                   :padding 0})
+
+(def background-box-incorrect {:font-family "open_sans, Verdana, Helvetica, sans-serif"
+                               :color "#121212"
+                               :background "url('images/meme.jpg')"
+                               :background-repeat "no-repeat"
+                               :background-position "center"
+                               :background-attachment "fixed"
+                               :background-size "cover"
+                               :margin 0
+                               :padding 0})
+
 (defn- simple-examples []
   [:div (use-style (merge styles/root
                           styles/general-styles))
@@ -268,7 +281,6 @@
 
    [:h1 "Boostrap navbar"]
    [:p "You can also assign any classes to elements normally. Here we use Boostrap classes to construct simple navbars. We also override some BS styles."]
-   [bs-navbar-legacy-syntax]
    [bs-navbar-current-syntax]
    [bs-navbar-alternative-syntax]
 
@@ -294,6 +306,16 @@
 
    [garden-units]
 
+   [:h1 "Key order"]
+   [:p "If CSS shorthands are used, the order of CSS key properties is important. If we use a regular Clojure map, the order of keys can change in the final CSS output."]
+   [:p "This specific style map renders incorrectly (some background properties are defined before the background itself and these are ignored by the browser):"]
+   [:div (merge
+           (use-style background-box-incorrect)
+           {:style {:width "100%" :height "20rem"}})]
+   [:p "Workaround is to use a sorted-map (or sorted-map-by):"]
+   [:div (use-style background-box-sorted)]
+   [:p "Or, probably a better way, not to use shorthand properties:"]
+   [:div (use-style background-box-no-shorthands)]
    [:h1 "Caching"]
    [:p "stylefy supports style caching, which means that the generated CSS code is saved into the offline storage and retrieved from there when the page is reloaded. This way, styles once generated do not need to be generated again and the page loads faster. Caching can be turned on manually, and it also needs to be cleared manually."]
    [button "Clear cache" #(stylefy-cache/clear) :primary]])
@@ -303,8 +325,8 @@
     (fn []
       [:div
        [:ul.nav.nav-pills (use-style styles/boostrap-navbar-overrides)
-        [bs-navbar-item-legacy-syntax 0 active-tab "Simple examples"]
-        [bs-navbar-item-legacy-syntax 1 active-tab "Full page example"]]
+        [bs-navbar-item 0 active-tab "Simple examples"]
+        [bs-navbar-item 1 active-tab "Full page example"]]
        (case @active-tab
          0 [simple-examples]
          1 [full-page/full-page])])))

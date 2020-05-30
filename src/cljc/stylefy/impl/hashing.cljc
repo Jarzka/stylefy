@@ -30,7 +30,7 @@
                                         (assoc result prop-key (compiler/render-css prop-value))
                                         result)))
                                   {}
-                                  (keys (utils/filter-css-props style)))
+                                  (keys (utils/remove-special-keywords style)))
           hashable-style (merge style hashable-garden-units)
           ;; Hash style without certain special keywords:
           ;; - sub-styles is only a link to other styles, it does not define the actual properties of this style

@@ -1,12 +1,13 @@
 (ns stylefy.tests.core-test
   (:require [cljs.test :as test :refer-macros [deftest is testing]]
             [stylefy.core :as stylefy]
-            [stylefy.impl.styles :as styles]
             [stylefy.impl.dom :as dom]
             [garden.core :refer [css]]
             [garden.color :as color]
             [garden.units :as units]
             [clojure.string :as str]))
+
+; Style definitions for tests:
 
 (def css-props {:border "1px solid black"
                 :background-color "#FFDDDD"
@@ -21,14 +22,27 @@
                        :stylefy.core/auto-prefix #{:border-radius}
                        :stylefy.core/sub-styles {:sub-box {:border "1px solid black"}}}))
 
+; Use style smoke tests
+
 (deftest use-style
   (testing "Use style"
     (let [return (stylefy/use-style style-box)]
-      (is (string? (:class return)))
+      (is (= (:class return) "_stylefy_1149735588"))
       ;; This is the first time we use this style map -> inline style shoule be returned
       (is (map? (:style return)))
-      ;; Inline style does not contain namespaced keywords:
+      ;; Inline style does not contain namespaced keywords. Also, it is not marked as hidden, because
+      ;; the style works perfectly as inline style.
       (is (= (:style return) css-props))))
+
+  (testing "Use nil style"
+    (let [return (stylefy/use-style nil)]
+      (is (nil? return))))
+
+  (testing "Use empty style"
+    (let [return (stylefy/use-style {})]
+      (is (nil? return))))
+
+  ; Modes
 
   (testing "Use style with :hover mode"
     (let [return (stylefy/use-style (merge style-box
@@ -47,6 +61,8 @@
       ;; certain modes can be accepted without hiding the component
       (is (= (:style return) (assoc css-props :visibility "hidden")))))
 
+  ; Media queries
+
   (testing "Use style with media query"
     (let [return (stylefy/use-style (merge style-box
                                            {:stylefy.core/media {{:max-width "400px"}
@@ -55,6 +71,8 @@
       (is (map? (:style return)))
       ;; Inline style hides the component (media queries do not work as inline style)
       (is (= (:style return) (assoc css-props :visibility "hidden")))))
+
+  ; Manual mode
 
   (testing "Use style with manual mode"
     (let [return (stylefy/use-style (merge style-box
@@ -65,6 +83,8 @@
       ;; Inline style hides the component (manual mode does not work as inline style)
       (is (= (:style return) (assoc css-props :visibility "hidden")))))
 
+  ; Feature query
+
   (testing "Use style with feature query"
     (let [return (stylefy/use-style (merge style-box
                                            {:stylefy.core/supports {"display: grid"
@@ -74,103 +94,114 @@
       ;; Inline style hides the component (feature queries do not work as inline style)
       (is (= (:style return) (assoc css-props :visibility "hidden")))))
 
-  (testing "Use nil style"
-    (let [return (stylefy/use-style nil)]
-      (is (nil? return))))
-
   (testing "Use nil style with HTML attributes"
     (let [return (stylefy/use-style nil {:src "image.jpg" :class "myclass"})]
       (is (= return {:src "image.jpg" :class "myclass"}))))
 
-  (testing "Use empty style"
-    (let [return (stylefy/use-style {})]
-      (is (nil? return))))
+  ; HTML attributes
+
+  (testing "Use style with HTML class name (as string):"
+    (let [return (stylefy/use-style style-box {:class "dummy"})]
+      (is (= "_stylefy_1149735588 dummy" (:class return)))))
+
+  (testing "Use style with multiple HTML class names (as long string):"
+    (let [return (stylefy/use-style style-box {:class "dummy hello world"})]
+      (is (= "_stylefy_1149735588 dummy hello world" (:class return)))))
+
+  (testing "Use style with HTML class name (as keyword):"
+    (let [return (stylefy/use-style style-box {:class :dummy})]
+      (is (= "_stylefy_1149735588 dummy" (:class return)))))
+
+  (testing "Use style with HTML class name (in vector):"
+    (let [return (stylefy/use-style style-box {:class ["dummy"]})]
+      (is (= "_stylefy_1149735588 dummy" (:class return)))))
+
+  (testing "Use style with multiple HTML class names (in vector):"
+    (let [return (stylefy/use-style style-box {:class ["dummy" "hello" "world"]})]
+      (is (= "_stylefy_1149735588 dummy hello world" (:class return)))))
+
+  (testing "Use style with multiple HTML class names (in vector, both strings and keywords):"
+    (let [return (stylefy/use-style style-box {:class ["dummy" :hello "world"]})]
+      (is (= "_stylefy_1149735588 dummy hello world" (:class return)))))
+
+  (testing "Use style with multiple HTML class names (in vector, both strings, keywords and nils):"
+    (let [return (stylefy/use-style style-box {:class ["dummy" :hello nil nil "world" nil nil]})]
+      (is (= "_stylefy_1149735588 dummy hello world" (:class return)))))
 
   (testing "Use empty style with HTML attributes"
     (let [return (stylefy/use-style {} {:src "image.jpg" :class "myclass"})]
       (is (= return {:src "image.jpg" :class "myclass"}))))
 
-  (testing "Use garbage style: number"
-    (try
-      (stylefy/use-style 123)
-      (is false "Error was not thrown")
-      (catch js/Error e
-        (is true "Error was thrown as expected"))))
-
-  (testing "Use garbage style: string"
-    (try
-      (stylefy/use-style "foo")
-      (is false "Error was not thrown")
-      (catch js/Error e
-        (is true "Error was thrown as expected"))))
-
-  (testing "Use style with option: ::with-classes"
-    (let [return (stylefy/use-style style-box
-                                    {::stylefy/with-classes ["dummy"]})]
-      (is (string? (:class return)))
-      (is (str/includes? (:class return) "dummy"))))
-
-  (testing "Use style with HTML attributes and ::with-classes"
+  (testing "Use style with HTML attributes, class is string"
     (let [attr-src "image.jpg"
           attr-alt "fail"
           attr-class "myclass"
           return (stylefy/use-style style-box
                                     {:src attr-src
                                      :alt attr-alt
-                                     :class attr-class
-                                     ::stylefy/with-classes ["dummy"]})]
+                                     :class attr-class})]
       (is (= (:src return) attr-src))
       (is (= (:alt return) attr-alt))
-      (is (string? (:class return)))
-      (is (str/includes? (:class return) "_stylefy_")) ;; Prefix for auto-generated class
-      (is (str/includes? (:class return) "myclass"))
-      (is (str/includes? (:class return) "dummy"))))
+      (is (= "_stylefy_1149735588 myclass" (:class return)))))
 
-  (testing "Use style with :class vector"
+  (testing "Use style with HTML attributes, class is vector"
     (let [attr-src "image.jpg"
           attr-alt "fail"
-          attr-class ["myclass" "myclass2"]
+          attr-class ["myclass1" "myclass2"]
           return (stylefy/use-style style-box
                                     {:src attr-src
                                      :alt attr-alt
-                                     :class attr-class
-                                     ::stylefy/with-classes ["dummy"]})]
+                                     :class attr-class})]
       (is (= (:src return) attr-src))
       (is (= (:alt return) attr-alt))
-      (is (string? (:class return)))
-      (is (str/includes? (:class return) "_stylefy_")) ;; Prefix for auto-generated class
-      (is (str/includes? (:class return) "myclass myclass2"))
-      (is (str/includes? (:class return) "dummy"))))
+      (is (= "_stylefy_1149735588 myclass1 myclass2" (:class return)))))
 
-  (testing "Use style with additional class names attached to it"
+  (testing "Use style with HTML attributes and additional class names (string) attached to it"
     (let [attr-src "image.jpg"
           attr-alt "fail"
           return (stylefy/use-style (assoc style-box
-                                      ::stylefy/with-classes ["dummy"])
+                                      ::stylefy/with-classes "hello world")
+                                    {:src attr-src
+                                     :class "default"
+                                     :alt attr-alt})]
+      (is (= (:src return) attr-src))
+      (is (= (:alt return) attr-alt))
+      (is (= "_stylefy_-594685217 default hello world" (:class return)))))
+
+  (testing "Use style with HTML attributes and additional class name (keyword) attached to it"
+    (let [attr-src "image.jpg"
+          attr-alt "fail"
+          return (stylefy/use-style (assoc style-box
+                                      ::stylefy/with-classes :hello)
+                                    {:src attr-src
+                                     :class "default"
+                                     :alt attr-alt})]
+      (is (= (:src return) attr-src))
+      (is (= (:alt return) attr-alt))
+      (is (= "_stylefy_1638123288 default hello" (:class return)))))
+
+  (testing "Use style with additional class names (vector) attached to it"
+    (let [attr-src "image.jpg"
+          attr-alt "fail"
+          return (stylefy/use-style (assoc style-box
+                                      ::stylefy/with-classes ["additional" :classname])
                                     {:src attr-src
                                      :alt attr-alt})]
       (is (= (:src return) attr-src))
       (is (= (:alt return) attr-alt))
-      (is (string? (:class return)))
-      (is (str/includes? (:class return) "_stylefy_")) ;; Prefix for auto-generated class
-      (is (str/includes? (:class return) "dummy"))))
+      (is (= "_stylefy_1989766565 additional classname" (:class return)))))
 
-  (testing "Use style with additional class names attached to it, along with :class"
+  (testing "Use style with HTML attributes, class name and additional class name attached to it"
     (let [attr-src "image.jpg"
           attr-alt "fail"
           return (stylefy/use-style (assoc style-box
-                                      ::stylefy/with-classes ["dummy"])
+                                      ::stylefy/with-classes ["hello" :world])
                                     {:src attr-src
-                                     :alt attr-alt
-                                     ::stylefy/with-classes ["anotherclass"]
-                                     :class "myclass"})]
+                                     :class [:default "thing"]
+                                     :alt attr-alt})]
       (is (= (:src return) attr-src))
       (is (= (:alt return) attr-alt))
-      (is (string? (:class return)))
-      (is (str/includes? (:class return) "_stylefy_")) ;; Prefix for auto-generated class
-      (is (str/includes? (:class return) "dummy"))
-      (is (str/includes? (:class return) "myclass"))
-      (is (str/includes? (:class return) "anotherclass"))))
+      (is (= "_stylefy_1161193281 default thing hello world" (:class return)))))
 
   (testing "Use style with additional HTML attribute :style definition"
     (try
@@ -178,6 +209,24 @@
       (is false "Error was not thrown")
       (catch js/Error e
         (is true "Error was thrown as expected")))))
+
+; Invalid styles
+
+(testing "Use garbage style: number"
+  (try
+    (stylefy/use-style 123)
+    (is false "Error was not thrown")
+    (catch js/Error e
+      (is true "Error was thrown as expected"))))
+
+(testing "Use garbage style: string"
+  (try
+    (stylefy/use-style "foo")
+    (is false "Error was not thrown")
+    (catch js/Error e
+      (is true "Error was thrown as expected"))))
+
+; Garden types
 
 (deftest garden-types
   (testing "Garden units are converted correctly"
@@ -193,6 +242,8 @@
       (is (map? (:style return)))
       (is (= (:style return)
              {:color "#050505"})))))
+
+; use-sub-style
 
 (deftest use-sub-style
   (testing "Use sub-style"
@@ -222,12 +273,19 @@
       (catch js/Error e
         (is true "Error was thrown as expected"))))
 
-  (testing "Use sub-style with option: ::with-classes"
-    (let [return (stylefy/use-sub-style style-box :sub-box
-                                        {::stylefy/with-classes ["dummy"]})]
+  (testing "Use sub-style with class name"
+    (let [return (stylefy/use-sub-style style-box :sub-box {:class ["dummy"]})]
       (is (string? (:class return)))
-      (is (str/includes? (:class return) "dummy"))
-      (is (= (:style (get-in style-box [::stylefy/sub-styles :sub-box]))))))
+      (is (str/includes? (:class return) "dummy"))))
+
+  (testing "Use sub-style with class name along with additional classes"
+    (let [return (stylefy/use-sub-style (assoc-in style-box
+                                                  [::stylefy/sub-styles :sub-box ::stylefy/with-classes]
+                                                  ["additional"])
+                                        :sub-box {:class ["dummy"]})]
+      (is (string? (:class return)))
+      (is (str/includes? (:class return) "additional"))
+      (is (str/includes? (:class return) "dummy"))))
 
   (testing "Use sub-style with additional HTML attribute :style definition"
     (try
@@ -236,21 +294,19 @@
       (catch js/Error e
         (is true "Error was thrown as expected"))))
 
-  (testing "Use sub-style with HTML attributes and ::with-classes"
+  (testing "Use sub-style with HTML attributes"
     (let [attr-src "image.jpg"
           attr-alt "fail"
           attr-class "myclass"
           return (stylefy/use-sub-style style-box :sub-box
                                         {:src attr-src
                                          :alt attr-alt
-                                         :class attr-class
-                                         ::stylefy/with-classes ["dummy"]})]
+                                         :class attr-class})]
       (is (= (:src return) attr-src))
       (is (= (:alt return) attr-alt))
       (is (string? (:class return)))
       (is (str/includes? (:class return) "_stylefy_")) ;; Prefix for auto-generated class
-      (is (str/includes? (:class return) "myclass"))
-      (is (str/includes? (:class return) "dummy"))))
+      (is (str/includes? (:class return) "myclass"))))
 
   (testing "Use sub-style with :class vector"
     (let [attr-src "image.jpg"
@@ -259,18 +315,18 @@
           return (stylefy/use-sub-style style-box :sub-box
                                         {:src attr-src
                                          :alt attr-alt
-                                         :class attr-class
-                                         ::stylefy/with-classes ["dummy"]})]
+                                         :class attr-class})]
       (is (= (:src return) attr-src))
       (is (= (:alt return) attr-alt))
       (is (string? (:class return)))
       (is (str/includes? (:class return) "_stylefy_")) ;; Prefix for auto-generated class
-      (is (str/includes? (:class return) "myclass myclass2"))
-      (is (str/includes? (:class return) "dummy"))))
+      (is (str/includes? (:class return) "myclass myclass2"))))
 
   (testing "Use sub-style that does not exist: returns nil"
     (let [return (stylefy/use-sub-style style-box :foo)]
       (is (nil? return)))))
+
+; sub-style
 
 (deftest sub-style
   (testing "Get sub-style"
@@ -303,12 +359,16 @@
       (catch js/Error e
         (is true "Error was thrown as expected")))))
 
+; DOM
+
 (deftest dom-update-is-requested
   (let [dom-update-requested? (atom false)]
     (with-redefs [dom/request-asynchronous-dom-update #(reset! dom-update-requested? true)]
       (is (nil? (stylefy/init)))
       (stylefy/use-style {:color "red"})
       (is (true? @dom-update-requested?)))))
+
+; font-face
 
 (deftest font-face
   (is (= (css {:pretty-print? false}
@@ -317,6 +377,8 @@
                                   :font-weight "normal"
                                   :font-style "normal"}))
          "@font-face{font-family:open_sans;src:url('../fonts/OpenSans-Regular-webfont.woff') format('woff');font-weight:normal;font-style:normal}")))
+
+; keyframes
 
 (deftest keyframes
   (is (= (css {:pretty-print? false}
@@ -362,6 +424,8 @@
                                                 [:to
                                                  {:background-color "red"}]))})))
 
+; tag
+
 (deftest tag
   (reset! stylefy.impl.dom/custom-tags-in-use [])
   (is (= (stylefy/tag "code"
@@ -378,6 +442,8 @@
           ::stylefy.impl.dom/class-properties {:transition "background-color 1s;"}}))
   (is (= @stylefy.impl.dom/custom-classes-in-use
          [{:stylefy.impl.dom/css ".background-transition {\n  transition: background-color 1s;;\n}"}])))
+
+; prepare-styles
 
 (deftest prepare-styles
   (testing "Return value"
@@ -403,6 +469,8 @@
       (is false "Expected an error to be thrown.")
       (catch js/Error e
         (is true "Error was thrown as expected")))))
+
+; prepare-style
 
 (deftest prepare-style
   (let [style {:background-color :red}]

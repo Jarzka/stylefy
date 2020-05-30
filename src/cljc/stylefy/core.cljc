@@ -1,8 +1,12 @@
 (ns stylefy.core
-  (:require [stylefy.impl.hashing :as hashing]
+  (:require [clojure.string :as str]
+            [stylefy.impl.hashing :as hashing]
             [stylefy.impl.styles :as impl-styles]
-            [stylefy.impl.dom :as dom])
-  (:require-macros [reagent.ratom :refer [run!]]))
+            #?(:cljs [stylefy.impl.dom :as dom])
+            [stylefy.impl.state :as state]
+            [stylefy.impl.log :as log]))
+
+(def ^:dynamic css-in-context (atom nil))
 
 (defn use-style
   "Defines a style for a component by converting the given style map in to an unique CSS class,
@@ -54,16 +58,15 @@
                        For the most part, it is recommended to use ::sub-styles.
 
    Options is an optional map, which contains HTML attributes (:class, :href, :src etc.).
-   It can also contain the following special keywords features:
-
-   ::with-classes       DEPRECATED. A vector of additional class names used with the current style.
-                        Deprecated since version 1.3.0: The options map can now contain
-                        any HTML attributes. Thus, you can just use :class instead of ::with-classes."
+   It can also contain the following special keywords features:"
   ([style] (use-style style {}))
   ([style options]
    (assert (or (map? style) (nil? style)) (str "Style should be a map or nil, got: " (pr-str style)))
    (assert (or (map? options) (nil? options)) (str "Options should be a map or nil, got: " (pr-str options)))
-   (impl-styles/use-style! style options)))
+   #?(:cljs (impl-styles/use-style! style options dom/save-style!)
+      :clj  (impl-styles/use-style! style options (fn [{:keys [hash css]}]
+                                                    (swap! css-in-context assoc hash css))))))
+
 
 (defn use-sub-style
   "Defines style for a component using sub-style.
@@ -78,7 +81,9 @@
    (assert (or (map? style) (nil? style)) (str "Style should be a map or nil, got: " (pr-str style)))
    (assert (or (map? options) (nil? options))
            (str "Options should be a map or nil, got: " (pr-str options)))
-   (impl-styles/use-sub-style! style sub-style options)))
+   #?(:cljs (impl-styles/use-sub-style! style sub-style options dom/save-style!)
+      :clj  (impl-styles/use-sub-style! style sub-style options (fn [{:keys [hash css]}]
+                                                                  (swap! css-in-context assoc hash css))))))
 
 (defn sub-style
   "Returns sub-style for a given style."
@@ -90,6 +95,14 @@
   "Initialises stylefy.
 
   The following options are supported:
+
+  :global-vendor-prefixes     A map containing a set of ::stylefy/vendors and ::stylefy/auto-prefix properties.
+                              These properties are globally prefixed in all stylefy style maps.
+  :use-custom-class-prefix?   If set to true, custom class prefix is used if the style map contains it.
+                              By default, this is set to false.
+
+  FRONTEND ONLY:
+
     :use-caching?             If true, caches the generated CSS code using localstorage
                               so that future page loads work faster. Defaults to true since version 1.7.0.
                               Also check :cache-options.
@@ -98,11 +111,7 @@
                               For example, value 604800 clears the cache after one week.
                               By default, the cache is never cleared automatically.
                               You can also clear the cache manually by calling stylefy.cache/clear.
-    :global-vendor-prefixes   A map containing a set of ::stylefy/vendors and ::stylefy/auto-prefix properties.
-                              These properties are globally prefixed in all stylefy style maps.
-    :use-custom-class-prefix? If set to true, custom class prefix is used if the style map contains it.
-                              By default, this is set to false.
-                              It is recommended to set this to true only in development / test environment.
+
     :multi-instance           Provides support for multiple stylefy instances.
                               This can be used if you need to run multiple SPA applications
                               on the same page and at least two of them are using stylefy.
@@ -114,87 +123,115 @@
                               This value is also used as suffix in caching."
   ([] (init {}))
   ([options]
-   (when @dom/stylefy-initialised?
-     (.warn js/console "Attempted to initialise stylefy more than once."))
+   (when @state/stylefy-initialised?
+     (log/warn "Attempted to initialise stylefy more than once."))
    (hashing/init-custom-class-prefix options)
-   (dom/init-multi-instance options)
-   (dom/init-cache options)
+   #?(:cljs (dom/init-multi-instance options))
+   #?(:cljs (dom/init-cache options))
    (impl-styles/init-global-vendor-prefixes options)
-   (reset! dom/stylefy-initialised? true)
-   (dom/update-dom))) ;; Update can be synchronous on init
+   (reset! state/stylefy-initialised? true)
+   #?(:cljs (dom/update-dom))))
 
-(defn keyframes
-  "Adds the given keyframe definition into the DOM asynchronously.
-   Identifier is the name of the keyframes.
-   Frames are given in the same form as Garden accepts them.
+;
+; Backend only
+;
 
-   Example:
-   (stylefy/keyframes \"simple-animation\"
-                       [:from
-                        {:opacity 0}]
-                       [:to
-                        {:opacity 1}])"
-  [identifier & frames]
-  (assert (string? identifier) (str "Identifier should be string, got: " (pr-str identifier)))
-  (apply dom/add-keyframes identifier frames))
+#?(:clj
+   (defn query-with-styles
+     "Takes a query-fn, which is assumed to return HTML as text, and executes it.
+      If use-style is called during the execution, the generated CSS is kept in temporary memory.
+      When the query has finished, a special value of _stylefy-server-styles-content_ is searched
+      in the output and replaced with the generated CSS. Returns the end result."
+     [query]
+     (binding [stylefy.core/css-in-context (atom nil)]
+       (let [result (query)
+             result-with-styles-attached (str/replace
+                                           result
+                                           #"_stylefy-server-styles-content_"
+                                           (apply str (vals @css-in-context)))]
+         result-with-styles-attached))))
 
-(defn font-face
-  "Adds the given font-face definition into the DOM asynchronously.
-   Properties are given in the same form as Garden accepts them.
+;
+; Frontend only
+;
+#?(:cljs
+   (defn keyframes
+     "Adds the given keyframe definition into the DOM asynchronously.
+      Identifier is the name of the keyframes.
+      Frames are given in the same form as Garden accepts them.
 
-   Example:
-   (stylefy/font-face {:font-family \"open_sans\"
-                       :src \"url('../fonts/OpenSans-Regular-webfont.woff') format('woff')\"
-                       :font-weight \"normal\"
-                       :font-style \"normal\"})"
-  [properties]
-  (assert (map? properties) (str "Properties should be a map, got: " (pr-str properties)))
-  (dom/add-font-face properties))
+      Example:
+      (stylefy/keyframes \"simple-animation\"
+                          [:from
+                           {:opacity 0}]
+                          [:to
+                           {:opacity 1}])"
+     [identifier & frames]
+     (assert (string? identifier) (str "Identifier should be string, got: " (pr-str identifier)))
+     (apply dom/add-keyframes identifier frames)))
 
-(defn tag
-  "Creates a CSS selector for the given tag and properties and adds it into the DOM asynchronously.
+#?(:cljs
+   (defn font-face
+     "Adds the given font-face definition into the DOM asynchronously.
+      Properties are given in the same form as Garden accepts them.
 
-   Normally you should let stylefy convert your style maps to unique CSS classes by calling
-   use-style, instead of creating tag selectors. However, custom tag styles
-   can be useful for setting styles on base elements, like html or body.
+      Example:
+      (stylefy/font-face {:font-family \"open_sans\"
+                          :src \"url('../fonts/OpenSans-Regular-webfont.woff') format('woff')\"
+                          :font-weight \"normal\"
+                          :font-style \"normal\"})"
+     [properties]
+     (assert (map? properties) (str "Properties should be a map, got: " (pr-str properties)))
+     (dom/add-font-face properties)))
 
-   Example:
-   (stylefy/tag \"code\"
-                 {:background-color \"lightyellow\"})"
-  [name properties]
-  (assert (string? name) (str "Tag name should be a string, got: " (pr-str name)))
-  (assert (map? properties) (str "Properties should be a map, got: " (pr-str properties)))
-  (dom/add-tag name properties))
+#?(:cljs
+   (defn tag
+     "Creates a CSS selector for the given tag and properties and adds it into the DOM asynchronously.
 
-(defn class
-  "Creates a CSS class with the given name and properties and adds it into the DOM asynchronously.
+      Normally you should let stylefy convert your style maps to unique CSS classes by calling
+      use-style, instead of creating tag selectors. However, custom tag styles
+      can be useful for setting styles on base elements, like html or body.
 
-   Normally you should let stylefy convert your style maps to unique CSS classes by calling
-   use-style. Thus, there is usually no need to create customly named classes when using stylefy,
-   unless you work with some 3rd party framework.
+      Example:
+      (stylefy/tag \"code\"
+                    {:background-color \"lightyellow\"})"
+     [name properties]
+     (assert (string? name) (str "Tag name should be a string, got: " (pr-str name)))
+     (assert (map? properties) (str "Properties should be a map, got: " (pr-str properties)))
+     (dom/add-tag name properties)))
 
-   Example:
-   (stylefy/class \"enter-transition\"
-                   {:transition \"background-color 2s\"})"
-  [name properties]
-  (assert (string? name) (str "Name should be a string, got: " (pr-str name)))
-  (assert (map? properties) (str "Properties should be a map, got: " (pr-str properties)))
-  (dom/add-class name properties))
+#?(:cljs
+   (defn class
+     "Creates a CSS class with the given name and properties and adds it into the DOM asynchronously.
 
-(defn prepare-styles
-  "Converts the given styles and their sub-styles to CSS and adds them into the DOM
-   synchronously (immediately)."
-  [styles]
-  (assert (seqable? styles) (str "Styles should be seqable, got: " (pr-str styles)))
-  (assert (every? map? (remove nil? styles))
-          (str "Every style should be a map or nil, got: " (pr-str styles)))
-  (impl-styles/prepare-styles styles))
+      Normally you should let stylefy convert your style maps to unique CSS classes by calling
+      use-style. Thus, there is usually no need to create customly named classes when using stylefy,
+      unless you work with some 3rd party framework.
 
-(defn prepare-style
-  "Same as prepare-styles, but takes only one style map as a parameter, prepares it
-   and returns it. Can be used easily along with use-style: (use-style (prepare-style style))."
-  [style]
-  (assert (or (map? style) (nil? style)) (str "Style should be a map or nil, got: " (pr-str style)))
-  (when style
-    (impl-styles/prepare-styles [style]))
-  style)
+      Example:
+      (stylefy/class \"enter-transition\"
+                      {:transition \"background-color 2s\"})"
+     [name properties]
+     (assert (string? name) (str "Name should be a string, got: " (pr-str name)))
+     (assert (map? properties) (str "Properties should be a map, got: " (pr-str properties)))
+     (dom/add-class name properties)))
+
+#?(:cljs
+   (defn prepare-styles
+     "Converts the given styles and their sub-styles to CSS and adds them into the DOM
+      synchronously (immediately)."
+     [styles]
+     (assert (seqable? styles) (str "Styles should be seqable, got: " (pr-str styles)))
+     (assert (every? map? (remove nil? styles))
+             (str "Every style should be a map or nil, got: " (pr-str styles)))
+     (impl-styles/prepare-styles styles)))
+
+#?(:cljs
+   (defn prepare-style
+     "Same as prepare-styles, but takes only one style map as a parameter, prepares it
+      and returns it. Can be used easily along with use-style: (use-style (prepare-style style))."
+     [style]
+     (assert (or (map? style) (nil? style)) (str "Style should be a map or nil, got: " (pr-str style)))
+     (when style
+       (impl-styles/prepare-styles [style]))
+     style))

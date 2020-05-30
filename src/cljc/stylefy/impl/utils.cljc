@@ -1,13 +1,15 @@
 (ns stylefy.impl.utils
-  (:require [dommy.core :as dommy]
-            [garden.core :refer [css]]
+  (:require [garden.core :refer [css]]
             [garden.color :as color]
             [garden.types :as types]
             [garden.stylesheet :refer [at-media at-keyframes at-font-face]]
             [clojure.string :as str])
-  (:require-macros [reagent.ratom :refer [run!]]))
+  (:import #?@(:clj
+               [(garden.types CSSFunction)
+                (garden.types CSSUnit)
+                (garden.color CSSColor)])))
 
-(defn filter-css-props
+(defn remove-special-keywords
   "Removes stylefy's namespaced keywords from the given map."
   [props]
   (apply dissoc props (filter #(and (namespace %)
@@ -16,6 +18,9 @@
 
 (defn is-garden-value? [value]
   ; Note: types/CSSAtRule is not included since it is a selector, not a valid CSS value.
-  (or (instance? types/CSSUnit value)
-      (instance? color/CSSColor value)
-      (instance? types/CSSFunction value)))
+  #?(:cljs (or (instance? types/CSSUnit value)
+               (instance? color/CSSColor value)
+               (instance? types/CSSFunction value))
+     :clj  (or (instance? CSSUnit value)
+               (instance? CSSColor value)
+               (instance? CSSFunction value))))

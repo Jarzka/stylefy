@@ -1,10 +1,4 @@
-(ns stylefy.impl.cache
-  (:require [dommy.core :as dommy]
-            [reagent.core :as r]
-            [garden.core :refer [css]]
-            [stylefy.impl.utils :as utils]
-            [garden.stylesheet :refer [at-media at-keyframes at-font-face]])
-  (:require-macros [reagent.ratom :refer [run!]]))
+(ns stylefy.impl.cache)
 
 (def cache-prefix "stylefy_cache_")
 (def cache-styles? (atom false))
