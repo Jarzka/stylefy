@@ -5,6 +5,24 @@
 (defn sub-component [message]
   [:span (use-style {:color :red}) message])
 
+(defn constant-styles []
+  (stylefy/keyframes "simple-animation"
+                     [:from
+                      {:opacity 0}]
+                     [:to
+                      {:opacity 1}])
+
+  (stylefy/font-face {:font-family "open_sans"
+                      :src "url('../fonts/OpenSans-Regular-webfont.woff') format('woff')"
+                      :font-weight "normal"
+                      :font-style "normal"})
+
+  (stylefy/tag "code"
+               {:background-color "lightyellow"})
+
+  (stylefy/class "enter-transition"
+                 {:transition "background-color 2s"}))
+
 (defn example-component []
   [:html
    [:head
@@ -26,4 +44,6 @@
 
 (defn example-query []
   (stylefy/query-with-styles
-    (fn [] (html (example-component)))))
+    (fn []
+      (constant-styles)
+      (html (example-component)))))
