@@ -57,8 +57,7 @@
                        resolving corner cases in which complex CSS selectors are needed.
                        For the most part, it is recommended to use ::sub-styles.
 
-   Options is an optional map, which contains HTML attributes (:class, :href, :src etc.).
-   It can also contain the following special keywords features:"
+   Options is an optional map, which contains HTML attributes (:class, :href, :src etc.)."
   ([style] (use-style style {}))
   ([style options]
    (assert (or (map? style) (nil? style)) (str "Style should be a map or nil, got: " (pr-str style)))
