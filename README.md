@@ -560,7 +560,7 @@ Yup, for example: [Finnish National Access Point](https://github.com/finnishtran
 
 # More examples
 
-More examples available here: https://github.com/Jarzka/stylefy/tree/master/examples/src/stylefy/examples
+More examples available here: https://github.com/Jarzka/stylefy/tree/master/examples/
 
 # More cool stuff
 
