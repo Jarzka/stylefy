@@ -1,3 +1,9 @@
+# 2.2.0
+
+May 31, 2020
+
+- Make sure that `keyframes`, `font-face`, `tag`, `class` and `prepare-styles` always return nil, as the return value was never designed to be used anywhere.
+
 # 2.1.1
 
 May 30, 2020
@@ -10,7 +16,7 @@ May 30, 2020
 
 - Adds support for calling `keyframes`, `font-face`, `tag` and `class` on the backend.
 
-Previously these functions also returned a value, but not anymore. The value was only used for testing purposes. The tests have now been updated, and I don't consider this being a breaking change since the return value was never meant to be used anywhere. The return value was also never used in any examples.
+The return value of these functions was also changed, but the value is used for testing purposes only. The tests have now been updated, and I don't consider this being a breaking change since the return value was never meant to be used anywhere. The return value was also never used in any examples.
 
 # 2.0.0
 
