@@ -174,7 +174,7 @@
     #?(:cljs (do (dom/add-font-face garden-syntax)
                  nil)
        :clj  (do (swap! css-in-context assoc :font-faces
-                     (conj (:font-faces @css-in-context) (css garden-syntax)))
+                        (conj (:font-faces @css-in-context) (css garden-syntax)))
                  nil))))
 
 (defn tag
