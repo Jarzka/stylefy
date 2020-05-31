@@ -132,7 +132,8 @@
    #?(:cljs (dom/init-cache options))
    (impl-styles/init-global-vendor-prefixes options)
    (reset! state/stylefy-initialised? true)
-   #?(:cljs (dom/update-dom))))
+   #?(:cljs (dom/update-dom))
+   nil))
 
 (defn keyframes
   "Frontend: Adds the given keyframe definition into the DOM asynchronously.
@@ -150,8 +151,10 @@
   [identifier & frames]
   (assert (string? identifier) (str "Identifier should be string, got: " (pr-str identifier)))
   (let [garden-syntax (apply at-keyframes identifier frames)]
-    #?(:cljs (dom/add-keyframes identifier garden-syntax)
-       :clj  (swap! css-in-context assoc-in [:keyframes identifier] (css garden-syntax)))))
+    #?(:cljs (do (dom/add-keyframes identifier garden-syntax)
+                 nil)
+       :clj  (do (swap! css-in-context assoc-in [:keyframes identifier] (css garden-syntax))
+                 nil))))
 
 (defn font-face
   "Frontend: Adds the given font-face definition into the DOM asynchronously.
@@ -168,9 +171,11 @@
   (assert (map? properties) (str "Properties should be a map, got: " (pr-str properties)))
 
   (let [garden-syntax (at-font-face properties)]
-    #?(:cljs (dom/add-font-face garden-syntax)
-       :clj  (swap! css-in-context assoc :font-faces
-                    (conj (:font-faces @css-in-context) (css garden-syntax))))))
+    #?(:cljs (do (dom/add-font-face garden-syntax)
+                 nil)
+       :clj  (do (swap! css-in-context assoc :font-faces
+                     (conj (:font-faces @css-in-context) (css garden-syntax)))
+                 nil))))
 
 (defn tag
   "Frontend: Creates a CSS selector for the given tag and properties and adds it into the DOM asynchronously.
@@ -188,8 +193,10 @@
   (assert (map? properties) (str "Properties should be a map, got: " (pr-str properties)))
 
   (let [tag-as-css (conversion/style->css {:props properties :custom-selector name})]
-    #?(:cljs (dom/add-tag tag-as-css)
-       :clj  (swap! css-in-context assoc-in [:tags name] tag-as-css))))
+    #?(:cljs (do (dom/add-tag tag-as-css)
+                 nil)
+       :clj  (do (swap! css-in-context assoc-in [:tags name] tag-as-css)
+                 nil))))
 
 (defn class
   "Frontend: Creates a CSS class with the given name and properties and adds it into the DOM asynchronously.
@@ -207,8 +214,10 @@
   (assert (map? properties) (str "Properties should be a map, got: " (pr-str properties)))
 
   (let [class-as-css (conversion/style->css {:props properties :custom-selector (conversion/class-selector name)})]
-    #?(:cljs (dom/add-class class-as-css)
-       :clj  (swap! css-in-context assoc-in [:classes name] class-as-css))))
+    #?(:cljs (do (dom/add-class class-as-css)
+                 nil)
+       :clj  (do (swap! css-in-context assoc-in [:classes name] class-as-css)
+                 nil))))
 
 ;
 ; Backend only
@@ -244,7 +253,8 @@
      (assert (seqable? styles) (str "Styles should be seqable, got: " (pr-str styles)))
      (assert (every? map? (remove nil? styles))
              (str "Every style should be a map or nil, got: " (pr-str styles)))
-     (impl-styles/prepare-styles styles)))
+     (impl-styles/prepare-styles styles)
+     nil))
 
 #?(:cljs
    (defn prepare-style
