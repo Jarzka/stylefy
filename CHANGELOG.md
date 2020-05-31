@@ -16,8 +16,6 @@ May 30, 2020
 
 - Adds support for calling `keyframes`, `font-face`, `tag` and `class` on the backend.
 
-The return value of these functions was also changed, but the value is used for testing purposes only. The tests have now been updated, and I don't consider this being a breaking change since the return value was never meant to be used anywhere. The return value was also never used in any examples.
-
 # 2.0.0
 
 May 30, 2020
