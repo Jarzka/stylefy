@@ -72,7 +72,7 @@ You can read more about style caching in the *Style caching* section.
 
 ### Multi-instance summary
 
-If you are planning to run multiple apps using stylefy on the same web page / domain, the setup need additional steps. See: *multi-instance* section.
+If you are planning to run multiple apps using stylefy on the same web page / domain, the setup needs additional steps. See: [Multi-instance support](#multi-instance). section.
 
 ## Backend (Clojure)
 
@@ -540,7 +540,7 @@ Notice that you need to turn custom prefixes on separately on the init function:
 (stylefy/init {:use-custom-class-prefix? true})
 ```
 
-## Multi-instance support (frontend)
+## <a name="multi-instance"></a> Multi-instance support (frontend)
 
 Multi-instance support can be used in the following scenarios:
 
