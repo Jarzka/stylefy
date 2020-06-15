@@ -497,6 +497,8 @@ By default, the cache is cleared in seven days. You can also clear it manually b
 (stylefy-cache/clear)
 ```
 
+If you run multiple stylefy apps on the same domain, they share the same localstorage cache. If you want every app to have its own cache, see: *multi-instance support*.
+
 ### Cache options
 
 Cache options support automatic cache clearing when a certain amount of time is passed.
@@ -529,14 +531,16 @@ Notice that you need to turn custom prefixes on separately on the init function:
 
 ## Multi-instance support (frontend)
 
-Running multiple apps using stylefy on the same web page is currently possible if every app is built separately (every app contains its own JS file). Every instance can use its own style tag, so use your app name as a suffix in the **style** tag id.
+Multi-instance support is meant for running multiple apps using stylefy on the same web page. This is currently possible if every app is built separately (every app contains its own JS file). Also, if you run multiple stylefy apps on the same domain and have HTML5 localstorage caching turned on, you might want to consider using multi-instance support so that every app gets is own cache.
+
+To setup multi-instance support, use your app name as a suffix in the **style** tag id.
 
 ```html
 <style id="_stylefy-constant-styles_myapp"></style>
 <style id="_stylefy-styles_myapp"></style>
 ```
 
-Then init stylefy with multi-instance support. Instance-id is a unique string (for example app name). Base-node is an optional base node for style tags (handy if you use web components).
+Then init stylefy with multi-instance support. Instance-id is a unique string (app name). Base-node is an optional base node for style tags (handy if you use web components).
 
 ```clojure
 (stylefy/init {:multi-instance {:base-node (dommy/sel1 "#myapp")
