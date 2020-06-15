@@ -521,25 +521,6 @@ You can also clear the cache manually:
 
 If you run multiple stylefy apps on the same domain, they share the same local storage cache. If you want every app to have its own cache, see: [Multi-instance support](#multi-instance).
 
-## Garden units and colors
-
-You can use Garden's [Unit](https://github.com/noprompt/garden/wiki/Units-%26-Arithmetic) and [Color](https://github.com/noprompt/garden/wiki/Color) helpers with stylefy. You can also use Garden's `defcssfn` macro to create custom CSS functions (notice that `defcssfn` is a macro and needs `garden.core` dependency declaration). 
-
-## Debugging and testing
-
-If you want to test your user interface by examining CSS class names, stylefy's automatically generated class names can become a hassle. To make testing and debugging easier, you can use your own prefix in stylefy's automatically generated class names:
-
-```clojure
-(def my-style {:color "red"
-               ::stylefy/class-prefix "debugthis"}
-```
-
-Notice that you need to turn custom prefixes on separately on the init function:
-
-```clojure
-(stylefy/init {:use-custom-class-prefix? true})
-```
-
 ## <a name="multi-instance"></a> Multi-instance support (frontend)
 
 Multi-instance support can be used in the following scenarios:
@@ -559,6 +540,25 @@ Then init stylefy with multi-instance support. Instance-id is a unique string (a
 ```clojure
 (stylefy/init {:multi-instance {:base-node (dommy/sel1 "#myapp")
                                 :instance-id "myapp"}})
+```
+
+## Garden units and colors
+
+You can use Garden's [Unit](https://github.com/noprompt/garden/wiki/Units-%26-Arithmetic) and [Color](https://github.com/noprompt/garden/wiki/Color) helpers with stylefy. You can also use Garden's `defcssfn` macro to create custom CSS functions (notice that `defcssfn` is a macro and needs `garden.core` dependency declaration). 
+
+## Debugging and testing
+
+If you want to test your user interface by examining CSS class names, stylefy's automatically generated class names can become a hassle. To make testing and debugging easier, you can use your own prefix in stylefy's automatically generated class names:
+
+```clojure
+(def my-style {:color "red"
+               ::stylefy/class-prefix "debugthis"}
+```
+
+Notice that you need to turn custom prefixes on separately on the init function:
+
+```clojure
+(stylefy/init {:use-custom-class-prefix? true})
 ```
 
 # FAQ
