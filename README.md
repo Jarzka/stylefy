@@ -497,8 +497,6 @@ By default, the cache is cleared in seven days. You can also clear it manually b
 (stylefy-cache/clear)
 ```
 
-If you run multiple stylefy apps on the same domain, they share the same localstorage cache. If you want every app to have its own cache, see: *multi-instance support*.
-
 ### Cache options
 
 Cache options support automatic cache clearing when a certain amount of time is passed.
@@ -507,6 +505,10 @@ Cache options support automatic cache clearing when a certain amount of time is 
 (stylefy/init {:use-caching? true
                :cache-options {:expires (* 1 60 60 24 7)}}) ; Cache is cleared after 7 days
 ```
+
+### localstorage origin
+
+If you run multiple stylefy apps on the same domain, they share the same localstorage cache. If you want every app to have its own cache, see: *multi-instance support*.
 
 ## Garden units and colors
 
