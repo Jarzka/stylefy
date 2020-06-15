@@ -68,11 +68,11 @@ Now you are ready to go, but before you start, it's good be aware of a few thing
 
 stylefy supports style caching for styles generated on the frontend via HTML5 local storage and it is turned on by default. The converted CSS code is added into local storage and loaded from there when the page is reloaded. Caching can speed up the style generation a lot, so it is recommended to keep it on at least in the production environment.
 
-You can read more about style caching in the *Style caching* section.
+You can read more about style caching in the [Style caching](#caching) section.
 
 ### Multi-instance summary
 
-If you are planning to run multiple apps using stylefy on the same web page / domain, the setup needs additional steps. See: [Multi-instance support](#multi-instance). section.
+If you are planning to run multiple apps using stylefy on the same web page / domain, the setup needs additional steps. See: [Multi-instance support](#multi-instance) section.
 
 ## Backend (Clojure)
 
@@ -153,7 +153,7 @@ To use it in a component, use the **use-style** function:
     text])
 ```
 
-On the frontend, **use-style** adds the style into the DOM as a CSS class on-demand (see "How it works" for more details). On the server, it returns a class name pointing to the generated CSS code.
+On the frontend, **use-style** adds the style into the DOM as a CSS class on-demand (see [How does the CSS generation work on the frontend?](#howdoesfrontendwork) for more details). On the server, it returns a class name pointing to the generated CSS code.
 
 ### Passing styles to components
 
@@ -491,7 +491,7 @@ An example of such corner case is a situation in which we want to change the sty
 
 For syntax help, see Garden's [documentation](https://github.com/noprompt/garden/wiki/Syntax).
 
-## Style caching (frontend)
+## <a name="caching"></a> Style caching (frontend)
 
 stylefy supports style caching for styles generated on the frontend via HTML5 local storage. The converted CSS code is added into local storage and loaded from there when the page is reloaded.
 
@@ -519,7 +519,7 @@ You can also clear the cache manually:
 
 ### Storage origin
 
-If you run multiple stylefy apps on the same domain, they share the same local storage cache. If you want every app to have its own cache, see: *multi-instance support*.
+If you run multiple stylefy apps on the same domain, they share the same local storage cache. If you want every app to have its own cache, see: [Multi-instance support](#multi-instance).
 
 ## Garden units and colors
 
@@ -571,7 +571,7 @@ Yes, it is possible to easily attach styles to components with Garden too if you
 
 TLDR; stylefy it's like using inline CSS, but with full support for all CSS features that are not normally available when using CSS inline.
 
-## How does the CSS generation work on the frontend?
+## <a name="howdoesfrontendwork"></a> How does the CSS generation work on the frontend?
 
 **use-style** saves the style and adds it into the DOM as a CSS class asynchronously (if it's not already there). The return value is a map containing the given style properties as inline style. It is needed until the CSS class has been generated and inserted into the DOM. When the DOM is ready, the component is forced to re-render itself and use only the CSS class definition.
 
