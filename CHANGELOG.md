@@ -1,3 +1,9 @@
+# 2.2.1
+
+June 15, 2020
+
+- Fix Figwheel warning
+
 # 2.2.0
 
 May 31, 2020
