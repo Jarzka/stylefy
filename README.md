@@ -541,7 +541,7 @@ Notice that you need to turn custom prefixes on separately on the init function:
 
 Multi-instance support can be used in the following scenarios:
 
-* Running multiple apps using stylefy on the same web page (this is possible if every app is built separately, i.e. every app contains its own JS file.
+* Running multiple apps using stylefy on the same web page (this is possible if every app is built separately, i.e. every app contains its own JS file).
 * Running multiple apps using stylefy on the same domain in a way that every app uses its own HTML5 local storage cache.
 
 To setup multi-instance support, use your app name as a suffix in the **style** tag id.
