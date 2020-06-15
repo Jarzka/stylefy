@@ -506,9 +506,9 @@ Cache options support automatic cache clearing when a certain amount of time is 
                :cache-options {:expires (* 1 60 60 24 7)}}) ; Cache is cleared after 7 days
 ```
 
-### localstorage origin
+### Storage origin
 
-If you run multiple stylefy apps on the same domain, they share the same localstorage cache. If you want every app to have its own cache, see: *multi-instance support*.
+If you run multiple stylefy apps on the same domain, they share the same local storage cache. If you want every app to have its own cache, see: *multi-instance support*.
 
 ## Garden units and colors
 
@@ -533,7 +533,7 @@ Notice that you need to turn custom prefixes on separately on the init function:
 
 ## Multi-instance support (frontend)
 
-Multi-instance support is meant for running multiple apps using stylefy on the same web page. This is currently possible if every app is built separately (every app contains its own JS file). Also, if you run multiple stylefy apps on the same domain and have HTML5 localstorage caching turned on, you might want to consider using multi-instance support so that every app gets is own cache.
+Multi-instance support is meant for running multiple apps using stylefy on the same web page. This is currently possible if every app is built separately (every app contains its own JS file). Also, if you run multiple stylefy apps on the same domain and have HTML5 local storage caching turned on, you might want to consider using multi-instance support so that every app gets is own cache.
 
 To setup multi-instance support, use your app name as a suffix in the **style** tag id.
 
