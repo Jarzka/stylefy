@@ -63,9 +63,7 @@ Then, call **stylefy/init** once when your application starts:
 (stylefy/init)
 ```
 
-Now you are ready to go.
-
-Finally, it's good be aware of local storage caching:
+Now you are ready to go, but before you start, it's good be aware of local storage caching:
 
 ### Caching summary
 
