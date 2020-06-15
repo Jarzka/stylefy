@@ -65,7 +65,13 @@ Then, call **stylefy/init** once when your application starts:
 
 Now you are ready to go.
 
-Finally, it's good be aware of local storage caching. You can read more about it in the *Style caching* section.
+Finally, it's good be aware of local storage caching:
+
+### Caching summary
+
+stylefy supports style caching for styles generated on the frontend via HTML5 local storage and it is turned on by default. The converted CSS code is added into local storage and loaded from there when the page is reloaded. Caching can speed up the style generation a lot, so it is recommended to keep it on at least in the production environment.
+
+You can read more about it in the *Style caching* section.
 
 ## Backend (Clojure)
 
@@ -486,7 +492,7 @@ For syntax help, see Garden's [documentation](https://github.com/noprompt/garden
 
 ## Style caching (frontend)
 
-stylefy supports style caching for styles generated on the frontend. The styles can be cached in HTML5 local storage. The converted CSS code is added into local storage and loaded from there when the page is reloaded.
+stylefy supports style caching for styles generated on the frontend via HTML5 local storage. The converted CSS code is added into local storage and loaded from there when the page is reloaded.
 
 As from version 1.7.0, caching with local storage is turned on by default. Caching can speed up the style generation a lot, so it is recommended to keep it on at least in the production environment.
 
@@ -533,11 +539,12 @@ Notice that you need to turn custom prefixes on separately on the init function:
 (stylefy/init {:use-custom-class-prefix? true})
 ```
 
-# Advanced features 
-
 ## Multi-instance support (frontend)
 
-Multi-instance support is meant for running multiple apps using stylefy on the same web page. This is currently possible if every app is built separately (every app contains its own JS file). Also, if you run multiple stylefy apps on the same domain and have HTML5 local storage caching turned on, you might want to consider using multi-instance support so that every app gets is own cache.
+Multi-instance support can be used in the following scenarios:
+
+* Running multiple apps using stylefy on the same web page (this is possible if every app is built separately, i.e. every app contains its own JS file.
+* Running multiple apps using stylefy on the same domain in a way that every app uses its own HTML5 local storage cache.
 
 To setup multi-instance support, use your app name as a suffix in the **style** tag id.
 
