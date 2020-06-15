@@ -63,6 +63,10 @@ Then, call **stylefy/init** once when your application starts:
 (stylefy/init)
 ```
 
+Now you are ready to go.
+
+Finally, it's good be aware of local storage caching. You can read more about it in the *Style caching* section.
+
 ## Backend (Clojure)
 
 **Follow these steps if you want to render styles on the server. These steps are not necessary if you only render styles on the frontend.**
@@ -484,26 +488,26 @@ For syntax help, see Garden's [documentation](https://github.com/noprompt/garden
 
 stylefy supports style caching for styles generated on the frontend. The styles can be cached in HTML5 local storage. The converted CSS code is added into local storage and loaded from there when the page is reloaded.
 
-As from version 1.7.0, caching with local storage is turned on by default. You can turn it off in the initialisation function:
+As from version 1.7.0, caching with local storage is turned on by default. Caching can speed up the style generation a lot, so it is recommended to keep it on at least in the production environment.
+
+Caching can be turned off in the initialisation function:
 
 ```clojure
   (stylefy/init {:use-caching? false})
 ```
 
-By default, the cache is cleared in seven days. You can also clear it manually by calling:
+By default, the cache is cleared in seven days. You can modify this with **cache-options**:
+
+```clojure
+(stylefy/init {:use-caching? true
+               :cache-options {:expires (* 1 60 60 24 7)}}) ; Cache is cleared automatically after 7 days
+```
+
+You can also clear the cache manually:
 
 ```clojure
 (require '[stylefy.cache :as stylefy-cache])
 (stylefy-cache/clear)
-```
-
-### Cache options
-
-Cache options support automatic cache clearing when a certain amount of time is passed.
-
-```clojure
-(stylefy/init {:use-caching? true
-               :cache-options {:expires (* 1 60 60 24 7)}}) ; Cache is cleared after 7 days
 ```
 
 ### Storage origin
