@@ -519,7 +519,7 @@ You can also clear the cache manually:
 
 ### Storage origin
 
-If you run multiple stylefy apps on the same domain, they share the same local storage cache. This applies to apps developed on localhost domain too. If you want every app to have its own cache, either use a different port / domain alias for every app, or use [Multi-instance support](#multi-instance).
+If you run multiple stylefy apps on the same domain, they share the same local storage cache (this applies to apps developed on localhost domain too). If you want every app to have its own cache, either use a different domain / port for every app, or use [Multi-instance support](#multi-instance).
 
 ## <a name="multi-instance"></a> Multi-instance support (frontend)
 
