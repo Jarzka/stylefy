@@ -1,4 +1,5 @@
-(ns stylefy.impl.cache)
+(ns stylefy.impl.cache
+  (:require [cljs.reader :refer [read-string]]))
 
 (def cache-prefix "stylefy_cache_")
 (def cache-styles? (atom false))
@@ -31,7 +32,7 @@
   [key]
   (when @cache-styles?
     (when-let [cache-contents (.getItem (.-localStorage js/window) key)]
-      (cljs.reader/read-string cache-contents))))
+      (read-string cache-contents))))
 
 ; Cache manipulation
 

@@ -1,10 +1,12 @@
 (ns stylefy.impl.conversion
-  (:require [garden.core :refer [css]]
-            [stylefy.impl.utils :as utils]
-            [garden.stylesheet :refer [at-media at-keyframes at-font-face]]
-            [stylefy.impl.log :as log]
-            [clojure.string :as str]
-            [garden.compiler :as compiler]))
+  (:require
+    [clojure.walk :refer [walk]]
+    [garden.core :refer [css]]
+    [stylefy.impl.utils :as utils]
+    [garden.stylesheet :refer [at-media at-keyframes at-font-face]]
+    [stylefy.impl.log :as log]
+    [clojure.string :as str]
+    [garden.compiler :as compiler]))
 
 (defn garden-units->css
   "Checks all values in the map and converts all Garden units to CSS."
@@ -107,11 +109,11 @@
     (let [css-parent-selector (or custom-selector (class-selector hash))
           css-manual-styles (map
                              (fn [manual-style]
-                               (let [manual-selector-and-css-props (clojure.walk/walk #(if (map? %)
-                                                                                        (utils/remove-special-keywords %)
-                                                                                        %)
-                                                                                     identity
-                                                                                     manual-style)
+                               (let [manual-selector-and-css-props (walk #(if (map? %)
+                                                                            (utils/remove-special-keywords %)
+                                                                            %)
+                                                                         identity
+                                                                         manual-style)
                                      garden-style-definition (into [css-parent-selector] [manual-selector-and-css-props])
                                      css-class (css options garden-style-definition)]
                                  css-class))
