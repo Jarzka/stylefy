@@ -22,7 +22,6 @@ While being originally created with the frontend in mind, stylefy now runs on bo
 - Manual mode can be used for styling 3rd party components and resolving corner cases in which complex CSS selectors are needed
 - Vendor prefixes are supported both locally and globally
 - CSS caching on the frontend using local storage (optional)
-- Multi-instance support on the frontend (you can run multiple apps using stylefy on the same web page if all apps are built separately)
 - Small and simple core API which is easy to setup
 - Fast, asynchronous CSS generation
 - Automatic style reloading (with shadow-cljs or Figwheel)
@@ -63,13 +62,17 @@ Then, call **stylefy/init** once when your application starts:
 (stylefy/init)
 ```
 
-Now you are ready to go, but before you start, it's good be aware of local storage caching:
+Now you are ready to go, but before you start, it's good be aware of a few things:
 
 ### Caching summary
 
 stylefy supports style caching for styles generated on the frontend via HTML5 local storage and it is turned on by default. The converted CSS code is added into local storage and loaded from there when the page is reloaded. Caching can speed up the style generation a lot, so it is recommended to keep it on at least in the production environment.
 
 You can read more about style caching in the *Style caching* section.
+
+### Multi-instance summary
+
+If you are planning to run multiple apps using stylefy on the same web page / domain, the setup need additional steps. See: *multi-instance* section.
 
 ## Backend (Clojure)
 
