@@ -17,7 +17,7 @@ While being originally created with the frontend in mind, stylefy now runs on bo
 
 # Features
 
-- Define styles as Clojure data. All important CSS features are supported: pseudo-classes, pseudo-elements, keyframes, font-faces, media queries, feature queries...
+- Define styles as Clojure data – all important CSS features are supported: pseudo-classes, pseudo-elements, keyframes, font-faces, media queries, feature queries...
 - Use any 3rd party CSS code along with stylefy
 - Manual mode can be used for styling 3rd party components and resolving corner cases in which complex CSS selectors are needed
 - Vendor prefixes are supported both locally and globally
