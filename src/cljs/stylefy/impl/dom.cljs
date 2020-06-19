@@ -9,7 +9,6 @@
             [stylefy.impl.log :as log]
             [stylefy.impl.state :as state])
   (:require-macros
-    [reagent.ratom :refer [run!]]
     [cljs.core.async.macros :refer [go]]))
 
 
