@@ -4,7 +4,6 @@
             [garden.core :refer [css]]
             [cljs.core.async :refer [<! timeout]]
             [stylefy.impl.cache :as cache]
-            [stylefy.impl.conversion :as conversion]
             [garden.stylesheet :refer [at-media at-keyframes at-font-face]]
             [stylefy.impl.log :as log]
             [stylefy.impl.state :as state])
