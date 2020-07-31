@@ -13,7 +13,7 @@ lein test
 # Compile examples project
 
 ```bash
-cd examples/src
+cd examples
 shadow-cljs watch frontend
 ```
 
