@@ -4,7 +4,8 @@
 examples/target
 examples/resources/public/js
 examples/resources/public/css
-examples/figwheel_server.log
+examples/.shadow-cljs
+examples/node_modules
 .nrepl-port
 pom.xml
 pom.xml.asc

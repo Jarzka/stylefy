@@ -1,17 +1,19 @@
 (ns stylefy.examples.main
-  (:require [reagent.core :as r]
-            [dommy.core :as dommy]
-            [garden.units :as gu]
-            [garden.color :as gc]
-            [stylefy.examples.styles :as styles]
-            [stylefy.examples.table :as table]
-            [stylefy.examples.hoverbox :as hoverbox]
-            [stylefy.examples.grid :as grid]
-            [stylefy.examples.full-page :as full-page]
-            [stylefy.examples.custom-tags :as custom-tags]
-            [cljs.core.async :refer [<! timeout]]
-            [stylefy.core :as stylefy :refer [use-style sub-style use-sub-style]]
-            [stylefy.cache :as stylefy-cache])
+  (:require
+    [garden.units :as gu]
+    [garden.color :as gc]
+    [reagent.core :as r]
+    [reagent.dom :as reagent-dom]
+    [stylefy.examples.styles :as styles]
+    [stylefy.examples.table :as table]
+    [stylefy.examples.hoverbox :as hoverbox]
+    [stylefy.examples.grid :as grid]
+    [stylefy.examples.full-page :as full-page]
+    [stylefy.examples.example-template :as example-template]
+    [stylefy.examples.custom-tags :as custom-tags]
+    [cljs.core.async :refer [<! timeout]]
+    [stylefy.core :as stylefy :refer [use-style sub-style use-sub-style]]
+    [stylefy.cache :as stylefy-cache])
   (:require-macros [cljs.core.async.macros :refer [go]]
                    [garden.def :refer [defcssfn]]))
 
@@ -342,4 +344,4 @@
                  :cache-options {:expires (* 1 60 60 24 7)}
                  :global-vendor-prefixes {::stylefy/vendors ["webkit" "moz" "o"]
                                           ::stylefy/auto-prefix #{:border-radius}}})
-  (r/render main (.getElementById js/document "app")))
+  (reagent-dom/render main (.getElementById js/document "app")))

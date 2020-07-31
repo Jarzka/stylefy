@@ -12,21 +12,12 @@ lein test
 
 # Compile examples project
 
-Start ClojureScript -> JS autocompile:
-
 ```bash
 cd examples/src
-lein figwheel
+shadow-cljs watch frontend
 ```
 
-Start web server:
-
-```bash
-cd examples/resources/public
-python -m SimpleHTTPServer 8000
-```
-
-Now go to http://localhost:8000/index_dev.html
+Now go to http://localhost:8000/index.html
 
 # Update API DOC
 

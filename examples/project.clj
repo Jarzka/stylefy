@@ -9,8 +9,7 @@
                  [org.clojure/core.async "0.3.443"]
                  [com.andrewmcveigh/cljs-time "0.5.0"]
                  [figwheel "0.5.18"]]
-  :plugins [[lein-cljsbuild "1.1.7"]
-            [lein-figwheel "0.5.18"]]
+  :plugins [[lein-cljsbuild "1.1.7"]]
   :repl-options {:init-ns stylefy.examples.main
                  :port 1339
                  :timeout 120000}
@@ -23,9 +22,8 @@
                                        "src/cljs"
                                        "../src/cljc"
                                        "../src/cljs"]
-                        :figwheel {:on-jsload "stylefy.examples.main/start"}
-                        :compiler {:output-to "resources/public/js/dev/stylefy.js"
-                                   :output-dir "resources/public/js/dev/out"
+                        :compiler {:output-to "resources/public/js/stylefy.js"
+                                   :output-dir "resources/public/js/out"
                                    :optimizations :none
                                    :source-map true}}
                        {:id "prod"
