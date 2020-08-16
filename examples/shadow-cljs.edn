@@ -17,7 +17,7 @@
   [reagent "0.10.0"]
   [com.andrewmcveigh/cljs-time "0.5.0"]]
 
- :dev-http {8000 "frontend/public"}
+ :dev-http {8000 "resources/public"}
 
  :builds
  {:frontend
