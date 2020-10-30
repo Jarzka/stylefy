@@ -583,7 +583,7 @@ If the style contains some specific definitions that cannot be present as inline
 [:div (use-style (prepare-style style))]
 ```
 
-Because **prepare-style** causes immediate synchronous DOM update, it is not recommended to overuse it, as it can slow the rendering process. Also, it's good to keep in mind that most of the time **prepare-style** is not needed, but calling **use-style** is enough. Also, when caching is used, the style will be ready after its CSS has been created for the first time.
+Because **prepare-style** causes immediate synchronous DOM update, it is not recommended to overuse it, as it can slow the rendering process. Also, when caching is used, the style will be ready after its CSS has been created for the first time.
 
 ## Any real projects using stylefy?
 
