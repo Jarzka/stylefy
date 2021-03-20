@@ -248,8 +248,7 @@
 (deftest use-sub-style
   (testing "Use sub-style"
     (let [return (stylefy/use-sub-style style-box :sub-box)]
-      (is (string? (:class return)))
-      (is (= (:style (get-in style-box [::stylefy/sub-styles :sub-box]))))))
+      (is (string? (:class return)))))
 
   (testing "Use sub-style when the actual style map is nil"
     (let [return (stylefy/use-sub-style nil :foo)]
