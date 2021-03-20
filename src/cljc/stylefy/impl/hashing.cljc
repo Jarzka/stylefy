@@ -1,6 +1,5 @@
 (ns stylefy.impl.hashing
-  (:require [garden.core :refer [css]]
-            [stylefy.impl.utils :as utils]
+  (:require [stylefy.impl.utils :as utils]
             [garden.compiler :as compiler]))
 
 (def default-class-prefix "_stylefy")
@@ -20,7 +19,7 @@
         (keyword? custom-class-prefix) (name custom-class-prefix)))
 
 (defn hash-style [style]
-  (when (not (empty? style))
+  (when (seq style)
     (let [hashable-garden-units (reduce
                                   ; Convert Garden units to CSS to make them structurally
                                   ; hashable (different contents = different hash)

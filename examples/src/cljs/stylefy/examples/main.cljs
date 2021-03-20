@@ -9,7 +9,6 @@
     [stylefy.examples.hoverbox :as hoverbox]
     [stylefy.examples.grid :as grid]
     [stylefy.examples.full-page :as full-page]
-    [stylefy.examples.example-template :as example-template]
     [stylefy.examples.custom-tags :as custom-tags]
     [cljs.core.async :refer [<! timeout]]
     [stylefy.core :as stylefy :refer [use-style sub-style use-sub-style]]
