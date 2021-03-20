@@ -1,8 +1,6 @@
 (ns stylefy.impl.utils
-  (:require [garden.core :refer [css]]
-            [garden.color :as color]
+  (:require [garden.color :as color]
             [garden.types :as types]
-            [garden.stylesheet :refer [at-media at-keyframes at-font-face]]
             [clojure.string :as str])
   (:import #?@(:clj
                [(garden.types CSSFunction)

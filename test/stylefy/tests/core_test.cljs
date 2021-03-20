@@ -2,7 +2,6 @@
   (:require [cljs.test :as test :refer-macros [deftest is testing]]
             [stylefy.core :as stylefy]
             [stylefy.impl.dom :as dom]
-            [garden.core :refer [css]]
             [garden.color :as color]
             [garden.units :as units]
             [clojure.string :as str]))
@@ -208,7 +207,7 @@
     (try
       (stylefy/use-style {:color "blue"} {:style {:color "red"}}) ; No point here!
       (is false "Error was not thrown")
-      (catch js/Error e
+      (catch js/Error _e
         (is true "Error was thrown as expected")))))
 
 ; Invalid styles
@@ -217,14 +216,14 @@
   (try
     (stylefy/use-style 123)
     (is false "Error was not thrown")
-    (catch js/Error e
+    (catch js/Error _e
       (is true "Error was thrown as expected"))))
 
 (testing "Use garbage style: string"
   (try
     (stylefy/use-style "foo")
     (is false "Error was not thrown")
-    (catch js/Error e
+    (catch js/Error _e
       (is true "Error was thrown as expected"))))
 
 ; Garden types
@@ -249,8 +248,7 @@
 (deftest use-sub-style
   (testing "Use sub-style"
     (let [return (stylefy/use-sub-style style-box :sub-box)]
-      (is (string? (:class return)))
-      (is (= (:style (get-in style-box [::stylefy/sub-styles :sub-box]))))))
+      (is (string? (:class return)))))
 
   (testing "Use sub-style when the actual style map is nil"
     (let [return (stylefy/use-sub-style nil :foo)]
@@ -264,14 +262,14 @@
     (try
       (stylefy/use-sub-style {} 123 :foo)
       (is false "Error was not thrown")
-      (catch js/Error e
+      (catch js/Error _e
         (is true "Error was thrown as expected"))))
 
   (testing "Use garbage style: string"
     (try
       (stylefy/use-sub-style {} "foo" :foo)
       (is false "Error was not thrown")
-      (catch js/Error e
+      (catch js/Error _e
         (is true "Error was thrown as expected"))))
 
   (testing "Use sub-style with class name"
@@ -292,7 +290,7 @@
     (try
       (stylefy/use-sub-style style-box :sub-box {:style {:color "red"}})
       (is false "Error was not thrown")
-      (catch js/Error e
+      (catch js/Error _e
         (is true "Error was thrown as expected"))))
 
   (testing "Use sub-style with HTML attributes"
@@ -357,7 +355,7 @@
     (try
       (stylefy/sub-style {} :foo "bar")
       (is false "Error was not thrown")
-      (catch js/Error e
+      (catch js/Error _e
         (is true "Error was thrown as expected")))))
 
 ; DOM
@@ -379,21 +377,21 @@
     (try
       (stylefy/prepare-styles [{:foo :bar} nil {:foo :bar}])
       (is true "Error was not thrown as expected")
-      (catch js/Error e
+      (catch js/Error _e
         (is false "Error was thrown"))))
 
   (testing "Good empty argument"
     (try
       (stylefy/prepare-styles [])
       (is true "Error was not thrown as expected")
-      (catch js/Error e
+      (catch js/Error _e
         (is false "Error was thrown"))))
 
   (testing "Bad argument: map"
     (try
       (stylefy/prepare-styles {:foo :bar})
       (is false "Expected an error to be thrown.")
-      (catch js/Error e
+      (catch js/Error _e
         (is true "Error was thrown as expected")))))
 
 ; prepare-style
@@ -407,19 +405,19 @@
       (try
         (is (= (stylefy/prepare-style style) style))
         (is true "Error was not thrown as expected")
-        (catch js/Error e
+        (catch js/Error _e
           (is false "Error was thrown"))))
 
     (testing "Good nil argument"
       (try
         (is (nil? (stylefy/prepare-style nil)))
         (is true "Error was not thrown as expected")
-        (catch js/Error e
+        (catch js/Error _e
           (is false "Error was thrown"))))
 
     (testing "Bad argument: vector of styles"
       (try
         (stylefy/prepare-style [style style])
         (is false "Expected an error to be thrown.")
-        (catch js/Error e
+        (catch js/Error _e
           (is true "Error was thrown as expected"))))))

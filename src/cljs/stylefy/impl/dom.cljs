@@ -2,9 +2,8 @@
   (:require [dommy.core :as dommy]
             [reagent.core :as r]
             [garden.core :refer [css]]
-            [cljs.core.async :refer [<! timeout]]
+            [cljs.core.async :as async] ; Mandatory for running tests
             [stylefy.impl.cache :as cache]
-            [garden.stylesheet :refer [at-media at-keyframes at-font-face]]
             [stylefy.impl.log :as log]
             [stylefy.impl.state :as state])
   (:require-macros
@@ -77,13 +76,11 @@
           (mark-all-styles-added-in-dom!))
       (log/error "stylefy is unable to find the required <style> tags!"))))
 
-(defn- update-dom-if-requested
-  []
+(defn update-dom-if-requested []
   (when @dom-update-requested?
     (update-dom)))
 
-(defn- request-asynchronous-dom-update
-  []
+(defn- request-asynchronous-dom-update []
   (when @state/stylefy-initialised?
     (when-not @dom-update-requested?
       (reset! dom-update-requested? true)
@@ -91,7 +88,7 @@
         (update-dom))
       nil)))
 
-(defn init-multi-instance [{:keys [multi-instance] :as options}]
+(defn init-multi-instance [{:keys [multi-instance] :as _options}]
   (let [base-node (:base-node multi-instance)
         instance-id (:instance-id multi-instance)]
     (assert (or (nil? instance-id)
@@ -114,7 +111,7 @@
 
 (defn save-style!
   "Stores the style in an atom. The style is going to be added into the DOM soon."
-  [{:keys [css hash] :as style}]
+  [{:keys [css hash] :as _style}]
   (assert css "Unable to save empty style!")
   (assert hash "Unable to save style without hash!")
   (let [style-to-be-saved {::css css}]

@@ -3,7 +3,7 @@
     [clojure.walk :refer [walk]]
     [garden.core :refer [css]]
     [stylefy.impl.utils :as utils]
-    [garden.stylesheet :refer [at-media at-keyframes at-font-face]]
+    [garden.stylesheet :refer [at-media]]
     [stylefy.impl.log :as log]
     [clojure.string :as str]
     [garden.compiler :as compiler]))
@@ -45,7 +45,7 @@
 
 (defn- convert-base-style-into-class
   "Converts Clojure style map into CSS class."
-  [{:keys [props hash custom-selector] :as style} options]
+  [{:keys [props hash custom-selector] :as _style} options]
   (let [css-props (utils/remove-special-keywords props)
         css-selector (or custom-selector (class-selector hash))
         garden-class-definition [css-selector css-props]
@@ -58,7 +58,7 @@
 
 (defn- convert-media-queries
   "Converts stylefy/media definition into CSS media query."
-  [{:keys [props hash custom-selector] :as style} options]
+  [{:keys [props hash custom-selector] :as _style} options]
   (when-let [stylefy-media-queries (:stylefy.core/media props)]
     (let [css-selector (or custom-selector (class-selector hash))
           css-media-queries
@@ -77,7 +77,7 @@
 
 (defn- convert-supports-rules
   "Converts stylefy/supports definition into CSS feature query."
-  [{:keys [props hash custom-selector] :as style} options]
+  [{:keys [props hash custom-selector] :as _style} options]
   (when-let [stylefy-supports (:stylefy.core/supports props)]
     (let [css-selector (or custom-selector (class-selector hash))
           css-supports (map
@@ -104,7 +104,7 @@
 
 (defn- convert-manual-styles
   "Converts stylefy/manual definition into CSS."
-  [{:keys [props hash custom-selector] :as style} options]
+  [{:keys [props hash custom-selector] :as _style} options]
   (when-let [stylefy-manual-styles (:stylefy.core/manual props)]
     (let [css-parent-selector (or custom-selector (class-selector hash))
           css-manual-styles (map
@@ -123,7 +123,7 @@
 (defn style->css
   "Converts the given style to CSS. Options are sent directly to Garden"
   ([style] (style->css style {}))
-  ([{:keys [props hash] :as style} options]
+  ([style options]
    (let [css-class (convert-base-style-into-class style options)
          css-media-queries (convert-media-queries style options)
          css-supports (convert-supports-rules style options)

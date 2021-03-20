@@ -14,3 +14,4 @@ doo-index.html
 /out
 .lein-repl-history
 .lein-failures
+.lsp

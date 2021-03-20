@@ -1,7 +1,7 @@
 (ns stylefy.core
   (:require [clojure.string :as str]
             [garden.core :refer [css]]
-            [garden.stylesheet :refer [at-media at-keyframes at-font-face]]
+            [garden.stylesheet :refer [at-keyframes at-font-face]]
             [stylefy.impl.conversion :as conversion]
             #?(:cljs [stylefy.impl.dom :as dom])
             [stylefy.impl.hashing :as hashing]

@@ -1,6 +1,5 @@
 (ns stylefy.impl.styles
-  (:require [garden.core :refer [css]]
-            [clojure.string :as str]
+  (:require [clojure.string :as str]
             #?(:cljs [stylefy.impl.dom :as dom])
             [stylefy.impl.hashing :as hashing]
             [stylefy.impl.utils :as utils]
@@ -72,9 +71,9 @@
                           (str/join " " (remove nil? [class-as-string style-with-classes-as-string]))))
           final-html-attributes (merge
                                   html-attributes
-                                  (when (not (empty? final-class)) {:class final-class}))]
+                                  (when (seq final-class) {:class final-class}))]
 
-      (when (not (empty? final-html-attributes))
+      (when (seq final-html-attributes)
         final-html-attributes))))
 
 (defn style-return-value [style style-hash options]
@@ -95,10 +94,8 @@
                      mode-names (cond
                                   (map? modes) (set (keys modes))
                                   (vector? modes) (set (map first modes))
-                                  :default #{})
-                     contains-modes-not-excluded? (not (empty?
-                                                         (filter (comp not excluded-modes)
-                                                                 mode-names)))
+                                  :else #{})
+                     contains-modes-not-excluded? (seq (filter (comp not excluded-modes) mode-names))
                      inline-style (-> style
                                       (utils/remove-special-keywords)
                                       (conversion/garden-units->css))]
@@ -117,7 +114,7 @@
         already-created #?(:cljs (dom/style-by-hash style-hash)
                            :clj false)] ; TODO Read from css-in-context?
 
-    (when (and (not (empty? style-with-global-vendors))
+    (when (and (seq style-with-global-vendors)
                (some? style-hash)
                (not already-created))
       (create-style!
@@ -146,7 +143,7 @@
    (defn prepare-styles
      ([styles]
       (prepare-styles styles {:request-dom-update-after-done? true}))
-     ([styles {:keys [request-dom-update-after-done?] :as options}]
+     ([styles {:keys [request-dom-update-after-done?] :as _options}]
       (let [styles (remove nil? styles)]
 
         (doseq [style styles]
