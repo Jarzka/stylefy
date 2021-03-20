@@ -1,3 +1,9 @@
+# 2.2.2
+
+March 20, 2021
+
+- Minor refactoring based on clj-kondo findings. No functional changes.
+
 # 2.2.1
 
 June 15, 2020
