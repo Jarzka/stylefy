@@ -2,6 +2,7 @@
   (:require [dommy.core :as dommy]
             [reagent.core :as r]
             [garden.core :refer [css]]
+            [cljs.core.async :as async] ; Mandatory for running tests
             [stylefy.impl.cache :as cache]
             [stylefy.impl.log :as log]
             [stylefy.impl.state :as state])
