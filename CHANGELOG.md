@@ -2,7 +2,9 @@
 
 March 20, 2021
 
-- Minor refactoring based on clj-kondo findings. No functional changes. https://github.com/Jarzka/stylefy/pull/54
+- Minor refactoring based on clj-kondo findings. No functional changes.
+
+PR: https://github.com/Jarzka/stylefy/pull/54
 
 # 2.2.1
 
