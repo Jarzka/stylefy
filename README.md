@@ -465,7 +465,7 @@ Manual mode can be used to style child elements with manually written CSS select
 
 The selector and the style written in manual mode will be scoped inside the element in which you use the style map with **use-style**. To avoid confusion, stylefy's special keywords do not work in manual mode.
 
-Aan example of a situation when we need to use manual mode: we want to change the style of some child element when the parent element is being hovered.
+An example of a situation when we need to use manual mode: we want to change the style of some child element when the parent element is being hovered.
 
 ```clojure
 (def mobile-media-query {:max-width "550px"})
