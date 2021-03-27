@@ -143,6 +143,10 @@
   (doseq [font-face (:font-face uninitialised-styles)]
     (add-font-face font-face)))
 
+; FIXME stylefy.impl.dom namespaced keywords are used in caching
+; If styles have been cached before updating stylefy to this version, the cache simply does not work.
+; Use original namespaced keywords OR clear the cache when updating to this version of stylefy (how?)
+
 (defrecord RumDom []
   dom/Dom
   (load-uninitialised-styles [this uninitialised-styles] (load-uninitialised-styles uninitialised-styles))
