@@ -1,0 +1,27 @@
+;; shadow-cljs configuration
+{:lein false
+
+ :source-paths
+ ["src/clj"
+  "src/cljs"
+  "src/cljc"
+
+  "../src/clj"
+  "../src/cljs"
+  "../src/cljc"]
+
+ :dependencies
+ [[prismatic/dommy "1.1.0"]
+  [hiccup "1.0.5"]
+  [garden "1.3.6"]
+  [rum "0.12.4"]
+  [com.andrewmcveigh/cljs-time "0.5.0"]]
+
+ :dev-http {8000 "resources/public"}
+
+ :builds
+ {:frontend
+  {:target :browser
+   :output-dir "resources/public/js/"
+   :devtools {:after-load stylefy.examples.main/start}
+   :modules {:main {:init-fn stylefy.examples.main/start}}}}}
