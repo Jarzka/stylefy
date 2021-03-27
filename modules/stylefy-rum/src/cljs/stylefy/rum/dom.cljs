@@ -1,6 +1,5 @@
 (ns stylefy.rum.dom
   (:require [dommy.core :as dommy]
-            [garden.core :refer [css]]
             [cljs.core.async :as async] ; Mandatory for running tests
             [rum.core :as rum]
             [stylefy.impl.cache :as cache]
