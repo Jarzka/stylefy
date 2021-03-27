@@ -45,12 +45,17 @@
 (defrecord UninitialisedDom []
   Dom
   ; TODO Store values to be used when the real DOM record has been initialised?
+  ; Init
   (init-cache [this options] (warn-not-initialised))
+
+  ; Add styles
   (save-style [this style] (warn-not-initialised))
   (add-class [this class-as-css] (warn-not-initialised))
   (add-tag [this tag-as-css] (warn-not-initialised))
   (add-font-face [this font-face-as-css] (warn-not-initialised))
   (add-keyframes [this identifier keyframes-as-css] (warn-not-initialised))
+
+  ; DOM management
   (update-dom [this] (warn-not-initialised))
   (update-dom-if-needed [this] (warn-not-initialised))
   (style-in-dom? [this style-hash] (warn-not-initialised))
