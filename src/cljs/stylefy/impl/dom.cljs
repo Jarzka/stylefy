@@ -30,7 +30,7 @@
 
 (defprotocol Dom
   ; Init
-  (load-queued-styles [this uninitialised-styles])
+  (load-uninitialised-styles [this uninitialised-styles])
   (init-cache [this options])
 
   ; Add styles
@@ -59,9 +59,8 @@
 ; and this handler is replaced with a real DOM handler.
 (defrecord UninitialisedDom []
   Dom
-  ; TODO Store values to be used when the real DOM record has been initialised?
   ; Init
-  (load-queued-styles [this uninitialised-styles] (warn-not-initialised "load-queued-styles"))
+  (load-uninitialised-styles [this uninitialised-styles] (warn-not-initialised "load-uninitialised-styles"))
   (init-cache [this options] (warn-not-initialised "init-cache"))
 
   ; Add styles

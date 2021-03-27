@@ -128,7 +128,7 @@
   (request-asynchronous-dom-update)
   nil)
 
-(defn load-queued-styles [uninitialised-styles]
+(defn load-uninitialised-styles [uninitialised-styles]
   (cljs.pprint/pprint uninitialised-styles)
 
   (doseq [tag (:tag uninitialised-styles)]
@@ -145,7 +145,7 @@
 
 (defrecord RumDom []
   dom/Dom
-  (load-queued-styles [this uninitialised-styles] (load-queued-styles uninitialised-styles))
+  (load-uninitialised-styles [this uninitialised-styles] (load-uninitialised-styles uninitialised-styles))
   (init-cache [this options] (init-cache options))
   (save-style [this style] (save-style style))
   (add-class [this class-as-css] (add-class class-as-css))

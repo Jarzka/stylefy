@@ -128,7 +128,7 @@
    (when @state/stylefy-initialised?
      (log/warn "Attempted to initialise stylefy more than once."))
    #?(:cljs (do (reset! dom/dom (:dom options))
-                (dom/load-queued-styles @dom/dom @dom/uninitialised-styles)
+                (dom/load-uninitialised-styles @dom/dom @dom/uninitialised-styles)
                 (reset! dom/uninitialised-styles nil)))
    (hashing/init-custom-class-prefix options)
    #?(:cljs (dom/init-multi-instance options))
