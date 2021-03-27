@@ -1,6 +1,6 @@
 (ns stylefy.impl.styles
   (:require [clojure.string :as str]
-            [stylefy.impl.dom :as dom]
+            #?(:cljs [stylefy.impl.dom :as dom])
             [stylefy.impl.hashing :as hashing]
             [stylefy.impl.utils :as utils]
             [stylefy.impl.state :as state]
