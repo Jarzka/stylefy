@@ -8,12 +8,12 @@
   :source-paths ["src/cljs"]
   :cljsbuild {:builds [{:id "dev"
                         :source-paths ["src/cljs"]
-                        :compiler {:output-to "resources/public/js/stylefy-reagent.js"
+                        :compiler {:output-to "resources/public/js/stylefy-rum.js"
                                    :output-dir "resources/public/js/out"
                                    :optimizations :none
                                    :source-map true}}
                        {:id "prod"
                         :source-paths ["src/cljs"]
-                        :compiler {:output-to "resources/public/js/stylefy-reagent.js"
+                        :compiler {:output-to "resources/public/js/stylefy-rum.js"
                                    :output-dir "resources/public/js/out"
                                    :optimizations :advanced}}]})
