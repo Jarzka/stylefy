@@ -13,10 +13,18 @@
 (def ^:private stylefy-base-node (atom nil)) ; Used when running multiple instances of stylefy on the same page
 (def stylefy-instance-id (atom nil)) ; Used when running multiple instances of stylefy on the same page
 
+(defn init-multi-instance [{:keys [multi-instance] :as _options}]
+  (let [base-node (:base-node multi-instance)
+        instance-id (:instance-id multi-instance)]
+    (assert (or (nil? instance-id)
+                (string? instance-id))
+            (str "instance-id must be string. Got: " (pr-str base-node instance-id)))
+    (reset! stylefy-base-node base-node)
+    (reset! stylefy-instance-id instance-id)))
+
 (defprotocol Dom
   ; Init
   (init-cache [this options])
-  (init-multi-instance [this options])
 
   ; Add styles
   (save-style [this style])
@@ -38,7 +46,6 @@
   Dom
   ; TODO Store values to be used when the real DOM record has been initialised?
   (init-cache [this options] (warn-not-initialised))
-  (init-multi-instance [this options] (warn-not-initialised))
   (save-style [this style] (warn-not-initialised))
   (add-class [this class-as-css] (warn-not-initialised))
   (add-tag [this tag-as-css] (warn-not-initialised))

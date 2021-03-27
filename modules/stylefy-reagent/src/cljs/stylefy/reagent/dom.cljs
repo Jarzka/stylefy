@@ -82,15 +82,6 @@
         (update-dom))
       nil)))
 
-(defn init-multi-instance [{:keys [multi-instance] :as _options}]
-  (let [base-node (:base-node multi-instance)
-        instance-id (:instance-id multi-instance)]
-    (assert (or (nil? instance-id)
-                (string? instance-id))
-            (str "instance-id must be string. Got: " (pr-str base-node instance-id)))
-    (reset! dom/stylefy-base-node base-node)
-    (reset! dom/stylefy-instance-id instance-id)))
-
 (defn init-cache [options]
   (when (not= (:use-caching? options) false)
     (cache/use-caching! (:cache-options options) @dom/stylefy-instance-id)
@@ -142,7 +133,6 @@
 (defrecord ReagentDom []
   dom/Dom
   (init-cache [this options] (init-cache options))
-  (init-multi-instance [this options] (init-multi-instance options))
   (save-style [this style] (save-style style))
   (add-class [this class-as-css] (add-class class-as-css))
   (add-tag [this tag-as-css] (add-tag tag-as-css))

@@ -129,7 +129,7 @@
      (log/warn "Attempted to initialise stylefy more than once."))
    #?(:cljs (reset! dom/dom (:dom options)))
    (hashing/init-custom-class-prefix options)
-   #?(:cljs (dom/init-multi-instance @dom/dom options))
+   #?(:cljs (dom/init-multi-instance options))
    #?(:cljs (dom/init-cache @dom/dom options))
    (impl-styles/init-global-vendor-prefixes options)
    (reset! state/stylefy-initialised? true)
