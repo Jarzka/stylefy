@@ -152,7 +152,6 @@
   [identifier & frames]
   (assert (string? identifier) (str "Identifier should be string, got: " (pr-str identifier)))
   (let [keyframes-as-css (css (apply at-keyframes identifier frames))]
-    (println "ADD KEYS: " @dom/dom)
     #?(:cljs (do (dom/add-keyframes @dom/dom identifier keyframes-as-css)
                  nil)
        :clj  (do (swap! css-in-context assoc-in [:keyframes identifier] keyframes-as-css)

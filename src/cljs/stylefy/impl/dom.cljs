@@ -8,8 +8,6 @@
   (:require-macros
     [cljs.core.async.macros :refer [go]]))
 
-(def dom (atom nil))
-
 (def ^:private stylefy-node-id "#_stylefy-styles_")
 (def ^:private stylefy-constant-node-id "#_stylefy-constant-styles_")
 (def ^:private stylefy-base-node (atom nil)) ; Used when running multiple instances of stylefy on the same page
@@ -32,3 +30,23 @@
   (update-dom-if-needed [this])
   (style-in-dom? [this style-hash])
   (style-by-hash [this style-hash]))
+
+(defn warn-not-initialised []
+  (log/warn "stylefy functions called before it was initialised!"))
+
+(defrecord UninitialisedDom []
+  Dom
+  ; TODO Store values to be used when the real DOM record has been initialised?
+  (init-cache [this options] (warn-not-initialised))
+  (init-multi-instance [this options] (warn-not-initialised))
+  (save-style [this style] (warn-not-initialised))
+  (add-class [this class-as-css] (warn-not-initialised))
+  (add-tag [this tag-as-css] (warn-not-initialised))
+  (add-font-face [this font-face-as-css] (warn-not-initialised))
+  (add-keyframes [this identifier keyframes-as-css] (warn-not-initialised))
+  (update-dom [this] (warn-not-initialised))
+  (update-dom-if-needed [this] (warn-not-initialised))
+  (style-in-dom? [this style-hash] (warn-not-initialised))
+  (style-by-hash [this style-hash] (warn-not-initialised)))
+
+(def dom (atom (->UninitialisedDom)))
