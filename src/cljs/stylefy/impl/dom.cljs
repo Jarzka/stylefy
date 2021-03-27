@@ -39,26 +39,26 @@
   (style-in-dom? [this style-hash])
   (style-by-hash [this style-hash]))
 
-(defn warn-not-initialised []
-  (log/warn "stylefy functions called before it was initialised!"))
+(defn warn-not-initialised [fn-name]
+  (log/warn (str "stylefy function " fn-name " can not be called before stylefy is initialised!")))
 
 (defrecord UninitialisedDom []
   Dom
   ; TODO Store values to be used when the real DOM record has been initialised?
   ; Init
-  (init-cache [this options] (warn-not-initialised))
+  (init-cache [this options] (warn-not-initialised "init-cache"))
 
   ; Add styles
-  (save-style [this style] (warn-not-initialised))
-  (add-class [this class-as-css] (warn-not-initialised))
-  (add-tag [this tag-as-css] (warn-not-initialised))
-  (add-font-face [this font-face-as-css] (warn-not-initialised))
-  (add-keyframes [this identifier keyframes-as-css] (warn-not-initialised))
+  (save-style [this style] (warn-not-initialised "save-style"))
+  (add-class [this class-as-css] (warn-not-initialised "add-class"))
+  (add-tag [this tag-as-css] (warn-not-initialised "add-tag"))
+  (add-font-face [this font-face-as-css] (warn-not-initialised "add-font-face"))
+  (add-keyframes [this identifier keyframes-as-css] (warn-not-initialised "add-keyframes"))
 
   ; DOM management
-  (update-dom [this] (warn-not-initialised))
-  (update-dom-if-needed [this] (warn-not-initialised))
-  (style-in-dom? [this style-hash] (warn-not-initialised))
-  (style-by-hash [this style-hash] (warn-not-initialised)))
+  (update-dom [this] (warn-not-initialised "update-dom"))
+  (update-dom-if-needed [this] (warn-not-initialised "update-dom-if-needed"))
+  (style-in-dom? [this style-hash] (warn-not-initialised "style-in-dom?"))
+  (style-by-hash [this style-hash] (warn-not-initialised "style-by-hash")))
 
 (def dom (atom (->UninitialisedDom)))
