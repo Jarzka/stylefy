@@ -1,7 +1,6 @@
 (ns stylefy.tests.core-test
   (:require [cljs.test :as test :refer-macros [deftest is testing]]
             [stylefy.core :as stylefy]
-            [stylefy.impl.dom :as dom]
             [garden.color :as color]
             [garden.units :as units]
             [clojure.string :as str]))
