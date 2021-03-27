@@ -24,16 +24,16 @@
 
 (defn- update-style-tags!
   [node-stylefy node-stylefy-constant]
-  (let [styles-in-css          (map (comp ::css style-by-hash) (keys @styles-as-css))
-        keyframes-in-css       (vals @keyframes-in-use)
-        font-faces-in-use      (map ::css @font-faces-in-use)
-        custom-tags-in-use     (map ::css @custom-tags-in-use)
-        custom-classes-in-use  (map ::css @custom-classes-in-use)
+  (let [styles-in-css (map (comp ::css style-by-hash) (keys @styles-as-css))
+        keyframes-in-css (vals @keyframes-in-use)
+        font-faces-in-use (map ::css @font-faces-in-use)
+        custom-tags-in-use (map ::css @custom-tags-in-use)
+        custom-classes-in-use (map ::css @custom-classes-in-use)
         new-style-constant-css (apply str (concat font-faces-in-use
                                                   keyframes-in-css
                                                   custom-tags-in-use
                                                   custom-classes-in-use))
-        new-style-css          (apply str styles-in-css)]
+        new-style-css (apply str styles-in-css)]
     ; Do not update this node contents if there are no new styles to be added.
     ; This is important, because even if setting the same contents should have no effect,
     ; it can cause font flickering in some browsers.
@@ -130,8 +130,22 @@
   (request-asynchronous-dom-update)
   nil)
 
+(defn load-queued-styles [uninitialised-styles]
+  (doseq [tag (:tag uninitialised-styles)]
+    (add-tag tag))
+
+  (doseq [class (:class uninitialised-styles)]
+    (add-class class))
+
+  (doseq [[identifier keyframes] (:keyframes uninitialised-styles)]
+    (add-keyframes identifier keyframes))
+
+  (doseq [font-face (:font-face uninitialised-styles)]
+    (add-font-face font-face)))
+
 (defrecord ReagentDom []
   dom/Dom
+  (load-queued-styles [this uninitialised-styles] (load-queued-styles uninitialised-styles))
   (init-cache [this options] (init-cache options))
   (save-style [this style] (save-style style))
   (add-class [this class-as-css] (add-class class-as-css))

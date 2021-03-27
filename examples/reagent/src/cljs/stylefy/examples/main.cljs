@@ -59,13 +59,13 @@
 
 (defn- create-bar-style [background index max]
   ; Generates unique, but predictable style, so that caching can be tested.
-  {:padding          "5px"
-   :width            (str (float (* (/ index max) 100)) "%")
-   :height           "30px"
-   :color            "black"
-   :z-index          index                                  ; Just to make sure every single style is unique
-   :margin-bottom    "5px"
-   :border           "1px solid black"
+  {:padding "5px"
+   :width (str (float (* (/ index max) 100)) "%")
+   :height "30px"
+   :color "black"
+   :z-index index ; Just to make sure every single style is unique
+   :margin-bottom "5px"
+   :border "1px solid black"
    :background-color background})
 
 (defn stress-test []
@@ -129,7 +129,7 @@
   [:li (use-style styles/clickable (merge
                                      (when (= @index-atom index)
                                        {:class "active"})
-                                     {:role     "presentation"
+                                     {:role "presentation"
                                       :on-click #(reset! index-atom index)}))
    [:a (use-sub-style styles/boostrap-navbar-overrides :link)
     text]])
@@ -191,12 +191,12 @@
    [:p (use-style {:margin-top (gu/px 50)})
     "Margin top defined with Garden px unit (50px)"]
    [:p (use-style {:margin-top (gu/rem 3)
-                   :color      (gc/rgb 255 0 0)})
+                   :color (gc/rgb 255 0 0)})
     "Margin top defined with Garden rem unit (3rem) and color with rgb"]
-   [:div (use-style {:padding          "1rem"
-                     :width            (gu/pc 50)
-                     :height           (gu/rem 25)
-                     :color            (gc/rgb 255 255 255)
+   [:div (use-style {:padding "1rem"
+                     :width (gu/pc 50)
+                     :height (gu/rem 25)
+                     :color (gc/rgb 255 255 255)
                      :background-image (url "images/background.jpg")})
     "Defined with pc unit, height with rem unit, color with rgb, background as a custom defcssfn function."]])
 
@@ -213,27 +213,27 @@
                              :margin 0
                              :padding 0))
 
-(def background-box-no-shorthands {:width                 "100%"
-                                   :height                "20rem"
-                                   :font-family           "open_sans, Verdana, Helvetica, sans-serif"
-                                   :color                 "#eaeaea"
-                                   :background-image      "url('images/meme.jpg')"
-                                   :background-repeat     "no-repeat"
-                                   :background-position   "center"
+(def background-box-no-shorthands {:width "100%"
+                                   :height "20rem"
+                                   :font-family "open_sans, Verdana, Helvetica, sans-serif"
+                                   :color "#eaeaea"
+                                   :background-image "url('images/meme.jpg')"
+                                   :background-repeat "no-repeat"
+                                   :background-position "center"
                                    :background-attachment "fixed"
-                                   :background-size       "cover"
-                                   :margin                0
-                                   :padding               0})
+                                   :background-size "cover"
+                                   :margin 0
+                                   :padding 0})
 
-(def background-box-incorrect {:font-family           "open_sans, Verdana, Helvetica, sans-serif"
-                               :color                 "#121212"
-                               :background            "url('images/meme.jpg')"
-                               :background-repeat     "no-repeat"
-                               :background-position   "center"
+(def background-box-incorrect {:font-family "open_sans, Verdana, Helvetica, sans-serif"
+                               :color "#121212"
+                               :background "url('images/meme.jpg')"
+                               :background-repeat "no-repeat"
+                               :background-position "center"
                                :background-attachment "fixed"
-                               :background-size       "cover"
-                               :margin                0
-                               :padding               0})
+                               :background-size "cover"
+                               :margin 0
+                               :padding 0})
 
 (defn- simple-examples []
   [:div (use-style (merge styles/root
@@ -248,8 +248,8 @@
 
    [:h1 "Modes generate pseudo-classes"]
    [:p (use-style {::stylefy/mode {:before {:content "'This is CSS :before content - '"}
-                                   :after  {:content "' - This is CSS :after content'"}
-                                   :hover  {:color "red"}}})
+                                   :after {:content "' - This is CSS :after content'"}
+                                   :hover {:color "red"}}})
     "This is text content, hover me!"]
    [:p (use-style {::stylefy/mode [[:hover {:background-color "#ffedcf"}]
                                    [:active {:background-color "blue" :color "white"}]]})
@@ -294,10 +294,9 @@
    [:p "stylefy also supports keyframes"]
    [animation]
 
-   ; FIXME Keyframes etc. not added until stylefy initialised
-   ;[:h1 "Custom tag styles"]
-   ;[:p "Custom tag selectors should rarely be necessary, but can be useful for setting styles on base elements, like html or body. This example shows custom styles applied to <code> and <ul> elements."]
-   ;[custom-tags/custom-tags]
+   [:h1 "Custom tag styles"]
+   [:p "Custom tag selectors should rarely be necessary, but can be useful for setting styles on base elements, like html or body. This example shows custom styles applied to <code> and <ul> elements."]
+   [custom-tags/custom-tags]
 
    [:h1 "Custom class names"]
    [:p "Normally stylefy handles the conversion from Clojure style maps to unique CSS classes. However, if needed, you can also define your custom named classes. Here we have defined a custom named class for handling animation fades."]
@@ -339,13 +338,12 @@
   [top-level])
 
 (defn ^:export start []
-  ; FIXME Keyframes etc. not added until stylefy initialised
-  (stylefy/init {:use-caching?             false ; TODO For testing...
-                 :dom                      (stylefy-reagent-dom/->ReagentDom)
+  (stylefy/init {:use-caching? false ; TODO For testing...
+                 :dom (stylefy-reagent-dom/->ReagentDom)
                  ;:multi-instance {:base-node nil
                  ;                 :instance-id "example"}
                  :use-custom-class-prefix? true
-                 :cache-options            {:expires (* 1 60 60 24 7)}
-                 :global-vendor-prefixes   {::stylefy/vendors     ["webkit" "moz" "o"]
-                                            ::stylefy/auto-prefix #{:border-radius}}})
+                 :cache-options {:expires (* 1 60 60 24 7)}
+                 :global-vendor-prefixes {::stylefy/vendors ["webkit" "moz" "o"]
+                                          ::stylefy/auto-prefix #{:border-radius}}})
   (reagent-dom/render main (.getElementById js/document "app")))

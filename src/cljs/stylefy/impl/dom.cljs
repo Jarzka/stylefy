@@ -10,8 +10,14 @@
 
 (def ^:private stylefy-node-id "#_stylefy-styles_")
 (def ^:private stylefy-constant-node-id "#_stylefy-constant-styles_")
+
 (def ^:private stylefy-base-node (atom nil)) ; Used when running multiple instances of stylefy on the same page
 (def stylefy-instance-id (atom nil)) ; Used when running multiple instances of stylefy on the same page
+
+(def uninitialised-styles (atom {:font-face []
+                                 :keyframes []
+                                 :tag []
+                                 :class []}))
 
 (defn init-multi-instance [{:keys [multi-instance] :as _options}]
   (let [base-node (:base-node multi-instance)
@@ -24,6 +30,7 @@
 
 (defprotocol Dom
   ; Init
+  (load-queued-styles [this uninitialised-styles])
   (init-cache [this options])
 
   ; Add styles
@@ -42,18 +49,27 @@
 (defn warn-not-initialised [fn-name]
   (log/warn (str "stylefy function " fn-name " can not be called before stylefy is initialised!")))
 
+(defn save-uninitialised-style [key style-as-css]
+  (reset! uninitialised-styles
+          (assoc @uninitialised-styles
+            key
+            (conj (key @uninitialised-styles) style-as-css))))
+
+; Temporary "dummy" DOM handler is used until stylefy is initialised
+; and this handler is replaced with a real DOM handler.
 (defrecord UninitialisedDom []
   Dom
   ; TODO Store values to be used when the real DOM record has been initialised?
   ; Init
+  (load-queued-styles [this uninitialised-styles] (warn-not-initialised "load-queued-styles"))
   (init-cache [this options] (warn-not-initialised "init-cache"))
 
   ; Add styles
   (save-style [this style] (warn-not-initialised "save-style"))
-  (add-class [this class-as-css] (warn-not-initialised "add-class"))
-  (add-tag [this tag-as-css] (warn-not-initialised "add-tag"))
-  (add-font-face [this font-face-as-css] (warn-not-initialised "add-font-face"))
-  (add-keyframes [this identifier keyframes-as-css] (warn-not-initialised "add-keyframes"))
+  (add-class [this class-as-css] (save-uninitialised-style :class class-as-css))
+  (add-tag [this tag-as-css] (save-uninitialised-style :tag tag-as-css))
+  (add-font-face [this font-face-as-css] (save-uninitialised-style :font-face font-face-as-css))
+  (add-keyframes [this identifier keyframes-as-css] (save-uninitialised-style :keyframes [identifier keyframes-as-css]))
 
   ; DOM management
   (update-dom [this] (warn-not-initialised "update-dom"))
