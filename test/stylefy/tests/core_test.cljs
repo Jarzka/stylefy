@@ -357,15 +357,6 @@
       (catch js/Error _e
         (is true "Error was thrown as expected")))))
 
-; DOM
-
-(deftest dom-update-is-requested
-  (let [dom-update-requested? (atom false)]
-    (with-redefs [dom/request-asynchronous-dom-update #(reset! dom-update-requested? true)]
-      (is (nil? (stylefy/init)))
-      (stylefy/use-style {:color "red"})
-      (is (true? @dom-update-requested?)))))
-
 ; prepare-styles
 
 (deftest prepare-styles
