@@ -4,7 +4,7 @@
             [garden.stylesheet :refer [at-keyframes at-font-face]]
             [stylefy.impl.conversion :as conversion]
             #?(:cljs [stylefy.impl.dom :as dom])
-            [stylefy.impl.cache :as cache]
+            #?(:cljs [stylefy.impl.cache :as cache])
             [stylefy.impl.hashing :as hashing]
             [stylefy.impl.log :as log]
             [stylefy.impl.state :as state]
