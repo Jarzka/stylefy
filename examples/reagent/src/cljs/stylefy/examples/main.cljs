@@ -10,7 +10,7 @@
     [stylefy.examples.grid :as grid]
     [stylefy.examples.full-page :as full-page]
     [stylefy.examples.custom-tags :as custom-tags]
-    [stylefy.reagent.dom :as stylefy-reagent-dom]
+    [stylefy.reagent :as stylefy-reagent]
     [cljs.core.async :refer [<! timeout]]
     [stylefy.core :as stylefy :refer [use-style sub-style use-sub-style]]
     [stylefy.cache :as stylefy-cache])
@@ -339,7 +339,7 @@
 
 (defn ^:export start []
   (stylefy/init {:use-caching? false ; TODO For testing...
-                 :dom (stylefy-reagent-dom/->ReagentDom)
+                 :dom (stylefy-reagent/init)
                  ;:multi-instance {:base-node nil
                  ;                 :instance-id "example"}
                  :use-custom-class-prefix? true

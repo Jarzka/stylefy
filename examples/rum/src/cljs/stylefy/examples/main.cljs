@@ -6,7 +6,7 @@
     [cljs.core.async :refer [<! timeout]]
     [stylefy.core :as stylefy :refer [use-style sub-style use-sub-style]]
     [stylefy.cache :as stylefy-cache]
-    [stylefy.rum.dom :as stylefy-rum-dom])
+    [stylefy.rum :as stylefy-rum])
   (:require-macros [cljs.core.async.macros :refer [go]]
                    [garden.def :refer [defcssfn]]))
 
@@ -16,7 +16,7 @@
 
 (defn ^:export start []
   (stylefy/init {:use-caching? false  ; TODO For testing...
-                 :dom (stylefy-rum-dom/->RumDom)
+                 :dom (stylefy-rum/init)
                  ;:multi-instance {:base-node nil
                  ;                 :instance-id "example"}
                  :use-custom-class-prefix? true
