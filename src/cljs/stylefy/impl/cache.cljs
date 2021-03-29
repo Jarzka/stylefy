@@ -88,7 +88,7 @@
   (let [cached-maps (vals cache)]
     (boolean (some #(contains? % :stylefy.impl.dom/css) cached-maps))))
 
-(defn- check-cache-support!
+(defn- check-cache-version!
   "In stylefy 3.0.0, :stylefy.impl.dom/css keywords were replaced with keyword :css while caching CSS.
    This functions checks if the cache contains these old namespaced keywords, and if it does,
    it clears the unsupported cache version."
@@ -102,5 +102,5 @@
 
 (defn init [stylefy-instance-id options]
   (when (not= (:use-caching? options) false)
-    (check-cache-support! (cache-key-styles stylefy-instance-id))
+    (check-cache-version! (cache-key-styles stylefy-instance-id))
     (use-caching! (:cache-options options) stylefy-instance-id)))
