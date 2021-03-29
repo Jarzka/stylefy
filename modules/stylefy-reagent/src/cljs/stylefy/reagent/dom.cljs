@@ -1,6 +1,5 @@
 (ns stylefy.reagent.dom
   (:require [dommy.core :as dommy]
-            [garden.core :refer [css]]
             [cljs.core.async :as async] ; Mandatory for running tests
             [reagent.core :as r]
             [stylefy.impl.cache :as cache]
@@ -12,11 +11,12 @@
 
 (def styles-in-dom (atom {})) ; style hash -> r/atom with boolean value
 (def ^:private dom-update-requested? (atom false))
-(def styles-as-css (atom {})) ; style hash -> map containing keys: ::css
-(def keyframes-in-use (atom {})) ; keyframe identifier -> css
-(def font-faces-in-use (atom [])) ; Vector of maps containing keys: ::css
-(def custom-tags-in-use (atom [])) ; Vector of maps containing keys: ::css
-(def custom-classes-in-use (atom [])) ; Vector of maps containing keys: ::css
+
+(def styles-as-css (atom {})) ; style hash -> map containing keys: :css
+(def keyframes-in-use (atom {})) ; keyframe identifier -> map containing keys: :css
+(def font-faces-in-use (atom [])) ; Vector of maps containing keys: :css
+(def custom-tags-in-use (atom [])) ; Vector of maps containing keys: :css
+(def custom-classes-in-use (atom [])) ; Vector of maps containing keys: :css
 
 (defn style-by-hash [style-hash]
   (when style-hash
@@ -24,11 +24,11 @@
 
 (defn- update-style-tags!
   [node-stylefy node-stylefy-constant]
-  (let [styles-in-css (map (comp ::css style-by-hash) (keys @styles-as-css))
-        keyframes-in-css (vals @keyframes-in-use)
-        font-faces-in-use (map ::css @font-faces-in-use)
-        custom-tags-in-use (map ::css @custom-tags-in-use)
-        custom-classes-in-use (map ::css @custom-classes-in-use)
+  (let [styles-in-css (map (comp :css style-by-hash) (keys @styles-as-css))
+        keyframes-in-css (map :css (vals @keyframes-in-use))
+        font-faces-in-use (map :css @font-faces-in-use)
+        custom-tags-in-use (map :css @custom-tags-in-use)
+        custom-classes-in-use (map :css @custom-classes-in-use)
         new-style-constant-css (apply str (concat font-faces-in-use
                                                   keyframes-in-css
                                                   custom-tags-in-use
@@ -99,7 +99,7 @@
   [{:keys [css hash] :as _style}]
   (assert css "Unable to save empty style!")
   (assert hash "Unable to save style without hash!")
-  (let [style-to-be-saved {::css css}]
+  (let [style-to-be-saved {:css css}]
     (swap! styles-as-css assoc hash style-to-be-saved)
     (swap! styles-in-dom assoc hash (r/atom false)) ; Note: r/atom, to be usable in component render methods.
     (request-asynchronous-dom-update)))
@@ -111,22 +111,22 @@
   (boolean @(get @styles-in-dom style-hash)))
 
 (defn add-keyframes [identifier keyframes-as-css]
-  (swap! keyframes-in-use assoc identifier keyframes-as-css)
+  (swap! keyframes-in-use assoc identifier {:css keyframes-as-css})
   (request-asynchronous-dom-update)
   nil)
 
 (defn add-font-face [font-faces-as-css]
-  (swap! font-faces-in-use conj {::css font-faces-as-css})
+  (swap! font-faces-in-use conj {:css font-faces-as-css})
   (request-asynchronous-dom-update)
   nil)
 
 (defn add-tag [tag-css]
-  (swap! custom-tags-in-use conj {::css tag-css})
+  (swap! custom-tags-in-use conj {:css tag-css})
   (request-asynchronous-dom-update)
   nil)
 
 (defn add-class [class-as-css]
-  (swap! custom-classes-in-use conj {::css class-as-css})
+  (swap! custom-classes-in-use conj {:css class-as-css})
   (request-asynchronous-dom-update)
   nil)
 
