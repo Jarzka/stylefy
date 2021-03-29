@@ -1,3 +1,14 @@
+# 3.0.0-SNAPSHOT
+
+March 29, 2021
+
+- `stylefy.impl.dom`, which handles DOM manipulation when using styles in components, has been mostly replaced with two external DOM modules: stylefy-reagent and stylefy-rum. This change makes it possible for stylefy to support other UI libraries along with Reagent. However, it also requires that the used DOM module needs to be defined during stylefy initialisation. See migration guide below.
+- Namespaced keywords replaced with unnamespaced when caching CSS. This makes different DOM module implementations easier to work with, and it also reduces the size of the cache approximately 7%. Unsupported cache versions are cleared automatically, so no actions are required from the users of the library.
+
+**Migration guide from previous versions:**
+
+TODO
+
 # 2.2.2
 
 March 20, 2021
