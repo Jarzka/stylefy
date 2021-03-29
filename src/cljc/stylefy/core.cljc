@@ -66,7 +66,7 @@
   ([style options]
    (assert (or (map? style) (nil? style)) (str "Style should be a map or nil, got: " (pr-str style)))
    (assert (or (map? options) (nil? options)) (str "Options should be a map or nil, got: " (pr-str options)))
-   #?(:cljs (impl-styles/use-style! style options (fn [style] (dom/save-style @dom/dom style)))
+   #?(:cljs (impl-styles/use-style! style options (fn [style] (dom/add-style @dom/dom style)))
       :clj  (impl-styles/use-style! style options (fn [{:keys [hash css]}]
                                                     (swap! css-in-context assoc-in [:stylefy-classes hash] css))))))
 
@@ -84,7 +84,7 @@
    (assert (or (map? style) (nil? style)) (str "Style should be a map or nil, got: " (pr-str style)))
    (assert (or (map? options) (nil? options))
            (str "Options should be a map or nil, got: " (pr-str options)))
-   #?(:cljs (impl-styles/use-sub-style! style sub-style options (fn [style] (dom/save-style @dom/dom style)))
+   #?(:cljs (impl-styles/use-sub-style! style sub-style options (fn [style] (dom/add-style @dom/dom style)))
       :clj  (impl-styles/use-sub-style! style sub-style options (fn [{:keys [hash css]}]
                                                                   (swap! css-in-context assoc-in [:stylefy-classes hash] css))))))
 

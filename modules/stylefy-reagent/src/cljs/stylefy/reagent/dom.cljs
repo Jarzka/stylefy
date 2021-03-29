@@ -84,7 +84,7 @@
                                          #(-> {% (r/atom false)})
                                          (keys cached-styles))))))
 
-(defn save-style
+(defn add-style
   "Stores the style in an atom. The style is going to be added into the DOM soon."
   [{:keys [css hash] :as _style}]
   (assert css "Unable to save empty style!")
@@ -138,7 +138,7 @@
   (load-uninitialised-styles [this uninitialised-styles] (load-uninitialised-styles uninitialised-styles))
   (load-cache [this] (load-cache))
 
-  (save-style [this style] (save-style style))
+  (add-style [this style] (add-style style))
   (add-class [this class-as-css] (add-class class-as-css))
   (add-tag [this tag-as-css] (add-tag tag-as-css))
   (add-font-face [this font-face-as-css] (add-font-face font-face-as-css))

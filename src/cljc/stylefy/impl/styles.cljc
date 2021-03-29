@@ -147,7 +147,7 @@
       (let [styles (remove nil? styles)]
 
         (doseq [style styles]
-          (use-style! style {} (fn [style] (dom/save-style @dom/dom style)))
+          (use-style! style {} (fn [style] (dom/add-style @dom/dom style)))
           (when-let [sub-styles (vals (:stylefy.core/sub-styles style))]
             (prepare-styles sub-styles {:request-dom-update-after-done? false}))))
 
