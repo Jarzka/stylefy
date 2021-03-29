@@ -25,6 +25,8 @@ Require `stylefy.reagent` and initialise it together with stylefy:
 (stylefy/init {:dom (stylefy-reagent/init)})
 ```
 
+That's it!
+
 # 2.2.2
 
 March 20, 2021
