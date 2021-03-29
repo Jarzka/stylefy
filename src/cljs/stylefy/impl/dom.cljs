@@ -8,10 +8,10 @@
   (:require-macros
     [cljs.core.async.macros :refer [go]]))
 
-(def ^:private stylefy-node-id "#_stylefy-styles_")
-(def ^:private stylefy-constant-node-id "#_stylefy-constant-styles_")
+(def stylefy-node-id "#_stylefy-styles_")
+(def stylefy-constant-node-id "#_stylefy-constant-styles_")
 
-(def ^:private stylefy-base-node (atom nil)) ; Used when running multiple instances of stylefy on the same page
+(def stylefy-base-node (atom nil)) ; Used when running multiple instances of stylefy on the same page
 (def stylefy-instance-id (atom nil)) ; Used when running multiple instances of stylefy on the same page
 
 (def uninitialised-styles (atom {:font-face []
@@ -28,8 +28,8 @@
     (reset! stylefy-base-node base-node)
     (reset! stylefy-instance-id instance-id)))
 
-(defn- get-stylefy-node [id base-node instance-id]
-  (let [final-id (str id (when instance-id (str instance-id)))]
+(defn- get-stylefy-node [node-id base-node instance-id]
+  (let [final-id (str node-id (when instance-id (str instance-id)))]
     (if (nil? base-node)
       (dommy/sel1 final-id)
       (dommy/sel1 base-node final-id))))
