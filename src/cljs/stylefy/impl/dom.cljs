@@ -61,8 +61,9 @@
             key
             (conj (key @uninitialised-styles) style-as-css))))
 
-; Temporary "dummy" DOM handler is used until stylefy is initialised
-; and this handler is replaced with a real DOM handler.
+; Temporary "dummy" DOM handler is used until stylefy is initialised.
+; The main purpose of this "dummy" handler is to save the styles
+; that are created before the real DOM handler has been initialised.
 (defrecord UninitialisedDom []
   Dom
   ; Init
