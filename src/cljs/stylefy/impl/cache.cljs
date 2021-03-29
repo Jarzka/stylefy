@@ -89,7 +89,7 @@
     (boolean (some #(contains? % :stylefy.impl.dom/css) cached-maps))))
 
 (defn- check-cache-support!
-  "In stylefy 3.x, :stylefy.impl.dom/css keywords were replaced with keyword :css while caching CSS.
+  "In stylefy 3.0.0, :stylefy.impl.dom/css keywords were replaced with keyword :css while caching CSS.
    This functions checks if the cache contains these old namespaced keywords, and if it does,
    it clears the unsupported cache version."
   [key]
