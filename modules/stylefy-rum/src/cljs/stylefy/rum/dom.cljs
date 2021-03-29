@@ -120,8 +120,6 @@
   nil)
 
 (defn load-uninitialised-styles [uninitialised-styles]
-  (cljs.pprint/pprint uninitialised-styles)
-
   (doseq [tag (:tag uninitialised-styles)]
     (add-tag tag))
 
