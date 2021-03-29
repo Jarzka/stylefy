@@ -5,7 +5,7 @@ March 29, 2021
 - `stylefy.impl.dom`, which handles DOM manipulation when using styles in components, has been (mostly) removed and replaced with external DOM modules. This change frees stylefy from depending on Reagent, which makes it possible to support many UI libraries / frameworks. At the beginning, three different DOM modules are available:
     - `stylefy-reagent`, which works the same way as in previous versions.
     - `stylefy-rum`, which is mostly the same module as `stylefy-reagent`, but for Rum.
-    - `stylefy-generinc-dom` is a generic DOM module which works with virtually any UI library. It does only synchronous DOM updates, so the wide support comes with the cost of performance.
+    - `stylefy-generic-dom` is a generic DOM module which works with virtually any UI library. It does only synchronous DOM updates, so the wide support comes with the cost of performance.
 - Namespaced keywords are replaced with unnamespaced when caching CSS. This makes different DOM module implementations easier to work with, and it also reduces the size of the cache by approximately 7%. Unsupported cache versions are cleared automatically, so no actions are required from the users of the library.
 
 **Migration guide from previous versions (frontend only):**
