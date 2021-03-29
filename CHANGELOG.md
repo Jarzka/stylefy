@@ -8,7 +8,7 @@ March 29, 2021
     - `stylefy-generic-dom` is a general-purpose solution that works with virtually any UI library. It does only synchronous DOM updates, so the wide support comes with the cost of performance.
 - Namespaced keywords are replaced with unnamespaced when caching CSS. This makes different DOM module implementations easier to work with, and it also reduces the size of the cache by approximately 7%. Unsupported cache versions are cleared automatically, so no actions are required from the users of the library.
 
-**Migration guide from previous versions (frontend only):**
+## Migration guide from previous versions (frontend only):
 
 Assuming you are using Reagent, update stylefy version and add `stylefy/reagent` as a new dependency. Your dependencies should look something like this:
 
