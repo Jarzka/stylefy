@@ -2,24 +2,27 @@
 
 March 29, 2021
 
-- `stylefy.impl.dom`, which handles DOM manipulation when using styles in components, has been (mostly) replaced with an external DOM module. This change makes it possible for stylefy to support multiple different UI libraries / frameworks. Reagent and Rum are supported at the beginning. This change requires that the used DOM module is added as a new dependency and is defined during stylefy initialisation. See migration guide below.
+- `stylefy.impl.dom`, which handles DOM manipulation when using styles in components, has been (mostly) removed and replaced with external DOM modules. This change frees stylefy from depending on Reagent, which makes it possible to support many UI libraries / frameworks. At the beginning, three different DOM modules are available:
+    - `stylefy-reagent`, which works the same way as in previous versions.
+    - `stylefy-rum`, which is mostly the same module as `stylefy-reagent`, but for Rum.
+    - `stylefy-generinc-dom` is a generic DOM module which works with virtually any UI library. It does only synchronous DOM updates, so the wide support comes with the cost of performance.
 - Namespaced keywords are replaced with unnamespaced when caching CSS. This makes different DOM module implementations easier to work with, and it also reduces the size of the cache by approximately 7%. Unsupported cache versions are cleared automatically, so no actions are required from the users of the library.
 
 **Migration guide from previous versions (frontend only):**
 
-Assuming you are using Reagent, update stylefy version and add `stylefy/reagent` as a new dependency. After that, your dependencies should look something like this:
+Assuming you are using Reagent, update stylefy version and add `stylefy/reagent` as a new dependency. Your dependencies should look something like this:
 
 ```
 [stylefy "3.0-SNAPSHOT"]
 [stylefy/reagent "3.0-SNAPSHOT"]
 ```
 
-Require `stylefy/reagent` and initialise it together with stylefy:
+Require `stylefy.reagent` and initialise it together with stylefy:
 
 ```cljs
-(:require [stylefy.reagent.dom :as stylefy-reagent-dom])
+(:require [stylefy.reagent :as stylefy-reagent])
 
-(stylefy/init {:dom (stylefy-reagent-dom/->ReagentDom)})
+(stylefy/init {:dom (stylefy-reagent/init)})
 ```
 
 # 2.2.2
