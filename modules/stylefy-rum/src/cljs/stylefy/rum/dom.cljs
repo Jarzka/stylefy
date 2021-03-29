@@ -9,7 +9,7 @@
   (:require-macros
     [cljs.core.async.macros :refer [go]]))
 
-(def styles-in-dom (atom {})) ; style hash -> r/atom with boolean value
+(def styles-in-dom (atom {})) ; style hash -> atom with boolean value
 (def ^:private dom-update-requested? (atom false))
 (def styles-as-css (atom {})) ; style hash -> map containing keys: :css
 (def keyframes-in-use (atom {})) ; keyframe identifier -> map containing keys: :css
