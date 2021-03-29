@@ -338,7 +338,7 @@
   [top-level])
 
 (defn ^:export start []
-  (stylefy/init {:use-caching? false ; TODO For testing...
+  (stylefy/init {:use-caching? true
                  :dom (stylefy-reagent/init)
                  ;:multi-instance {:base-node nil
                  ;                 :instance-id "example"}
