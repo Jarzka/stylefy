@@ -28,6 +28,12 @@
     (reset! stylefy-base-node base-node)
     (reset! stylefy-instance-id instance-id)))
 
+(defn- get-stylefy-node [id base-node instance-id]
+  (let [final-id (str id (when instance-id (str instance-id)))]
+    (if (nil? base-node)
+      (dommy/sel1 final-id)
+      (dommy/sel1 base-node final-id))))
+
 (defprotocol Dom
   ; Init
   (load-uninitialised-styles [this uninitialised-styles])

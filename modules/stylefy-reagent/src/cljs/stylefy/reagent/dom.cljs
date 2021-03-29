@@ -11,7 +11,6 @@
 
 (def styles-in-dom (atom {})) ; style hash -> r/atom with boolean value
 (def ^:private dom-update-requested? (atom false))
-
 (def styles-as-css (atom {})) ; style hash -> map containing keys: :css
 (def keyframes-in-use (atom {})) ; keyframe identifier -> map containing keys: :css
 (def font-faces-in-use (atom [])) ; Vector of maps containing keys: :css
@@ -46,16 +45,10 @@
   (doseq [style-hash (keys @styles-in-dom)]
     (reset! (get @styles-in-dom style-hash) true)))
 
-(defn- get-stylefy-node [id base-node instance-id]
-  (let [final-id (str id (when instance-id (str instance-id)))]
-    (if (nil? base-node)
-      (dommy/sel1 final-id)
-      (dommy/sel1 base-node final-id))))
-
 (defn update-dom
   []
-  (let [node-stylefy (get-stylefy-node dom/stylefy-node-id @dom/stylefy-base-node @dom/stylefy-instance-id)
-        node-stylefy-constant (get-stylefy-node dom/stylefy-constant-node-id @dom/stylefy-base-node @dom/stylefy-instance-id)]
+  (let [node-stylefy (dom/get-stylefy-node dom/stylefy-node-id @dom/stylefy-base-node @dom/stylefy-instance-id)
+        node-stylefy-constant (dom/get-stylefy-node dom/stylefy-constant-node-id @dom/stylefy-base-node @dom/stylefy-instance-id)]
     (if (and node-stylefy node-stylefy-constant)
       (do (update-style-tags! node-stylefy node-stylefy-constant)
           (reset! dom-update-requested? false)
@@ -83,11 +76,10 @@
       nil)))
 
 (defn init-cache [options]
-  (when (not= (:use-caching? options) false)
-    (cache/use-caching! (:cache-options options) @dom/stylefy-instance-id)
-
-    (when-let [cached-styles (cache/read-cache-value
-                               (cache/cache-key-styles @dom/stylefy-instance-id))]
+  (cache/init-and-load-cache
+    @dom/stylefy-instance-id
+    options
+    (fn [cached-styles]
       (reset! styles-as-css (or cached-styles {}))
       (reset! styles-in-dom (apply merge (map
                                            ; Note: r/atom, to be usable in component render methods.
@@ -142,10 +134,6 @@
 
   (doseq [font-face (:font-face uninitialised-styles)]
     (add-font-face font-face)))
-
-; FIXME stylefy.impl.dom namespaced keywords are used in caching
-; If styles have been cached before updating stylefy to this version, the cache simply does not work.
-; Use original namespaced keywords OR clear the cache when updating to this version of stylefy (how?)
 
 (defrecord ReagentDom []
   dom/Dom

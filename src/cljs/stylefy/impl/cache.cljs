@@ -98,3 +98,11 @@
      (.setItem (.-localStorage js/window)
                (cache-key-styles instance-id)
                styles))))
+
+(defn init-and-load-cache [stylefy-instance-id options initialised-fn]
+  (when (not= (:use-caching? options) false)
+    (use-caching! (:cache-options options) stylefy-instance-id)
+
+    (when-let [cached-styles (read-cache-value
+                               (cache-key-styles stylefy-instance-id))]
+      (initialised-fn cached-styles))))
