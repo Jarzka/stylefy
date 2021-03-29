@@ -4,6 +4,7 @@
             [garden.stylesheet :refer [at-keyframes at-font-face]]
             [stylefy.impl.conversion :as conversion]
             #?(:cljs [stylefy.impl.dom :as dom])
+            [stylefy.impl.cache :as cache]
             [stylefy.impl.hashing :as hashing]
             [stylefy.impl.log :as log]
             [stylefy.impl.state :as state]
@@ -127,12 +128,14 @@
   ([options]
    (when @state/stylefy-initialised?
      (log/warn "Attempted to initialise stylefy more than once."))
+
    #?(:cljs (do (reset! dom/dom (:dom options))
                 (dom/load-uninitialised-styles @dom/dom @dom/uninitialised-styles)
                 (reset! dom/uninitialised-styles nil)))
    (hashing/init-custom-class-prefix options)
    #?(:cljs (dom/init-multi-instance options))
-   #?(:cljs (dom/init-cache @dom/dom options))
+   #?(:cljs (cache/init @dom/stylefy-instance-id options))
+   #?(:cljs (dom/load-cache @dom/dom))
    (impl-styles/init-global-vendor-prefixes options)
    (reset! state/stylefy-initialised? true)
    #?(:cljs (dom/update-dom @dom/dom))

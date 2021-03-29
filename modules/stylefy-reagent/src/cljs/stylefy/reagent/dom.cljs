@@ -75,16 +75,14 @@
         (update-dom))
       nil)))
 
-(defn init-cache [options]
-  (cache/init-and-load-cache
-    @dom/stylefy-instance-id
-    options
-    (fn [cached-styles]
-      (reset! styles-as-css (or cached-styles {}))
-      (reset! styles-in-dom (apply merge (map
-                                           ; Note: r/atom, to be usable in component render methods.
-                                           #(-> {% (r/atom false)})
-                                           (keys cached-styles)))))))
+(defn load-cache []
+  (when-let [cached-styles (cache/read-cache-value
+                             (cache/cache-key-styles @dom/stylefy-instance-id))]
+    (reset! styles-as-css (or cached-styles {}))
+    (reset! styles-in-dom (apply merge (map
+                                         ; Note: r/atom, to be usable in component render methods.
+                                         #(-> {% (r/atom false)})
+                                         (keys cached-styles))))))
 
 (defn save-style
   "Stores the style in an atom. The style is going to be added into the DOM soon."
@@ -138,12 +136,14 @@
 (defrecord ReagentDom []
   dom/Dom
   (load-uninitialised-styles [this uninitialised-styles] (load-uninitialised-styles uninitialised-styles))
-  (init-cache [this options] (init-cache options))
+  (load-cache [this] (load-cache))
+
   (save-style [this style] (save-style style))
   (add-class [this class-as-css] (add-class class-as-css))
   (add-tag [this tag-as-css] (add-tag tag-as-css))
   (add-font-face [this font-face-as-css] (add-font-face font-face-as-css))
   (add-keyframes [this identifier keyframes-as-css] (add-keyframes identifier keyframes-as-css))
+
   (update-dom [this] (update-dom))
   (update-dom-if-needed [this] (update-dom-if-requested))
   (style-in-dom? [this style-hash] (style-in-dom? style-hash))

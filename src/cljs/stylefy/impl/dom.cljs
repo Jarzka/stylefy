@@ -37,7 +37,7 @@
 (defprotocol Dom
   ; Init
   (load-uninitialised-styles [this uninitialised-styles])
-  (init-cache [this options])
+  (load-cache [this])
 
   ; Add styles
   (save-style [this style])
@@ -67,7 +67,7 @@
   Dom
   ; Init
   (load-uninitialised-styles [this uninitialised-styles] (warn-not-initialised "load-uninitialised-styles"))
-  (init-cache [this options] (warn-not-initialised "init-cache"))
+  (load-cache [this] (warn-not-initialised "load-cache"))
 
   ; Add styles
   (save-style [this style] (warn-not-initialised "save-style"))
