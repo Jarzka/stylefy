@@ -30,27 +30,10 @@
 
 ; Cache reading
 
-(defn- style-cache-version-not-supported? [cache]
-  (let [cached-maps (vals cache)]
-    (some #(contains? % :stylefy.impl.dom/css) cached-maps)))
-
-(defn- check-cache-support!
-  "In stylefy 3.x, :stylefy.impl.dom/css keywords were replaced with keyword :css while caching CSS.
-   This functions checks if the cache contains these old namespaced keywords, and if it does,
-   it clears the unsupported cache version."
-  [key]
-  (when-let [cache-contents (.getItem (.-localStorage js/window) key)]
-    (let [cache-as-clojure-data (read-string cache-contents)]
-      (when (and (string/starts-with? key "stylefy_cache_styles")
-                 (map? cache-as-clojure-data)
-                 (style-cache-version-not-supported? cache-as-clojure-data))
-        (clear-styles)))))
-
 (defn read-cache-value
   "Reads the cache if caching is used."
   [key]
   (when @cache-styles?
-    (check-cache-support! key)
     (when-let [cache-contents (.getItem (.-localStorage js/window) key)]
       (read-string cache-contents))))
 
@@ -101,6 +84,23 @@
 
 ; Init
 
+(defn- style-cache-version-not-supported? [cache]
+  (let [cached-maps (vals cache)]
+    (some #(contains? % :stylefy.impl.dom/css) cached-maps)))
+
+(defn- check-cache-support!
+  "In stylefy 3.x, :stylefy.impl.dom/css keywords were replaced with keyword :css while caching CSS.
+   This functions checks if the cache contains these old namespaced keywords, and if it does,
+   it clears the unsupported cache version."
+  [key]
+  (when-let [cache-contents (.getItem (.-localStorage js/window) key)]
+    (let [cache-as-clojure-data (read-string cache-contents)]
+      (when (and (string/starts-with? key "stylefy_cache_styles")
+                 (map? cache-as-clojure-data)
+                 (style-cache-version-not-supported? cache-as-clojure-data))
+        (clear-styles)))))
+
 (defn init [stylefy-instance-id options]
   (when (not= (:use-caching? options) false)
+    (check-cache-support! key)
     (use-caching! (:cache-options options) stylefy-instance-id)))
