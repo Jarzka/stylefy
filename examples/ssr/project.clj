@@ -5,7 +5,6 @@
                  [hiccup "1.0.5"]
                  [garden "1.3.6"]
                  [org.clojure/core.async "0.3.443"]]
-  :plugins [[lein-cljsbuild "1.1.7"]]
   :repl-options {:init-ns stylefy.examples.ssr.main
                  :port 1339
                  :timeout 120000}
@@ -22,9 +21,4 @@
                         :compiler {:output-to "resources/public/js/stylefy.js"
                                    :output-dir "resources/public/js/out"
                                    :optimizations :none
-                                   :source-map true}}
-                       {:id "prod"
-                        :source-paths ["src" "../src"]
-                        :compiler {:output-to "resources/public/js/stylefy.js"
-                                   :output-dir "resources/public/js/out"
-                                   :optimizations :advanced}}]})
+                                   :source-map true}}]})
