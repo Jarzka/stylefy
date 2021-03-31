@@ -122,7 +122,7 @@
        [:p lorem]]
       [:article
        [:h1 "CSS Clock"]
-       [clock]]
+       (clock)]
       [:article
        [:h1 "Lorem ipsum 3"]
        [:p lorem]

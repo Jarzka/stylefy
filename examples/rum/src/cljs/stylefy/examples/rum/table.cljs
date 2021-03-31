@@ -12,7 +12,7 @@
                              ::stylefy/mode {:hover {:background-color "#BBBBBB"}}}
                    :cell {:padding "5px"}}})
 
-#_(rum/defc table < rum/reactive [options schema data]
+(rum/defc table < rum/reactive [options schema data]
   [:div (use-style table-style)
    [:table (use-sub-style table-style :table)
     [:thead (use-sub-style table-style :thead)

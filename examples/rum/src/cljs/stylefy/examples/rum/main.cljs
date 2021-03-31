@@ -23,15 +23,15 @@
     styles/generic-button))
 
 (rum/defc button < rum/reactive [text & [action-fn type]]
-   [:div (use-style (button-style-by-type type)
-                    {:on-click action-fn})
-    text])
+  [:div (use-style (button-style-by-type type)
+                   {:on-click action-fn})
+   text])
 
 (rum/defc button-container < rum/reactive []
   [:div (use-style styles/generic-container)
-   [button "Hello World!"]
-   [button "Primary" #(.log js/console "Primary button clicked") :primary]
-   [button "Secondary" #(.log js/console "Secondary button clicked") :secondary]])
+   (button "Hello World!")
+   (button "Primary" #(.log js/console "Primary button clicked") :primary)
+   (button "Secondary" #(.log js/console "Secondary button clicked") :secondary)])
 
 (rum/defc stateful-component < rum/reactive []
   (let [switch #(if (= :on %) :off :on)
@@ -48,7 +48,7 @@
        (if (= @state :on)
          [:p "The component's current state is ON"]
          [:p "The component's current state is OFF"])
-       [button "Switch" #(reset! state (switch @state)) :primary]])))
+       (button "Switch" #(reset! state (switch @state)) :primary)])))
 
 (rum/defc stress-test-item < rum/reactive [index]
   (fn [style]
@@ -75,18 +75,18 @@
       (.log js/console "Render stress test")
       [:div (use-style styles/generic-container)
 
-       [button
-        (case @state
-          :hidden "Generate"
-          :generating "Generating..."
-          :visible "Hide")
-        #(case @state
-           :hidden (go (reset! state :generating)
-                       (<! (timeout 100))
-                       (reset! start-time (.getTime (js/Date.)))
-                       (reset! state :visible))
-           :visible (reset! state :hidden))
-        :primary]
+       (button
+         (case @state
+           :hidden "Generate"
+           :generating "Generating..."
+           :visible "Hide")
+         #(case @state
+            :hidden (go (reset! state :generating)
+                        (<! (timeout 100))
+                        (reset! start-time (.getTime (js/Date.)))
+                        (reset! state :visible))
+            :visible (reset! state :hidden))
+         :primary)
 
        (when (= @state :visible)
          (doall
@@ -119,7 +119,7 @@
        (map-indexed
          (fn [index component]
            ^{:key index}
-           [component])
+           (component))
          @comps)])))
 
 (rum/defc bs-navbar-item < rum/reactive [index index-atom text]
@@ -135,17 +135,17 @@
   (let [active-index (atom 0)]
     (fn []
       [:ul.nav.nav-pills (use-style styles/boostrap-navbar-overrides)
-       [bs-navbar-item 0 active-index "A"]
-       [bs-navbar-item 1 active-index "B"]
-       [bs-navbar-item 2 active-index "C"]])))
+       (bs-navbar-item 0 active-index "A")
+       (bs-navbar-item 1 active-index "B")
+       (bs-navbar-item 2 active-index "C")])))
 
 (rum/defc bs-navbar-alternative-syntax < rum/reactive []
   (let [active-index (atom 0)]
     (fn []
       ; In this example, BS navbar classes are attached into the style map directly.
       [:ul (use-style styles/boostrap-navbar)
-       [bs-navbar-item 0 active-index "Hello"]
-       [bs-navbar-item 1 active-index "World!"]])))
+       (bs-navbar-item 0 active-index "Hello")
+       (bs-navbar-item 1 active-index "World!")])))
 
 (rum/defc responsive-layout < rum/reactive []
   [:div (use-style styles/responsive-layout)
@@ -232,16 +232,17 @@
                                :margin 0
                                :padding 0})
 
+; FIXME Port these examples from Reagent to rum
 (rum/defc simple-examples < rum/reactive []
   [:div (use-style (merge styles/root
                           styles/general-styles))
    [:h1 "Generic button"]
    [:p "Just a simple styled button to begin with."]
-   [button "Generic button"]
+   #_(button "Generic button")
 
    [:h1 "Different type of buttons in a container"]
    [:p "Styled by merging styles"]
-   [button-container]
+   #_(button-container)
 
    [:h1 "Modes generate pseudo-classes"]
    [:p (use-style {::stylefy/mode {:before {:content "'This is CSS :before content - '"}
@@ -254,57 +255,56 @@
 
    [:h1 "Component with multiple sub elements"]
    [:p "Rows are styled by using sub-styles"]
-   ; FIXME Macroexpand fail?
-   #_[table/table
-    {:title "Example grid"}
-    [{:title "Product" :name :name}
-     {:title "ID" :name :id}
-     {:title "Price (€/kg)" :name :price}]
-    [{:name "Apple" :id 13 :price 1}
-     {:name "Orange" :id 35 :price 2}
-     {:name "Banana" :id 15 :price 3}]]
+   #_(table/table
+     {:title "Example grid"}
+     [{:title "Product" :name :name}
+      {:title "ID" :name :id}
+      {:title "Price (€/kg)" :name :price}]
+     [{:name "Apple" :id 13 :price 1}
+      {:name "Orange" :id 35 :price 2}
+      {:name "Banana" :id 15 :price 3}])
 
    [:p "A box in a box, written in manual mode to make hovering the parent brighten the child box style (darken on mobile)"]
-   [hoverbox/hoverbox]
+   #_(hoverbox/hoverbox)
 
    [:h1 "Component with internal state"]
    [:p "This component contains a different style in different states. The styles are generated and inserted into DOM on-demand."]
-   [stateful-component]
+   #_(stateful-component)
 
    [:h1 "Stress test"]
    [:p "Styles are added into the DOM on-demand when they are used for the first time. Clicking the button below generates 1000 different looking components dynamically. The components are first styled with inline styles until the DOM has been updated and we can begin using CSS classes to save memory."]
-   [stress-test]
+   #_(stress-test)
 
    [:h1 "Stress test 2"]
    [:p "Press the button to dynamically insert more styles into DOM."]
-   [add-style-test]
+   #_(add-style-test)
 
    [:h1 "Boostrap navbar"]
    [:p "You can also assign any classes to elements normally. Here we use Boostrap classes to construct simple navbars. We also override some BS styles."]
-   [bs-navbar-current-syntax]
-   [bs-navbar-alternative-syntax]
+   #_(bs-navbar-current-syntax)
+   #_(bs-navbar-alternative-syntax)
 
    [:h1 "Simple responsive layout"]
    [:p "stylefy supports media queries out of the box"]
-   [responsive-layout]
+   #_(responsive-layout)
 
    [:h1 "Animations"]
    [:p "stylefy also supports keyframes"]
-   [animation]
+   #_(animation)
 
    [:h1 "Custom tag styles"]
    [:p "Custom tag selectors should rarely be necessary, but can be useful for setting styles on base elements, like html or body. This example shows custom styles applied to <code> and <ul> elements."]
-   [custom-tags/custom-tags]
+   #_(custom-tags/custom-tags)
 
    [:h1 "Custom class names"]
    [:p "Normally stylefy handles the conversion from Clojure style maps to unique CSS classes. However, if needed, you can also define your custom named classes. Here we have defined a custom named class for handling animation fades."]
-   [fade]
+   #_(fade)
 
    [:h1 "Feature queries"]
    [:p "The following example is rendered using CSS Grid if supported by the browser. If not, it uses Flexbox fallback as the default style. stylefy also supports media queries inside feature queries!"]
-   [grid/grid]
+   #_(grid/grid)
 
-   [garden-units]
+   #_(garden-units)
 
    [:h1 "Key order"]
    [:p "If CSS shorthands are used, the order of CSS key properties is important. If we use a regular Clojure map, the order of keys can change in the final CSS output."]
@@ -318,26 +318,26 @@
    [:div (use-style background-box-no-shorthands)]
    [:h1 "Caching"]
    [:p "stylefy supports style caching, which means that the generated CSS code is saved into the offline storage and retrieved from there when the page is reloaded. This way, styles once generated do not need to be generated again and the page loads faster. Caching can be turned on manually, and it also needs to be cleared manually."]
-   [button "Clear cache" #(stylefy-cache/clear) :primary]])
+   #_(button "Clear cache" #(stylefy-cache/clear) :primary)])
+
+; TODO Move to local state
+(def active-tab (atom 0))
 
 (rum/defc top-level < rum/reactive []
-  [:div "Rum is running!"]
-  #_(let [active-tab (atom 0)]
-    (fn []
-      [:div
-       [:ul.nav.nav-pills (use-style styles/boostrap-navbar-overrides)
-        [bs-navbar-item 0 active-tab "Simple examples"]
-        [bs-navbar-item 1 active-tab "Full page example"]]
+  [:div
+   [:ul.nav.nav-pills (use-style styles/boostrap-navbar-overrides)
+    (bs-navbar-item 0 active-tab "Simple examples")
+    (bs-navbar-item 1 active-tab "Full page example")]
 
-       (case @active-tab
-         0 [simple-examples]
-         1 [full-page/full-page])])))
+   (case @active-tab
+       0 (simple-examples)
+       1 (full-page/full-page))])
 
 (rum/defc main < rum/reactive []
-  [top-level])
+  (top-level))
 
 (defn ^:export start []
-  (stylefy/init {:use-caching? false  ; TODO For testing...
+  (stylefy/init {:use-caching? false ; TODO For testing...
                  :dom (stylefy-rum/init)
                  ;:multi-instance {:base-node nil
                  ;                 :instance-id "example"}
