@@ -129,6 +129,8 @@
    (when @state/stylefy-initialised?
      (log/warn "Attempted to initialise stylefy more than once."))
 
+   (assert (:dom options) "Unable to initialise stylefy: DOM module is missing!")
+
    #?(:cljs (do (reset! dom/dom (:dom options))
                 (dom/load-uninitialised-styles @dom/dom @dom/uninitialised-styles)
                 (reset! dom/uninitialised-styles nil)))
