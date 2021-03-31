@@ -2,9 +2,7 @@
 {:lein     false
 
  :source-paths
-           ["src/clj"
-            "src/cljs"
-            "src/cljc"
+           ["src/cljs"
 
             "../../src/clj"
             "../../src/cljs"
@@ -25,5 +23,5 @@
            {:frontend
             {:target     :browser
              :output-dir "resources/public/js/"
-             :devtools   {:after-load stylefy.examples.main/start}
-             :modules    {:main {:init-fn stylefy.examples.main/start}}}}}
+             :devtools   {:after-load stylefy.examples.reagent.main/start}
+             :modules    {:main {:init-fn stylefy.examples.reagent.main/start}}}}}

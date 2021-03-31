@@ -1,4 +1,4 @@
-(defproject stylefy-examples "1.0-SNAPSHOT"
+(defproject stylefy-rum-examples "1.0-SNAPSHOT"
   :description "stylefy Rum examples"
   :dependencies [[org.clojure/clojure "1.10.1"]
                  [org.clojure/clojurescript "1.10.520"]
@@ -8,12 +8,10 @@
                  [rum "0.12.4"]
                  [org.clojure/core.async "0.3.443"]
                  [com.andrewmcveigh/cljs-time "0.5.0"]]
-  :repl-options {:init-ns stylefy.examples.main
+  :repl-options {:init-ns stylefy.examples.rum.main
                  :port 1339
                  :timeout 120000}
-  :source-paths ["src/clj"
-                 "src/cljs"
-                 "src/cljc"
+  :source-paths ["src/cljs"
 
                  "../../src/clj"
                  "../../src/cljs"

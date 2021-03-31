@@ -1,4 +1,4 @@
-(ns stylefy.examples.hoverbox
+(ns stylefy.examples.reagent.hoverbox
   (:require [reagent.core :as r]
             [garden.stylesheet :refer [at-media]]
             [stylefy.core :as stylefy :refer [use-style use-sub-style]]))

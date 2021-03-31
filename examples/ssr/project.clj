@@ -1,4 +1,4 @@
-(defproject stylefy-examples "1.0-SNAPSHOT"
+(defproject stylefy-ssr-examples "1.0-SNAPSHOT"
   :description "stylefy SSR examples"
   :dependencies [[org.clojure/clojure "1.10.1"]
                  [prismatic/dommy "1.1.0"]
@@ -6,7 +6,7 @@
                  [garden "1.3.6"]
                  [org.clojure/core.async "0.3.443"]]
   :plugins [[lein-cljsbuild "1.1.7"]]
-  :repl-options {:init-ns stylefy.examples.main
+  :repl-options {:init-ns stylefy.examples.ssr.main
                  :port 1339
                  :timeout 120000}
   :source-paths ["src/clj"

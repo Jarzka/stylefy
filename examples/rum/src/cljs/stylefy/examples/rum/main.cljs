@@ -1,44 +1,41 @@
-(ns stylefy.examples.main
+(ns stylefy.examples.rum.main
   (:require
     [garden.units :as gu]
     [garden.color :as gc]
-    [reagent.core :as r]
-    [reagent.dom :as reagent-dom]
-    [stylefy.examples.styles :as styles]
-    [stylefy.examples.table :as table]
-    [stylefy.examples.hoverbox :as hoverbox]
-    [stylefy.examples.grid :as grid]
-    [stylefy.examples.full-page :as full-page]
-    [stylefy.examples.custom-tags :as custom-tags]
-    [stylefy.reagent :as stylefy-reagent]
+    [rum.core :as rum]
+    [stylefy.examples.rum.styles :as styles]
+    [stylefy.examples.rum.table :as table]
+    [stylefy.examples.rum.hoverbox :as hoverbox]
+    [stylefy.examples.rum.grid :as grid]
+    [stylefy.examples.rum.full-page :as full-page]
+    [stylefy.examples.rum.custom-tags :as custom-tags]
+    [stylefy.rum :as stylefy-rum]
     [cljs.core.async :refer [<! timeout]]
     [stylefy.core :as stylefy :refer [use-style sub-style use-sub-style]]
     [stylefy.cache :as stylefy-cache])
   (:require-macros [cljs.core.async.macros :refer [go]]
                    [garden.def :refer [defcssfn]]))
 
-(defn- button-style-by-type [type]
+(rum/defc button-style-by-type < rum/reactive [type]
   (case type
     :primary styles/primary-button
     :secondary styles/secondary-button
     styles/generic-button))
 
-(defn- button
-  ([text] (button text #() nil))
-  ([text action-fn type]
+(rum/defc button < rum/reactive [text & [action-fn type]]
    [:div (use-style (button-style-by-type type)
                     {:on-click action-fn})
-    text]))
+    text])
 
-(defn- button-container []
+(rum/defc button-container < rum/reactive []
   [:div (use-style styles/generic-container)
    [button "Hello World!"]
    [button "Primary" #(.log js/console "Primary button clicked") :primary]
    [button "Secondary" #(.log js/console "Secondary button clicked") :secondary]])
 
-(defn stateful-component []
+(rum/defc stateful-component < rum/reactive []
   (let [switch #(if (= :on %) :off :on)
-        state (r/atom :on)]
+        state (atom :on)]
     ; Make sure the state style is prepared before we use it.
     ; Normally, when use-style is called, it returns the given style as an inline style
     ; until the style is converted to CSS and added into the DOM.
@@ -53,11 +50,11 @@
          [:p "The component's current state is OFF"])
        [button "Switch" #(reset! state (switch @state)) :primary]])))
 
-(defn- stress-test-item [index]
+(rum/defc stress-test-item < rum/reactive [index]
   (fn [style]
     [:div style index]))
 
-(defn- create-bar-style [background index max]
+(rum/defc create-bar-style < rum/reactive [background index max]
   ; Generates unique, but predictable style, so that caching can be tested.
   {:padding "5px"
    :width (str (float (* (/ index max) 100)) "%")
@@ -68,9 +65,9 @@
    :border "1px solid black"
    :background-color background})
 
-(defn stress-test []
+(rum/defc stress-test < rum/reactive []
   (let [components-count 1000
-        state (r/atom :hidden)
+        state (atom :hidden)
         start-time (atom nil)
         styles (mapv #(create-bar-style "grey" % components-count)
                      (range 0 components-count))]
@@ -103,8 +100,8 @@
                           [component (use-style (get styles index))])
                         (map stress-test-item (range 0 components-count)))))])))
 
-(defn- add-style-test []
-  (let [comps (r/atom [])
+(rum/defc add-style-test < rum/reactive []
+  (let [comps (atom [])
         max 100]
     (fn []
       (.log js/console "Render add style test")
@@ -125,7 +122,7 @@
            [component])
          @comps)])))
 
-(defn- bs-navbar-item [index index-atom text]
+(rum/defc bs-navbar-item < rum/reactive [index index-atom text]
   [:li (use-style styles/clickable (merge
                                      (when (= @index-atom index)
                                        {:class "active"})
@@ -134,23 +131,23 @@
    [:a (use-sub-style styles/boostrap-navbar-overrides :link)
     text]])
 
-(defn- bs-navbar-current-syntax []
-  (let [active-index (r/atom 0)]
+(rum/defc bs-navbar-current-syntax < rum/reactive []
+  (let [active-index (atom 0)]
     (fn []
       [:ul.nav.nav-pills (use-style styles/boostrap-navbar-overrides)
        [bs-navbar-item 0 active-index "A"]
        [bs-navbar-item 1 active-index "B"]
        [bs-navbar-item 2 active-index "C"]])))
 
-(defn- bs-navbar-alternative-syntax []
-  (let [active-index (r/atom 0)]
+(rum/defc bs-navbar-alternative-syntax < rum/reactive []
+  (let [active-index (atom 0)]
     (fn []
       ; In this example, BS navbar classes are attached into the style map directly.
       [:ul (use-style styles/boostrap-navbar)
        [bs-navbar-item 0 active-index "Hello"]
        [bs-navbar-item 1 active-index "World!"]])))
 
-(defn- responsive-layout []
+(rum/defc responsive-layout < rum/reactive []
   [:div (use-style styles/responsive-layout)
    ; The easiest way to use a sub-style is to call use-sub-style function:
    [:div (use-sub-style styles/responsive-layout :column1)
@@ -169,13 +166,13 @@
     [:p (use-style (sub-style styles/responsive-layout :column3 :text)) "This is column 3"]
     [:p (use-style (sub-style styles/responsive-layout :column3 :text)) "This is column 3"]]])
 
-(defn animation []
+(rum/defc animation < rum/reactive []
   [:div (use-style styles/animated-box)])
 
-(defn fade []
+(rum/defc fade < rum/reactive []
   (let [on-style {:background-color (:background-color styles/simple-box)}
         off-style {:background-color "black"}
-        active-state (r/atom true)]
+        active-state (atom true)]
     (fn []
       [:div.background-transition (use-style (merge styles/simple-box
                                                     (if @active-state on-style off-style))
@@ -184,7 +181,7 @@
 
 (defcssfn url)
 
-(defn- garden-units []
+(rum/defc garden-units < rum/reactive []
   [:div
    [:h1 "Garden units"]
    [:p "Garden units should work without problems. Examples:"]
@@ -235,7 +232,7 @@
                                :margin 0
                                :padding 0})
 
-(defn- simple-examples []
+(rum/defc simple-examples < rum/reactive []
   [:div (use-style (merge styles/root
                           styles/general-styles))
    [:h1 "Generic button"]
@@ -257,7 +254,8 @@
 
    [:h1 "Component with multiple sub elements"]
    [:p "Rows are styled by using sub-styles"]
-   [table/table
+   ; FIXME Macroexpand fail?
+   #_[table/table
     {:title "Example grid"}
     [{:title "Product" :name :name}
      {:title "ID" :name :id}
@@ -322,8 +320,9 @@
    [:p "stylefy supports style caching, which means that the generated CSS code is saved into the offline storage and retrieved from there when the page is reloaded. This way, styles once generated do not need to be generated again and the page loads faster. Caching can be turned on manually, and it also needs to be cleared manually."]
    [button "Clear cache" #(stylefy-cache/clear) :primary]])
 
-(defn- top-level []
-  (let [active-tab (r/atom 0)]
+(rum/defc top-level < rum/reactive []
+  [:div "Rum is running!"]
+  #_(let [active-tab (atom 0)]
     (fn []
       [:div
        [:ul.nav.nav-pills (use-style styles/boostrap-navbar-overrides)
@@ -334,16 +333,16 @@
          0 [simple-examples]
          1 [full-page/full-page])])))
 
-(defn- main []
+(rum/defc main < rum/reactive []
   [top-level])
 
 (defn ^:export start []
-  (stylefy/init {:use-caching? true
-                 :dom (stylefy-reagent/init)
+  (stylefy/init {:use-caching? false  ; TODO For testing...
+                 :dom (stylefy-rum/init)
                  ;:multi-instance {:base-node nil
                  ;                 :instance-id "example"}
                  :use-custom-class-prefix? true
                  :cache-options {:expires (* 1 60 60 24 7)}
                  :global-vendor-prefixes {::stylefy/vendors ["webkit" "moz" "o"]
                                           ::stylefy/auto-prefix #{:border-radius}}})
-  (reagent-dom/render main (.getElementById js/document "app")))
+  (rum/mount (main) (.getElementById js/document "app")))

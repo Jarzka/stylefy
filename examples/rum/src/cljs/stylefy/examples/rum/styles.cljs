@@ -1,6 +1,5 @@
-(ns stylefy.examples.styles
-  (:require [reagent.core :as r]
-            [stylefy.core :as stylefy]))
+(ns stylefy.examples.rum.styles
+  (:require [stylefy.core :as stylefy]))
 
 (def phone-width "414px")
 

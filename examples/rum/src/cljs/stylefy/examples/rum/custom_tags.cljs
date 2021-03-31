@@ -1,6 +1,5 @@
-(ns stylefy.examples.custom-tags
-  (:require [reagent.core :as r]
-            [stylefy.core :as stylefy]))
+(ns stylefy.examples.rum.custom-tags
+  (:require [stylefy.core :as stylefy]))
 
 (stylefy/tag "code" {:background-color :lightyellow
                      :padding          :5px

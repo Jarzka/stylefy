@@ -1,7 +1,7 @@
-(ns stylefy.examples.grid
+(ns stylefy.examples.reagent.grid
   (:require [reagent.core :as r]
             [stylefy.core :as stylefy :refer [use-style use-sub-style]]
-            [stylefy.examples.styles :as styles]))
+            [stylefy.examples.reagent.styles :as styles]))
 
 (def grid-style {; Default style uses Flexbox as fallback
                  :display "flex"

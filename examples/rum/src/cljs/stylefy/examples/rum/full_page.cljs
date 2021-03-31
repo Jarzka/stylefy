@@ -1,6 +1,6 @@
-(ns stylefy.examples.full-page
-  (:require [reagent.core :as r]
-            [cljs-time.core :as t]
+(ns stylefy.examples.rum.full-page
+  (:require [cljs-time.core :as t]
+            [rum.core :as rum]
             [cljs.core.async :refer [<! timeout]]
             [stylefy.core :as stylefy :refer [use-style use-sub-style]])
   (:require-macros [cljs.core.async.macros :refer [go go-loop]]))
@@ -87,27 +87,28 @@
                            :minute (minute-to-deg time-value)
                            :hour (hour-to-deg time-value))}))
 
-(defn clock []
-  (let [time (r/atom (t/now))
-        updating? (atom true)]
-    (r/create-class
-      {:component-did-mount #(go-loop []
-                                       (<! (timeout 1000))
-                                       (when @updating?
-                                         (reset! time (t/now))
-                                         (recur)))
-       :component-will-unmount #(reset! updating? false)
-       :render
-       (fn []
-         [:div (use-style clock-body)
-          ; Clock hands should not use stylefy, because clock-hand will generate
-          ; many different styles; we do not want to create a new CSS class from each different result.
-          ; In this case, inline style is a better option.
-          [:div {:style (clock-hand :second (t/second @time))}]
-          [:div {:style (clock-hand :minute (t/minute @time))}]
-          [:div {:style (clock-hand :hour (t/hour @time))}]])})))
+; TODO Move to local state
+(def clock-time (atom (t/now)))
+(def updating? (atom true))
 
-(defn full-page []
+(defn update-clock []
+  {:did-mount (go-loop []
+                        (<! (timeout 1000))
+                        (when @updating?
+                          (reset! clock-time (t/now))
+                          (recur)))
+   :will-unmount (reset! updating? false)})
+
+(rum/defc clock < rum/reactive update-clock []
+          [:div (use-style clock-body)
+           ; Clock hands should not use stylefy, because clock-hand will generate
+           ; many different styles; we do not want to create a new CSS class from each different result.
+           ; In this case, inline style is a better option.
+           [:div {:style (clock-hand :second (t/second (rum/react clock-time)))}]
+           [:div {:style (clock-hand :minute (t/minute (rum/react clock-time)))}]
+           [:div {:style (clock-hand :hour (t/hour (rum/react clock-time)))}]])
+
+(rum/defc full-page < rum/reactive []
   [:div
    [:header (use-style header)
     [:h1 (use-sub-style header :infinity) "∞"]

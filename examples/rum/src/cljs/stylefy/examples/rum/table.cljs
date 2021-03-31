@@ -1,5 +1,5 @@
-(ns stylefy.examples.table
-  (:require [reagent.core :as r]
+(ns stylefy.examples.rum.table
+  (:require [rum.core :as rum]
             [stylefy.core :as stylefy :refer [use-style use-sub-style]]))
 
 (def table-style {:margin-bottom "1rem"
@@ -12,7 +12,7 @@
                              ::stylefy/mode {:hover {:background-color "#BBBBBB"}}}
                    :cell {:padding "5px"}}})
 
-(defn table [options schema data]
+#_(rum/defc table < rum/reactive [options schema data]
   [:div (use-style table-style)
    [:table (use-sub-style table-style :table)
     [:thead (use-sub-style table-style :thead)

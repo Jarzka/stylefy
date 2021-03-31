@@ -1,4 +1,4 @@
-(ns stylefy.examples.main
+(ns stylefy.examples.ssr.main
   (:require [hiccup.core :refer :all]
             [stylefy.core :as stylefy :refer [use-style]]))
 
