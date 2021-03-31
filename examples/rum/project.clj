@@ -11,6 +11,7 @@
   :repl-options {:init-ns stylefy.examples.rum.main
                  :port 1339
                  :timeout 120000}
+  :plugins [[lein-cljsbuild "1.1.7"]]
   :source-paths ["src/cljs"
 
                  "../../src/clj"
@@ -26,9 +27,4 @@
                         :compiler {:output-to "resources/public/js/stylefy.js"
                                    :output-dir "resources/public/js/out"
                                    :optimizations :none
-                                   :source-map true}}
-                       {:id "prod"
-                        :source-paths ["src" "../src"]
-                        :compiler {:output-to "resources/public/js/stylefy.js"
-                                   :output-dir "resources/public/js/out"
-                                   :optimizations :advanced}}]})
+                                   :source-map true}}]})
