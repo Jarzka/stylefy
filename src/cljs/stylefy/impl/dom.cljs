@@ -28,7 +28,7 @@
     (reset! stylefy-base-node base-node)
     (reset! stylefy-instance-id instance-id)))
 
-(defn- get-stylefy-node [node-id base-node instance-id]
+(defn get-stylefy-node [node-id base-node instance-id]
   (let [final-id (str node-id (when instance-id (str instance-id)))]
     (if (nil? base-node)
       (dommy/sel1 final-id)
