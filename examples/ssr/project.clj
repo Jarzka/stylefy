@@ -12,13 +12,4 @@
                  "src/cljc"
 
                  "../../src/clj"
-                 "../../src/cljc"]
-  :cljsbuild {:builds [{:id "dev"
-                        :source-paths ["src/clj"
-                                       "src/cljs"
-                                       "../src/cljc"
-                                       "../src/cljs"]
-                        :compiler {:output-to "resources/public/js/stylefy.js"
-                                   :output-dir "resources/public/js/out"
-                                   :optimizations :none
-                                   :source-map true}}]})
+                 "../../src/cljc"])
