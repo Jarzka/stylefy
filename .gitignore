@@ -12,6 +12,9 @@ examples/rum/resources/public/css
 examples/rum/.shadow-cljs
 examples/rum/node_modules
 examples/ssr/target
+modules/stylefy-reagent/target
+modules/stylefy-rum/target
+modules/stylefy-generic-dom/target
 .nrepl-port
 pom.xml
 pom.xml.asc
