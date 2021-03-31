@@ -20,10 +20,13 @@
 
                  "../../modules/stylefy-reagent/src/cljs"]
   :cljsbuild {:builds [{:id "dev"
-                        :source-paths ["src/clj"
-                                       "src/cljs"
-                                       "../src/cljc"
-                                       "../src/cljs"]
+                        :source-paths ["src/cljs"
+
+                                       "../../src/clj"
+                                       "../../src/cljs"
+                                       "../../src/cljc"
+
+                                       "../../modules/stylefy-reagent/src/cljs"]
                         :compiler {:output-to "resources/public/js/stylefy.js"
                                    :output-dir "resources/public/js/out"
                                    :optimizations :none
