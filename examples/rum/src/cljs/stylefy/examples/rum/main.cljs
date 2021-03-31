@@ -16,7 +16,7 @@
   (:require-macros [cljs.core.async.macros :refer [go]]
                    [garden.def :refer [defcssfn]]))
 
-(rum/defc button-style-by-type < rum/reactive [type]
+(defn button-style-by-type [type]
   (case type
     :primary styles/primary-button
     :secondary styles/secondary-button
@@ -238,11 +238,11 @@
                           styles/general-styles))
    [:h1 "Generic button"]
    [:p "Just a simple styled button to begin with."]
-   #_(button "Generic button")
+   (button "Generic button")
 
    [:h1 "Different type of buttons in a container"]
    [:p "Styled by merging styles"]
-   #_(button-container)
+   (button-container)
 
    [:h1 "Modes generate pseudo-classes"]
    [:p (use-style {::stylefy/mode {:before {:content "'This is CSS :before content - '"}
