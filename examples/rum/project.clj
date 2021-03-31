@@ -27,7 +27,7 @@
                                        "../../src/cljc"
 
                                        "../../modules/stylefy-rum/src/cljs"]
-                        :compiler {:output-to "resources/public/js/stylefy.js"
+                        :compiler {:output-to "resources/public/js/main.js"
                                    :output-dir "resources/public/js/out"
                                    :optimizations :none
                                    :source-map true}}]})
