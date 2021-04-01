@@ -71,7 +71,7 @@
   (load-cache [this] (warn-not-initialised "load-cache"))
 
   ; Add styles
-  (add-style [this style] (warn-not-initialised "save-style"))
+  (add-style [this style] (warn-not-initialised "add-style"))
   (add-class [this class-as-css] (save-uninitialised-style :class class-as-css))
   (add-tag [this tag-as-css] (save-uninitialised-style :tag tag-as-css))
   (add-font-face [this font-face-as-css] (save-uninitialised-style :font-face font-face-as-css))
