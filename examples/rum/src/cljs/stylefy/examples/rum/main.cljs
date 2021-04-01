@@ -255,7 +255,7 @@
 
    [:h1 "Component with multiple sub elements"]
    [:p "Rows are styled by using sub-styles"]
-   #_(table/table
+   (table/table
      {:title "Example grid"}
      [{:title "Product" :name :name}
       {:title "ID" :name :id}
@@ -265,7 +265,7 @@
       {:name "Banana" :id 15 :price 3}])
 
    [:p "A box in a box, written in manual mode to make hovering the parent brighten the child box style (darken on mobile)"]
-   #_(hoverbox/hoverbox)
+   (hoverbox/hoverbox)
 
    [:h1 "Component with internal state"]
    [:p "This component contains a different style in different states. The styles are generated and inserted into DOM on-demand."]
@@ -286,11 +286,11 @@
 
    [:h1 "Simple responsive layout"]
    [:p "stylefy supports media queries out of the box"]
-   #_(responsive-layout)
+   (responsive-layout)
 
    [:h1 "Animations"]
    [:p "stylefy also supports keyframes"]
-   #_(animation)
+   (animation)
 
    [:h1 "Custom tag styles"]
    [:p "Custom tag selectors should rarely be necessary, but can be useful for setting styles on base elements, like html or body. This example shows custom styles applied to <code> and <ul> elements."]
@@ -302,9 +302,9 @@
 
    [:h1 "Feature queries"]
    [:p "The following example is rendered using CSS Grid if supported by the browser. If not, it uses Flexbox fallback as the default style. stylefy also supports media queries inside feature queries!"]
-   #_(grid/grid)
+   (grid/grid)
 
-   #_(garden-units)
+   (garden-units)
 
    [:h1 "Key order"]
    [:p "If CSS shorthands are used, the order of CSS key properties is important. If we use a regular Clojure map, the order of keys can change in the final CSS output."]
@@ -318,7 +318,7 @@
    [:div (use-style background-box-no-shorthands)]
    [:h1 "Caching"]
    [:p "stylefy supports style caching, which means that the generated CSS code is saved into the offline storage and retrieved from there when the page is reloaded. This way, styles once generated do not need to be generated again and the page loads faster. Caching can be turned on manually, and it also needs to be cleared manually."]
-   #_(button "Clear cache" #(stylefy-cache/clear) :primary)])
+   (button "Clear cache" #(stylefy-cache/clear) :primary)])
 
 ; TODO Move to local state
 (def active-tab (atom 0))
@@ -329,7 +329,7 @@
     (bs-navbar-item 0 active-tab "Simple examples")
     (bs-navbar-item 1 active-tab "Full page example")]
 
-   (case @active-tab
+   (case (rum/react active-tab)
        0 (simple-examples)
        1 (full-page/full-page))])
 
