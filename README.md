@@ -13,7 +13,7 @@
 
 stylefy makes it possible to define CSS styles as Clojure data and attach them into HTML elements easily without writing selectors. Styles are converted to CSS on-demand and scoped locally. This makes writing style code easy and maintainable.
 
-While being originally created with the frontend in mind, stylefy now runs on both Web browsers and servers. On the frontend, it is designed to be used along with [Reagent](https://github.com/reagent-project/reagent). stylefy uses [Garden](https://github.com/noprompt/garden) in the background for most of its CSS conversions. 
+While being originally created with the frontend in mind, stylefy now runs on both Web browsers and servers. stylefy uses [Garden](https://github.com/noprompt/garden) in the background for most of its CSS conversions. 
 
 # Features
 
@@ -29,17 +29,31 @@ While being originally created with the frontend in mind, stylefy now runs on bo
 
 # Installation
 
-Add dependency:
+## Stable version
+
+Designed to be used only with [Reagent](https://github.com/reagent-project/reagent). Add dependency:
 
 ```clj
 [stylefy "2.2.2"]
 ```
 
+## Latest development release
+
+Supports [Rum](https://github.com/tonsky/rum) and virtually any UI library / framework via generic DOM module. Add dependencies:
+
+```clj
+[stylefy "3.0.0-beta1"]
+; And ONE of these:
+[stylefy/reagent "3.0.0-beta1"] 
+[stylefy/rum "3.0.0-beta1"] 
+[stylefy/generic-dom "3.0.0-beta1"]
+```
+
+See changelog for help how to set it up.
+
 # Setup
 
 ## Frontend (ClojureScript)
-
-**Follow these steps if you want to use stylefy along with Reagent:**
 
 Add the following **style** tags on your page's **head** tag. It is recommended that these tags are the last style tags in the **header** so that it is less likely that possible other styles would override them.
 
