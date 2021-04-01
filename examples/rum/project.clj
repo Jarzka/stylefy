@@ -5,7 +5,7 @@
                  [prismatic/dommy "1.1.0"]
                  [hiccup "1.0.5"]
                  [garden "1.3.6"]
-                 [rum "0.12.4"]
+                 [rum "0.12.3"]
                  [org.clojure/core.async "0.3.443"]
                  [com.andrewmcveigh/cljs-time "0.5.0"]]
   :repl-options {:init-ns stylefy.examples.rum.main

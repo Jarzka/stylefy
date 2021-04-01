@@ -3,7 +3,7 @@
   :dependencies [[org.clojure/clojure "1.10.1"]
                  [org.clojure/clojurescript "1.10.520"]
                  [prismatic/dommy "1.1.0"]
-                 [rum "0.12.4"]
+                 [rum "0.12.3"]
                  [org.clojure/core.async "0.3.443"]]
   :source-paths ["src/cljs"]
   :cljsbuild {:builds [{:id "dev"
