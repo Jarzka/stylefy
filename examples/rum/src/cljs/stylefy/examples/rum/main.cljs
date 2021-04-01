@@ -33,9 +33,8 @@
    (button "Primary" #(.log js/console "Primary button clicked") :primary)
    (button "Secondary" #(.log js/console "Secondary button clicked") :secondary)])
 
-(rum/defc stateful-component < rum/reactive []
-  (let [switch #(if (= :on %) :off :on)
-        state (atom :on)]
+(rum/defcs stateful-component < rum/reactive (rum/local :on :state) [state]
+  (let [switch #(if (= :on %) :off :on)]
     ; Make sure the state style is prepared before we use it.
     ; Normally, when use-style is called, it returns the given style as an inline style
     ; until the style is converted to CSS and added into the DOM.
@@ -43,12 +42,11 @@
     ; present as inline style, so stylefy would hide the component for a small amount of time
     ; until the styles are added into DOM, which creates a bad flickering effect.
     ; To prevent this from happening, we prepare the state style before we use it.
-    (fn []
-      [:div (use-style (stylefy/prepare-style (@state styles/stateful-component)))
-       (if (= @state :on)
-         [:p "The component's current state is ON"]
-         [:p "The component's current state is OFF"])
-       (button "Switch" #(reset! state (switch @state)) :primary)])))
+    [:div (use-style (stylefy/prepare-style ((rum/react (:state state)) styles/stateful-component)))
+     (if (= (rum/react (:state state)) :on)
+       [:p "The component's current state is ON"]
+       [:p "The component's current state is OFF"])
+     (button "Switch" #(reset! (:state state) (switch @(:state state))) :primary)]))
 
 (rum/defc stress-test-item < rum/reactive [index]
   (fn [style]
@@ -269,7 +267,7 @@
 
    [:h1 "Component with internal state"]
    [:p "This component contains a different style in different states. The styles are generated and inserted into DOM on-demand."]
-   #_(stateful-component)
+   (stateful-component)
 
    [:h1 "Stress test"]
    [:p "Styles are added into the DOM on-demand when they are used for the first time. Clicking the button below generates 1000 different looking components dynamically. The components are first styled with inline styles until the DOM has been updated and we can begin using CSS classes to save memory."]

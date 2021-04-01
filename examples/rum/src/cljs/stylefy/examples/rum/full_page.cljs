@@ -101,10 +101,10 @@
                    state)})
 
 (rum/defcs clock < rum/reactive
-                  update-clock
-                  (rum/local (t/now) :clock)
-                  (rum/local true :updating?)
-          [state]
+                   update-clock
+                   (rum/local (t/now) :clock)
+                   (rum/local true :updating?)
+  [state]
   [:div (use-style clock-body)
    ; Clock hands should not use stylefy, because clock-hand will generate
    ; many different styles; we do not want to create a new CSS class from each different result.
