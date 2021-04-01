@@ -20,22 +20,20 @@
       (doall
         (map-indexed
           (fn [column-index s]
-            ^{:key column-index}
-            [:th (use-sub-style table-style :cell)
+            [:th (merge {:key column-index} (use-sub-style table-style :cell))
              (:title s)])
           schema))]]
     [:tbody
      (doall
        (map-indexed
          (fn [data-index data-item]
-           ^{:key data-index}
-           [:tr (use-sub-style table-style (if (= (rem data-index 2) 0)
-                                            :row-even
-                                            :row-odd))
+           [:tr (merge {:key data-index}
+                       (use-sub-style table-style (if (= (rem data-index 2) 0)
+                                                    :row-even
+                                                    :row-odd)))
             (doall (map-indexed
                      (fn [column-index s]
-                       ^{:key column-index}
-                       [:td (use-sub-style table-style :cell)
+                       [:td (merge {:key column-index} (use-sub-style table-style :cell))
                         ((:name s) data-item)])
                      schema))])
          data))]]])

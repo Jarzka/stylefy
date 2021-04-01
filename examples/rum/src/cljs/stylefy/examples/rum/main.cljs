@@ -48,11 +48,11 @@
        [:p "The component's current state is OFF"])
      (button "Switch" #(reset! (:state state) (switch @(:state state))) :primary)]))
 
-(rum/defc stress-test-item < rum/reactive [index]
+(defn stress-test-item [index]
   (fn [style]
-    [:div style index]))
+    [:div (merge {:key index} style) index]))
 
-(rum/defc create-bar-style < rum/reactive [background index max]
+(defn create-bar-style [background index max]
   ; Generates unique, but predictable style, so that caching can be tested.
   {:padding "5px"
    :width (str (float (* (/ index max) 100)) "%")
@@ -63,40 +63,39 @@
    :border "1px solid black"
    :background-color background})
 
-(rum/defc stress-test < rum/reactive []
+(rum/defcs stress-test < rum/reactive
+                         (rum/local :hidden :state)
+                         (rum/local nil :start-time)
+  [state]
   (let [components-count 1000
-        state (atom :hidden)
-        start-time (atom nil)
         styles (mapv #(create-bar-style "grey" % components-count)
                      (range 0 components-count))]
-    (fn []
-      (.log js/console "Render stress test")
-      [:div (use-style styles/generic-container)
+    (.log js/console "Render stress test")
+    [:div (use-style styles/generic-container)
 
-       (button
-         (case @state
-           :hidden "Generate"
-           :generating "Generating..."
-           :visible "Hide")
-         #(case @state
-            :hidden (go (reset! state :generating)
-                        (<! (timeout 100))
-                        (reset! start-time (.getTime (js/Date.)))
-                        (reset! state :visible))
-            :visible (reset! state :hidden))
-         :primary)
+     (button
+       (case @(:state state)
+         :hidden "Generate"
+         :generating "Generating..."
+         :visible "Hide")
+       #(case @(:state state)
+          :hidden (go (reset! (:state state) :generating)
+                      (<! (timeout 100))
+                      (reset! (:start-time state) (.getTime (js/Date.)))
+                      (reset! (:state state) :visible))
+          :visible (reset! (:state state) :hidden))
+       :primary)
 
-       (when (= @state :visible)
-         (doall
-           (map-indexed (fn [index component]
-                          (when (= index (- components-count 1))
-                            (.log js/console (str "Generation time: "
-                                                  (- (.getTime (js/Date.)) @start-time)
-                                                  " ms.")))
+     (when (= (rum/react (:state state)) :visible)
+       (doall
+         (map-indexed (fn [index component]
+                        (when (= index (- components-count 1))
+                          (.log js/console (str "Generation time: "
+                                                (- (.getTime (js/Date.)) @(:start-time state))
+                                                " ms.")))
 
-                          ^{:key index}
-                          [component (use-style (get styles index))])
-                        (map stress-test-item (range 0 components-count)))))])))
+                        (component (use-style (get styles index))))
+                      (map stress-test-item (range 0 components-count)))))]))
 
 (rum/defc add-style-test < rum/reactive []
   (let [comps (atom [])
@@ -271,7 +270,7 @@
 
    [:h1 "Stress test"]
    [:p "Styles are added into the DOM on-demand when they are used for the first time. Clicking the button below generates 1000 different looking components dynamically. The components are first styled with inline styles until the DOM has been updated and we can begin using CSS classes to save memory."]
-   #_(stress-test)
+   (stress-test)
 
    [:h1 "Stress test 2"]
    [:p "Press the button to dynamically insert more styles into DOM."]
