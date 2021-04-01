@@ -92,7 +92,6 @@
         updating? (atom true)]
     (r/create-class
       {:component-did-mount #(go-loop []
-                                       (reset! updating? true)
                                        (<! (timeout 1000))
                                        (when @updating?
                                          (reset! time (t/now))

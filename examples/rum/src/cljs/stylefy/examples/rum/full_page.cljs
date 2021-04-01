@@ -87,31 +87,31 @@
                            :minute (minute-to-deg time-value)
                            :hour (hour-to-deg time-value))}))
 
-; TODO Move to local state
-(def clock-time (atom (t/now)))
-(def updating? (atom true))
-
 (def update-clock
   {:did-mount (fn [state]
                 (go-loop []
-                         (reset! updating? true)
+                         (reset! (:updating? state) true)
                          (<! (timeout 1000))
-                         (when @updating?
-                           (reset! clock-time (t/now))
+                         (when (:updating? state)
+                           (reset! (:clock state) (t/now))
                            (recur)))
                 state)
    :will-unmount (fn [state]
-                   (reset! updating? false)
+                   (reset! (:updating? state) false)
                    state)})
 
-(rum/defc clock < update-clock rum/reactive []
+(rum/defcs clock < rum/reactive
+                  update-clock
+                  (rum/local (t/now) :clock)
+                  (rum/local true :updating?)
+          [state]
   [:div (use-style clock-body)
    ; Clock hands should not use stylefy, because clock-hand will generate
    ; many different styles; we do not want to create a new CSS class from each different result.
    ; In this case, inline style is a better option.
-   [:div {:style (clock-hand :second (t/second (rum/react clock-time)))}]
-   [:div {:style (clock-hand :minute (t/minute (rum/react clock-time)))}]
-   [:div {:style (clock-hand :hour (t/hour (rum/react clock-time)))}]])
+   [:div {:style (clock-hand :second (t/second (rum/react (:clock state))))}]
+   [:div {:style (clock-hand :minute (t/minute (rum/react (:clock state))))}]
+   [:div {:style (clock-hand :hour (t/hour (rum/react (:clock state))))}]])
 
 (rum/defc full-page < rum/reactive []
   [:div
