@@ -1,4 +1,4 @@
-(defproject stylefy/reagent "3.0-SNAPSHOT"
+(defproject stylefy/reagent "3.0.0-beta1"
   :description "ReagentDOM for stylefy"
   :dependencies [[org.clojure/clojure "1.10.1"]
                  [org.clojure/clojurescript "1.10.520"]
