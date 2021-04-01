@@ -97,27 +97,22 @@
                         (component (use-style (get styles index))))
                       (map stress-test-item (range 0 components-count)))))]))
 
-(rum/defc add-style-test < rum/reactive []
-  (let [comps (atom [])
-        max 100]
-    (fn []
-      (.log js/console "Render add style test")
-      [:div
-       ; When this button is clicked, only the render method of this component should be called.
-       [button "Add component"
-        (fn []
-          (when (< (count @comps) max)
-            (swap! comps conj
-                   (fn []
-                     (let [style (create-bar-style "#005511" (count @comps) max)]
-                       (fn []
-                         [:div (use-style style)]))))))
-        :primary]
-       (map-indexed
-         (fn [index component]
-           ^{:key index}
-           (component))
-         @comps)])))
+(rum/defcs add-style-test < rum/reactive (rum/local [] :comps) [state]
+  (let [max 100]
+    (.log js/console "Render add style test")
+    [:div
+     (button "Add component"
+             (fn []
+               (let [style (create-bar-style "#005511" (count @(:comps state)) max)]
+                 (when (< (count @(:comps state)) max)
+                   (swap! (:comps state) conj
+                          (fn []
+                            [:div (merge {:key (gensym)} (use-style style))])))))
+             :primary)
+     (map
+       (fn [component]
+         (component))
+       (rum/react (:comps state)))]))
 
 (rum/defc bs-navbar-item < rum/reactive [index index-atom text]
   [:li (use-style styles/clickable (merge
@@ -274,7 +269,7 @@
 
    [:h1 "Stress test 2"]
    [:p "Press the button to dynamically insert more styles into DOM."]
-   #_(add-style-test)
+   (add-style-test)
 
    [:h1 "Boostrap navbar"]
    [:p "You can also assign any classes to elements normally. Here we use Boostrap classes to construct simple navbars. We also override some BS styles."]

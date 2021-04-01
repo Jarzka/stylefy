@@ -109,15 +109,11 @@
     (fn []
       (.log js/console "Render add style test")
       [:div
-       ; When this button is clicked, only the render method of this component should be called.
        [button "Add component"
         (fn []
-          (when (< (count @comps) max)
-            (swap! comps conj
-                   (fn []
-                     (let [style (create-bar-style "#005511" (count @comps) max)]
-                       (fn []
-                         [:div (use-style style)]))))))
+          (let [style (create-bar-style "#005511" (count @comps) max)]
+            (when (< (count @comps) max)
+              (swap! comps conj (fn [] [:div (use-style style)])))))
         :primary]
        (map-indexed
          (fn [index component]
