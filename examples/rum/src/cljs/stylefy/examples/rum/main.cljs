@@ -123,21 +123,17 @@
    [:a (use-sub-style styles/boostrap-navbar-overrides :link)
     text]])
 
-(rum/defc bs-navbar-current-syntax < rum/reactive []
-  (let [active-index (atom 0)]
-    (fn []
-      [:ul.nav.nav-pills (use-style styles/boostrap-navbar-overrides)
-       (bs-navbar-item 0 active-index "A")
-       (bs-navbar-item 1 active-index "B")
-       (bs-navbar-item 2 active-index "C")])))
+(rum/defcs bs-navbar-current-syntax < rum/reactive (rum/local 0 :active-index) [state]
+           [:ul.nav.nav-pills (use-style styles/boostrap-navbar-overrides)
+            (bs-navbar-item 0 (:active-index state) "A")
+            (bs-navbar-item 1 (:active-index state) "B")
+            (bs-navbar-item 2 (:active-index state) "C")])
 
-(rum/defc bs-navbar-alternative-syntax < rum/reactive []
-  (let [active-index (atom 0)]
-    (fn []
-      ; In this example, BS navbar classes are attached into the style map directly.
-      [:ul (use-style styles/boostrap-navbar)
-       (bs-navbar-item 0 active-index "Hello")
-       (bs-navbar-item 1 active-index "World!")])))
+(rum/defcs bs-navbar-alternative-syntax < rum/reactive (rum/local 0 :active-index) [state]
+  ; In this example, BS navbar classes are attached into the style map directly.
+  [:ul (use-style styles/boostrap-navbar)
+   (bs-navbar-item 0 (:active-index state) "Hello")
+   (bs-navbar-item 1 (:active-index state) "World!")])
 
 (rum/defc responsive-layout < rum/reactive []
   [:div (use-style styles/responsive-layout)
@@ -161,15 +157,13 @@
 (rum/defc animation < rum/reactive []
   [:div (use-style styles/animated-box)])
 
-(rum/defc fade < rum/reactive []
+(rum/defcs fade < rum/reactive (rum/local true :active-state) [state]
   (let [on-style {:background-color (:background-color styles/simple-box)}
-        off-style {:background-color "black"}
-        active-state (atom true)]
-    (fn []
-      [:div.background-transition (use-style (merge styles/simple-box
-                                                    (if @active-state on-style off-style))
-                                             {:on-click #(swap! active-state not)})
-       "Click me!"])))
+        off-style {:background-color "black"}]
+    [:div.background-transition (use-style (merge styles/simple-box
+                                                  (if (rum/react (:active-state state)) on-style off-style))
+                                           {:on-click #(swap! (:active-state state) not)})
+     "Click me!"]))
 
 (defcssfn url)
 
@@ -273,8 +267,8 @@
 
    [:h1 "Boostrap navbar"]
    [:p "You can also assign any classes to elements normally. Here we use Boostrap classes to construct simple navbars. We also override some BS styles."]
-   #_(bs-navbar-current-syntax)
-   #_(bs-navbar-alternative-syntax)
+   (bs-navbar-current-syntax)
+   (bs-navbar-alternative-syntax)
 
    [:h1 "Simple responsive layout"]
    [:p "stylefy supports media queries out of the box"]
@@ -286,11 +280,11 @@
 
    [:h1 "Custom tag styles"]
    [:p "Custom tag selectors should rarely be necessary, but can be useful for setting styles on base elements, like html or body. This example shows custom styles applied to <code> and <ul> elements."]
-   #_(custom-tags/custom-tags)
+   (custom-tags/custom-tags)
 
    [:h1 "Custom class names"]
    [:p "Normally stylefy handles the conversion from Clojure style maps to unique CSS classes. However, if needed, you can also define your custom named classes. Here we have defined a custom named class for handling animation fades."]
-   #_(fade)
+   (fade)
 
    [:h1 "Feature queries"]
    [:p "The following example is rendered using CSS Grid if supported by the browser. If not, it uses Flexbox fallback as the default style. stylefy also supports media queries inside feature queries!"]
@@ -312,16 +306,13 @@
    [:p "stylefy supports style caching, which means that the generated CSS code is saved into the offline storage and retrieved from there when the page is reloaded. This way, styles once generated do not need to be generated again and the page loads faster. Caching can be turned on manually, and it also needs to be cleared manually."]
    (button "Clear cache" #(stylefy-cache/clear) :primary)])
 
-; TODO Move to local state
-(def active-tab (atom 0))
-
-(rum/defc top-level < rum/reactive []
+(rum/defcs top-level < rum/reactive (rum/local 0 :active-tab) [state]
   [:div
    [:ul.nav.nav-pills (use-style styles/boostrap-navbar-overrides)
-    (bs-navbar-item 0 active-tab "Simple examples")
-    (bs-navbar-item 1 active-tab "Full page example")]
+    (bs-navbar-item 0 (:active-tab state) "Simple examples")
+    (bs-navbar-item 1 (:active-tab state) "Full page example")]
 
-   (case (rum/react active-tab)
+   (case (rum/react (:active-tab state))
        0 (simple-examples)
        1 (full-page/full-page))])
 
