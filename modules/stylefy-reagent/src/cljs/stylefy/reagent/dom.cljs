@@ -95,7 +95,7 @@
     (request-asynchronous-dom-update)))
 
 (defn style-in-dom? [style-hash]
-  ; Note: This function does Reagent atom dereference.
+  ; Note: This function dereferences Reagent atom when reading style-hash atom.
   ; If called inside a component render method (via use-style), it causes the component to re-render
   ; itself if the "CSS in DOM" state of this specific style hash is changed.
   (boolean @(get @styles-in-dom style-hash)))
