@@ -44,8 +44,8 @@ Supports [Rum](https://github.com/tonsky/rum) and virtually any UI library / fra
 ```clj
 [stylefy "3.0.0-beta1"]
 ; And ONE of these:
-[stylefy/reagent "3.0.0-beta1"] 
-[stylefy/rum "3.0.0-beta1"] 
+[stylefy/reagent "3.0.0-beta2"] 
+[stylefy/rum "3.0.0-beta2"] 
 [stylefy/generic-dom "3.0.0-beta1"]
 ```
 
