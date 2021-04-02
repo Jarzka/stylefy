@@ -98,9 +98,7 @@
   ; Note: This function does Reagent atom dereference.
   ; If called inside a component render method (via use-style), it causes the component to re-render
   ; itself if the "CSS in DOM" state of this specific style hash is changed.
-  (if-let [style-in-dom-atom (get @styles-in-dom style-hash)]
-    (boolean @style-in-dom-atom)
-    false))
+  (boolean @(get @styles-in-dom style-hash)))
 
 (defn add-keyframes [identifier keyframes-as-css]
   (swap! keyframes-in-use assoc identifier {:css keyframes-as-css})
