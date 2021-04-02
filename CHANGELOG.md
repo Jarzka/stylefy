@@ -14,7 +14,7 @@ Assuming you are using Reagent, update stylefy version and add `stylefy/reagent`
 
 ```
 [stylefy "3.0.0-beta1"]
-[stylefy/reagent "3.0.0-beta1"]
+[stylefy/reagent "3.0.0-beta2"]
 ```
 
 Require `stylefy.reagent` and initialise it together with stylefy:
