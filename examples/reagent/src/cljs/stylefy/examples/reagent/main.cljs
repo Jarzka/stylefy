@@ -182,7 +182,7 @@
 
 (defn- garden-units []
   [:div
-   [:h1 "Garden units"]
+   [:h2 "Garden units"]
    [:p "Garden units should work without problems. Examples:"]
    [:p (use-style {:margin-top (gu/px 50)})
     "Margin top defined with Garden px unit (50px)"]
@@ -234,15 +234,16 @@
 (defn- simple-examples []
   [:div (use-style (merge styles/root
                           styles/general-styles))
-   [:h1 "Generic button"]
+   [:h1 "Reagent Examples"]
+   [:h2 "Generic button"]
    [:p "Just a simple styled button to begin with."]
    [button "Generic button"]
 
-   [:h1 "Different type of buttons in a container"]
+   [:h2 "Different type of buttons in a container"]
    [:p "Styled by merging styles"]
    [button-container]
 
-   [:h1 "Modes generate pseudo-classes"]
+   [:h2 "Modes generate pseudo-classes"]
    [:p (use-style {::stylefy/mode {:before {:content "'This is CSS :before content - '"}
                                    :after {:content "' - This is CSS :after content'"}
                                    :hover {:color "red"}}})
@@ -251,7 +252,7 @@
                                    [:active {:background-color "blue" :color "white"}]]})
     "Another example created with different syntax"]
 
-   [:h1 "Component with multiple sub elements"]
+   [:h2 "Component with multiple sub elements"]
    [:p "Rows are styled by using sub-styles"]
    [table/table
     {:title "Example grid"}
@@ -265,46 +266,46 @@
    [:p "A box in a box, written in manual mode to make hovering the parent brighten the child box style (darken on mobile)"]
    [hoverbox/hoverbox]
 
-   [:h1 "Component with internal state"]
+   [:h2 "Component with internal state"]
    [:p "This component contains a different style in different states. The styles are generated and inserted into DOM on-demand."]
    [stateful-component]
 
-   [:h1 "Stress test"]
+   [:h2 "Stress test"]
    [:p "Styles are added into the DOM on-demand when they are used for the first time. Clicking the button below generates 1000 different looking components dynamically. The components are first styled with inline styles until the DOM has been updated and we can begin using CSS classes to save memory."]
    [stress-test]
 
-   [:h1 "Stress test 2"]
+   [:h2 "Stress test 2"]
    [:p "Press the button to dynamically insert more styles into DOM."]
    [add-style-test]
 
-   [:h1 "Boostrap navbar"]
+   [:h2 "Boostrap navbar"]
    [:p "You can also assign any classes to elements normally. Here we use Boostrap classes to construct simple navbars. We also override some BS styles."]
    [bs-navbar-current-syntax]
    [bs-navbar-alternative-syntax]
 
-   [:h1 "Simple responsive layout"]
+   [:h2 "Simple responsive layout"]
    [:p "stylefy supports media queries out of the box"]
    [responsive-layout]
 
-   [:h1 "Animations"]
+   [:h2 "Animations"]
    [:p "stylefy also supports keyframes"]
    [animation]
 
-   [:h1 "Custom tag styles"]
+   [:h2 "Custom tag styles"]
    [:p "Custom tag selectors should rarely be necessary, but can be useful for setting styles on base elements, like html or body. This example shows custom styles applied to <code> and <ul> elements."]
    [custom-tags/custom-tags]
 
-   [:h1 "Custom class names"]
+   [:h2 "Custom class names"]
    [:p "Normally stylefy handles the conversion from Clojure style maps to unique CSS classes. However, if needed, you can also define your custom named classes. Here we have defined a custom named class for handling animation fades."]
    [fade]
 
-   [:h1 "Feature queries"]
+   [:h2 "Feature queries"]
    [:p "The following example is rendered using CSS Grid if supported by the browser. If not, it uses Flexbox fallback as the default style. stylefy also supports media queries inside feature queries!"]
    [grid/grid]
 
    [garden-units]
 
-   [:h1 "Key order"]
+   [:h2 "Key order"]
    [:p "If CSS shorthands are used, the order of CSS key properties is important. If we use a regular Clojure map, the order of keys can change in the final CSS output."]
    [:p "This specific style map renders incorrectly (some background properties are defined before the background itself and these are ignored by the browser):"]
    [:div (merge
@@ -314,7 +315,7 @@
    [:div (use-style background-box-sorted)]
    [:p "Or, probably a better way, not to use shorthand properties:"]
    [:div (use-style background-box-no-shorthands)]
-   [:h1 "Caching"]
+   [:h2 "Caching"]
    [:p "stylefy supports style caching, which means that the generated CSS code is saved into the offline storage and retrieved from there when the page is reloaded. This way, styles once generated do not need to be generated again and the page loads faster. Caching can be turned on manually, and it also needs to be cleared manually."]
    [button "Clear cache" #(stylefy-cache/clear) :primary]])
 
