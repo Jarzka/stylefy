@@ -218,7 +218,6 @@
                                :margin 0
                                :padding 0})
 
-; FIXME Port these examples from Reagent to rum
 (rum/defc simple-examples < rum/reactive []
   [:div (use-style (merge styles/root
                           styles/general-styles))
