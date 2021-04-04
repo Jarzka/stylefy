@@ -90,6 +90,10 @@ You can read more about style caching in the [Style caching](#caching) section.
 
 If you are planning to run multiple apps using stylefy on the same web page / domain, the setup needs additional steps. See: [Multi-instance support](#multi-instance) section.
 
+### Rum summary
+
+For Rum users only: You must always have `rum/reactive` mixing in components using stylefy.
+
 ## Backend (Clojure)
 
 **Follow these steps if you want to render styles on the server. These steps are not necessary if you only render styles on the frontend.**
@@ -141,8 +145,6 @@ Full example:
 If you wish to do something else with the generated CSS, you can create your own execution context. Use the implementation of `query-with-styles` as an example.
 
 # Usage
-
-These examples are written for Reagent, but they work the same way in Rum. The only difference is that when using Rum, you must always use `rum/reactive` mixing in components using stylefy.
 
 ## Creating & using styles
 
