@@ -31,6 +31,7 @@
     text]))
 
 (defn- button-container []
+  (println "Render button-container")
   [:div (use-style styles/generic-container)
    [button "Hello World!"]
    [button "Primary" #(.log js/console "Primary button clicked") :primary]
@@ -53,9 +54,8 @@
          [:p "The component's current state is OFF"])
        [button "Switch" #(reset! state (switch @state)) :primary]])))
 
-(defn- stress-test-item [index]
-  (fn [style]
-    [:div style index]))
+(defn- stress-test-item [index style]
+  [:div (use-style style) index])
 
 (defn- create-bar-style [background index max]
   ; Generates unique, but predictable style, so that caching can be tested.
@@ -71,37 +71,37 @@
 (defn stress-test []
   (let [components-count 1000
         state (r/atom :hidden)
-        start-time (atom nil)
+        render-start-time (atom nil)
         styles (mapv #(create-bar-style "grey" % components-count)
                      (range 0 components-count))]
-    (fn []
-      (.log js/console "Render stress test")
-      [:div (use-style styles/generic-container)
 
-       [button
-        (case @state
-          :hidden "Generate"
-          :generating "Generating..."
-          :visible "Hide")
-        #(case @state
-           :hidden (go (reset! state :generating)
-                       (<! (timeout 100))
-                       (reset! start-time (.getTime (js/Date.)))
-                       (reset! state :visible))
-           :visible (reset! state :hidden))
-        :primary]
+    (r/create-class
+      {:component-did-update #(.log js/console (str "Render time: "
+                                                    (- (.getTime (js/Date.)) @render-start-time)
+                                                    " ms."))
+       :render (fn []
+                 (reset! render-start-time (.getTime (js/Date.)))
+                 (.log js/console "Render stress test")
+                 [:div (use-style styles/generic-container)
 
-       (when (= @state :visible)
-         (doall
-           (map-indexed (fn [index component]
-                          (when (= index (- components-count 1))
-                            (.log js/console (str "Generation time: "
-                                                  (- (.getTime (js/Date.)) @start-time)
-                                                  " ms.")))
+                  [button
+                   (case @state
+                     :hidden "Generate"
+                     :generating "Generating..."
+                     :visible "Hide")
+                   #(case @state
+                      :hidden (go (reset! state :generating)
+                                  (<! (timeout 100))
+                                  (reset! state :visible))
+                      :visible (reset! state :hidden))
+                   :primary]
 
-                          ^{:key index}
-                          [component (use-style (get styles index))])
-                        (map stress-test-item (range 0 components-count)))))])))
+                  (when (= @state :visible)
+                    (doall
+                      (map-indexed (fn [index]
+                                     ^{:key index}
+                                     [stress-test-item index (get styles index)])
+                                   (range 0 components-count))))])})))
 
 (defn- add-style-test []
   (let [comps (r/atom [])
