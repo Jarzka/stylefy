@@ -28,6 +28,7 @@
    text])
 
 (rum/defc button-container < rum/reactive []
+  (println "Render button-container")
   [:div (use-style styles/generic-container)
    (button "Hello World!")
    (button "Primary" #(.log js/console "Primary button clicked") :primary)
@@ -48,9 +49,8 @@
        [:p "The component's current state is OFF"])
      (button "Switch" #(reset! (:state state) (switch @(:state state))) :primary)]))
 
-(defn stress-test-item [index]
-  (fn [style]
-    [:div (merge {:key index} style) index]))
+(rum/defc stress-test-item < rum/reactive [index style]
+  [:div (use-style style) index])
 
 (defn create-bar-style [background index max]
   ; Generates unique, but predictable style, so that caching can be tested.
@@ -63,16 +63,25 @@
    :border "1px solid black"
    :background-color background})
 
-(rum/defcs stress-test < rum/reactive
-                         (rum/local :hidden :state)
-                         (rum/local nil :start-time)
-  [state]
-  (let [components-count 1000
-        styles (mapv #(create-bar-style "grey" % components-count)
-                     (range 0 components-count))]
-    (.log js/console "Render stress test")
-    [:div (use-style styles/generic-container)
+(def stress-test-render-start-time (atom nil))
 
+(def stress-test-lifecycle
+  {:did-update (fn [state]
+                 (.log js/console (str "Render time: "
+                                       (- (.getTime (js/Date.)) @stress-test-render-start-time)
+                                       " ms."))
+                state)})
+
+(rum/defcs stress-test < rum/reactive
+                         stress-test-lifecycle
+                         (rum/local :hidden :state)
+           [state]
+  (reset! stress-test-render-start-time (.getTime (js/Date.)))
+  (.log js/console "Render stress test")
+
+  (let [components-count 1000
+        styles (mapv #(create-bar-style "grey" % components-count) (range 0 components-count))]
+    [:div (use-style styles/generic-container)
      (button
        (case @(:state state)
          :hidden "Generate"
@@ -81,21 +90,15 @@
        #(case @(:state state)
           :hidden (go (reset! (:state state) :generating)
                       (<! (timeout 100))
-                      (reset! (:start-time state) (.getTime (js/Date.)))
                       (reset! (:state state) :visible))
           :visible (reset! (:state state) :hidden))
        :primary)
 
      (when (= (rum/react (:state state)) :visible)
        (doall
-         (map-indexed (fn [index component]
-                        (when (= index (- components-count 1))
-                          (.log js/console (str "Generation time: "
-                                                (- (.getTime (js/Date.)) @(:start-time state))
-                                                " ms.")))
-
-                        (component (use-style (get styles index))))
-                      (map stress-test-item (range 0 components-count)))))]))
+         (map (fn [index]
+                (rum/with-key (stress-test-item index (get styles index)) index))
+              (range 0 components-count))))]))
 
 (rum/defcs add-style-test < rum/reactive (rum/local [] :comps) [state]
   (let [max 100]
