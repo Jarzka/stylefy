@@ -55,7 +55,7 @@ See changelog for help how to set it up.
 
 ## Frontend (ClojureScript)
 
-**Follow these steps if you want render styles on the browser:**
+**Follow these steps if you want to render styles on the browser:**
 
 Add the following **style** tags on your page's **head** tag. It is recommended that these tags are the last style tags in the **header** so that it is less likely that possible other styles would override them.
 
