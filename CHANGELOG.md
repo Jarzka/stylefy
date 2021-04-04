@@ -27,6 +27,10 @@ Require `stylefy.reagent` and initialise it together with stylefy:
 
 That's it!
 
+## Rum setup
+
+The setup is the same as with Reagent, but instead of depending on `stylefy/reagent`, you should depend on `stylefy/rum`.
+
 # 2.2.2
 
 March 20, 2021
