@@ -24,7 +24,7 @@ While being originally created with the frontend in mind, stylefy now runs on bo
 - CSS caching on the frontend using local storage (optional)
 - Small and simple core API which is easy to setup
 - Fast, asynchronous CSS generation
-- Automatic style reloading (with shadow-cljs or Figwheel)
+- Automatic style reloading (with shadow-cljs or Figwheel
 - All features are tested to work with Chrome, Firefox, Edge & Internet Explorer 11
 
 # Installation
@@ -141,6 +141,8 @@ Full example:
 If you wish to do something else with the generated CSS, you can create your own execution context. Use the implementation of `query-with-styles` as an example.
 
 # Usage
+
+These examples are written for Reagent, but they work the same way in Rum. The only difference is that when using Rum, you must always use `rum/reactive` mixing in components using stylefy.
 
 ## Creating & using styles
 
