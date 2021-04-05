@@ -1,4 +1,4 @@
-(defproject stylefy/rum "3.0.0-beta4"
+(defproject stylefy/rum "3.0.0-beta5"
   :description "RumDOM for stylefy"
   :dependencies [[org.clojure/clojure "1.10.1"]
                  [org.clojure/clojurescript "1.10.520"]

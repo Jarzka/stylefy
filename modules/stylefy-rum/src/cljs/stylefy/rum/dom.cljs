@@ -1,6 +1,7 @@
 (ns stylefy.rum.dom
   (:require [dommy.core :as dommy]
             [cljs.core.async :as async] ; Mandatory for running tests
+            [react-dom :as react-dom]
             [rum.core :as rum]
             [stylefy.impl.cache :as cache]
             [stylefy.impl.log :as log]
@@ -42,8 +43,17 @@
     (dommy/set-text! node-stylefy new-style-css)))
 
 (defn- mark-all-styles-added-in-dom! []
-  (doseq [style-hash (keys @styles-in-dom)]
-    (reset! (get @styles-in-dom style-hash) true)))
+  (if (.-unstable_batchedUpdates react-dom)
+    ; Use batchedUpdates -> all affected components re-render only after this is done.
+    (react-dom/unstable_batchedUpdates
+      (fn []
+        (doseq [style-hash (keys @styles-in-dom)]
+          (reset! (get @styles-in-dom style-hash) true))))
+    ; batchedUpdates does not exist, do the update without it.
+    ; All affected components re-render between state updates.
+    ; This is a bit slower, but works.
+    (doseq [style-hash (keys @styles-in-dom)]
+      (reset! (get @styles-in-dom style-hash) true))))
 
 (defn update-dom
   []
