@@ -98,7 +98,7 @@
   (when (seq style)
     (let [; Remove some unnecessary special keywords before hashing:
           ; - sub-styles is only a link to other styles, it does not define the actual properties of this style
-          ; - class-prefix is only for class naming, the style looks the same with it or without
+          ; - class-prefix is only for class naming, the style looks the same with or without it
           style-without-unnecessary-keywords (recursively-remove-unnecessary-keywords style)
           ; Convert Garden units to CSS before hashing.
           ; This makes sure Garden units have the same hash on both frontend and backend.
