@@ -84,11 +84,13 @@
 
 (defn hash-style [style]
   (when (seq style)
-    (let [; Hash style without certain special keywords:
+    (let [; Remove some unnecessary special keywords before hashing:
           ; - sub-styles is only a link to other styles, it does not define the actual properties of this style
           ; - class-prefix is only for class naming, the style looks the same with it or without
           style-without-unnecessary-keywords (recursively-remove-unnecessary-keywords style)
-          ; Convert Garden units to CSS so that only the converted result is hashed.
+          ; Convert Garden units to CSS before hashing.
+          ; This makes sure Garden units have the same hash on both frontend and backend.
+          ; It also makes sure that Garden units and manually written units have the same hash.
           ; For example: "100px" should be considered the same as (garden.units/px 100)
           hashable-style (recursively-convert-garden-units style-without-unnecessary-keywords)
           class-prefix (if @use-custom-class-prefix?
