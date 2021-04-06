@@ -31,7 +31,7 @@ While being originally created with the frontend in mind, stylefy now runs on bo
 
 ## Stable version
 
-Designed to be used only with [Reagent](https://github.com/reagent-project/reagent). Add dependency:
+Designed to be used with [Reagent](https://github.com/reagent-project/reagent) or on the backend. Add dependency:
 
 ```clj
 [stylefy "2.2.2"]
