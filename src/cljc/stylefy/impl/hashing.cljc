@@ -38,10 +38,10 @@
                                  prop-key)]
 
         (if (= prop-key converted-prop-key)
-          (assoc result prop-key converted-prop-value))
-        (-> result
-            (dissoc prop-key)
-            (assoc converted-prop-key converted-prop-value))))
+          (assoc result prop-key converted-prop-value)
+          (-> result
+              (dissoc prop-key)
+              (assoc converted-prop-key converted-prop-value)))))
     style-map
     (keys style-map)))
 
