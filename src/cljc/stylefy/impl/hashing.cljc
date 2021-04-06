@@ -24,12 +24,24 @@
 (defn- recursively-convert-garden-units-in-map [style-map]
   (reduce
     (fn [result prop-key]
-      (let [prop-value (get style-map prop-key)]
-        (if (or (utils/is-garden-value? prop-value)
-                (map? prop-value)
-                (coll? prop-value))
-          (assoc result prop-key (recursively-convert-garden-units prop-value))
-          result)))
+      (let [prop-value (get style-map prop-key)
+            ; Check the value and convert it if necessary.
+            converted-prop-value (if (or (utils/is-garden-value? prop-value)
+                                         (map? prop-value)
+                                         (coll? prop-value))
+                                   (recursively-convert-garden-units prop-value)
+                                   prop-value)
+            ; The key can also be a map or collection, check it.
+            converted-prop-key (if (or (map? prop-key)
+                                       (coll? prop-key))
+                                 (recursively-convert-garden-units prop-key)
+                                 prop-key)]
+
+        (if (= prop-key converted-prop-key)
+          (assoc result prop-key converted-prop-value))
+        (-> result
+            (dissoc prop-key)
+            (assoc converted-prop-key converted-prop-value))))
     style-map
     (keys style-map)))
 
