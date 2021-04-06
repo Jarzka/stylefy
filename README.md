@@ -78,7 +78,7 @@ Then, call **stylefy/init** once when your application starts:
 (stylefy/init)
 ```
 
-Now you are ready to go, but before you start, it's good be aware of a few things:
+Now you are ready to go! But before you start, it's good to be aware of a few things:
 
 ### Caching summary
 
