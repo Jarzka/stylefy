@@ -88,7 +88,8 @@
           ; - sub-styles is only a link to other styles, it does not define the actual properties of this style
           ; - class-prefix is only for class naming, the style looks the same with it or without
           style-without-unnecessary-keywords (recursively-remove-unnecessary-keywords style)
-          ; Convert Garden units to CSS to make them structurally hashable (different contents = different hash)
+          ; Convert Garden units to CSS so that only the converted result is hashed.
+          ; For example: "100px" should be considered the same as (garden.units/px 100)
           hashable-style (recursively-convert-garden-units style-without-unnecessary-keywords)
           class-prefix (if @use-custom-class-prefix?
                          (check-custom-class-prefix (:stylefy.core/class-prefix style))
