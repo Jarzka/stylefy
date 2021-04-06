@@ -191,7 +191,7 @@
 
 ; custom classes
 
-(deftest class
+(deftest class-test
   (let [result (stylefy/query-with-styles
                  (fn []
                    (stylefy/class "background-transition"
