@@ -1,3 +1,9 @@
+# 3.0.0-beta2
+
+April 6, 2021
+
+- Style hashing now checks Garden units recursively. This makes sure that if Garden units are used deeply inside a style map, they are converted to CSS before hashing, so that the hash values are the same on both frontend and backend.
+
 # 3.0.0-beta1
 
 April 1, 2021
