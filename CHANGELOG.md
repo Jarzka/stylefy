@@ -20,7 +20,7 @@ April 1, 2021
 Assuming you are using Reagent, update stylefy version and add `stylefy/reagent` as a new dependency. Your dependencies should look something like this:
 
 ```
-[[stylefy "3.0.0-beta3"]]
+[stylefy "3.0.0-beta3"]
 [stylefy/reagent "3.0.0-beta2"]
 ```
 
