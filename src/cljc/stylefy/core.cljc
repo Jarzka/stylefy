@@ -8,7 +8,8 @@
             [stylefy.impl.hashing :as hashing]
             [stylefy.impl.log :as log]
             [stylefy.impl.state :as state]
-            [stylefy.impl.styles :as impl-styles]))
+            [stylefy.impl.styles :as impl-styles])
+  (:refer-clojure :exclude [class]))
 
 #?(:clj (def ^:dynamic css-in-context (atom nil)))
 
