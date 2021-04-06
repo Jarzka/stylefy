@@ -3,6 +3,7 @@
 April 6, 2021
 
 - Style hashing now checks Garden units recursively. This makes sure that if Garden units are used deeply inside a style map, they are converted to CSS before hashing, so that the hash values are the same on both frontend and backend.
+- A warning message about namespace conflict between `stylefy/class` and `clojure.core/class` is now ignored.
 
 # 3.0.0-beta1
 
