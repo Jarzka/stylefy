@@ -42,7 +42,7 @@ Designed to be used with [Reagent](https://github.com/reagent-project/reagent) o
 Supports [Rum](https://github.com/tonsky/rum) and virtually any UI library / framework via generic DOM module. Add dependencies:
 
 ```clj
-[[stylefy "3.0.0-beta3"]]
+[stylefy "3.0.0-beta3"]
 ; And ONE of these:
 [stylefy/reagent "3.0.0-beta2"] 
 [stylefy/rum "3.0.0-beta5"] 
