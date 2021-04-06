@@ -21,7 +21,7 @@
 (declare recursively-convert-garden-units)
 (declare recursively-remove-unnecessary-keywords)
 
-(defn- convert-garden-units-in-map [style-map]
+(defn- recursively-convert-garden-units-in-map [style-map]
   (reduce
     (fn [result prop-key]
       (let [prop-value (get style-map prop-key)]
@@ -39,7 +39,7 @@
     (compiler/render-css item)
 
     (map? item)
-    (convert-garden-units-in-map item)
+    (recursively-convert-garden-units-in-map item)
 
     (vector? item)
     (mapv recursively-convert-garden-units item)
@@ -52,7 +52,7 @@
 
     :else item))
 
-(defn- remove-unnecessary-keywords-in-map [style-map]
+(defn- recursively-remove-unnecessary-keywords-in-map [style-map]
   (let [style-without-unncessary-keywords (dissoc style-map
                                                   :stylefy.core/sub-styles
                                                   :stylefy.core/class-prefix)]
@@ -69,7 +69,7 @@
 (defn- recursively-remove-unnecessary-keywords [item]
   (cond
     (map? item)
-    (remove-unnecessary-keywords-in-map item)
+    (recursively-remove-unnecessary-keywords-in-map item)
 
     (vector? item)
     (mapv recursively-remove-unnecessary-keywords item)
