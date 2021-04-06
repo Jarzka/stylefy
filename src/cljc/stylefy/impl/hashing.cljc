@@ -64,42 +64,12 @@
 
     :else item))
 
-(defn- recursively-remove-unnecessary-keywords-in-map [style-map]
-  (let [style-without-unncessary-keywords (dissoc style-map
-                                                  :stylefy.core/sub-styles
-                                                  :stylefy.core/class-prefix)]
-    (reduce
-      (fn [result prop-key]
-        (let [prop-value (get style-map prop-key)]
-          (if (or (map? prop-value)
-                  (coll? prop-value))
-            (assoc result prop-key (recursively-remove-unnecessary-keywords prop-value))
-            result)))
-      style-without-unncessary-keywords
-      (keys style-without-unncessary-keywords))))
-
-(defn- recursively-remove-unnecessary-keywords [item]
-  (cond
-    (map? item)
-    (recursively-remove-unnecessary-keywords-in-map item)
-
-    (vector? item)
-    (mapv recursively-remove-unnecessary-keywords item)
-
-    (set? item)
-    (set (map recursively-remove-unnecessary-keywords item))
-
-    (coll? item)
-    (map recursively-remove-unnecessary-keywords item)
-
-    :else item))
-
 (defn hash-style [style]
   (when (seq style)
     (let [; Remove some unnecessary special keywords before hashing:
           ; - sub-styles is only a link to other styles, it does not define the actual properties of this style
           ; - class-prefix is only for class naming, the style looks the same with or without it
-          style-without-unnecessary-keywords (recursively-remove-unnecessary-keywords style)
+          style-without-unnecessary-keywords (dissoc style :stylefy.core/sub-styles :stylefy.core/class-prefix)
           ; Convert Garden units to CSS before hashing.
           ; This makes sure Garden units have the same hash on both frontend and backend.
           ; It also makes sure that Garden units and manually written units have the same hash.
