@@ -35,7 +35,7 @@ stylefy comes with modules that are optimised for specific UI libraries / framew
 [stylefy "3.0.0"]
 ```
 
-Then add a DOM module as a dependency, based on the UI library / framework you are using:
+Then, based on the UI library you are using, add a corresponding DOM module:
 
 **Reagent**
 
@@ -57,7 +57,7 @@ If your UI library is not listed above, use the generic DOM module:
 [stylefy/generic-dom "3.0.0"]
 ```
 
-This module makes only synchronous DOM updates and is not optimised for any specific UI library / framework. It can also be used with Reagent & Rum, but it's generally slower.
+This module makes only synchronous DOM updates and is not optimised for any specific UI library. It can also be used with Reagent & Rum, but it's generally slower.
 
 # Setup
 
