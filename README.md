@@ -29,9 +29,7 @@ While being originally created with the frontend in mind, stylefy now runs on bo
 
 # Installation
 
-stylefy comes with modules that are optimised for specific UI libraries / frameworks.
-
-First, add stylefy core as a dependency:
+stylefy comes with modules that are optimised for specific UI libraries / frameworks. First, add stylefy core as a dependency:
 
 ```clj
 [stylefy "3.0.0"]
