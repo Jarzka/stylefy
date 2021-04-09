@@ -91,6 +91,20 @@
          style-box-expected-hash)))
 
 (deftest hash-style-with-garden-units
+  ; Hashed garden units should have the same hash as manually written units
+  (is (= (hashing/hash-style {:width "100px"})
+         (hashing/hash-style {:width (units/px 100)})))
+  (is (= (hashing/hash-style {:width "100rem"})
+         (hashing/hash-style {:width (units/rem 100)})))
+  (is (= (hashing/hash-style {:width "100px"
+                              ::stylefy/media {{:max-width "500px"} {:width "100px"}}})
+         (hashing/hash-style {:width "100px"
+                              ::stylefy/media {{:max-width "500px"} {:width (units/px 100)}}})))
+  (is (= (hashing/hash-style {:width "100px"
+                              ::stylefy/media {{:max-width (units/px 500)} {:width "100px"}}})
+         (hashing/hash-style {:width "100px"
+                              ::stylefy/media {{:max-width "500px"} {:width "100px"}}})))
+
   (is (= (hashing/hash-style h2-style) "_stylefy_154513737"))
   (is (= (hashing/hash-style h3-style) "_stylefy_-1528553558"))
   (is (= (hashing/hash-style h4-style) "_stylefy_-372704016"))

@@ -4,22 +4,24 @@
             [garden.stylesheet :refer [at-keyframes at-font-face]]
             [stylefy.impl.conversion :as conversion]
             #?(:cljs [stylefy.impl.dom :as dom])
+            #?(:cljs [stylefy.impl.cache :as cache])
             [stylefy.impl.hashing :as hashing]
             [stylefy.impl.log :as log]
             [stylefy.impl.state :as state]
-            [stylefy.impl.styles :as impl-styles]))
+            [stylefy.impl.styles :as impl-styles])
+  (:refer-clojure :exclude [class]))
 
 #?(:clj (def ^:dynamic css-in-context (atom nil)))
 
 (defn use-style
-  "Defines a style for a component by converting the given style map in to an unique CSS class,
-   and returning a pointer (a map with :class keyword) to it so that the component can use it.
+  "Converts the given style to CSS class.
+   Returns a map with :class keyword, pointing to the generated CSS class.
+
    To keep the rendering process fast, use-style works asynchronously, meaning that it
    does not add the generated CSS class into the DOM immediately, but very soon instead.
    If the style has not been added into the DOM yet, it returns the given props as inline style,
    so that the component looks good even if CSS class has not been generated yet.
-
-   Important exception: if the style contains specific modes or media query definitions,
+   However, if the style contains specific modes or media query definitions,
    which cannot be used as inline style, {:style {:visibility \"hidden\"}} is returned.
    Thus, the component is going to be hidden for a few milliseconds.
    In most cases, this is not a problem, but if you want to avoid it, see prepare-styles function.
@@ -65,7 +67,7 @@
   ([style options]
    (assert (or (map? style) (nil? style)) (str "Style should be a map or nil, got: " (pr-str style)))
    (assert (or (map? options) (nil? options)) (str "Options should be a map or nil, got: " (pr-str options)))
-   #?(:cljs (impl-styles/use-style! style options dom/save-style!)
+   #?(:cljs (impl-styles/use-style! style options (fn [style] (dom/add-style @dom/dom style)))
       :clj  (impl-styles/use-style! style options (fn [{:keys [hash css]}]
                                                     (swap! css-in-context assoc-in [:stylefy-classes hash] css))))))
 
@@ -83,7 +85,7 @@
    (assert (or (map? style) (nil? style)) (str "Style should be a map or nil, got: " (pr-str style)))
    (assert (or (map? options) (nil? options))
            (str "Options should be a map or nil, got: " (pr-str options)))
-   #?(:cljs (impl-styles/use-sub-style! style sub-style options dom/save-style!)
+   #?(:cljs (impl-styles/use-sub-style! style sub-style options (fn [style] (dom/add-style @dom/dom style)))
       :clj  (impl-styles/use-sub-style! style sub-style options (fn [{:keys [hash css]}]
                                                                   (swap! css-in-context assoc-in [:stylefy-classes hash] css))))))
 
@@ -127,12 +129,19 @@
   ([options]
    (when @state/stylefy-initialised?
      (log/warn "Attempted to initialise stylefy more than once."))
+
+   #?(:cljs (assert (:dom options) "Unable to initialise stylefy: DOM module is missing!"))
+
+   #?(:cljs (do (reset! dom/dom (:dom options))
+                (dom/load-uninitialised-styles @dom/dom @dom/uninitialised-styles)
+                (reset! dom/uninitialised-styles nil)))
    (hashing/init-custom-class-prefix options)
    #?(:cljs (dom/init-multi-instance options))
-   #?(:cljs (dom/init-cache options))
+   #?(:cljs (cache/init @dom/stylefy-instance-id options))
+   #?(:cljs (dom/load-cache @dom/dom))
    (impl-styles/init-global-vendor-prefixes options)
    (reset! state/stylefy-initialised? true)
-   #?(:cljs (dom/update-dom))
+   #?(:cljs (dom/update-dom @dom/dom))
    nil))
 
 (defn keyframes
@@ -150,10 +159,10 @@
                         {:opacity 1}])"
   [identifier & frames]
   (assert (string? identifier) (str "Identifier should be string, got: " (pr-str identifier)))
-  (let [garden-syntax (apply at-keyframes identifier frames)]
-    #?(:cljs (do (dom/add-keyframes identifier garden-syntax)
+  (let [keyframes-as-css (css (apply at-keyframes identifier frames))]
+    #?(:cljs (do (dom/add-keyframes @dom/dom identifier keyframes-as-css)
                  nil)
-       :clj  (do (swap! css-in-context assoc-in [:keyframes identifier] (css garden-syntax))
+       :clj  (do (swap! css-in-context assoc-in [:keyframes identifier] keyframes-as-css)
                  nil))))
 
 (defn font-face
@@ -170,11 +179,11 @@
   [properties]
   (assert (map? properties) (str "Properties should be a map, got: " (pr-str properties)))
 
-  (let [garden-syntax (at-font-face properties)]
-    #?(:cljs (do (dom/add-font-face garden-syntax)
+  (let [font-faces-as-css (css (at-font-face properties))]
+    #?(:cljs (do (dom/add-font-face @dom/dom font-faces-as-css)
                  nil)
        :clj  (do (swap! css-in-context assoc :font-faces
-                        (conj (:font-faces @css-in-context) (css garden-syntax)))
+                        (conj (:font-faces @css-in-context) font-faces-as-css))
                  nil))))
 
 (defn tag
@@ -193,7 +202,7 @@
   (assert (map? properties) (str "Properties should be a map, got: " (pr-str properties)))
 
   (let [tag-as-css (conversion/style->css {:props properties :custom-selector name})]
-    #?(:cljs (do (dom/add-tag tag-as-css)
+    #?(:cljs (do (dom/add-tag @dom/dom tag-as-css)
                  nil)
        :clj  (do (swap! css-in-context assoc-in [:tags name] tag-as-css)
                  nil))))
@@ -214,7 +223,7 @@
   (assert (map? properties) (str "Properties should be a map, got: " (pr-str properties)))
 
   (let [class-as-css (conversion/style->css {:props properties :custom-selector (conversion/class-selector name)})]
-    #?(:cljs (do (dom/add-class class-as-css)
+    #?(:cljs (do (dom/add-class @dom/dom class-as-css)
                  nil)
        :clj  (do (swap! css-in-context assoc-in [:classes name] class-as-css)
                  nil))))

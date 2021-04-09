@@ -1,7 +1,6 @@
 (ns stylefy.tests.core-test
   (:require [cljs.test :as test :refer-macros [deftest is testing]]
             [stylefy.core :as stylefy]
-            [stylefy.impl.dom :as dom]
             [garden.color :as color]
             [garden.units :as units]
             [clojure.string :as str]))
@@ -357,15 +356,6 @@
       (is false "Error was not thrown")
       (catch js/Error _e
         (is true "Error was thrown as expected")))))
-
-; DOM
-
-(deftest dom-update-is-requested
-  (let [dom-update-requested? (atom false)]
-    (with-redefs [dom/request-asynchronous-dom-update #(reset! dom-update-requested? true)]
-      (is (nil? (stylefy/init)))
-      (stylefy/use-style {:color "red"})
-      (is (true? @dom-update-requested?)))))
 
 ; prepare-styles
 

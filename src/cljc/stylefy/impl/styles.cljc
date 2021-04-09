@@ -79,7 +79,7 @@
 (defn style-return-value [style style-hash options]
   (let [return-map (prepare-style-return-value style style-hash options)]
     #?(:cljs (if (or (empty? style)
-                     (dom/style-in-dom? style-hash))
+                     (dom/style-in-dom? @dom/dom style-hash))
                return-map
                ; The style definition has not been added into the DOM yet, so return the style props
                ; as inline style. Inline style gets replaced soon as the style definition
@@ -111,7 +111,7 @@
   (state/check-stylefy-initialisation)
   (let [style-with-global-vendors (when-not (empty? style) (add-global-vendors style))
         style-hash (hashing/hash-style style-with-global-vendors)
-        already-created #?(:cljs (dom/style-by-hash style-hash)
+        already-created #?(:cljs (dom/style-by-hash @dom/dom style-hash)
                            :clj false)] ; TODO Read from css-in-context?
 
     (when (and (seq style-with-global-vendors)
@@ -147,12 +147,12 @@
       (let [styles (remove nil? styles)]
 
         (doseq [style styles]
-          (use-style! style {} dom/save-style!)
+          (use-style! style {} (fn [style] (dom/add-style @dom/dom style)))
           (when-let [sub-styles (vals (:stylefy.core/sub-styles style))]
             (prepare-styles sub-styles {:request-dom-update-after-done? false}))))
 
       (when request-dom-update-after-done?
-        (dom/update-dom-if-requested)))))
+        (dom/update-dom-if-needed @dom/dom)))))
 
 (defn init-global-vendor-prefixes [options]
   (let [global-vendor-prefixes-options (:global-vendor-prefixes options)]

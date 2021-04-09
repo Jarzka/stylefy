@@ -29,27 +29,37 @@ While being originally created with the frontend in mind, stylefy now runs on bo
 
 # Installation
 
-## Stable version
+stylefy comes with modules that are optimised for specific UI libraries / frameworks.
 
-Designed to be used with [Reagent](https://github.com/reagent-project/reagent) or on the backend. Add dependency:
-
-```clj
-[stylefy "2.2.2"]
-```
-
-## Latest development release
-
-Supports [Rum](https://github.com/tonsky/rum) and virtually any UI library / framework via generic DOM module. Add dependencies:
+First, add stylefy core as a dependency:
 
 ```clj
-[stylefy "3.0.0-beta3"]
-; And ONE of these:
-[stylefy/reagent "3.0.0-beta2"] 
-[stylefy/rum "3.0.0-beta5"] 
-[stylefy/generic-dom "3.0.0-beta1"]
+[stylefy "3.0.0"]
 ```
 
-See changelog for help how to set it up.
+Then add another dependency, depending on which UI library / framework you are using:
+
+**Reagent**
+
+```clj
+[stylefy/reagent "3.0.0"]
+```
+
+**Rum**
+
+```clj
+[stylefy/rum "3.0.0"]
+```
+
+**Other**
+
+If your UI library is not listed above, use the generic DOM module:
+
+```clj
+[stylefy/generic-dom "3.0.0"]
+```
+
+This module makes only synchronous DOM updates and is not optimised for any specific UI library / framework. It can also be used with Reagent & Rum, but it's generally slower.
 
 # Setup
 
@@ -599,6 +609,8 @@ TLDR; stylefy it's like using inline CSS, but with full support for all CSS feat
 
 ## <a name="howdoesfrontendwork"></a> How does the CSS generation work on the frontend?
 
+*Note: This information only applies to `stylefy/reagent` and `stylefy/rum` modules.*
+
 **use-style** saves the style and adds it into the DOM as a CSS class asynchronously (if it's not already there). The return value is a map containing the given style properties as inline style. Inline style is used for a very short time, until the CSS class has been generated and inserted into the DOM. When the DOM is ready, the component is forced to re-render itself and use only the CSS class definition.
 
 You might ask why does **use-style** work asynchronously? Why don't we add the style into the DOM immediately and return its class name? The reason is speed. Consider a case when multiple components are being rendered and **use-style** is being called many times with different style maps. In this case, updating the DOM on every single call would slow the rendering process down. To keep the rendering fast, the idea is to collect as many style maps as possible during a single render event, convert all of them to CSS and add into the DOM at once.
@@ -613,7 +625,14 @@ Because **prepare-style** causes immediate synchronous DOM update, it is not rec
 
 ## Any real projects using stylefy?
 
-Yup, for example: [Finnish National Access Point](https://github.com/finnishtransportagency/mmtis-national-access-point), [Velho Design System](https://github.com/velho-allianssi/velho-ds), [Solita Rooms](https://github.com/solita/solita-rooms), [My personal website](https://github.com/Jarzka/Pikseli.org), and [various other projects](https://github.com/search?q=_stylefy-constant-styles_&type=Code)
+Yup, for example:
+
+- [Finnish National Access Point](https://github.com/finnishtransportagency/mmtis-national-access-point)
+- [Velho Design System](https://github.com/velho-allianssi/velho-ds)
+- [Solita Rooms](https://github.com/solita/solita-rooms)
+- [My personal website](https://github.com/Jarzka/Pikseli.org)
+  
+and [various other projects](https://github.com/search?q=_stylefy-constant-styles_&type=Code)
 
 # More examples
 

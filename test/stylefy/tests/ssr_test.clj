@@ -5,7 +5,8 @@
             [garden.units :as gu]
             [garden.stylesheet :refer [at-media]]
             [stylefy.core :as stylefy :refer [use-style]]
-            [clojure.string :as str]))
+            [clojure.string :as str])
+  (:refer-clojure :exclude [class]))
 
 ; Style definitions for SSR tests:
 
