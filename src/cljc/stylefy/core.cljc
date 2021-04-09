@@ -14,14 +14,14 @@
 #?(:clj (def ^:dynamic css-in-context (atom nil)))
 
 (defn use-style
-  "Defines a style for a component by converting the given style map in to an unique CSS class,
-   and returning a pointer (a map with :class keyword) to it so that the component can use it.
+  "Converts the given style to CSS class.
+   Returns a map with :class keyword, pointing to the generated CSS class.
+
    To keep the rendering process fast, use-style works asynchronously, meaning that it
    does not add the generated CSS class into the DOM immediately, but very soon instead.
    If the style has not been added into the DOM yet, it returns the given props as inline style,
    so that the component looks good even if CSS class has not been generated yet.
-
-   Important exception: if the style contains specific modes or media query definitions,
+   However, if the style contains specific modes or media query definitions,
    which cannot be used as inline style, {:style {:visibility \"hidden\"}} is returned.
    Thus, the component is going to be hidden for a few milliseconds.
    In most cases, this is not a problem, but if you want to avoid it, see prepare-styles function.
