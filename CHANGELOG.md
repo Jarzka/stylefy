@@ -14,6 +14,7 @@ April 1, 2021
     - `stylefy-rum`, which is functionally the same module as `stylefy-reagent`, but for Rum.
     - `stylefy-generic-dom` is a general-purpose solution that does not depend on any specific UI library / framework. It makes only synchronous DOM updates, so the wide support comes with the cost of performance.
 - Namespaced keywords are replaced with unnamespaced when caching CSS. This makes different DOM module implementations easier to work with, and it also reduces the size of the cache by approximately 7%. Unsupported cache versions are cleared automatically, so no actions are required from the users of the library.
+  - This also means that after upgrading stylefy to version 3.0.0, you should not downgrade it, or the cache is going to get corrupted.
 
 ## Migration guide from previous versions (frontend only):
 
