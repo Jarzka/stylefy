@@ -20,7 +20,7 @@ Assuming you are using Reagent, update stylefy version and add `stylefy/reagent`
 [stylefy/reagent "3.0.0"]
 ```
 
-Require `stylefy.reagent` and initialise it together with stylefy:
+Require `stylefy.reagent` and initialise it together with stylefy (along with any other options you pass to `stylefy/init`):
 
 ```cljs
 (:require [stylefy.reagent :as stylefy-reagent])
