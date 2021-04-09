@@ -140,7 +140,10 @@
     (add-keyframes identifier keyframes))
 
   (doseq [font-face (:font-face uninitialised-styles)]
-    (add-font-face font-face)))
+    (add-font-face font-face))
+
+  (doseq [style (:style uninitialised-styles)]
+    (add-style style)))
 
 (defrecord RumDom []
   dom/Dom

@@ -14,7 +14,8 @@
 (def stylefy-base-node (atom nil)) ; Used when running multiple instances of stylefy on the same page
 (def stylefy-instance-id (atom nil)) ; Used when running multiple instances of stylefy on the same page
 
-(def uninitialised-styles (atom {:font-face []
+(def uninitialised-styles (atom {:style []
+                                 :font-face []
                                  :keyframes []
                                  :tag []
                                  :class []}))
@@ -52,9 +53,6 @@
   (style-in-dom? [this style-hash])
   (style-by-hash [this style-hash]))
 
-(defn warn-not-initialised [fn-name]
-  (log/warn (str "stylefy function " fn-name " can not be called before stylefy is initialised!")))
-
 (defn save-uninitialised-style [key style-as-css]
   (reset! uninitialised-styles
           (assoc @uninitialised-styles
@@ -67,20 +65,20 @@
 (defrecord UninitialisedDom []
   Dom
   ; Init
-  (load-uninitialised-styles [this uninitialised-styles] (warn-not-initialised "load-uninitialised-styles"))
-  (load-cache [this] (warn-not-initialised "load-cache"))
+  (load-uninitialised-styles [this uninitialised-styles])
+  (load-cache [this])
 
   ; Add styles
-  (add-style [this style] (warn-not-initialised "add-style"))
+  (add-style [this style] (save-uninitialised-style :style style))
   (add-class [this class-as-css] (save-uninitialised-style :class class-as-css))
   (add-tag [this tag-as-css] (save-uninitialised-style :tag tag-as-css))
   (add-font-face [this font-face-as-css] (save-uninitialised-style :font-face font-face-as-css))
   (add-keyframes [this identifier keyframes-as-css] (save-uninitialised-style :keyframes [identifier keyframes-as-css]))
 
   ; DOM management
-  (update-dom [this] (warn-not-initialised "update-dom"))
-  (update-dom-if-needed [this] (warn-not-initialised "update-dom-if-needed"))
-  (style-in-dom? [this style-hash] (warn-not-initialised "style-in-dom?"))
-  (style-by-hash [this style-hash] (warn-not-initialised "style-by-hash")))
+  (update-dom [this])
+  (update-dom-if-needed [this])
+  (style-in-dom? [this style-hash] false)
+  (style-by-hash [this style-hash]))
 
 (def dom (atom (->UninitialisedDom)))
