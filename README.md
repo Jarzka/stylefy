@@ -77,8 +77,8 @@ The first tag is going to contain CSS definitions that are not going to change (
 Require stylefy along with the DOM module:
 
 ```clj
-(:require [stylefy.core :as stylefy])
-(:require [stylefy.reagent :as stylefy-reagent])
+(:require [stylefy.core :as stylefy]
+          [stylefy.reagent :as stylefy-reagent])
 ```
 
 Then, call **stylefy/init** once when your application starts:
