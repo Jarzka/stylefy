@@ -23,8 +23,9 @@ While being originally created with the frontend in mind, stylefy now runs on bo
 - Vendor prefixes are supported both locally and globally
 - CSS caching on the frontend using local storage (optional)
 - Small and simple core API which is easy to setup
-- Fast, asynchronous CSS generation
-- Automatic style reloading (with shadow-cljs or Figwheel
+- Fast, asynchronous CSS generation on the frontend (with an option to use synchronous generation)
+- Automatic style reloading (with shadow-cljs or Figwheel)
+- Server Side Rendering
 - All features are tested to work with Chrome, Firefox, Edge & Internet Explorer 11
 
 # Installation
