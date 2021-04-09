@@ -29,27 +29,37 @@ While being originally created with the frontend in mind, stylefy now runs on bo
 
 # Installation
 
-## Stable version
+stylefy comes with modules that are optimised for specific UI libraries / frameworks.
 
-Designed to be used with [Reagent](https://github.com/reagent-project/reagent) or on the backend. Add dependency:
-
-```clj
-[stylefy "2.2.2"]
-```
-
-## Latest development release
-
-Supports [Rum](https://github.com/tonsky/rum) and virtually any UI library / framework via generic DOM module. Add dependencies:
+First, add stylefy core as a dependency:
 
 ```clj
-[stylefy "3.0.0-beta3"]
-; And ONE of these:
-[stylefy/reagent "3.0.0-beta2"] 
-[stylefy/rum "3.0.0-beta5"] 
-[stylefy/generic-dom "3.0.0-beta1"]
+[stylefy "3.0.0"]
 ```
 
-See changelog for help how to set it up.
+Then add another dependency, depending on which UI library / framework you are using:
+
+**Reagent**
+
+```clj
+[stylefy/reagent "3.0.0"]
+```
+
+**Rum**
+
+```clj
+[stylefy/rum "3.0.0"]
+```
+
+**Other**
+
+If your UI library is not listed above, use the generic DOM module:
+
+```clj
+[stylefy/generic-dom "3.0.0"]
+```
+
+This module makes only synchronous DOM updates and is not optimised for any specific UI library / framework. It can also be used with Reagent & Rum, but it's generally slower.
 
 # Setup
 
