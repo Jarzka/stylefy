@@ -609,6 +609,8 @@ TLDR; stylefy it's like using inline CSS, but with full support for all CSS feat
 
 ## <a name="howdoesfrontendwork"></a> How does the CSS generation work on the frontend?
 
+*Note: This information only applies to `stylefy/reagent` and `stylefy/rum` modules.*
+
 **use-style** saves the style and adds it into the DOM as a CSS class asynchronously (if it's not already there). The return value is a map containing the given style properties as inline style. Inline style is used for a very short time, until the CSS class has been generated and inserted into the DOM. When the DOM is ready, the component is forced to re-render itself and use only the CSS class definition.
 
 You might ask why does **use-style** work asynchronously? Why don't we add the style into the DOM immediately and return its class name? The reason is speed. Consider a case when multiple components are being rendered and **use-style** is being called many times with different style maps. In this case, updating the DOM on every single call would slow the rendering process down. To keep the rendering fast, the idea is to collect as many style maps as possible during a single render event, convert all of them to CSS and add into the DOM at once.
@@ -623,7 +625,14 @@ Because **prepare-style** causes immediate synchronous DOM update, it is not rec
 
 ## Any real projects using stylefy?
 
-Yup, for example: [Finnish National Access Point](https://github.com/finnishtransportagency/mmtis-national-access-point), [Velho Design System](https://github.com/velho-allianssi/velho-ds), [Solita Rooms](https://github.com/solita/solita-rooms), [My personal website](https://github.com/Jarzka/Pikseli.org), and [various other projects](https://github.com/search?q=_stylefy-constant-styles_&type=Code)
+Yup, for example:
+
+- [Finnish National Access Point](https://github.com/finnishtransportagency/mmtis-national-access-point)
+- [Velho Design System](https://github.com/velho-allianssi/velho-ds)
+- [Solita Rooms](https://github.com/solita/solita-rooms)
+- [My personal website](https://github.com/Jarzka/Pikseli.org)
+  
+and [various other projects](https://github.com/search?q=_stylefy-constant-styles_&type=Code)
 
 # More examples
 
