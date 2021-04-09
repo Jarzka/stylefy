@@ -35,7 +35,7 @@ stylefy comes with modules that are optimised for specific UI libraries / framew
 [stylefy "3.0.0"]
 ```
 
-Then, based on the UI library you are using, add a corresponding DOM module:
+Then, based on the UI library you are using, add a corresponding module:
 
 **Reagent**
 
@@ -51,7 +51,7 @@ Then, based on the UI library you are using, add a corresponding DOM module:
 
 **Other**
 
-If your UI library is not listed above, use the generic DOM module:
+If your UI library is not listed above, use the generic module:
 
 ```clj
 [stylefy/generic-dom "3.0.0"]
@@ -74,7 +74,7 @@ The first tag is going to contain CSS definitions that are not going to change (
 <style id="_stylefy-styles_"></style>
 ```
 
-Require stylefy along with the DOM module:
+Require stylefy along with the module:
 
 ```clj
 (:require [stylefy.core :as stylefy]
