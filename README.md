@@ -35,7 +35,7 @@ stylefy comes with modules that are optimised for specific UI libraries / framew
 [stylefy "3.0.0"]
 ```
 
-Then add another dependency, depending on which UI library / framework you are using:
+Then add a DOM module as a dependency, based on the UI library / framework you are using:
 
 **Reagent**
 
@@ -74,16 +74,17 @@ The first tag is going to contain CSS definitions that are not going to change (
 <style id="_stylefy-styles_"></style>
 ```
 
-Require stylefy:
+Require stylefy along with the DOM module:
 
 ```clj
 (:require [stylefy.core :as stylefy])
+(:require [stylefy.reagent :as stylefy-reagent])
 ```
 
 Then, call **stylefy/init** once when your application starts:
 
 ```clojure
-(stylefy/init)
+(stylefy/init {:dom (stylefy-reagent/init)})
 ```
 
 Now you are ready to go! But before you start, it's good to be aware of a few things:
