@@ -30,7 +30,7 @@ While being originally created with the frontend in mind, stylefy now runs on bo
 
 # Installation
 
-stylefy comes with modules that are optimised for specific UI libraries / frameworks. First, add stylefy core as a dependency:
+stylefy consists of modules that are optimised for specific UI libraries / frameworks. First, add stylefy core as a dependency:
 
 ```clj
 [stylefy "3.0.0"]
@@ -629,6 +629,7 @@ Yup, for example:
 
 - [Finnish National Access Point](https://github.com/finnishtransportagency/mmtis-national-access-point)
 - [Velho Design System](https://github.com/velho-allianssi/velho-ds)
+- [Athens](https://github.com/athensresearch/athens)
 - [Solita Rooms](https://github.com/solita/solita-rooms)
 - [My personal website](https://github.com/Jarzka/Pikseli.org)
   
