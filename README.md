@@ -30,13 +30,15 @@ While being originally created with the frontend in mind, stylefy now runs on bo
 
 # Installation
 
-stylefy consists of modules that are optimised for specific UI libraries / frameworks. First, add stylefy core as a dependency:
+stylefy consists of modules that are optimised for specific UI libraries / frameworks.
+
+First, add stylefy core as a dependency:
 
 ```clj
 [stylefy "3.0.0"]
 ```
 
-Then, based on the UI library you are using, add a corresponding module:
+Then, based on the UI library you are using, add a corresponding module. The main purpose of the module is to handle asynchronous DOM updates when components are rendered.
 
 **Reagent**
 
