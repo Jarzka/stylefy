@@ -114,6 +114,9 @@
                                                                             %)
                                                                          identity
                                                                          manual-style)
+                                     ; Manually written selectors can contain media queries,
+                                     ; those will be correctly nested by Garden
+                                     ; (media query will be defined first in CSS)
                                      garden-style-definition (into [css-parent-selector] [manual-selector-and-css-props])
                                      css-class (css options garden-style-definition)]
                                  css-class))
