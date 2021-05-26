@@ -529,6 +529,14 @@ An example of a situation when we need to use manual mode: we want to change the
 
 For syntax help, see Garden's [documentation](https://github.com/noprompt/garden/wiki/Syntax).
 
+Notice that Garden's selector syntax can contain strings, so purely string-based selectors can also be used:
+
+```clojure
+(def style
+  {:color :red
+   ::stylefy/manual [["> .box:hover" {:color "black"}]]})
+```
+
 ## <a name="caching"></a> Style caching (frontend)
 
 stylefy supports style caching for styles generated on the frontend via HTML5 local storage. The converted CSS code is added into local storage and loaded from there when the page is reloaded.
