@@ -199,4 +199,10 @@
                                   {:width "200px"
                                    ::stylefy/mode {:hover {:background-color "#336633"}}}}}]
       (is (= (conversion/style->css {:props style :hash (hashing/hash-style style)} {:pretty-print? false})
-             "._stylefy_640089058{width:500px;height:200px;padding:33px;margin-bottom:10px;background-color:#55AA55}._stylefy_640089058:hover{background-color:#99DD99}@media(max-width:550px){._stylefy_640089058{width:200px}._stylefy_640089058:hover{background-color:#336633}}._stylefy_640089058:hover .innerbox{background-color:#999999}._stylefy_640089058:hover .innerbox:hover{background-color:#EEEEEE}@media(max-width:550px){._stylefy_640089058:hover .innerbox{background-color:#666666}._stylefy_640089058:hover .innerbox:hover{background-color:#111111}}")))))
+             "._stylefy_640089058{width:500px;height:200px;padding:33px;margin-bottom:10px;background-color:#55AA55}._stylefy_640089058:hover{background-color:#99DD99}@media(max-width:550px){._stylefy_640089058{width:200px}._stylefy_640089058:hover{background-color:#336633}}._stylefy_640089058:hover .innerbox{background-color:#999999}._stylefy_640089058:hover .innerbox:hover{background-color:#EEEEEE}@media(max-width:550px){._stylefy_640089058:hover .innerbox{background-color:#666666}._stylefy_640089058:hover .innerbox:hover{background-color:#111111}}"))))
+
+  (testing "Manual mode with string-based selector"
+    (let [style {:color :red
+                 ::stylefy/manual [["> .box:hover" {:color "black"}]]}]
+      (is (= (conversion/style->css {:props style :hash (hashing/hash-style style)} {:pretty-print? false})
+              "._stylefy_696232348{color:red}._stylefy_696232348 > .box:hover{color:black}")))))
