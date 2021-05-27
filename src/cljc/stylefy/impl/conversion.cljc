@@ -31,7 +31,7 @@
                       (assert (or (keyword? mode-name)
                                   (and (string? mode-name)
                                        (str/starts-with? mode-name ":")))
-                              (str "Mode must be specified as a keyword or string beginning with colon, got: " (pr-str mode-name)))
+                              (str "Mode must be specified as a keyword or string beginning with a colon, got: " (pr-str mode-name)))
                       (when (and (string? mode-name)
                                  (> (count (str/split mode-name " ")) 1))
                         (log/warn (str "Incorrect mode detected, should not contain spaces. Mode was: " (pr-str mode-name))))
@@ -57,7 +57,14 @@
     css-class))
 
 (defn- convert-media-queries
-  "Converts stylefy/media definition into CSS media query."
+  "Converts stylefy/media definition into CSS media query.
+
+  stylefy features supported in media query style map:
+  - modes
+  - vendor prefixes
+
+  stylefy/manual is not suppoted here since one can use it to create
+  media queries."
   [{:keys [props hash custom-selector] :as _style} options]
   (when-let [stylefy-media-queries (:stylefy.core/media props)]
     (let [css-selector (or custom-selector (class-selector hash))
@@ -75,8 +82,14 @@
             (keys stylefy-media-queries))]
       (apply str css-media-queries))))
 
-(defn- convert-supports-rules
-  "Converts stylefy/supports definition into CSS feature query."
+(defn- convert-feature-queries
+  "Converts stylefy/supports definition into CSS feature query.
+
+  stylefy features supported in feature query style map:
+  - modes
+  - media queries
+  - vendor prefixes"
+  ; TODO Manual mode should also be supported here
   [{:keys [props hash custom-selector] :as _style} options]
   (when-let [stylefy-supports (:stylefy.core/supports props)]
     (let [css-selector (or custom-selector (class-selector hash))
@@ -103,7 +116,9 @@
       (apply str css-supports))))
 
 (defn- convert-manual-styles
-  "Converts stylefy/manual definition into CSS."
+  "Converts stylefy/manual definition into CSS.
+
+   stylefy's special keywords are not supported here."
   [{:keys [props hash custom-selector] :as _style} options]
   (when-let [stylefy-manual-styles (:stylefy.core/manual props)]
     (let [css-parent-selector (or custom-selector (class-selector hash))
@@ -129,7 +144,7 @@
   ([style options]
    (let [css-class (convert-base-style-into-class style options)
          css-media-queries (convert-media-queries style options)
-         css-supports (convert-supports-rules style options)
+         css-supports (convert-feature-queries style options)
          css-manual-styles (convert-manual-styles style options)]
      (str css-class
           css-media-queries
