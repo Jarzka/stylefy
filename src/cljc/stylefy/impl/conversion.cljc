@@ -70,7 +70,7 @@
     :else item))
 
 (defn- convert-scoped-styles
-  "Converts Clojure style map into CSS class."
+  "Converts stylefy/scope definition into CSS class."
   [{:keys [props hash custom-selector] :as _style} options]
   (when-let [stylefy-scoped-styles (:stylefy.core/scope props)]
     (let [css-parent-selector (or custom-selector (class-selector hash))
