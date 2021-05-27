@@ -63,7 +63,7 @@
   - modes
   - vendor prefixes
 
-  stylefy/manual is not suppoted here since one can use it to create
+  stylefy/manual is not supported here since one can use it to create
   media queries."
   [{:keys [props hash custom-selector] :as _style} options]
   (when-let [stylefy-media-queries (:stylefy.core/media props)]
