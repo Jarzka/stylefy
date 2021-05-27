@@ -117,7 +117,10 @@
 (defn- convert-manual-styles
   "Converts stylefy/manual definition into CSS.
 
-   stylefy's special keywords are not supported here."
+   stylefy's special keywords are not supported here.
+
+   Manually written selectors can contain media queries, those will be correctly nested by Garden
+   (media query will be defined first in CSS)."
   [{:keys [props hash custom-selector] :as _style} options]
   (when-let [stylefy-manual-styles (:stylefy.core/manual props)]
     (let [css-parent-selector (or custom-selector (class-selector hash))
@@ -128,9 +131,6 @@
                                                                             %)
                                                                          identity
                                                                          manual-style)
-                                     ; Manually written selectors can contain media queries,
-                                     ; those will be correctly nested by Garden
-                                     ; (media query will be defined first in CSS)
                                      garden-style-definition (into [css-parent-selector] [manual-selector-and-css-props])
                                      css-class (css options garden-style-definition)]
                                  css-class))
@@ -145,6 +145,7 @@
          css-media-queries (convert-media-queries style options)
          css-supports (convert-feature-queries style options)
          css-manual-styles (convert-manual-styles style options)]
+     ; Order is important, from less specific to more specific.
      (str css-class
           css-media-queries
           css-supports
