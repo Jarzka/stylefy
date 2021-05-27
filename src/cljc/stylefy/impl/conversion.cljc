@@ -68,18 +68,17 @@
   [{:keys [props hash custom-selector] :as _style} options]
   (when-let [stylefy-media-queries (:stylefy.core/media props)]
     (let [css-selector (or custom-selector (class-selector hash))
-          css-media-queries
-          (map
-            (fn [media-query]
-              (let [media-query-props (get stylefy-media-queries media-query)
-                    media-query-css-props (utils/remove-special-keywords media-query-props)
-                    garden-class-definition [css-selector media-query-css-props]
-                    garden-pseudo-classes (convert-stylefy-modes-to-garden media-query-props)
-                    garden-vendors (convert-stylefy-vendors-to-garden media-query-props)
-                    garden-options (or (merge options garden-vendors) {})]
-                (css garden-options (at-media media-query (into garden-class-definition
-                                                                garden-pseudo-classes)))))
-            (keys stylefy-media-queries))]
+          css-media-queries (map
+                              (fn [media-query]
+                                (let [media-query-props (get stylefy-media-queries media-query)
+                                      media-query-css-props (utils/remove-special-keywords media-query-props)
+                                      garden-class-definition [css-selector media-query-css-props]
+                                      garden-pseudo-classes (convert-stylefy-modes-to-garden media-query-props)
+                                      garden-vendors (convert-stylefy-vendors-to-garden media-query-props)
+                                      garden-options (or (merge options garden-vendors) {})]
+                                  (css garden-options (at-media media-query (into garden-class-definition
+                                                                                  garden-pseudo-classes)))))
+                              (keys stylefy-media-queries))]
       (apply str css-media-queries))))
 
 (defn- convert-feature-queries
