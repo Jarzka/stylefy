@@ -56,6 +56,34 @@
                                             garden-pseudo-classes))]
     css-class))
 
+(defn- scope-style-map [style-map scope]
+  [scope style-map])
+
+(defn- recursively-scope-style-map [item scope]
+  (cond
+    (map? item)
+    (scope-style-map item scope)
+
+    (vector? item)
+    (mapv #(recursively-scope-style-map % scope) item)
+
+    :else item))
+
+(defn- convert-scoped-styles
+  "Converts Clojure style map into CSS class."
+  [{:keys [props hash custom-selector] :as _style} options]
+  (when-let [stylefy-scoped-styles (:stylefy.core/scope props)]
+    (let [css-parent-selector (or custom-selector (class-selector hash))
+          css-scoped-styles (map
+                              (fn [scoping-rule]
+                                ; It is assumed that the given Garden selector contains only one style map
+                                ; TODO Handle stylefy's special keywords in the scoped style map
+                                (let [manual-selector-and-css-props (recursively-scope-style-map scoping-rule css-parent-selector)
+                                      css-class (css options manual-selector-and-css-props)]
+                                  css-class))
+                              stylefy-scoped-styles)]
+      (apply str css-scoped-styles))))
+
 (defn- convert-media-queries
   "Converts stylefy/media definition into CSS media query.
 
@@ -88,7 +116,7 @@
   - modes
   - media queries
   - vendor prefixes"
-  ; TODO Manual mode should also be supported here
+  ; TODO Manual mode and scoping should also be supported here
   [{:keys [props hash custom-selector] :as _style} options]
   (when-let [stylefy-supports (:stylefy.core/supports props)]
     (let [css-selector (or custom-selector (class-selector hash))
@@ -143,9 +171,11 @@
    (let [css-class (convert-base-style-into-class style options)
          css-media-queries (convert-media-queries style options)
          css-supports (convert-feature-queries style options)
+         css-scoped-styles (convert-scoped-styles style options)
          css-manual-styles (convert-manual-styles style options)]
      ; Order is important, from less specific to more specific.
      (str css-class
+          css-scoped-styles
           css-media-queries
           css-supports
           css-manual-styles))))

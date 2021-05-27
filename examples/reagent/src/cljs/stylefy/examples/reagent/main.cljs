@@ -196,6 +196,21 @@
                      :background-image (url "images/background.jpg")})
     "Defined with pc unit, height with rem unit, color with rgb, background as a custom defcssfn function."]])
 
+(def style-only-in-scoped-box
+  {:font-weight :bold
+   ::stylefy/scope [[:.scoped-box {:color "red"
+                                   ;::stylefy/manual [:.green-text-in-scoped-box {:color "green"}]
+                                   }]]})
+
+(defn- scoped-box []
+  [:div
+   [:div (use-style style-only-in-scoped-box)
+    [:p "This text is only bold since it is not inside scoped box"]]
+   [:div.scoped-box
+    [:div (use-style style-only-in-scoped-box)
+     [:p "This text is both bold and red since it is in scoped box"]
+     [:p.green-text-in-scoped-box "This text is bold and green, as defined by scoped box style and it's manual mode"]]]])
+
 (def background-box-sorted (sorted-map
                              :width "100%"
                              :height "20rem"
@@ -304,6 +319,9 @@
    [grid/grid]
 
    [garden-units]
+
+   [:h2 "Scoped styles"]
+   [scoped-box]
 
    [:h2 "Key order"]
    [:p "If CSS shorthands are used, the order of CSS key properties is important. If we use a regular Clojure map, the order of keys can change in the final CSS output."]

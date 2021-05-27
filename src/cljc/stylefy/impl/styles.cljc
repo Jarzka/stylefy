@@ -89,6 +89,7 @@
                (let [contains-media-queries? (some? (:stylefy.core/media style))
                      contains-feature-queries? (some? (:stylefy.core/supports style))
                      contains-manual-mode? (some? (:stylefy.core/manual style))
+                     contains-scoping? (some? (:stylefy.core/scope style))
                      excluded-modes #{:hover}
                      modes (:stylefy.core/mode style)
                      mode-names (cond
@@ -102,6 +103,7 @@
                  (if (or contains-media-queries?
                          contains-feature-queries?
                          contains-manual-mode?
+                         contains-scoping?
                          contains-modes-not-excluded?)
                    (merge return-map {:style (merge inline-style {:visibility "hidden"})})
                    (merge return-map {:style inline-style}))))
