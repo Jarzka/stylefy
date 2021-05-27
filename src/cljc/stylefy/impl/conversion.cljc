@@ -101,12 +101,11 @@
                                  garden-pseudo-classes (convert-stylefy-modes-to-garden supports-props)
                                  garden-vendors (convert-stylefy-vendors-to-garden supports-props)
                                  garden-options (or (merge options garden-vendors) {})
-                                 css-media-queries-inside-supports
-                                 (convert-media-queries
-                                   {:props supports-props
-                                    :hash hash
-                                    :custom-selector custom-selector}
-                                   options)]
+                                 css-media-queries-inside-supports (convert-media-queries
+                                                                     {:props supports-props
+                                                                      :hash hash
+                                                                      :custom-selector custom-selector}
+                                                                     options)]
                              (str "@supports (" supports-selector ") {"
                                   (css garden-options (into garden-class-definition
                                                             garden-pseudo-classes))
