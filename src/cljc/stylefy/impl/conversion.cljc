@@ -56,11 +56,14 @@
                                             garden-pseudo-classes))]
     css-class))
 
-(defn- handle-scoped-style-map [style-map scope]
-  (let [scoped-style [scope style-map]
-        garden-pseudo-classes (convert-stylefy-modes-to-garden style-map)]
-    (into scoped-style
-          garden-pseudo-classes)))
+(defn- handle-scoped-style-map [props scope]
+  (let [scoped-style [scope props]
+        garden-pseudo-classes (convert-stylefy-modes-to-garden props)
+        stylefy-manual-styles (:stylefy.core/manual props)]
+    (apply conj scoped-style
+           (concat
+             garden-pseudo-classes
+             stylefy-manual-styles))))
 
 (defn- recursively-handle-scoped-style-map [item scope]
   (cond
@@ -77,7 +80,8 @@
 
   stylefy features supported in media query style map:
   - modes
-  - vendor prefixes"
+  - vendor prefixes
+  - manual mode"
   [{:keys [props hash custom-selector] :as _style} options]
   (when-let [stylefy-scoped-styles (:stylefy.core/scope props)]
     (let [css-parent-selector (or custom-selector (class-selector hash))
@@ -100,6 +104,7 @@
 
   stylefy/manual is not supported here since one can use it to create
   media queries."
+  ; TODO Add support for scopes
   [{:keys [props hash custom-selector] :as _style} options]
   (when-let [stylefy-media-queries (:stylefy.core/media props)]
     (let [css-selector (or custom-selector (class-selector hash))

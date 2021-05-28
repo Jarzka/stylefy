@@ -200,8 +200,7 @@
   {:font-weight :bold
    ::stylefy/scope [[:.scoped-box {:color "red"
                                    ::stylefy/mode {:hover {:color "yellow"}}
-                                   ;::stylefy/manual [:.green-text-in-scoped-box {:color "green"}]
-                                   }]]})
+                                   ::stylefy/manual [[:.green-text-in-scoped-box {:color "green"}]]}]]})
 
 (defn- scoped-box []
   [:div
