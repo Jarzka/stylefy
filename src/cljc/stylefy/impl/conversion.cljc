@@ -57,7 +57,7 @@
     css-class))
 
 (defn- handle-scoped-style-map [props scope]
-  (let [scoped-style [scope props]
+  (let [scoped-style [scope (utils/remove-special-keywords props)]
         garden-pseudo-classes (convert-stylefy-modes-to-garden props)
         stylefy-manual-styles (:stylefy.core/manual props)]
     (apply conj scoped-style
