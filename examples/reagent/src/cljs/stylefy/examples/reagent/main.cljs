@@ -196,7 +196,7 @@
                      :background-image (url "images/background.jpg")})
     "Defined with pc unit, height with rem unit, color with rgb, background as a custom defcssfn function."]])
 
-(def style-only-in-scoped-box
+(def scoped-box-style
   {:font-weight :bold
    ::stylefy/scope [[:.scoped-box {:color "red"
                                    ::stylefy/mode {:hover {:color "yellow"}}
@@ -204,10 +204,10 @@
 
 (defn- scoped-box []
   [:div
-   [:div (use-style style-only-in-scoped-box)
+   [:div (use-style scoped-box-style)
     [:p "This text is only bold since it is not inside scoped box"]]
    [:div.scoped-box
-    [:div (use-style style-only-in-scoped-box)
+    [:div (use-style scoped-box-style)
      [:p "This text is both bold and red since it is in scoped box. Hovering makes it yellow."]
      [:p.green-text-in-scoped-box "This text is bold and green, as defined by scoped box style and it's manual mode"]]]])
 
