@@ -199,6 +199,7 @@
 (def style-only-in-scoped-box
   {:font-weight :bold
    ::stylefy/scope [[:.scoped-box {:color "red"
+                                   ::stylefy/mode {:hover {:color "yellow"}}
                                    ;::stylefy/manual [:.green-text-in-scoped-box {:color "green"}]
                                    }]]})
 
@@ -208,7 +209,7 @@
     [:p "This text is only bold since it is not inside scoped box"]]
    [:div.scoped-box
     [:div (use-style style-only-in-scoped-box)
-     [:p "This text is both bold and red since it is in scoped box"]
+     [:p "This text is both bold and red since it is in scoped box. Hovering makes it yellow."]
      [:p.green-text-in-scoped-box "This text is bold and green, as defined by scoped box style and it's manual mode"]]]])
 
 (def background-box-sorted (sorted-map

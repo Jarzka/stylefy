@@ -56,30 +56,37 @@
                                             garden-pseudo-classes))]
     css-class))
 
-(defn- scope-style-map [style-map scope]
-  [scope style-map])
+(defn- handle-scoped-style-map [style-map scope]
+  (let [scoped-style [scope style-map]
+        garden-pseudo-classes (convert-stylefy-modes-to-garden style-map)]
+    (into scoped-style
+          garden-pseudo-classes)))
 
-(defn- recursively-scope-style-map [item scope]
+(defn- recursively-handle-scoped-style-map [item scope]
   (cond
     (map? item)
-    (scope-style-map item scope)
+    (handle-scoped-style-map item scope)
 
     (vector? item)
-    (mapv #(recursively-scope-style-map % scope) item)
+    (mapv #(recursively-handle-scoped-style-map % scope) item)
 
     :else item))
 
 (defn- convert-scoped-styles
-  "Converts stylefy/scope definition into CSS class."
+  "Converts stylefy/scope definition into CSS class.
+
+  stylefy features supported in media query style map:
+  - modes
+  - vendor prefixes"
   [{:keys [props hash custom-selector] :as _style} options]
   (when-let [stylefy-scoped-styles (:stylefy.core/scope props)]
     (let [css-parent-selector (or custom-selector (class-selector hash))
           css-scoped-styles (map
                               (fn [scoping-rule]
-                                ; It is assumed that the given Garden selector contains only one style map
-                                ; TODO Handle stylefy's special keywords in the scoped style map
-                                (let [manual-selector-and-css-props (recursively-scope-style-map scoping-rule css-parent-selector)
-                                      css-class (css options manual-selector-and-css-props)]
+                                (let [manual-selector-and-css-props (recursively-handle-scoped-style-map scoping-rule css-parent-selector)
+                                      garden-vendors (convert-stylefy-vendors-to-garden props)
+                                      garden-options (or (merge options garden-vendors) {})
+                                      css-class (css garden-options manual-selector-and-css-props)]
                                   css-class))
                               stylefy-scoped-styles)]
       (apply str css-scoped-styles))))
