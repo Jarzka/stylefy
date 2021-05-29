@@ -206,3 +206,14 @@
                  ::stylefy/manual [["> .box:hover" {:color "black"}]]}]
       (is (= (conversion/style->css {:props style :hash (hashing/hash-style style)} {:pretty-print? false})
               "._stylefy_696232348{color:red}._stylefy_696232348 > .box:hover{color:black}")))))
+
+; Scoped styles
+
+(deftest scoped-styles
+  (testing "Base style + scoped style with mode and manual mode"
+    (let [style {:font-weight :bold
+                 ::stylefy/scope [[:.scoped-box {:color "red"
+                                                 ::stylefy/mode {:hover {:color "yellow"}}
+                                                 ::stylefy/manual [[:.green-text-in-scoped-box {:color "green"}]]}]]}]
+      (is (= (conversion/style->css {:props style :hash (hashing/hash-style style)} {:pretty-print? false})
+             "._stylefy_-617868976{font-weight:bold}.scoped-box ._stylefy_-617868976{color:red}.scoped-box ._stylefy_-617868976:hover{color:yellow}.scoped-box ._stylefy_-617868976 .green-text-in-scoped-box{color:green}")))))
