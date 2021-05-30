@@ -111,7 +111,6 @@
 
   stylefy/manual is not supported here since one can use it to create
   media queries."
-  ; TODO Add support for scopes
   ; TODO Media queries could also be defined in a vector (just like modes can be defined as a map or vector)
   [{:keys [props hash custom-selector] :as _style} options]
   (when-let [stylefy-media-queries (:stylefy.core/media props)]
