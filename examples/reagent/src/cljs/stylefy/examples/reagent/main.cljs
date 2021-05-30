@@ -2,6 +2,7 @@
   (:require
     [garden.units :as gu]
     [garden.color :as gc]
+    [garden.stylesheet :refer [at-media]]
     [reagent.core :as r]
     [reagent.dom :as reagent-dom]
     [stylefy.examples.reagent.styles :as styles]
@@ -196,20 +197,21 @@
                      :background-image (url "images/background.jpg")})
     "Defined with pc unit, height with rem unit, color with rgb, background as a custom defcssfn function."]])
 
-(def scoped-box-style
+(def scoped-box-style-with-manual-media-query
   {:font-weight :bold
    ::stylefy/scope [[:.scoped-box {:color "red"
                                    ::stylefy/mode {:hover {:color "yellow"}}
-                                   ::stylefy/manual [[:.green-text-in-scoped-box {:color "green"}]]}]]})
+                                   ::stylefy/manual [[:.green-text-in-scoped-box {:color "green"}]
+                                                     (at-media {:max-width "500px"} [:.green-text-in-scoped-box {:color "purple"}])]}]]})
 
 (defn- scoped-box []
   [:div
-   [:div (use-style scoped-box-style)
+   [:div (use-style scoped-box-style-with-manual-media-query)
     [:p "This text is only bold since it is not inside scoped box"]]
    [:div.scoped-box
-    [:div (use-style scoped-box-style)
+    [:div (use-style scoped-box-style-with-manual-media-query)
      [:p "This text is both bold and red since it is in scoped box. Hovering makes it yellow."]
-     [:p.green-text-in-scoped-box "This text is bold and green, as defined by scoped box style and it's manual mode"]]]])
+     [:p.green-text-in-scoped-box "This text is bold and green, as defined by scoped box style and it's manual mode. On small screens, the text turns purple."]]]])
 
 (def background-box-sorted (sorted-map
                              :width "100%"

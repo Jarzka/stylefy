@@ -56,6 +56,13 @@
                                             garden-pseudo-classes))]
     css-class))
 
+(defn prepare-manual-style-map [style-map]
+  (walk #(if (map? %)
+           (utils/remove-special-keywords %)
+           %)
+        identity
+        style-map))
+
 (defn- handle-scoped-style-map [props scope]
   (let [scoped-style [scope (utils/remove-special-keywords props)]
         garden-pseudo-classes (convert-stylefy-modes-to-garden props)
@@ -63,7 +70,7 @@
     (apply conj scoped-style
            (concat
              garden-pseudo-classes
-             stylefy-manual-styles))))
+             (mapv prepare-manual-style-map stylefy-manual-styles)))))
 
 (defn- recursively-handle-scoped-style-map [item scope]
   (cond
@@ -165,12 +172,7 @@
     (let [css-parent-selector (or custom-selector (class-selector hash))
           css-manual-styles (map
                              (fn [manual-style]
-                               (let [manual-selector-and-css-props (walk #(if (map? %)
-                                                                            (utils/remove-special-keywords %)
-                                                                            %)
-                                                                         identity
-                                                                         manual-style)
-                                     garden-style-definition (into [css-parent-selector] [manual-selector-and-css-props])
+                               (let [garden-style-definition (into [css-parent-selector] [(prepare-manual-style-map manual-style)])
                                      css-class (css options garden-style-definition)]
                                  css-class))
                              stylefy-manual-styles)]
