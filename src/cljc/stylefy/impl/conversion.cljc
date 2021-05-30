@@ -189,7 +189,7 @@
   ([style options]
    (let [css-class (convert-base-style-into-class style options)
          css-media-queries (convert-media-queries style options)
-         css-supports (convert-feature-queries style options)
+         css-feature-queries (convert-feature-queries style options)
          css-scoped-styles (convert-scoped-styles style options)
          css-manual-styles (convert-manual-styles style options)]
      ; Order is important so that more specific styles properly overwrite the previous ones.
@@ -202,7 +202,7 @@
        ; these rules can be overwritten with the same selectors.
        css-media-queries
        ; Feature queries:
-       css-supports
+       css-feature-queries
        ; Manual mode appears last. It is usually used to have some specific rules
        ; and can also contain manually written media queries.
        css-manual-styles))))
