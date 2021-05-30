@@ -225,4 +225,14 @@
                                                  ::stylefy/manual [[:.green-text-in-scoped-box {:color "green"}]
                                                                    (at-media {:max-width "500px"} [:.green-text-in-scoped-box {:color "purple"}])]}]]}]
       (is (= (conversion/style->css {:props style :hash (hashing/hash-style style)} {:pretty-print? false})
-             "._stylefy_-2000417315{font-weight:bold}.scoped-box ._stylefy_-2000417315{color:red}.scoped-box ._stylefy_-2000417315:hover{color:yellow}.scoped-box ._stylefy_-2000417315 .green-text-in-scoped-box{color:green}@media(max-width:500px){.scoped-box ._stylefy_-2000417315 .green-text-in-scoped-box{color:purple}}")))))
+             "._stylefy_-2000417315{font-weight:bold}.scoped-box ._stylefy_-2000417315{color:red}.scoped-box ._stylefy_-2000417315:hover{color:yellow}.scoped-box ._stylefy_-2000417315 .green-text-in-scoped-box{color:green}@media(max-width:500px){.scoped-box ._stylefy_-2000417315 .green-text-in-scoped-box{color:purple}}"))))
+
+  (testing "Base style + scoped style with mode and manual mode. Base style also has a media query with scoping rules."
+    (let [style {:font-weight :bold
+                 ::stylefy/media {{:max-width "500px"}
+                                  {::stylefy/scope [[:.scoped-box {::stylefy/manual [[:.special-text-in-scoped-box {:color "purple"}]]}]]}}
+                 ::stylefy/scope [[:.scoped-box {:color "red"
+                                                 ::stylefy/mode {:hover {:color "yellow"}}
+                                                 ::stylefy/manual [[:.special-text-in-scoped-box {:color "green"}]]}]]}]
+      (is (= (conversion/style->css {:props style :hash (hashing/hash-style style)} {:pretty-print? false})
+             "._stylefy_-1583604889{font-weight:bold}.scoped-box ._stylefy_-1583604889{color:red}.scoped-box ._stylefy_-1583604889:hover{color:yellow}.scoped-box ._stylefy_-1583604889 .special-text-in-scoped-box{color:green}@media(max-width:500px){._stylefy_-1583604889{}}@media(max-width:500px){.scoped-box ._stylefy_-1583604889{}.scoped-box ._stylefy_-1583604889 .special-text-in-scoped-box{color:purple}}")))))

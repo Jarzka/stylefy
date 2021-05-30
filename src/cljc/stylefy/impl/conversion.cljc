@@ -72,13 +72,13 @@
              garden-pseudo-classes
              (mapv prepare-manual-style-map stylefy-manual-styles)))))
 
-(defn- recursively-handle-scoped-style-map [item scope]
+(defn- find-and-handle-scoped-style-map [item scope]
   (cond
     (map? item)
     (handle-scoped-style-map item scope)
 
     (vector? item)
-    (mapv #(recursively-handle-scoped-style-map % scope) item)
+    (mapv #(find-and-handle-scoped-style-map % scope) item)
 
     :else item))
 
@@ -94,11 +94,11 @@
     (let [css-parent-selector (or custom-selector (class-selector hash))
           css-scoped-styles (map
                               (fn [scoping-rule]
-                                (let [manual-selector-and-css-props (recursively-handle-scoped-style-map scoping-rule css-parent-selector)
+                                (let [selector-and-props (find-and-handle-scoped-style-map scoping-rule css-parent-selector)
                                       garden-vendors (convert-stylefy-vendors-to-garden props)
                                       garden-options (or (merge options garden-vendors) {})
-                                      css-class (css garden-options manual-selector-and-css-props)]
-                                  css-class))
+                                      css-selector (css garden-options selector-and-props)]
+                                  css-selector))
                               stylefy-scoped-styles)]
       (apply str css-scoped-styles))))
 
@@ -112,6 +112,7 @@
   stylefy/manual is not supported here since one can use it to create
   media queries."
   ; TODO Add support for scopes
+  ; TODO Media queries could also be defined in a vector (just like modes can be defined as a map or vector)
   [{:keys [props hash custom-selector] :as _style} options]
   (when-let [stylefy-media-queries (:stylefy.core/media props)]
     (let [css-selector (or custom-selector (class-selector hash))
@@ -119,12 +120,17 @@
                               (fn [media-query]
                                 (let [media-query-props (get stylefy-media-queries media-query)
                                       media-query-css-props (utils/remove-special-keywords media-query-props)
+                                      scoped-styles-garden (map
+                                                             (fn [scoping-rule]
+                                                               (find-and-handle-scoped-style-map scoping-rule css-selector))
+                                                             (:stylefy.core/scope media-query-props))
                                       garden-class-definition [css-selector media-query-css-props]
                                       garden-pseudo-classes (convert-stylefy-modes-to-garden media-query-props)
                                       garden-vendors (convert-stylefy-vendors-to-garden media-query-props)
                                       garden-options (or (merge options garden-vendors) {})]
-                                  (css garden-options (at-media media-query (into garden-class-definition
-                                                                                  garden-pseudo-classes)))))
+                                  (css garden-options [(at-media media-query (into garden-class-definition
+                                                                                   garden-pseudo-classes))
+                                                       (at-media media-query scoped-styles-garden)])))
                               (keys stylefy-media-queries))]
       (apply str css-media-queries))))
 
@@ -171,11 +177,11 @@
   (when-let [stylefy-manual-styles (:stylefy.core/manual props)]
     (let [css-parent-selector (or custom-selector (class-selector hash))
           css-manual-styles (map
-                             (fn [manual-style]
-                               (let [garden-style-definition (into [css-parent-selector] [(prepare-manual-style-map manual-style)])
-                                     css-class (css options garden-style-definition)]
-                                 css-class))
-                             stylefy-manual-styles)]
+                              (fn [manual-style]
+                                (let [selector-and-props (into [css-parent-selector] [(prepare-manual-style-map manual-style)])
+                                      css-class (css options selector-and-props)]
+                                  css-class))
+                              stylefy-manual-styles)]
       (apply str css-manual-styles))))
 
 (defn style->css
