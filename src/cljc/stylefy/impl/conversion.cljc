@@ -192,9 +192,17 @@
          css-supports (convert-feature-queries style options)
          css-scoped-styles (convert-scoped-styles style options)
          css-manual-styles (convert-manual-styles style options)]
-     ; Order is important, from less specific to more specific.
-     (str css-class
-          css-scoped-styles
-          css-media-queries
-          css-supports
-          css-manual-styles))))
+     ; Order is important so that more specific styles properly overwrite the previous ones.
+     (str
+       ; Base style definition comes first:
+       css-class
+       ; Scoped rules:
+       css-scoped-styles
+       ; Media queries themselves have no specificity, but they appear after class and scope so that
+       ; these rules can be overwritten with the same selectors.
+       css-media-queries
+       ; Feature queries:
+       css-supports
+       ; Manual mode appears last. It is usually used to have some specific rules
+       ; and can also contain manually written media queries.
+       css-manual-styles))))
