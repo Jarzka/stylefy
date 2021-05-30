@@ -142,10 +142,17 @@
   ([style options]
    (let [css-class (convert-base-style-into-class style options)
          css-media-queries (convert-media-queries style options)
-         css-supports (convert-feature-queries style options)
+         css-feature-queries (convert-feature-queries style options)
          css-manual-styles (convert-manual-styles style options)]
-     ; Order is important, from less specific to more specific.
-     (str css-class
-          css-media-queries
-          css-supports
-          css-manual-styles))))
+     ; Order is important so that more specific styles properly overwrite the previous ones.
+     (str
+       ; Base style definition comes first:
+       css-class
+       ; Media queries themselves have no specificity, but they appear after class so that
+       ; the rules can be overwritten with the same selector.
+       css-media-queries
+       ; Feature queries:
+       css-feature-queries
+       ; Manual mode appears last. It is usually used to have some specific rules
+       ; and can also contain manually written media queries.
+       css-manual-styles))))
