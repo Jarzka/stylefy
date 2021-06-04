@@ -359,7 +359,7 @@ Define how your style looks on various screen sizes:
     [:p "This is column 3"]]])
 ```
 
-You can also use modes and vendor prefixes inside media query style map.
+stylefy features supported in media queries: modes and vendor prefixes.
 
 For syntax help, see Garden's [documentation](https://github.com/noprompt/garden/wiki/Media-Queries).
 
@@ -386,7 +386,7 @@ Define how your style looks when certain CSS features are supported by the brows
 
 ```
 
-You can use modes, media queries, and vendor prefixes inside feature query style map.
+stylefy features supported in feature queries: modes, media queries and vendor prefixes.
 
 ## 3rd party classes
 
@@ -572,6 +572,8 @@ When scoping styles, media queries can be used either inside the scoped style ma
    ::stylefy/media {{:max-width "500px"}
                     {::stylefy/scope [[:.scoped-box {::stylefy/manual [[:.special-text-in-scoped-box {:color "purple"}]]}]]}}})
 ```
+
+stylefy features supported in scoped style map: modes, manual mode
 
 For syntax help, see Garden's [documentation](https://github.com/noprompt/garden/wiki/Syntax).
 
