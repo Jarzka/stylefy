@@ -210,6 +210,13 @@
 ; Scoped styles
 
 (deftest scoped-styles
+  (testing "Base style + scoped style with pseudoclass selector"
+    (let [style {:font-weight :bold
+                 ::stylefy/scope [[:.scoped-box {:color "red"}
+                                   [:&:hover {:color "yellow"}]]]}]
+      (is (= (conversion/style->css {:props style :hash (hashing/hash-style style)} {:pretty-print? false})
+             "._stylefy_-826201154{font-weight:bold}.scoped-box ._stylefy_-826201154{color:red}.scoped-box:hover ._stylefy_-826201154{color:yellow}"))))
+
   (testing "Base style + scoped style with mode and manual mode"
     (let [style {:font-weight :bold
                  ::stylefy/scope [[:.scoped-box {:color "red"
