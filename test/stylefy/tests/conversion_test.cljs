@@ -227,6 +227,14 @@
       (is (= (conversion/style->css {:props style :hash (hashing/hash-style style)} {:pretty-print? false})
              "._stylefy_673165582{font-weight:bold}.scoped-box > .child-box ._stylefy_673165582{color:red}"))))
 
+  (testing "Base style + multiple deeply nested scoped styles"
+    (let [style {:color :purple
+                 ::stylefy/scope [[:.hello [:.world ["> .scoped-box" [:&:hover {:color "red"}]]]]
+                                  [:main [".box:first-child" [:.scoped-box {:color "blue"}
+                                                              [:&:hover {:color "yellow"}]]]]]}]
+      (is (= (conversion/style->css {:props style :hash (hashing/hash-style style)} {:pretty-print? false})
+             "._stylefy_1991797270{color:purple}.hello .world > .scoped-box:hover ._stylefy_1991797270{color:red}main .box:first-child .scoped-box ._stylefy_1991797270{color:blue}main .box:first-child .scoped-box:hover ._stylefy_1991797270{color:yellow}"))))
+
   (testing "Base style including vendor prefixes + scoped style -> vendor prefixes also used in scoped style map"
     (let [style {:font-weight :bold
                  ::stylefy/vendors ["webkit" "moz"]
