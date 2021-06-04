@@ -573,7 +573,7 @@ When scoping styles, media queries can be used either inside the scoped style ma
                     {::stylefy/scope [[:.scoped-box {::stylefy/manual [[:.special-text-in-scoped-box {:color "purple"}]]}]]}}})
 ```
 
-stylefy features supported in scoped style map: modes, manual mode
+stylefy features supported in scoped style map: modes, manual mode, vendor prefixes (must be defined in parent style map).
 
 For syntax help, see Garden's [documentation](https://github.com/noprompt/garden/wiki/Syntax).
 

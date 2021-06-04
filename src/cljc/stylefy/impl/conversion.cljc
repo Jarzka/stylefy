@@ -87,7 +87,8 @@
 
   stylefy features supported in media query style map:
   - modes
-  - manual mode"
+  - manual mode
+  - vendor prefixed (must be defined in the parent style map)"
   [{:keys [props hash custom-selector] :as _style} options]
   (when-let [stylefy-scoped-styles (:stylefy.core/scope props)]
     (let [css-parent-selector (or custom-selector (class-selector hash))

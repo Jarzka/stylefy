@@ -222,6 +222,22 @@
       (is (= (conversion/style->css {:props style :hash (hashing/hash-style style)} {:pretty-print? false})
              "._stylefy_673165582{font-weight:bold}.scoped-box > .child-box ._stylefy_673165582{color:red}"))))
 
+  (testing "Base style including vendor prefixes + scoped style -> vendor prefixes also used in scoped style map"
+    (let [style {:font-weight :bold
+                 ::stylefy/vendors ["webkit" "moz"]
+                 ::stylefy/auto-prefix #{:color :font-weight}
+                 ::stylefy/scope [[:.scoped-box {:color "red"}]]}]
+      (is (= (conversion/style->css {:props style :hash (hashing/hash-style style)} {:pretty-print? false})
+             "._stylefy_-1580996801{font-weight:bold;-webkit-font-weight:bold;-moz-font-weight:bold}.scoped-box ._stylefy_-1580996801{color:red;-webkit-color:red;-moz-color:red}"))))
+
+  (testing "Base style + scoped style including vendor prefixes -> prefixes are not applied since these must be defined in the parent style map"
+    (let [style {:font-weight :bold
+                 ::stylefy/scope [[:.scoped-box {:color "red"
+                                                 ::stylefy/vendors ["webkit" "moz"]
+                                                 ::stylefy/auto-prefix #{:color :font-weight}}]]}]
+      (is (= (conversion/style->css {:props style :hash (hashing/hash-style style)} {:pretty-print? false})
+             "._stylefy_965416274{font-weight:bold}.scoped-box ._stylefy_965416274{color:red}"))))
+
   (testing "Base style + scoped style with pseudoclass selector"
     (let [style {:font-weight :bold
                  ::stylefy/scope [[:.scoped-box {:color "red"}
