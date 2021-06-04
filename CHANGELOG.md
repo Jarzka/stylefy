@@ -1,3 +1,10 @@
+# 3.1.0
+
+June 4, 2021
+
+- Adds a new feature: `::stylefy/scope`, which can be used to define styles that are applied only when the current
+  element is in some specific scope. See README.md for more info.
+
 # 3.0.0
 
 April 9, 2021
