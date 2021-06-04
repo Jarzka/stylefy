@@ -216,6 +216,11 @@
       (is (= (conversion/style->css {:props style :hash (hashing/hash-style style)} {:pretty-print? false})
              "._stylefy_83835414{font-weight:bold}.scoped-box ._stylefy_83835414{color:red}"))))
 
+  (testing "Scoped style only"
+    (let [style {::stylefy/scope [[:.scoped-box {:color "red"}]]}]
+      (is (= (conversion/style->css {:props style :hash (hashing/hash-style style)} {:pretty-print? false})
+             "._stylefy_14606206{}.scoped-box ._stylefy_14606206{color:red}"))))
+
   (testing "Base style + scoped style with string selector"
     (let [style {:font-weight :bold
                  ::stylefy/scope [[".scoped-box > .child-box" {:color "red"}]]}]
