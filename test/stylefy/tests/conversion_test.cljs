@@ -96,8 +96,8 @@
 (def responsive-style {:background-color "red"
                        :border-radius "10px"
                        ::stylefy/vendors ["webkit" "moz" "o"]
-                       ::stylefy/mode {:hover {:background-color "white"}}
                        ::stylefy/auto-prefix #{:border-radius}
+                       ::stylefy/mode {:hover {:background-color "white"}}
                        ::stylefy/media {{:max-width "500px"}
                                         {:background-color "blue"
                                          :border-radius "5px"
@@ -210,6 +210,18 @@
 ; Scoped styles
 
 (deftest scoped-styles
+  (testing "Base style + scoped style"
+    (let [style {:font-weight :bold
+                 ::stylefy/scope [[:.scoped-box {:color "red"}]]}]
+      (is (= (conversion/style->css {:props style :hash (hashing/hash-style style)} {:pretty-print? false})
+             "._stylefy_83835414{font-weight:bold}.scoped-box ._stylefy_83835414{color:red}"))))
+
+  (testing "Base style + scoped style with string selector"
+    (let [style {:font-weight :bold
+                 ::stylefy/scope [[".scoped-box > .child-box" {:color "red"}]]}]
+      (is (= (conversion/style->css {:props style :hash (hashing/hash-style style)} {:pretty-print? false})
+             "._stylefy_673165582{font-weight:bold}.scoped-box > .child-box ._stylefy_673165582{color:red}"))))
+
   (testing "Base style + scoped style with pseudoclass selector"
     (let [style {:font-weight :bold
                  ::stylefy/scope [[:.scoped-box {:color "red"}
