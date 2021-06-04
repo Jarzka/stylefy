@@ -546,7 +546,8 @@ Scoping can be used to define styles that are applied only when the current elem
 (def style
   {:font-weight :bold
    ::stylefy/scope [[:.scoped-box
-                     ; These additional style definitions are applied only when the current element is inside of .scoped-box
+                     ; These additional style definitions are applied only 
+                     ; when the current element is inside of .scoped-box
                      {:color "red"
                       ::stylefy/mode {:hover {:color "yellow"}}
                       ::stylefy/manual [[:.green-text-in-scoped-box {:color "green"}]]}]]})
