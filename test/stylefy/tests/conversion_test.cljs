@@ -283,4 +283,12 @@
                  ::stylefy/media {{:max-width "500px"}
                                   {::stylefy/scope [[:.scoped-box {::stylefy/manual [[:.special-text-in-scoped-box {:color "purple"}]]}]]}}}]
       (is (= (conversion/style->css {:props style :hash (hashing/hash-style style)} {:pretty-print? false})
-             "._stylefy_-1583604889{font-weight:bold}.scoped-box ._stylefy_-1583604889{color:red}.scoped-box ._stylefy_-1583604889:hover{color:yellow}.scoped-box ._stylefy_-1583604889 .special-text-in-scoped-box{color:green}@media(max-width:500px){._stylefy_-1583604889{}}@media(max-width:500px){.scoped-box ._stylefy_-1583604889{}.scoped-box ._stylefy_-1583604889 .special-text-in-scoped-box{color:purple}}")))))
+             "._stylefy_-1583604889{font-weight:bold}.scoped-box ._stylefy_-1583604889{color:red}.scoped-box ._stylefy_-1583604889:hover{color:yellow}.scoped-box ._stylefy_-1583604889 .special-text-in-scoped-box{color:green}@media(max-width:500px){._stylefy_-1583604889{}}@media(max-width:500px){.scoped-box ._stylefy_-1583604889{}.scoped-box ._stylefy_-1583604889 .special-text-in-scoped-box{color:purple}}"))))
+
+  (testing "Scoped style inside media query still takes vendor prefixes from parent style map"
+    (let [style {::stylefy/media {{:max-width "500px"}
+                                  {::stylefy/vendors ["webkit" "moz"]
+                                   ::stylefy/auto-prefix #{:color}
+                                   ::stylefy/scope [[:.scoped-box {:color "purple"}]]}}}]
+      (is (= (conversion/style->css {:props style :hash (hashing/hash-style style)} {:pretty-print? false})
+             "._stylefy_-839716516{}@media(max-width:500px){._stylefy_-839716516{}}@media(max-width:500px){.scoped-box ._stylefy_-839716516{color:purple;-webkit-color:purple;-moz-color:purple}}")))))
