@@ -83,7 +83,7 @@
     :else item))
 
 (defn- convert-scoped-styles
-  "Converts stylefy/scope definition into CSS class.
+  "Converts stylefy/scope definition into CSS selector.
 
   stylefy features supported in media query style map:
   - modes
