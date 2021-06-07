@@ -36,7 +36,7 @@ stylefy consists of modules that are optimised for specific UI libraries / frame
 First, add stylefy core as a dependency:
 
 ```clj
-[stylefy "3.0.0"]
+[stylefy "3.1.0"]
 ```
 
 Then, based on the UI library you are using, add a corresponding module. The main purpose of the module is to handle asynchronous DOM updates when components are rendered.
