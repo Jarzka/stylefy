@@ -96,8 +96,8 @@
 (def responsive-style {:background-color "red"
                        :border-radius "10px"
                        ::stylefy/vendors ["webkit" "moz" "o"]
-                       ::stylefy/mode {:hover {:background-color "white"}}
                        ::stylefy/auto-prefix #{:border-radius}
+                       ::stylefy/mode {:hover {:background-color "white"}}
                        ::stylefy/media {{:max-width "500px"}
                                         {:background-color "blue"
                                          :border-radius "5px"
@@ -206,3 +206,96 @@
                  ::stylefy/manual [["> .box:hover" {:color "black"}]]}]
       (is (= (conversion/style->css {:props style :hash (hashing/hash-style style)} {:pretty-print? false})
               "._stylefy_696232348{color:red}._stylefy_696232348 > .box:hover{color:black}")))))
+
+; Scoped styles
+
+(deftest scoped-styles
+  (testing "Base style + scoped style"
+    (let [style {:font-weight :bold
+                 ::stylefy/scope [[:.scoped-box {:color "red"}]]}]
+      (is (= (conversion/style->css {:props style :hash (hashing/hash-style style)} {:pretty-print? false})
+             "._stylefy_83835414{font-weight:bold}.scoped-box ._stylefy_83835414{color:red}"))))
+
+  (testing "Scoped style only"
+    (let [style {::stylefy/scope [[:.scoped-box {:color "red"}]]}]
+      (is (= (conversion/style->css {:props style :hash (hashing/hash-style style)} {:pretty-print? false})
+             "._stylefy_14606206{}.scoped-box ._stylefy_14606206{color:red}"))))
+
+  (testing "Base style + scoped style with string selector"
+    (let [style {:font-weight :bold
+                 ::stylefy/scope [[".scoped-box > .child-box" {:color "red"}]]}]
+      (is (= (conversion/style->css {:props style :hash (hashing/hash-style style)} {:pretty-print? false})
+             "._stylefy_673165582{font-weight:bold}.scoped-box > .child-box ._stylefy_673165582{color:red}"))))
+
+  (testing "Base style + multiple deeply nested scoped styles"
+    (let [style {:color :purple
+                 ::stylefy/scope [[:.hello [:.world ["> .scoped-box" [:&:hover {:color "red"}]]]]
+                                  [:main [".box:first-child" [:.scoped-box {:color "blue"}
+                                                              [:&:hover {:color "yellow"}]]]]]}]
+      (is (= (conversion/style->css {:props style :hash (hashing/hash-style style)} {:pretty-print? false})
+             "._stylefy_1991797270{color:purple}.hello .world > .scoped-box:hover ._stylefy_1991797270{color:red}main .box:first-child .scoped-box ._stylefy_1991797270{color:blue}main .box:first-child .scoped-box:hover ._stylefy_1991797270{color:yellow}"))))
+
+  (testing "Scoped style with multiple branches"
+    (let [style {::stylefy/scope [[:h1 :h2 {:font-weight "normal"}
+                                   [:strong :b {:font-weight "bold"}]]
+                                  [:.hello [:.world {:color :red}]]]}]
+      (is (= (conversion/style->css {:props style :hash (hashing/hash-style style)} {:pretty-print? false})
+             "._stylefy_-822863575{}h1 ._stylefy_-822863575,h2 ._stylefy_-822863575{font-weight:normal}h1 strong ._stylefy_-822863575,h1 b ._stylefy_-822863575,h2 strong ._stylefy_-822863575,h2 b ._stylefy_-822863575{font-weight:bold}.hello .world ._stylefy_-822863575{color:red}"))))
+
+  (testing "Base style including vendor prefixes + scoped style -> vendor prefixes also used in scoped style map"
+    (let [style {:font-weight :bold
+                 ::stylefy/vendors ["webkit" "moz"]
+                 ::stylefy/auto-prefix #{:color :font-weight}
+                 ::stylefy/scope [[:.scoped-box {:color "red"}]]}]
+      (is (= (conversion/style->css {:props style :hash (hashing/hash-style style)} {:pretty-print? false})
+             "._stylefy_-1580996801{font-weight:bold;-webkit-font-weight:bold;-moz-font-weight:bold}.scoped-box ._stylefy_-1580996801{color:red;-webkit-color:red;-moz-color:red}"))))
+
+  (testing "Base style + scoped style including vendor prefixes -> prefixes are not applied since these must be defined in the parent style map"
+    (let [style {:font-weight :bold
+                 ::stylefy/scope [[:.scoped-box {:color "red"
+                                                 ::stylefy/vendors ["webkit" "moz"]
+                                                 ::stylefy/auto-prefix #{:color :font-weight}}]]}]
+      (is (= (conversion/style->css {:props style :hash (hashing/hash-style style)} {:pretty-print? false})
+             "._stylefy_965416274{font-weight:bold}.scoped-box ._stylefy_965416274{color:red}"))))
+
+  (testing "Base style + scoped style with pseudoclass selector"
+    (let [style {:font-weight :bold
+                 ::stylefy/scope [[:.scoped-box {:color "red"}
+                                   [:&:hover {:color "yellow"}]]]}]
+      (is (= (conversion/style->css {:props style :hash (hashing/hash-style style)} {:pretty-print? false})
+             "._stylefy_-826201154{font-weight:bold}.scoped-box ._stylefy_-826201154{color:red}.scoped-box:hover ._stylefy_-826201154{color:yellow}"))))
+
+  (testing "Base style + scoped style with mode and manual mode"
+    (let [style {:font-weight :bold
+                 ::stylefy/scope [[:.scoped-box {:color "red"
+                                                 ::stylefy/mode {:hover {:color "yellow"}}
+                                                 ::stylefy/manual [[:.green-text-in-scoped-box {:color "green"}]]}]]}]
+      (is (= (conversion/style->css {:props style :hash (hashing/hash-style style)} {:pretty-print? false})
+             "._stylefy_-617868976{font-weight:bold}.scoped-box ._stylefy_-617868976{color:red}.scoped-box ._stylefy_-617868976:hover{color:yellow}.scoped-box ._stylefy_-617868976 .green-text-in-scoped-box{color:green}"))))
+
+  (testing "Base style + scoped style with mode and manual mode with manual media query"
+    (let [style {:font-weight :bold
+                 ::stylefy/scope [[:.scoped-box {:color "red"
+                                                 ::stylefy/mode {:hover {:color "yellow"}}
+                                                 ::stylefy/manual [[:.green-text-in-scoped-box {:color "green"}]
+                                                                   (at-media {:max-width "500px"} [:.green-text-in-scoped-box {:color "purple"}])]}]]}]
+      (is (= (conversion/style->css {:props style :hash (hashing/hash-style style)} {:pretty-print? false})
+             "._stylefy_-2000417315{font-weight:bold}.scoped-box ._stylefy_-2000417315{color:red}.scoped-box ._stylefy_-2000417315:hover{color:yellow}.scoped-box ._stylefy_-2000417315 .green-text-in-scoped-box{color:green}@media(max-width:500px){.scoped-box ._stylefy_-2000417315 .green-text-in-scoped-box{color:purple}}"))))
+
+  (testing "Base style + scoped style with mode and manual mode. Base style also has a media query with scoping rules."
+    (let [style {:font-weight :bold
+                 ::stylefy/scope [[:.scoped-box {:color "red"
+                                                 ::stylefy/mode {:hover {:color "yellow"}}
+                                                 ::stylefy/manual [[:.special-text-in-scoped-box {:color "green"}]]}]]
+                 ::stylefy/media {{:max-width "500px"}
+                                  {::stylefy/scope [[:.scoped-box {::stylefy/manual [[:.special-text-in-scoped-box {:color "purple"}]]}]]}}}]
+      (is (= (conversion/style->css {:props style :hash (hashing/hash-style style)} {:pretty-print? false})
+             "._stylefy_-1583604889{font-weight:bold}.scoped-box ._stylefy_-1583604889{color:red}.scoped-box ._stylefy_-1583604889:hover{color:yellow}.scoped-box ._stylefy_-1583604889 .special-text-in-scoped-box{color:green}@media(max-width:500px){._stylefy_-1583604889{}}@media(max-width:500px){.scoped-box ._stylefy_-1583604889{}.scoped-box ._stylefy_-1583604889 .special-text-in-scoped-box{color:purple}}"))))
+
+  (testing "Scoped style inside media query still takes vendor prefixes from parent style map"
+    (let [style {::stylefy/media {{:max-width "500px"}
+                                  {::stylefy/vendors ["webkit" "moz"]
+                                   ::stylefy/auto-prefix #{:color}
+                                   ::stylefy/scope [[:.scoped-box {:color "purple"}]]}}}]
+      (is (= (conversion/style->css {:props style :hash (hashing/hash-style style)} {:pretty-print? false})
+             "._stylefy_-839716516{}@media(max-width:500px){._stylefy_-839716516{}}@media(max-width:500px){.scoped-box ._stylefy_-839716516{color:purple;-webkit-color:purple;-moz-color:purple}}")))))

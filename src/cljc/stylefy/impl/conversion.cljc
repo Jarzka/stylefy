@@ -56,6 +56,52 @@
                                             garden-pseudo-classes))]
     css-class))
 
+(defn prepare-manual-style-map [style-map]
+  (walk #(if (map? %)
+           (utils/remove-special-keywords %)
+           %)
+        identity
+        style-map))
+
+(defn- handle-scoped-style-map [props scope]
+  (let [scoped-style [scope (utils/remove-special-keywords props)]
+        garden-pseudo-classes (convert-stylefy-modes-to-garden props)
+        stylefy-manual-styles (:stylefy.core/manual props)]
+    (apply conj scoped-style
+           (concat
+             garden-pseudo-classes
+             (mapv prepare-manual-style-map stylefy-manual-styles)))))
+
+(defn- find-and-handle-scoped-style-map [item scope]
+  (cond
+    (map? item)
+    (handle-scoped-style-map item scope)
+
+    (vector? item)
+    (mapv #(find-and-handle-scoped-style-map % scope) item)
+
+    :else item))
+
+(defn- convert-scoped-styles
+  "Converts stylefy/scope definition into CSS selector.
+
+  stylefy features supported in scoped style map:
+  - modes
+  - manual mode
+  - vendor prefixes (must be defined in the parent style map)"
+  [{:keys [props hash custom-selector] :as _style} options]
+  (when-let [stylefy-scoped-styles (:stylefy.core/scope props)]
+    (let [css-parent-selector (or custom-selector (class-selector hash))
+          css-scoped-styles (map
+                              (fn [scoping-rule]
+                                (let [selector-and-props (find-and-handle-scoped-style-map scoping-rule css-parent-selector)
+                                      garden-vendors (convert-stylefy-vendors-to-garden props)
+                                      garden-options (or (merge options garden-vendors) {})
+                                      css-selector (css garden-options selector-and-props)]
+                                  css-selector))
+                              stylefy-scoped-styles)]
+      (apply str css-scoped-styles))))
+
 (defn- convert-media-queries
   "Converts stylefy/media definition into CSS media query.
 
@@ -65,6 +111,7 @@
 
   stylefy/manual is not supported here since one can use it to create
   media queries."
+  ; TODO Media queries could also be defined in a vector (just like modes can be defined as a map or vector)
   [{:keys [props hash custom-selector] :as _style} options]
   (when-let [stylefy-media-queries (:stylefy.core/media props)]
     (let [css-selector (or custom-selector (class-selector hash))
@@ -72,12 +119,17 @@
                               (fn [media-query]
                                 (let [media-query-props (get stylefy-media-queries media-query)
                                       media-query-css-props (utils/remove-special-keywords media-query-props)
+                                      scoped-styles-garden (map
+                                                             (fn [scoping-rule]
+                                                               (find-and-handle-scoped-style-map scoping-rule css-selector))
+                                                             (:stylefy.core/scope media-query-props))
                                       garden-class-definition [css-selector media-query-css-props]
                                       garden-pseudo-classes (convert-stylefy-modes-to-garden media-query-props)
                                       garden-vendors (convert-stylefy-vendors-to-garden media-query-props)
                                       garden-options (or (merge options garden-vendors) {})]
-                                  (css garden-options (at-media media-query (into garden-class-definition
-                                                                                  garden-pseudo-classes)))))
+                                  (css garden-options [(at-media media-query (into garden-class-definition
+                                                                                   garden-pseudo-classes))
+                                                       (at-media media-query scoped-styles-garden)])))
                               (keys stylefy-media-queries))]
       (apply str css-media-queries))))
 
@@ -88,7 +140,7 @@
   - modes
   - media queries
   - vendor prefixes"
-  ; TODO Manual mode should also be supported here
+  ; TODO Manual mode and scoping should also be supported here
   [{:keys [props hash custom-selector] :as _style} options]
   (when-let [stylefy-supports (:stylefy.core/supports props)]
     (let [css-selector (or custom-selector (class-selector hash))
@@ -124,16 +176,11 @@
   (when-let [stylefy-manual-styles (:stylefy.core/manual props)]
     (let [css-parent-selector (or custom-selector (class-selector hash))
           css-manual-styles (map
-                             (fn [manual-style]
-                               (let [manual-selector-and-css-props (walk #(if (map? %)
-                                                                            (utils/remove-special-keywords %)
-                                                                            %)
-                                                                         identity
-                                                                         manual-style)
-                                     garden-style-definition (into [css-parent-selector] [manual-selector-and-css-props])
-                                     css-class (css options garden-style-definition)]
-                                 css-class))
-                             stylefy-manual-styles)]
+                              (fn [manual-style]
+                                (let [selector-and-props (into [css-parent-selector] [(prepare-manual-style-map manual-style)])
+                                      css-class (css options selector-and-props)]
+                                  css-class))
+                              stylefy-manual-styles)]
       (apply str css-manual-styles))))
 
 (defn style->css
@@ -143,13 +190,16 @@
    (let [css-class (convert-base-style-into-class style options)
          css-media-queries (convert-media-queries style options)
          css-feature-queries (convert-feature-queries style options)
+         css-scoped-styles (convert-scoped-styles style options)
          css-manual-styles (convert-manual-styles style options)]
      ; Order is important so that more specific styles properly overwrite the previous ones.
      (str
        ; Base style definition comes first:
        css-class
-       ; Media queries themselves have no specificity, but they appear after class so that
-       ; the rules can be overwritten with the same selector.
+       ; Scoped rules:
+       css-scoped-styles
+       ; Media queries themselves have no specificity, but they appear after class and scope so that
+       ; these rules can be overwritten with the same selectors.
        css-media-queries
        ; Feature queries:
        css-feature-queries

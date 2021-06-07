@@ -19,7 +19,8 @@ While being originally created with the frontend in mind, stylefy now runs on bo
 
 - Define styles as Clojure data – all important CSS features are supported: pseudo-classes, pseudo-elements, keyframes, font-faces, media queries, feature queries...
 - Use any 3rd party CSS code along with stylefy
-- Manual mode can be used for styling 3rd party components and resolving corner cases in which complex CSS selectors are needed
+- Manual mode: stylize 3rd party components and resolve corner cases in which complex CSS selectors are needed
+- Scoping: define styles that are applied only when the current element is in some specific scope
 - Vendor prefixes are supported both locally and globally
 - CSS caching on the frontend using local storage (optional)
 - Small and simple core API which is easy to setup
@@ -35,7 +36,7 @@ stylefy consists of modules that are optimised for specific UI libraries / frame
 First, add stylefy core as a dependency:
 
 ```clj
-[stylefy "3.0.0"]
+[stylefy "3.1.0"]
 ```
 
 Then, based on the UI library you are using, add a corresponding module. The main purpose of the module is to handle asynchronous DOM updates when components are rendered.
@@ -358,7 +359,7 @@ Define how your style looks on various screen sizes:
     [:p "This is column 3"]]])
 ```
 
-You can also use modes and vendor prefixes inside media query style map.
+stylefy features supported in media queries: modes and vendor prefixes.
 
 For syntax help, see Garden's [documentation](https://github.com/noprompt/garden/wiki/Media-Queries).
 
@@ -385,7 +386,7 @@ Define how your style looks when certain CSS features are supported by the brows
 
 ```
 
-You can use modes, media queries, and vendor prefixes inside feature query style map.
+stylefy features supported in feature queries: modes, media queries and vendor prefixes.
 
 ## 3rd party classes
 
@@ -536,6 +537,46 @@ Notice that Garden's selector syntax can contain strings, so purely string-based
   {:color :red
    ::stylefy/manual [["> .box:hover" {:color "black"}]]})
 ```
+
+## Scoping
+
+Scoping can be used to define styles that are applied only when the current element is in some specific scope.
+
+```clojure
+(def style
+  {:font-weight :bold
+   ::stylefy/scope [[:.scoped-box
+                     ; These additional style definitions are applied only 
+                     ; when the current element is inside of .scoped-box
+                     {:color "red"
+                      ::stylefy/mode {:hover {:color "yellow"}}
+                      ::stylefy/manual [[:.green-text-in-scoped-box {:color "green"}]]}]]})
+```
+
+When scoping styles, media queries can be used either inside the scoped style map using manual mode...
+
+```clojure
+(def style)
+  {:font-weight :bold
+   ::stylefy/scope [[:.scoped-box {:color "red"
+                                   ::stylefy/manual [[:.green-text-in-scoped-box {:color "green"}]
+                                                     (at-media {:max-width "500px"} [:.green-text-in-scoped-box {:color "purple"}])]}]]} )
+```
+
+...or by using `::stylefy/media` in the parent style map:
+
+```clojure
+(def style
+  {:font-weight :bold
+   ::stylefy/scope [[:.scoped-box {:color "red"
+                                   ::stylefy/manual [[:.special-text-in-scoped-box {:color "green"}]]}]]
+   ::stylefy/media {{:max-width "500px"}
+                    {::stylefy/scope [[:.scoped-box {::stylefy/manual [[:.special-text-in-scoped-box {:color "purple"}]]}]]}}})
+```
+
+stylefy features supported in scoped style map: modes, manual mode, vendor prefixes (must be defined in parent style map).
+
+For syntax help, see Garden's [documentation](https://github.com/noprompt/garden/wiki/Syntax).
 
 ## <a name="caching"></a> Style caching (frontend)
 
