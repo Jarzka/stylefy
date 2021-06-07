@@ -19,8 +19,8 @@ While being originally created with the frontend in mind, stylefy now runs on bo
 
 - Define styles as Clojure data – all important CSS features are supported: pseudo-classes, pseudo-elements, keyframes, font-faces, media queries, feature queries...
 - Use any 3rd party CSS code along with stylefy
-- Manual mode: styling 3rd party components and resolving corner cases in which complex CSS selectors are needed
-- Scoping: styles that are applied only when the current element is in some specific scope.
+- Manual mode: stylize 3rd party components and resolve corner cases in which complex CSS selectors are needed
+- Scoping: define styles that are applied only when the current element is in some specific scope
 - Vendor prefixes are supported both locally and globally
 - CSS caching on the frontend using local storage (optional)
 - Small and simple core API which is easy to setup
