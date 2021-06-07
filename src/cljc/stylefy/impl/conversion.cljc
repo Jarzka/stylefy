@@ -85,7 +85,7 @@
 (defn- convert-scoped-styles
   "Converts stylefy/scope definition into CSS selector.
 
-  stylefy features supported in media query style map:
+  stylefy features supported in scoped style map:
   - modes
   - manual mode
   - vendor prefixes (must be defined in the parent style map)"
