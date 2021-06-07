@@ -99,12 +99,13 @@
                      contains-modes-not-excluded? (seq (filter (comp not excluded-modes) mode-names))
                      inline-style (-> style
                                       (utils/remove-special-keywords)
-                                      (conversion/garden-units->css))]
-                 (if (or contains-media-queries?
-                         contains-feature-queries?
-                         contains-manual-mode?
-                         contains-scoping?
-                         contains-modes-not-excluded?)
+                                      (conversion/garden-units->css))
+                     inline-style-not-supported? (or contains-media-queries?
+                                                     contains-feature-queries?
+                                                     contains-manual-mode?
+                                                     contains-scoping?
+                                                     contains-modes-not-excluded?)]
+                 (if inline-style-not-supported?
                    (merge return-map {:style (merge inline-style {:visibility "hidden"})})
                    (merge return-map {:style inline-style}))))
        :clj  return-map)))
