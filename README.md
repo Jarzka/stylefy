@@ -540,7 +540,7 @@ Notice that Garden's selector syntax can contain strings, so purely string-based
 
 ## Scoping
 
-Scoping can be used to define styles that are applied only when the current element is in some specific scope.
+Scoping can be used to define styles that are applied only when the current element is in some specific scope. The scoping rule is written using Garden syntax.
 
 ```clojure
 (def style
