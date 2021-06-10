@@ -2,7 +2,7 @@
   (:require [cljs.test :as test :refer-macros [deftest is testing]]
             [stylefy.core :as stylefy]
             [stylefy.impl.hashing :as hashing]
-            [garden.stylesheet :refer [at-media]]
+            [garden.stylesheet :refer [at-media at-supports]]
             [garden.units :as gu]
             [garden.color :as gc]
             [stylefy.impl.conversion :as conversion]
@@ -205,7 +205,15 @@
     (let [style {:color :red
                  ::stylefy/manual [["> .box:hover" {:color "black"}]]}]
       (is (= (conversion/style->css {:props style :hash (hashing/hash-style style)} {:pretty-print? false})
-              "._stylefy_696232348{color:red}._stylefy_696232348 > .box:hover{color:black}")))))
+              "._stylefy_696232348{color:red}._stylefy_696232348 > .box:hover{color:black}"))))
+
+  (testing "Manual mode with nested at-supports and at-media"
+    (let [style {:color "red"
+                 ::stylefy/manual [(at-supports {:display "grid"}
+                                                (at-media {:max-width "50rem"}
+                                                          [:& {:color "green"}]))]}]
+      (is (= (conversion/style->css {:props style :hash (hashing/hash-style style)} {:pretty-print? false})
+             "._stylefy_239824967{color:red}@supports(display:grid){@media(max-width:50rem){._stylefy_239824967{color:green}}}")))))
 
 ; Scoped styles
 

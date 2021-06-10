@@ -515,6 +515,7 @@ An example of a situation when we need to use manual mode: we want to change the
                                 ; Brighten by default
                                 {:background-color "#999999"}]]
                      ; at-rules can be created with Garden's helper functions: at-media, at-supports...
+                     ; (these can also be nested if necessary)
                      (at-media mobile-media-query [:&:hover [:.innerbox
                                                              ; Darker on mobile
                                                              {:background-color "#666666"}]])]
