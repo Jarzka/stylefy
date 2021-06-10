@@ -578,7 +578,7 @@ You can also use media queries inside `::stylefy/manual` inside `::stylefy/scope
                                                      (at-media {:max-width "26rem"} [:.green-text-in-scoped-box {:color "purple"}])]}]]})
 ```
 
-stylefy features supported in scoped style map: modes, manual mode, vendor prefixes (must be defined in parent style map).
+stylefy features supported in scoped style map: modes, manual mode and vendor prefixes (must be defined in parent style map). However, notice that these features cannot be used when creating media queries with `at-media`.
 
 For syntax help, see Garden's [documentation](https://github.com/noprompt/garden/wiki/Syntax).
 
