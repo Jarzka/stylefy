@@ -508,9 +508,13 @@ An example of a situation when we need to use manual mode: we want to change the
                                     :background-color "#444444"}}
    ; Change the background color of the child element when the parent element is being hovered.
    ; This is a corner case that stylefy cannot handle directly, so we use manual mode to resolve it.
-   ::stylefy/manual [[:&:hover [:.innerbox
+   ::stylefy/manual [; Since stylefy's special keywords do not work in manual mode,
+                     ; we have to use Garden syntax as a replacement.
+                     ; Syntax for pseudo-classes/elements:
+                     [:&:hover [:.innerbox
                                 ; Brighten by default
                                 {:background-color "#999999"}]]
+                     ; at-rules can be created with Garden's helper functions: at-media, at-supports...
                      (at-media mobile-media-query [:&:hover [:.innerbox
                                                              ; Darker on mobile
                                                              {:background-color "#666666"}]])]
