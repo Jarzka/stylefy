@@ -559,7 +559,16 @@ Scoping can be used to define styles that are applied only when the current elem
                                                      ::stylefy/manual [[:.special-text-in-scoped-box {:color "purple"}]]}]]}}})
 ```
 
-You can also create media queries inside scoped style map by using `::stylefy/manual` with the help of Garden's `at-media` helper:
+Or you can use media queries inside scoped style with the help of Garden's `at-media` helper:
+
+```clojure
+(def style
+  {:color "white"
+   ::stylefy/scope [[:.scoped-box {:color "blue"}]
+                    [:.scoped-box (at-media {:max-width "50rem"} [:& {:color "purple"}])]]})
+```
+
+You can also use media queries inside `::stylefy/manual` inside `::stylefy/scope`:
 
 ```clojure
 (def style
