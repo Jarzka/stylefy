@@ -564,8 +564,8 @@ Or you can use media queries inside scoped style with the help of Garden's `at-m
 ```clojure
 (def style
   {:color "white"
-   ::stylefy/scope [[:.scoped-box {:color "blue"}]
-                    [:.scoped-box (at-media {:max-width "50rem"} [:& {:color "purple"}])]]})
+   ::stylefy/scope [[:.scoped-box {:color "red"}]
+                    [:.scoped-box (at-media {:max-width "26rem"} [:& {:color "blue"}])]]})
 ```
 
 You can also use media queries inside `::stylefy/manual` inside `::stylefy/scope`:
