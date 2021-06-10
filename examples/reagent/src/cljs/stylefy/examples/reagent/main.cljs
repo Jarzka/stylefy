@@ -201,13 +201,6 @@
                          :margin-top "1rem"
                          :padding "1rem"})
 
-(def scoped-box-element-with-manual-media-query
-  {:font-weight :bold
-   ::stylefy/scope [[:.scoped-box {:color "red"
-                                   ::stylefy/mode {:hover {:color "yellow"}}
-                                   ::stylefy/manual [[:.special-text-in-scoped-box {:color "green"}]
-                                                     (at-media {:max-width "500px"} [:.special-text-in-scoped-box {:color "purple"}])]}]]})
-
 (def scoped-box-element-with-stylefy-media-query
   {:font-weight :bold
    ::stylefy/media {{:max-width "500px"}
@@ -222,21 +215,28 @@
                                    ::stylefy/mode {:hover {:color "yellow"}}}]
                     [:.scoped-box (at-media {:max-width "500px"} [:& {:color "purple"}])]]})
 
+(def scoped-box-element-with-manual-media-query
+  {:font-weight :bold
+   ::stylefy/scope [[:.scoped-box {:color "red"
+                                   ::stylefy/mode {:hover {:color "yellow"}}
+                                   ::stylefy/manual [[:.special-text-in-scoped-box {:color "green"}]
+                                                     (at-media {:max-width "500px"} [:.special-text-in-scoped-box {:color "purple"}])]}]]})
+
 (defn- scoped-box []
   [:div
    [:div (use-style scoped-box-element-with-manual-media-query)
     [:p "This text is only bold since it is not inside scoped box"]]
-   [:div.scoped-box (use-style scoped-box-wrapper)
-    [:div (use-style scoped-box-element-with-manual-media-query)
-     [:p "This text is both bold and red since it is in scoped box. Hovering makes it yellow."]
-     [:p.special-text-in-scoped-box "This text is bold and green, as defined by scoped box style and it's manual mode. On small screens, the text turns purple, as defined by scoped style's manual media query."]]]
    [:div.scoped-box (use-style scoped-box-wrapper)
     [:div (use-style scoped-box-element-with-stylefy-media-query)
      [:p "This text is both bold and red since it is in scoped box. Hovering makes it yellow."]
      [:p.special-text-in-scoped-box "This text is bold and green, as defined by scoped box style and it's manual mode. On small screens, the text turns purple, as defined by parent map's media query."]]]
    [:div.scoped-box (use-style scoped-box-wrapper)
     [:div (use-style scoped-box-element-with-media-query)
-     [:p "This text is both bold and red since it is in scoped box. Hovering makes it yellow. On small screens, the text turns purple, as defined by scoping rule's media query."]]]])
+     [:p "This text is both bold and red since it is in scoped box. Hovering makes it yellow. On small screens, the text turns purple, as defined by scoping rule's media query."]]]
+   [:div.scoped-box (use-style scoped-box-wrapper)
+    [:div (use-style scoped-box-element-with-manual-media-query)
+     [:p "This text is both bold and red since it is in scoped box. Hovering makes it yellow."]
+     [:p.special-text-in-scoped-box "This text is bold and green, as defined by scoped box style and it's manual mode. On small screens, the text turns purple, as defined by scoped style's manual media query."]]]])
 
 (def background-box-sorted (sorted-map
                              :width "100%"
