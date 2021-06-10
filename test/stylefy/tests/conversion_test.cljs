@@ -308,6 +308,14 @@
       (is (= (conversion/style->css {:props style :hash (hashing/hash-style style)} {:pretty-print? false})
              "._stylefy_1934034165{color:white}.scoped-box ._stylefy_1934034165{color:blue}@media(max-width:50rem){.scoped-box ._stylefy_1934034165{color:purple}}@media(max-width:50rem){.os-win .scoped-box ._stylefy_1934034165{color:red}}"))))
 
+  (testing "Base style + scoped style with feature and media query."
+    (let [style {:color "white"
+                 ::stylefy/scope [[:.scoped-box (at-supports {:display :grid} [:& {:color "blue"}])]
+                                  [:.scoped-box (at-supports {:display :grid} (at-media {:max-width "50rem"} [:& {:color "purple"}]))]
+                                  [:.os-win [:.scoped-box (at-supports {:display :grid} (at-media {:max-width "50rem"} [:& {:color "red"}]))]]]}]
+      (is (= (conversion/style->css {:props style :hash (hashing/hash-style style)} {:pretty-print? false})
+             "._stylefy_-1973826168{color:white}@supports(display:grid){.scoped-box ._stylefy_-1973826168{color:blue}}@supports(display:grid){@media(max-width:50rem){.scoped-box ._stylefy_-1973826168{color:purple}}}@supports(display:grid){@media(max-width:50rem){.os-win .scoped-box ._stylefy_-1973826168{color:red}}}"))))
+
   (testing "Scoped style inside media query still takes vendor prefixes from parent style map"
     (let [style {::stylefy/media {{:max-width "500px"}
                                   {::stylefy/vendors ["webkit" "moz"]
