@@ -220,7 +220,7 @@
   {:font-weight :bold
    ::stylefy/scope [[:.scoped-box {:color "red"
                                    ::stylefy/mode {:hover {:color "yellow"}}}]
-                    [:.scoped-box (at-media {:max-width "500px"} [:& {:color "purple"}]]]})
+                    [:.scoped-box (at-media {:max-width "500px"} [:& {:color "purple"}])]]})
 
 (defn- scoped-box []
   [:div
