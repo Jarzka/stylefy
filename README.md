@@ -164,9 +164,9 @@ If you wish to do something else with the generated CSS, you can create your own
 Create a style as a normal Clojure map:
 
 ```clojure
-(def button-style {:padding "25px"
+(def button-style {:padding "2rem"
                    :background-color "#BBBBBB"
-                   :border "1px solid black"})
+                   :border "0.5rem solid black"})
 ```
 
 To use it in a component, use the **use-style** function:
@@ -200,13 +200,13 @@ On the frontend, **use-style** adds the style into the DOM as a CSS class on-dem
 (defn- button-wrapper []
   [:div
     ; This is OK
-    [button-with-custom-style "Hello" {:padding "25px"
+    [button-with-custom-style "Hello" {:padding "1rem"
                                        :background-color "#BBBBBB"
-                                       :border "1px solid black"}]
+                                       :border "0.5rem solid black"}]
     ; This is NOT ok, because use-style would be called twice, second time with incorrect arguments
-    [button-with-custom-style "Hello" (use-style {:padding "25px"
+    [button-with-custom-style "Hello" (use-style {:padding "1rem"
                                                   :background-color "#BBBBBB"
-                                                  :border "1px solid black"})]])
+                                                  :border "0.5rem solid black"})]])
 ```
 
 ### Combine & parametrise styles
@@ -306,14 +306,8 @@ Sub-styles are nothing special, they are supposed to contain the same contents a
 Supported in the same way as Garden supports them.
 
 ```clojure
-(def button {:border "1px solid black"
-             :background-color "#888888"
-             :border-radius "5px"
-             :color "white"
-             :text-align :center
-             :padding "5px"
-             :width "150px"
-             :height "38px"
+(def button {:border "0.5rem solid black"
+             :border-radius "0.5rem"
              ::stylefy/vendors ["webkit" "moz" "o"]
              ::stylefy/auto-prefix #{:border-radius}})
 ```
@@ -331,9 +325,9 @@ You can also use globally defined vendor prefixes. These prefixes are automatica
 Define how your style looks on various screen sizes:
 
 ```clojure
-(def phone-width "414px")
+(def phone-width "26rem")
 
-(def column {:padding "5px"
+(def column {:padding "0.5rem"
              :color "white"})
 
 (def responsive-layout {:display :flex
@@ -485,7 +479,7 @@ You can generate styles for HTML tags by calling **stylefy/tag**:
 ; or into the current execution context (backend).
 
 (stylefy/tag "body" {:background-color :lightyellow
-                     :padding          :5px})
+                     :padding          "1rem"})
 ```
 
 ## Manual mode
@@ -501,13 +495,13 @@ The selector and the style written in manual mode will be scoped inside the elem
 An example of a situation when we need to use manual mode: we want to change the style of some child element when the parent element is being hovered.
 
 ```clojure
-(def mobile-media-query {:max-width "550px"})
+(def mobile-media-query {:max-width "26rem"})
 
 (def hoverbox-style
-  {:width "500px"1
-   :height "200px"
-   :padding "33px"
-   :margin-bottom "10px"
+  {:width "26rem"
+   :height "15rem"
+   :padding "2rem"
+   :margin-bottom "1rem"
    :background-color "#55AA55"
    ::stylefy/sub-styles {:innerbox {:width "100%"
                                     :height "100%"
@@ -544,7 +538,7 @@ Scoping can be used to define styles that are applied only when the current elem
 
 ```clojure
 (def style
-  {:font-weight :bold
+  {:color "white"
    ::stylefy/scope [[:.scoped-box
                      ; These additional style definitions are applied only 
                      ; when the current element is inside of .scoped-box
@@ -553,25 +547,26 @@ Scoping can be used to define styles that are applied only when the current elem
                       ::stylefy/manual [[:.green-text-in-scoped-box {:color "green"}]]}]]})
 ```
 
-When scoping styles, media queries can be used either inside the scoped style map using manual mode...
-
-```clojure
-(def style)
-  {:font-weight :bold
-   ::stylefy/scope [[:.scoped-box {:color "red"
-                                   ::stylefy/manual [[:.green-text-in-scoped-box {:color "green"}]
-                                                     (at-media {:max-width "500px"} [:.green-text-in-scoped-box {:color "purple"}])]}]]} )
-```
-
-...or by using `::stylefy/media` in the parent style map:
+`::stylefy/scope` and `::stylefy/media` can be used together like this:
 
 ```clojure
 (def style
-  {:font-weight :bold
+  {:color "white"
    ::stylefy/scope [[:.scoped-box {:color "red"
                                    ::stylefy/manual [[:.special-text-in-scoped-box {:color "green"}]]}]]
-   ::stylefy/media {{:max-width "500px"}
-                    {::stylefy/scope [[:.scoped-box {::stylefy/manual [[:.special-text-in-scoped-box {:color "purple"}]]}]]}}})
+   ::stylefy/media {{:max-width "26rem"}
+                    {::stylefy/scope [[:.scoped-box {:color "blue"
+                                                     ::stylefy/manual [[:.special-text-in-scoped-box {:color "purple"}]]}]]}}})
+```
+
+You can also create media queries inside scoped style map by using `::stylefy/manual` with the help of Garden's `at-media` helper:
+
+```clojure
+(def style
+  {:color "white"
+   ::stylefy/scope [[:.scoped-box {:color "red"
+                                   ::stylefy/manual [[:.green-text-in-scoped-box {:color "green"}]
+                                                     (at-media {:max-width "26rem"} [:.green-text-in-scoped-box {:color "purple"}])]}]]})
 ```
 
 stylefy features supported in scoped style map: modes, manual mode, vendor prefixes (must be defined in parent style map).
