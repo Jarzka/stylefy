@@ -203,6 +203,6 @@
        css-media-queries
        ; Feature queries:
        css-feature-queries
-       ; Manual mode appears last. It is usually used to have some specific rules
-       ; and can also contain manually written media queries.
+       ; Manual mode appears last. It is usually used to create some specific rules.
+       ; It can also be used to generate at-rules (media queries, feature queries etc.)
        css-manual-styles))))
