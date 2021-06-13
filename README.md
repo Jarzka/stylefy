@@ -394,8 +394,6 @@ Alternative version using vector syntax. This is useful if the order of the rule
                      ["display: grid" {:color :purple}]]}
 ```
 
-stylefy features supported in feature queries: modes, media queries and vendor prefixes.
-
 ## 3rd party classes
 
 You can use 3rd party class names by passing them via `:class` HTML attribute. The value can be a string, a keyword or a vector of strings/keywords.
