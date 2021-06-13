@@ -124,9 +124,9 @@
            "._stylefy_628215496{background-color:red;border-radius:10px;-webkit-border-radius:10px;-moz-border-radius:10px;-o-border-radius:10px}._stylefy_628215496:hover{background-color:white}@media(max-width:500px){._stylefy_628215496{background-color:blue;border-radius:5px;-webkit-border-radius:5px;-moz-border-radius:5px;-o-border-radius:5px}._stylefy_628215496:hover{background-color:grey}}")))
 
   (testing "Vector syntax"
-    (is (= (conversion/style->css {:props responsive-style-vector-syntax :hash (hashing/hash-style responsive-style-map-syntax)}
+    (is (= (conversion/style->css {:props responsive-style-vector-syntax :hash (hashing/hash-style responsive-style-vector-syntax)}
                                   {:pretty-print? false})
-           "._stylefy_628215496{background-color:red;border-radius:10px;-webkit-border-radius:10px;-moz-border-radius:10px;-o-border-radius:10px}._stylefy_628215496:hover{background-color:white}@media(max-width:500px){._stylefy_628215496{background-color:blue;border-radius:5px;-webkit-border-radius:5px;-moz-border-radius:5px;-o-border-radius:5px}._stylefy_628215496:hover{background-color:grey}}")))
+           "._stylefy_720265521{background-color:red;border-radius:10px;-webkit-border-radius:10px;-moz-border-radius:10px;-o-border-radius:10px}._stylefy_720265521:hover{background-color:white}@media(max-width:500px){._stylefy_720265521{background-color:blue;border-radius:5px;-webkit-border-radius:5px;-moz-border-radius:5px;-o-border-radius:5px}._stylefy_720265521:hover{background-color:grey}}")))
 
   (testing "Same output with both syntaxes (excluding hash)"
     (is (= (conversion/style->css {:props responsive-style-map-syntax
