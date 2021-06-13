@@ -353,7 +353,7 @@ Define how your style looks on various screen sizes:
     [:p "This is column 3"]]])
 ```
 
-stylefy features supported in media queries: modes and vendor prefixes.
+stylefy features supported in media queries: modes, scope and vendor prefixes.
 
 For syntax help, see Garden's [documentation](https://github.com/noprompt/garden/wiki/Media-Queries).
 
