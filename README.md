@@ -36,7 +36,7 @@ stylefy consists of modules that are optimised for specific UI libraries / frame
 First, add stylefy core as a dependency:
 
 ```clj
-[stylefy "3.1.0"]
+[stylefy "3.2.0"]
 ```
 
 Then, based on the UI library you are using, add a corresponding module. The main purpose of the module is to handle asynchronous DOM updates when components are rendered.
@@ -353,6 +353,13 @@ Define how your style looks on various screen sizes:
     [:p "This is column 3"]]])
 ```
 
+Alternative version using vector syntax. This is useful if the order of the rules matter in CSS.
+
+```clojure
+{::stylefy/media [[{:max-width phone-width} {:flex-direction :column}]
+                  [{:max-width tablet-with} {:flex-direction :row}]]}
+```
+
 stylefy features supported in media queries: modes, scope and vendor prefixes.
 
 For syntax help, see Garden's [documentation](https://github.com/noprompt/garden/wiki/Media-Queries).
@@ -378,6 +385,13 @@ Define how your style looks when certain CSS features are supported by the brows
                                       ::stylefy/media {{:max-width styles/phone-width}
                                                        {:grid-template-columns "1fr"}}}}})
 
+```
+
+Alternative version using vector syntax. This is useful if the order of the rules matter in CSS.
+
+```clojure
+{::stylefy/supports [["display: flex" {:color :green}]
+                     ["display: grid" {:color :purple}]]}
 ```
 
 stylefy features supported in feature queries: modes, media queries and vendor prefixes.

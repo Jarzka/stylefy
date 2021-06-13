@@ -8,6 +8,8 @@
     [clojure.string :as str]
     [garden.compiler :as compiler]))
 
+(declare style->css)
+
 (defn garden-units->css
   "Checks all values in the map and converts all Garden units to CSS."
   [props]
@@ -107,62 +109,46 @@
 
   stylefy features supported in media query style map:
   - modes
+  - scope
   - vendor prefixes
 
-  stylefy/manual is not supported here since one can use it to create
+  ::stylefy/manual is not supported here since one can use it to create
   media queries."
-  ; TODO Media queries could also be defined in a vector (just like modes can be defined as a map or vector)
   [{:keys [props hash custom-selector] :as _style} options]
-  (when-let [stylefy-media-queries (:stylefy.core/media props)]
+  (when-let [media-queries (:stylefy.core/media props)]
     (let [css-selector (or custom-selector (class-selector hash))
-          css-media-queries (map
-                              (fn [media-query]
-                                (let [media-query-props (get stylefy-media-queries media-query)
-                                      media-query-css-props (utils/remove-special-keywords media-query-props)
-                                      scoped-styles-garden (map
-                                                             (fn [scoping-rule]
-                                                               (find-and-handle-scoped-style-map scoping-rule css-selector))
-                                                             (:stylefy.core/scope media-query-props))
-                                      garden-class-definition [css-selector media-query-css-props]
-                                      garden-pseudo-classes (convert-stylefy-modes-to-garden media-query-props)
-                                      garden-vendors (convert-stylefy-vendors-to-garden media-query-props)
-                                      garden-options (or (merge options garden-vendors) {})]
-                                  (css garden-options [(at-media media-query (into garden-class-definition
-                                                                                   garden-pseudo-classes))
-                                                       (at-media media-query scoped-styles-garden)])))
-                              (keys stylefy-media-queries))]
+          handle-media-query (fn [media-query media-query-props]
+                               (let [media-query-css-props (utils/remove-special-keywords media-query-props)
+                                     scoped-styles-garden (map
+                                                            (fn [scoping-rule]
+                                                              (find-and-handle-scoped-style-map scoping-rule css-selector))
+                                                            (:stylefy.core/scope media-query-props))
+                                     garden-class-definition [css-selector media-query-css-props]
+                                     garden-pseudo-classes (convert-stylefy-modes-to-garden media-query-props)
+                                     garden-vendors (convert-stylefy-vendors-to-garden media-query-props)
+                                     garden-options (or (merge options garden-vendors) {})]
+                                 (css garden-options [(at-media media-query (into garden-class-definition
+                                                                                  garden-pseudo-classes))
+                                                      (at-media media-query scoped-styles-garden)])))
+          css-media-queries (cond
+                              (map? media-queries) (mapv #(handle-media-query % (get media-queries %)) (keys media-queries))
+                              (vector? media-queries) (mapv #(handle-media-query (first %) (second %)) media-queries))]
       (apply str css-media-queries))))
 
 (defn- convert-feature-queries
-  "Converts stylefy/supports definition into CSS feature query.
-
-  stylefy features supported in feature query style map:
-  - modes
-  - media queries
-  - vendor prefixes"
-  ; TODO Manual mode and scoping should also be supported here
-  [{:keys [props hash custom-selector] :as _style} options]
-  (when-let [stylefy-supports (:stylefy.core/supports props)]
-    (let [css-selector (or custom-selector (class-selector hash))
-          css-supports (map
-                         (fn [supports-selector]
-                           (let [supports-props (get stylefy-supports supports-selector)
-                                 supports-css-props (utils/remove-special-keywords supports-props)
-                                 garden-class-definition [css-selector supports-css-props]
-                                 garden-pseudo-classes (convert-stylefy-modes-to-garden supports-props)
-                                 garden-vendors (convert-stylefy-vendors-to-garden supports-props)
-                                 garden-options (or (merge options garden-vendors) {})
-                                 css-media-queries-inside-supports (convert-media-queries
-                                                                     {:props supports-props
-                                                                      :hash hash
-                                                                      :custom-selector custom-selector}
-                                                                     options)]
-                             (str "@supports (" supports-selector ") {"
-                                  (css garden-options (into garden-class-definition
-                                                            garden-pseudo-classes))
-                                  css-media-queries-inside-supports
-                                  "}")))
-                         (keys stylefy-supports))]
+  "Converts stylefy/supports definition into CSS feature query."
+  [{:keys [hash props custom-selector] :as _style} options]
+  (when-let [supports-rules (:stylefy.core/supports props)]
+    (let [handle-supports-rule (fn [supports-query supports-props]
+                                     (str "@supports (" supports-query ") {"
+                                          (style->css {:props supports-props
+                                                       :hash hash ; Hash of the whole map
+                                                       :custom-selector custom-selector}
+                                                      options)
+                                          "}"))
+          css-supports (cond
+                         (map? supports-rules) (mapv #(handle-supports-rule % (get supports-rules %)) (keys supports-rules))
+                         (vector? supports-rules) (mapv #(handle-supports-rule (first %) (second %)) supports-rules))]
       (apply str css-supports))))
 
 (defn- convert-manual-styles

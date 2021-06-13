@@ -93,47 +93,147 @@
 
 ; Media queries
 
-(def responsive-style {:background-color "red"
-                       :border-radius "10px"
-                       ::stylefy/vendors ["webkit" "moz" "o"]
-                       ::stylefy/auto-prefix #{:border-radius}
-                       ::stylefy/mode {:hover {:background-color "white"}}
-                       ::stylefy/media {{:max-width "500px"}
-                                        {:background-color "blue"
-                                         :border-radius "5px"
-                                         ::stylefy/mode {:hover {:background-color "grey"}}
-                                         ::stylefy/vendors ["webkit" "moz" "o"]
-                                         ::stylefy/auto-prefix #{:border-radius}}}})
+(def responsive-style-map-syntax {:background-color "red"
+                                  :border-radius "10px"
+                                  ::stylefy/vendors ["webkit" "moz" "o"]
+                                  ::stylefy/auto-prefix #{:border-radius}
+                                  ::stylefy/mode {:hover {:background-color "white"}}
+                                  ::stylefy/media {{:max-width "500px"}
+                                                   {:background-color "blue"
+                                                    :border-radius "5px"
+                                                    ::stylefy/mode {:hover {:background-color "grey"}}
+                                                    ::stylefy/vendors ["webkit" "moz" "o"]
+                                                    ::stylefy/auto-prefix #{:border-radius}}}})
+
+(def responsive-style-vector-syntax {:background-color "red"
+                                     :border-radius "10px"
+                                     ::stylefy/vendors ["webkit" "moz" "o"]
+                                     ::stylefy/auto-prefix #{:border-radius}
+                                     ::stylefy/mode {:hover {:background-color "white"}}
+                                     ::stylefy/media [[{:max-width "500px"}
+                                                       {:background-color "blue"
+                                                        :border-radius "5px"
+                                                        ::stylefy/mode {:hover {:background-color "grey"}}
+                                                        ::stylefy/vendors ["webkit" "moz" "o"]
+                                                        ::stylefy/auto-prefix #{:border-radius}}]]})
 
 (deftest responsive-style->css
-  (is (= (conversion/style->css {:props responsive-style :hash (hashing/hash-style responsive-style)}
-                                {:pretty-print? false})
-         "._stylefy_628215496{background-color:red;border-radius:10px;-webkit-border-radius:10px;-moz-border-radius:10px;-o-border-radius:10px}._stylefy_628215496:hover{background-color:white}@media(max-width:500px){._stylefy_628215496{background-color:blue;border-radius:5px;-webkit-border-radius:5px;-moz-border-radius:5px;-o-border-radius:5px}._stylefy_628215496:hover{background-color:grey}}")))
+  (testing "Map syntax"
+    (is (= (conversion/style->css {:props responsive-style-map-syntax :hash (hashing/hash-style responsive-style-map-syntax)}
+                                  {:pretty-print? false})
+           "._stylefy_628215496{background-color:red;border-radius:10px;-webkit-border-radius:10px;-moz-border-radius:10px;-o-border-radius:10px}._stylefy_628215496:hover{background-color:white}@media(max-width:500px){._stylefy_628215496{background-color:blue;border-radius:5px;-webkit-border-radius:5px;-moz-border-radius:5px;-o-border-radius:5px}._stylefy_628215496:hover{background-color:grey}}")))
 
-(def grid-layout-with-fallback {:display "flex"
-                                :flex-direction "row"
-                                :flex-wrap "wrap"
-                                ::stylefy/mode {:hover {:background-color "white"}}
-                                ::stylefy/media {{:max-width "500px"}
-                                                 {:display "block"}}
-                                ::stylefy/supports
-                                {"display: grid"
-                                 {:display "grid"
-                                  :grid-template-columns "1fr 1fr 1fr"
-                                  ::stylefy/mode {:hover {:background-color "#111111"}}
-                                  ; Make CSS Grid responsive
-                                  ::stylefy/media {{:max-width "500px"}
-                                                   {:grid-template-columns "1fr"
-                                                    ::stylefy/mode {:hover
-                                                                    {:background-color "grey"}}}}}}})
+  (testing "Vector syntax"
+    (is (= (conversion/style->css {:props responsive-style-vector-syntax :hash (hashing/hash-style responsive-style-vector-syntax)}
+                                  {:pretty-print? false})
+           "._stylefy_720265521{background-color:red;border-radius:10px;-webkit-border-radius:10px;-moz-border-radius:10px;-o-border-radius:10px}._stylefy_720265521:hover{background-color:white}@media(max-width:500px){._stylefy_720265521{background-color:blue;border-radius:5px;-webkit-border-radius:5px;-moz-border-radius:5px;-o-border-radius:5px}._stylefy_720265521:hover{background-color:grey}}")))
+
+  (testing "Same output with both syntaxes (excluding hash)"
+    (is (= (conversion/style->css {:props responsive-style-map-syntax
+                                   :hash "test"}
+                                  {:pretty-print? false})
+           (conversion/style->css {:props responsive-style-vector-syntax
+                                   :hash "test"}
+                                  {:pretty-print? false}))))
+
+  (testing "Rules are rendered in the right order"
+    (let [style {::stylefy/media [[{:min-width "200px"} {:color "red"}]
+                                  [{:min-width "300px"} {:color "green"}]
+                                  [{:min-width "400px"} {:color "blue"}]
+                                  [{:min-width "500px"} {:color "purple"}]
+                                  [{:min-width "600px"} {:color "yellow"}]]}]
+      (is (= (conversion/style->css {:props style
+                                     :hash (hashing/hash-style style)}
+                                    {:pretty-print? false})
+             "._stylefy_1197239522{}@media(min-width:200px){._stylefy_1197239522{color:red}}@media(min-width:300px){._stylefy_1197239522{color:green}}@media(min-width:400px){._stylefy_1197239522{color:blue}}@media(min-width:500px){._stylefy_1197239522{color:purple}}@media(min-width:600px){._stylefy_1197239522{color:yellow}}")))))
 
 ; Feature queries
 
+(def grid-layout-with-fallback-map-syntax {:display "flex"
+                                           :flex-direction "row"
+                                           :flex-wrap "wrap"
+                                           ::stylefy/mode {:hover {:background-color "white"}}
+                                           ::stylefy/media {{:max-width "500px"}
+                                                            {:display "block"}}
+                                           ::stylefy/supports
+                                           {"display: grid"
+                                            {:display "grid"
+                                             :grid-template-columns "1fr 1fr 1fr"
+                                             ::stylefy/mode {:hover {:background-color "#111111"}}
+                                             ; Make CSS Grid responsive
+                                             ::stylefy/media {{:max-width "500px"}
+                                                              {:grid-template-columns "1fr"
+                                                               ::stylefy/mode {:hover
+                                                                               {:background-color "grey"}}}}}}})
+
+(def grid-layout-with-fallback-vector-syntax {:display "flex"
+                                              :flex-direction "row"
+                                              :flex-wrap "wrap"
+                                              ::stylefy/mode {:hover {:background-color "white"}}
+                                              ::stylefy/media {{:max-width "500px"}
+                                                               {:display "block"}}
+                                              ::stylefy/supports [["display: grid"
+                                                                   {:display "grid"
+                                                                    :grid-template-columns "1fr 1fr 1fr"
+                                                                    ::stylefy/mode {:hover {:background-color "#111111"}}
+                                                                    ; Make CSS Grid responsive
+                                                                    ::stylefy/media {{:max-width "500px"}
+                                                                                     {:grid-template-columns "1fr"
+                                                                                      ::stylefy/mode {:hover
+                                                                                                      {:background-color "grey"}}}}}]]})
+
+(def supports-with-many-stylefy-features {::stylefy/supports [["display: grid"
+                                                               {:color :green
+                                                                ::stylefy/mode [[:hover {:color :blue}]]
+                                                                ::stylefy/scope [[:.scope {:color :yellow
+                                                                                           ::stylefy/manual [[:.child-in-scope {:color :red}]]}]]
+                                                                ::stylefy/manual [[:.child {:color :purple}]]}]]})
+
 (deftest supports->css
-  (is (= (conversion/style->css {:props grid-layout-with-fallback
-                                 :hash (hashing/hash-style grid-layout-with-fallback)}
-                                {:pretty-print? false})
-         "._stylefy_-782791788{display:flex;flex-direction:row;flex-wrap:wrap}._stylefy_-782791788:hover{background-color:white}@media(max-width:500px){._stylefy_-782791788{display:block}}@supports (display: grid) {._stylefy_-782791788{display:grid;grid-template-columns:1fr 1fr 1fr}._stylefy_-782791788:hover{background-color:#111111}@media(max-width:500px){._stylefy_-782791788{grid-template-columns:1fr}._stylefy_-782791788:hover{background-color:grey}}}")))
+  (testing "Map syntax"
+    (is (= (conversion/style->css {:props grid-layout-with-fallback-map-syntax
+                                   :hash (hashing/hash-style grid-layout-with-fallback-map-syntax)}
+                                  {:pretty-print? false})
+           "._stylefy_-782791788{display:flex;flex-direction:row;flex-wrap:wrap}._stylefy_-782791788:hover{background-color:white}@media(max-width:500px){._stylefy_-782791788{display:block}}@supports (display: grid) {._stylefy_-782791788{display:grid;grid-template-columns:1fr 1fr 1fr}._stylefy_-782791788:hover{background-color:#111111}@media(max-width:500px){._stylefy_-782791788{grid-template-columns:1fr}._stylefy_-782791788:hover{background-color:grey}}}")))
+
+  (testing "Vector syntax"
+    (is (= (conversion/style->css {:props grid-layout-with-fallback-vector-syntax
+                                   :hash (hashing/hash-style grid-layout-with-fallback-vector-syntax)}
+                                  {:pretty-print? false})
+           "._stylefy_-683353920{display:flex;flex-direction:row;flex-wrap:wrap}._stylefy_-683353920:hover{background-color:white}@media(max-width:500px){._stylefy_-683353920{display:block}}@supports (display: grid) {._stylefy_-683353920{display:grid;grid-template-columns:1fr 1fr 1fr}._stylefy_-683353920:hover{background-color:#111111}@media(max-width:500px){._stylefy_-683353920{grid-template-columns:1fr}._stylefy_-683353920:hover{background-color:grey}}}"))
+
+    (testing "Rules are rendered in the right order"
+      (let [style {::stylefy/supports [["display: grid"
+                                        {:color "green"}]
+                                       ["display: flex"
+                                        {:color "blue"}]]}]
+        (is (= (conversion/style->css {:props style
+                                       :hash (hashing/hash-style style)}
+                                      {:pretty-print? false})
+               "._stylefy_-1712366838{}@supports (display: grid) {._stylefy_-1712366838{color:green}}@supports (display: flex) {._stylefy_-1712366838{color:blue}}")))
+
+      (let [style {::stylefy/supports [["display: flex"
+                                        {:color "blue"}]
+                                       ["display: grid"
+                                        {:color "green"}]]}]
+        (is (= (conversion/style->css {:props style
+                                       :hash (hashing/hash-style style)}
+                                      {:pretty-print? false})
+               "._stylefy_-2028302377{}@supports (display: flex) {._stylefy_-2028302377{color:blue}}@supports (display: grid) {._stylefy_-2028302377{color:green}}")))))
+
+  (testing "Same output with both syntaxes (excluding hash)"
+    (is (= (conversion/style->css {:props grid-layout-with-fallback-map-syntax
+                                   :hash "test"}
+                                  {:pretty-print? false})
+           (conversion/style->css {:props grid-layout-with-fallback-vector-syntax
+                                   :hash "test"}
+                                  {:pretty-print? false}))))
+
+  (testing "Other stylefy features also work in the supports query"
+    (is (= (conversion/style->css {:props supports-with-many-stylefy-features
+                                   :hash (hashing/hash-style supports-with-many-stylefy-features)}
+                                  {:pretty-print? false})
+           "._stylefy_1494431776{}@supports (display: grid) {._stylefy_1494431776{color:green}._stylefy_1494431776:hover{color:blue}.scope ._stylefy_1494431776{color:yellow}.scope ._stylefy_1494431776 .child-in-scope{color:red}._stylefy_1494431776 .child{color:purple}}"))))
 
 (deftest custom-selector
   (let [style {:color "red"}]
@@ -205,7 +305,7 @@
     (let [style {:color :red
                  ::stylefy/manual [["> .box:hover" {:color "black"}]]}]
       (is (= (conversion/style->css {:props style :hash (hashing/hash-style style)} {:pretty-print? false})
-              "._stylefy_696232348{color:red}._stylefy_696232348 > .box:hover{color:black}"))))
+             "._stylefy_696232348{color:red}._stylefy_696232348 > .box:hover{color:black}"))))
 
   (testing "Manual mode with nested at-supports and at-media"
     (let [style {:color "red"
