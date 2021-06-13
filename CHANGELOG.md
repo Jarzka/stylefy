@@ -1,3 +1,11 @@
+# 3.2.0
+
+June 13, 2021
+
+- `::stylefy/media` and `::stylefy/supports` rules can now be defined using vector syntax, which makes it possible to define the order in which the rules are rendered in CSS
+- All stylefy's special keywords now work inside`stylefy/supports` style map (manual mode and scoping were missing)
+
+
 # 3.1.0
 
 June 7, 2021
