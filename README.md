@@ -360,7 +360,7 @@ Alternative version using vector syntax. This is useful if the order of the rule
                   [{:max-width tablet-with} {:flex-direction :row}]]}
 ```
 
-stylefy features supported in media queries: modes and vendor prefixes.
+stylefy features supported in media queries: modes, scope and vendor prefixes.
 
 For syntax help, see Garden's [documentation](https://github.com/noprompt/garden/wiki/Media-Queries).
 
