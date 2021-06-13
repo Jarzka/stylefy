@@ -343,7 +343,8 @@
 
    [:h2 "Feature queries"]
    [:p "The following example is rendered using CSS Grid if supported by the browser. If not, it uses Flexbox fallback as the default style. stylefy also supports media queries inside feature queries!"]
-   [grid/grid]
+   [grid/grid-map-syntax]
+   [grid/grid-vector-syntax]
 
    [garden-units]
 
