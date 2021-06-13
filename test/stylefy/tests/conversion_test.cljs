@@ -93,22 +93,59 @@
 
 ; Media queries
 
-(def responsive-style {:background-color "red"
-                       :border-radius "10px"
-                       ::stylefy/vendors ["webkit" "moz" "o"]
-                       ::stylefy/auto-prefix #{:border-radius}
-                       ::stylefy/mode {:hover {:background-color "white"}}
-                       ::stylefy/media {{:max-width "500px"}
-                                        {:background-color "blue"
-                                         :border-radius "5px"
-                                         ::stylefy/mode {:hover {:background-color "grey"}}
-                                         ::stylefy/vendors ["webkit" "moz" "o"]
-                                         ::stylefy/auto-prefix #{:border-radius}}}})
+(def responsive-style-map-syntax {:background-color "red"
+                                  :border-radius "10px"
+                                  ::stylefy/vendors ["webkit" "moz" "o"]
+                                  ::stylefy/auto-prefix #{:border-radius}
+                                  ::stylefy/mode {:hover {:background-color "white"}}
+                                  ::stylefy/media {{:max-width "500px"}
+                                                   {:background-color "blue"
+                                                    :border-radius "5px"
+                                                    ::stylefy/mode {:hover {:background-color "grey"}}
+                                                    ::stylefy/vendors ["webkit" "moz" "o"]
+                                                    ::stylefy/auto-prefix #{:border-radius}}}})
+
+(def responsive-style-vector-syntax {:background-color "red"
+                                     :border-radius "10px"
+                                     ::stylefy/vendors ["webkit" "moz" "o"]
+                                     ::stylefy/auto-prefix #{:border-radius}
+                                     ::stylefy/mode {:hover {:background-color "white"}}
+                                     ::stylefy/media [[{:max-width "500px"}
+                                                       {:background-color "blue"
+                                                        :border-radius "5px"
+                                                        ::stylefy/mode {:hover {:background-color "grey"}}
+                                                        ::stylefy/vendors ["webkit" "moz" "o"]
+                                                        ::stylefy/auto-prefix #{:border-radius}}]]})
 
 (deftest responsive-style->css
-  (is (= (conversion/style->css {:props responsive-style :hash (hashing/hash-style responsive-style)}
-                                {:pretty-print? false})
-         "._stylefy_628215496{background-color:red;border-radius:10px;-webkit-border-radius:10px;-moz-border-radius:10px;-o-border-radius:10px}._stylefy_628215496:hover{background-color:white}@media(max-width:500px){._stylefy_628215496{background-color:blue;border-radius:5px;-webkit-border-radius:5px;-moz-border-radius:5px;-o-border-radius:5px}._stylefy_628215496:hover{background-color:grey}}")))
+  (testing "Map syntax"
+    (is (= (conversion/style->css {:props responsive-style-map-syntax :hash (hashing/hash-style responsive-style-map-syntax)}
+                                  {:pretty-print? false})
+           "._stylefy_628215496{background-color:red;border-radius:10px;-webkit-border-radius:10px;-moz-border-radius:10px;-o-border-radius:10px}._stylefy_628215496:hover{background-color:white}@media(max-width:500px){._stylefy_628215496{background-color:blue;border-radius:5px;-webkit-border-radius:5px;-moz-border-radius:5px;-o-border-radius:5px}._stylefy_628215496:hover{background-color:grey}}")))
+
+  (testing "Vector syntax"
+    (is (= (conversion/style->css {:props responsive-style-vector-syntax :hash (hashing/hash-style responsive-style-map-syntax)}
+                                  {:pretty-print? false})
+           "._stylefy_628215496{background-color:red;border-radius:10px;-webkit-border-radius:10px;-moz-border-radius:10px;-o-border-radius:10px}._stylefy_628215496:hover{background-color:white}@media(max-width:500px){._stylefy_628215496{background-color:blue;border-radius:5px;-webkit-border-radius:5px;-moz-border-radius:5px;-o-border-radius:5px}._stylefy_628215496:hover{background-color:grey}}")))
+
+  (testing "Same output with both syntaxes (excluding hash)"
+    (is (= (conversion/style->css {:props responsive-style-map-syntax
+                                   :hash "test"}
+                                  {:pretty-print? false})
+           (conversion/style->css {:props responsive-style-vector-syntax
+                                   :hash "test"}
+                                  {:pretty-print? false}))))
+
+  (testing "Rules are rendered in the right order"
+    (let [style {::stylefy/media [[{:min-width "200px"} {:color "red"}]
+                                  [{:min-width "300px"} {:color "green"}]
+                                  [{:min-width "400px"} {:color "blue"}]
+                                  [{:min-width "500px"} {:color "purple"}]
+                                  [{:min-width "600px"} {:color "yellow"}]]}]
+      (is (= (conversion/style->css {:props style
+                                     :hash (hashing/hash-style style)}
+                                    {:pretty-print? false})
+             "._stylefy_1197239522{}@media(min-width:200px){._stylefy_1197239522{color:red}}@media(min-width:300px){._stylefy_1197239522{color:green}}@media(min-width:400px){._stylefy_1197239522{color:blue}}@media(min-width:500px){._stylefy_1197239522{color:purple}}@media(min-width:600px){._stylefy_1197239522{color:yellow}}")))))
 
 ; Feature queries
 

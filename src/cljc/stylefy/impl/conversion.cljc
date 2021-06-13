@@ -109,9 +109,10 @@
 
   stylefy features supported in media query style map:
   - modes
+  - scope
   - vendor prefixes
 
-  stylefy/manual is not supported here since one can use it to create
+  ::stylefy/manual is not supported here since one can use it to create
   media queries."
   [{:keys [props hash custom-selector] :as _style} options]
   (when-let [media-queries (:stylefy.core/media props)]
