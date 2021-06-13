@@ -353,7 +353,7 @@ Define how your style looks on various screen sizes:
     [:p "This is column 3"]]])
 ```
 
-Alternative version using vector syntax, which makes sure the rules are rendered in order:
+Alternative version using vector syntax. This is useful if the order of the rules matter in CSS.
 
 ```clojure
 {::stylefy/media [[{:max-width phone-width} {:flex-direction :column}]
@@ -387,7 +387,7 @@ Define how your style looks when certain CSS features are supported by the brows
 
 ```
 
-Alternative version using vector syntax, which makes sure the rules are rendered in order:
+Alternative version using vector syntax. This is useful if the order of the rules matter in CSS.
 
 ```clojure
 {::stylefy/supports [["display: flex" {:color :green}]
