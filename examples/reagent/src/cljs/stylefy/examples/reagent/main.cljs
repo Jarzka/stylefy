@@ -147,24 +147,47 @@
        [bs-navbar-item 0 active-index "Hello"]
        [bs-navbar-item 1 active-index "World!"]])))
 
-(defn- responsive-layout []
-  [:div (use-style styles/responsive-layout)
-   ; The easiest way to use a sub-style is to call use-sub-style function:
-   [:div (use-sub-style styles/responsive-layout :column1)
-    [:p "This is column 1"]
-    [:p "This is column 1"]
-    [:p "This is column 1"]
-    [:p "This is column 1"]
-    [:p "This is column 1"]]
-   [:div (use-sub-style styles/responsive-layout :column2)
-    [:p "This is column 2"]
-    [:p "This is column 2"]
-    [:p "This is column 2"]]
-   [:div (use-sub-style styles/responsive-layout :column3)
-    ; If there are more than one level of sub-style nesting, call sub-style to get
-    ; the desired sub-style and use it.
-    [:p (use-style (sub-style styles/responsive-layout :column3 :text)) "This is column 3"]
-    [:p (use-style (sub-style styles/responsive-layout :column3 :text)) "This is column 3"]]])
+(defn- responsive-layout-map-syntax []
+  [:<>
+   [:h3 "Map syntax"]
+   [:div (use-style styles/responsive-layout-map-syntax)
+    ; The easiest way to use a sub-style is to call use-sub-style function:
+    [:div (use-sub-style styles/responsive-layout-map-syntax :column1)
+     [:p "This is column 1"]
+     [:p "This is column 1"]
+     [:p "This is column 1"]
+     [:p "This is column 1"]
+     [:p "This is column 1"]]
+    [:div (use-sub-style styles/responsive-layout-map-syntax :column2)
+     [:p "This is column 2"]
+     [:p "This is column 2"]
+     [:p "This is column 2"]]
+    [:div (use-sub-style styles/responsive-layout-map-syntax :column3)
+     ; If there are more than one level of sub-style nesting, call sub-style to get
+     ; the desired sub-style and use it.
+     [:p (use-style (sub-style styles/responsive-layout-map-syntax :column3 :text)) "This is column 3"]
+     [:p (use-style (sub-style styles/responsive-layout-map-syntax :column3 :text)) "This is column 3"]]]])
+
+(defn- responsive-layout-vector-syntax []
+  [:<>
+   [:h3 "Vector syntax"]
+   [:div (use-style styles/responsive-layout-vector-syntax)
+    ; The easiest way to use a sub-style is to call use-sub-style function:
+    [:div (use-sub-style styles/responsive-layout-vector-syntax :column1)
+     [:p "This is column 1"]
+     [:p "This is column 1"]
+     [:p "This is column 1"]
+     [:p "This is column 1"]
+     [:p "This is column 1"]]
+    [:div (use-sub-style styles/responsive-layout-vector-syntax :column2)
+     [:p "This is column 2"]
+     [:p "This is column 2"]
+     [:p "This is column 2"]]
+    [:div (use-sub-style styles/responsive-layout-vector-syntax :column3)
+     ; If there are more than one level of sub-style nesting, call sub-style to get
+     ; the desired sub-style and use it.
+     [:p (use-style (sub-style styles/responsive-layout-vector-syntax :column3 :text)) "This is column 3"]
+     [:p (use-style (sub-style styles/responsive-layout-vector-syntax :column3 :text)) "This is column 3"]]]])
 
 (defn animation []
   [:div (use-style styles/animated-box)])
@@ -327,7 +350,8 @@
 
    [:h2 "Simple responsive layout"]
    [:p "stylefy supports media queries out of the box"]
-   [responsive-layout]
+   [responsive-layout-map-syntax]
+   [responsive-layout-vector-syntax]
 
    [:h2 "Animations"]
    [:p "stylefy also supports keyframes"]
