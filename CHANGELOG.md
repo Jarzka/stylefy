@@ -185,6 +185,8 @@ Jan 25, 2019
 
 # 1.11.0
 
+Jan 24, 2019
+
 - Implemented support for manual mode, which makes it possible to style child components with custom CSS selectors. It is recommended to use manual mode only for corner cases, i.e. when regular sub-styles cannot produce the desired end result. An example of this is a case when we want to easily change the style of a child component when the parent is being hovered. Manual mode can also be used to style 3rd party components that do not take style parameters. To avoid possible hassle, stylefy's special keywords do not work in manual mode and styles written in manual mode are scoped inside the element in which you use the style.
 - Log a warning when attempted to initialise stylefy more than once.
 - Log a warning when attempted to use an incorrect mode with spaces.
