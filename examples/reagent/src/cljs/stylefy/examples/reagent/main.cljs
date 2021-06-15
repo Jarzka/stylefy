@@ -300,6 +300,7 @@
   [:div (use-style (merge styles/root
                           styles/general-styles))
    [:h1 "Reagent Examples"]
+
    [:h2 "Generic button"]
    [:p "Just a simple styled button to begin with."]
    [button "Generic button"]
@@ -385,6 +386,7 @@
    [:div (use-style background-box-sorted)]
    [:p "Or, probably a better way, not to use shorthand properties:"]
    [:div (use-style background-box-no-shorthands)]
+
    [:h2 "Caching"]
    [:p "stylefy supports style caching, which means that the generated CSS code is saved into the offline storage and retrieved from there when the page is reloaded. This way, styles once generated do not need to be generated again and the page loads faster. Caching can be turned on manually, and it also needs to be cleared manually."]
    [button "Clear cache" #(stylefy-cache/clear) :primary]])
