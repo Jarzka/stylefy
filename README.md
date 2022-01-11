@@ -85,7 +85,7 @@ Require stylefy along with the module:
           [stylefy.reagent :as stylefy-reagent])
 ```
 
-Then, call **stylefy/init** once when your application starts. This function must be called before rendering any styles on the page.
+Then, call **stylefy/init** once when your application starts. This function must be called **before** rendering any styles on the page.
 
 ```clojure
 (stylefy/init {:dom (stylefy-reagent/init)})
