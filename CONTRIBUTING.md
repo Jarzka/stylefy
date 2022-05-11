@@ -14,6 +14,7 @@ lein test
 
 ```bash
 cd examples/reagent
+npm install
 shadow-cljs watch frontend
 ```
 
