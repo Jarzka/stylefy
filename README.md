@@ -1,5 +1,8 @@
 <p align="center">
-  <img align="center" width="200" src="stylefy_logo2.png" alt="">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="stylefy_logo2_darkmode.png">
+    <img alt="stylefy logo" width="320" src="stylefy_logo2.png">
+  </picture>
 </p>
 
 <p align="center">Clojure(Script) library for styling user interface components with ease.</p>
