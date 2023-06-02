@@ -98,7 +98,7 @@ Now you are ready to go! But before you start, it's good to be aware of a few th
 
 ### Caching summary
 
-stylefy supports style caching for styles generated on the frontend via HTML5 local storage and it is turned on by default. The converted CSS code is added into local storage and loaded from there when the page is reloaded. Caching can speed up the style generation a lot, so it is recommended to keep it on at least in the production environment.
+stylefy supports style caching for styles generated on the frontend via HTML5 local storage. The converted CSS code is added into local storage and loaded from there when the page is reloaded. Caching can speed up the style generation, but it also consumes space from the local storage. Caching is turned on by default, but it is up to you to consider wheter you want to keep it that way.
 
 You can read more about style caching in the [Style caching](#caching) section.
 
@@ -606,9 +606,7 @@ For syntax help, see Garden's [documentation](https://github.com/noprompt/garden
 
 ## <a name="caching"></a> Style caching (frontend)
 
-stylefy supports style caching for styles generated on the frontend via HTML5 local storage. The converted CSS code is added into local storage and loaded from there when the page is reloaded.
-
-As from version 1.7.0, caching with local storage is turned on by default. Caching can speed up the style generation a lot, so it is recommended to keep it on at least in the production environment.
+stylefy supports style caching for styles generated on the frontend via HTML5 local storage. The converted CSS code is added into local storage and loaded from there when the page is reloaded. Caching can speed up the style generation, but it also consumes space from the local storage. Caching is turned on by default, but it is up to you to consider wheter you want to keep it that way.
 
 Caching can be turned off in the initialisation function:
 
