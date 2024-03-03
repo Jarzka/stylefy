@@ -1,7 +1,7 @@
 (defproject stylefy/generic-dom "3.0.0"
   :description "Generic DOM for stylefy"
-  :dependencies [[org.clojure/clojure "1.10.1"]
-                 [org.clojure/clojurescript "1.10.520"]
+  :dependencies [[org.clojure/clojure "1.11.1"]
+                 [org.clojure/clojurescript "1.11.132"]
                  [prismatic/dommy "1.1.0"]]
   :source-paths ["src/cljs"]
   :cljsbuild {:builds [{:id "dev"

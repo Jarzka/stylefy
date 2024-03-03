@@ -1,16 +1,15 @@
 (defproject stylefy "3.2.0"
   :description "Library for styling UI components"
   :url "https://github.com/Jarzka/stylefy"
-  :dependencies [[org.clojure/clojure "1.9.0"]
-                 [org.clojure/clojurescript "1.9.946"]
+  :dependencies [[org.clojure/clojure "1.11.1"]
+                 [org.clojure/clojurescript "1.11.132"]
                  [prismatic/dommy "1.1.0"]
-                 [hiccup "1.0.5"]
-                 [garden "1.3.6"]
-                 [org.clojure/core.async "0.3.443"]]
+                 [garden "1.3.10"]
+                 [org.clojure/core.async "1.6.681"]]
   :plugins [[lein-cljsbuild "1.1.7"]
             [lein-doo "0.1.7"]
-            [lein-codox "0.10.6"]]
-  :profiles {:dev {:dependencies [[clj-chrome-devtools "20180310"]]}}
+            [lein-codox "0.10.6"]
+            [lein-ancient "1.0.0-RC4-SNAPSHOT"]]
   :codox {:language :clojurescript
           :output-path "doc"
           :source-paths ["src"]}
