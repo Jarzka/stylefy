@@ -13,8 +13,6 @@ lein test
 # Compile examples project
 
 ```bash
-npm install -g shadow-cljs
-
 cd examples/reagent # or any other module
 npm install
 shadow-cljs watch frontend
