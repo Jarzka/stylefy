@@ -7,7 +7,7 @@ This project is aimed to remain backwards compatible. This means that **changes 
 # Run tests
 
 ```bash
-lein test
+shadow-cljs compile test
 ```
 
 # Compile examples project

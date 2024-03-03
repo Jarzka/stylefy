@@ -105,9 +105,9 @@
          (hashing/hash-style {:width "100px"
                               ::stylefy/media {{:max-width "500px"} {:width "100px"}}})))
 
-  (is (= (hashing/hash-style h2-style) "_stylefy_154513737"))
-  (is (= (hashing/hash-style h3-style) "_stylefy_-1528553558"))
-  (is (= (hashing/hash-style h4-style) "_stylefy_-372704016"))
+  (is (= (hashing/hash-style h2-style) "_stylefy_-1774772490"))
+  (is (= (hashing/hash-style h3-style) "_stylefy_-1572790382"))
+  (is (= (hashing/hash-style h4-style) "_stylefy_-61429269"))
 
   ; Different Garden units should make style maps structurally different
   (is (not= (hashing/hash-style h2-style)

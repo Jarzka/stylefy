@@ -24,3 +24,6 @@ doo-index.html
 .lein-repl-history
 .lein-failures
 .lsp
+.clj-kondo
+.shadow-cljs
+node_modules

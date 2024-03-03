@@ -1,10 +1,11 @@
 (defproject stylefy/reagent "3.0.0"
   :description "ReagentDOM for stylefy"
-  :dependencies [[org.clojure/clojure "1.10.1"]
-                 [org.clojure/clojurescript "1.10.520"]
+  :dependencies [[org.clojure/clojure "1.11.1"]
+                 [org.clojure/clojurescript "1.11.132"]
                  [prismatic/dommy "1.1.0"]
-                 [reagent "0.6.0"]
-                 [org.clojure/core.async "0.3.443"]]
+                 [reagent "1.2.0"]
+                 [org.clojure/core.async "1.6.681"]]
+  :plugins [[lein-ancient "1.0.0-RC4-SNAPSHOT"]]
   :source-paths ["src/cljs"]
   :cljsbuild {:builds [{:id "dev"
                         :source-paths ["src/cljs"]

@@ -332,5 +332,5 @@
                  :use-custom-class-prefix? true
                  :cache-options {:expires (* 1 60 60 24 7)}
                  :global-vendor-prefixes {::stylefy/vendors ["webkit" "moz" "o"]
-                                          ::stylefy/auto-prefix #{:border-radius}}})
+                                          ::stylefy/auto-prefix #{:border-radius}}}) 
   (rum/mount (main) (.getElementById js/document "app")))
