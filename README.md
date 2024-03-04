@@ -698,18 +698,6 @@ If the style contains some specific definitions that cannot be present as inline
 
 Because **prepare-style** causes immediate synchronous DOM update, it is not recommended to overuse it, as it can slow the rendering process. Also, when caching is used, the style will be ready after its CSS has been created for the first time.
 
-## Any real projects using stylefy?
-
-Yup, for example:
-
-- [Finnish National Access Point](https://github.com/finnishtransportagency/mmtis-national-access-point)
-- [Velho Design System](https://github.com/velho-allianssi/velho-ds)
-- [Athens](https://github.com/athensresearch/athens)
-- [Solita Rooms](https://github.com/solita/solita-rooms)
-- [My personal website](https://github.com/Jarzka/Pikseli.org)
-  
-and [various other projects](https://github.com/search?q=_stylefy-constant-styles_&type=Code)
-
 # More examples
 
 More examples available here: https://github.com/Jarzka/stylefy/tree/master/examples/
