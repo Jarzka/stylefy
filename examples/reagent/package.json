@@ -3,7 +3,7 @@
   "version": "1.0.0-SNAPSHOT",
   "private": false,
   "devDependencies": {
-    "shadow-cljs": "^2.10.18"
+    "shadow-cljs": "^2.28.9"
   },
   "dependencies": {
     "create-react-class": "^15.6.3",
