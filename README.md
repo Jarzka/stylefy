@@ -16,6 +16,10 @@
 
 stylefy makes it possible to define styles as Clojure data and attach them into HTML elements without writing CSS selectors. Styles are converted to CSS on-demand at runtime and attached to DOM as scoped CSS classes. CSS conversion is done via [Garden](https://github.com/noprompt/garden).
 
+# Project Status
+
+stylefy is a legacy project, built for the previous era of Clojure & CSS ecosystem. In most cases, you should choose a different library.
+
 # Installation
 
 stylefy consists of modules that are optimised for specific UI libraries / frameworks.
