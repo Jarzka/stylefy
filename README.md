@@ -5,7 +5,7 @@
   </picture>
 </p>
 
-<p align="center">Clojure(Script) library for styling user interface components with ease.</p>
+<p align="center">Clojure(Script) library for styling user interface components.</p>
 
 [![Clojars Project](https://img.shields.io/clojars/v/stylefy.svg)](https://clojars.org/stylefy)
 [![CircleCI](https://circleci.com/gh/Jarzka/stylefy.svg?style=svg)](https://circleci.com/gh/Jarzka/stylefy)
@@ -14,23 +14,7 @@
 
 # Introduction
 
-stylefy makes it possible to define CSS styles as Clojure data and attach them into HTML elements easily without writing selectors. Styles are converted to CSS on-demand and scoped locally. This makes writing style code easy and maintainable.
-
-While being originally created with the frontend in mind, stylefy now runs on both Web browsers and servers. stylefy uses [Garden](https://github.com/noprompt/garden) in the background for most of its CSS conversions. 
-
-# Features
-
-- Define styles as Clojure data – all important CSS features are supported: pseudo-classes, pseudo-elements, keyframes, font-faces, media queries, feature queries...
-- Use any 3rd party CSS code along with stylefy
-- Manual mode: stylize 3rd party components and resolve corner cases in which complex CSS selectors are needed
-- Scoping: define styles that are applied only when the current element is in some specific scope
-- Vendor prefixes are supported both locally and globally
-- CSS caching on the frontend using local storage (optional)
-- Small and simple core API which is easy to setup
-- Fast, asynchronous CSS generation on the frontend (with an option to use synchronous generation)
-- Automatic style reloading (with shadow-cljs or Figwheel)
-- Server Side Rendering
-- All features are tested to work with Chrome, Firefox, Edge & Internet Explorer 11
+stylefy makes it possible to define styles as Clojure data and attach them into HTML elements without writing CSS selectors. Styles are converted to CSS on-demand at runtime and attached to DOM as scoped CSS classes. CSS conversion is done via [Garden](https://github.com/noprompt/garden).
 
 # Installation
 
